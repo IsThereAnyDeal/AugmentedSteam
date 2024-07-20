@@ -97,7 +97,7 @@ export default class FShowMarketOverview extends Feature<CInventory> {
                             .append(L(__avgPrice_3cards, {price: thisItem.dataset.cardsPrice!}));
                     }, {once: true});
 
-                    DOMHelper.insertScript("scriptlets/Community/Inventory/marketOverviewPopulation.js");
+                    DOMHelper.insertScript("scriptlets/Community/Inventory/marketOverviewPopulation.js", {hashName});
                 }
             }
 
