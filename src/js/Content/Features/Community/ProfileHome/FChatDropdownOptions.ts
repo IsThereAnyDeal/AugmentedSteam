@@ -13,7 +13,7 @@ export default class FChatDropdownOptions extends Feature<CProfileHome> {
         
         const anchor = document.querySelector<HTMLAnchorElement>("div.profile_header_actions > a[href*=OpenFriendChat]");
         if (!anchor) {
-            throw new Error("Node not found");
+            return;
         }
 
         const m = anchor.href.match(/OpenFriendChat\(\s*'(\d+)'\s*,\s*(\d+)/);
