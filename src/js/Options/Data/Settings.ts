@@ -3,7 +3,7 @@ import type {SettingsSchema} from "./_types";
 import type {SchemaKeys, SchemaValue, StorageInterface} from "@Core/Storage/Storage";
 import {SyncedStorage} from "@Core/Storage/SyncedStorage";
 
-export const DefaultSettings: SettingsSchema = Object.freeze({
+export const DefaultSettings: Readonly<SettingsSchema> = {
     "language": "english",
 
     "version": Info.version,
@@ -185,7 +185,7 @@ export const DefaultSettings: SettingsSchema = Object.freeze({
     "context_steamdb": false,
     "context_steamdb_instant": false,
     "context_steam_keys": false,
-});
+};
 
 
 type TListener = () => void;
