@@ -8,7 +8,7 @@ import DOMHelper from "@Content/Modules/DOMHelper";
 import AugmentedSteam from "@Content/Modules/AugmentedSteam";
 import User from "@Content/Modules/User";
 import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
-import UpdateHandler from "@Content/Modules/UpdateHandler";
+import UpdateHandler from "@Core/UpdateHandler";
 import ITAD from "@Content/Modules/ITAD";
 import type Context from "@Content/Modules/Context/Context";
 import Environment, {ContextType} from "@Core/Environment";
