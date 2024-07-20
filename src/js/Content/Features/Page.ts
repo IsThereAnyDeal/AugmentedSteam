@@ -1,6 +1,6 @@
 import bootstrapDomPurify from "../../bootstrapDomPurify";
 import Config from "config";
-import {Info} from "@Core/Info";
+import Info from "@Core/Info";
 import Localization from "@Core/Localization/Localization";
 import {SettingsStore} from "@Options/Data/Settings";
 import ProgressBar from "@Content/Modules/Widgets/ProgressBar";

@@ -14,7 +14,7 @@
     import {L} from "@Core/Localization/Localization";
     import {DefaultSettings, SettingsStore} from "../Data/Settings";
     import Downloader from "@Core/Downloader";
-    import {Info} from "@Core/Info";
+    import Info from "@Core/Info";
     import UserNotes from "@Content/Features/Store/Common/UserNotes";
     import type {SettingsSchema} from "@Options/Data/_types";
     import UserNotesAdapter from "@Content/Modules/UserNotes/UserNotesAdapter";
