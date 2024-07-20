@@ -61,10 +61,8 @@ export default class FAchievementSort extends Feature<CProfileStats> {
 
         switch (language) {
             case "english":
-                return {
-                    format: "'Unlocked' d LLL, yyyy '@' h:mma",
-                    formatShort: "'Unlocked' d LLL '@' h:mma",
-                };
+                // English format is unstable (different based on region)
+                return null;
 
             case "czech":
                 return {
@@ -73,7 +71,7 @@ export default class FAchievementSort extends Feature<CProfileStats> {
                     options: {locale: "cs"}
                 };
 
-            // TODO add support for more locales without need to fallback to english
+            // TODO add support for more locales without need to fallback
         }
 
         return null;
@@ -102,22 +100,29 @@ export default class FAchievementSort extends Feature<CProfileStats> {
 
             if (dateSetup) {
                 const dateString = node.firstChild.textContent.trim();
+
                 const {format, formatShort, options} = dateSetup;
-                const unlockedTime = DateTime.fromFormat(
-                    dateString,
-                    /\d{4}/.test(dateString) ? format : formatShort,
-                    options
-                );
-                this.unlockedMap.set(achieveRow, unlockedTime.toUnixInteger());
+                const fmt = /\d{4}/.test(dateString) ? format : formatShort;
+                const unlockedTime = DateTime.fromFormat(dateString, fmt, options).toUnixInteger();
+
+                if (Number.isNaN(unlockedTime)) {
+                    this.logError(
+                        new Error("Invalid unlocked time"),
+                        `Failed to parse "${dateString}" with format "${fmt}"`
+                    );
+                    return;
+                }
+
+                this.unlockedMap.set(achieveRow, unlockedTime);
             }
         }
 
-        // fallback, load the same page in english
+        // fallback, load the same page in czech
         if (dateSetup === null) {
-            dateSetup = this.getDateFormat("english") as DateFormatSettings;
+            dateSetup = this.getDateFormat("czech")!;
 
             const url = new URL(window.location.origin + window.location.pathname);
-            url.searchParams.set("l", "english");
+            url.searchParams.set("l", "czech");
 
             const data = await RequestData.getText(url.toString());
             const nodes = HTML.toDom(data).querySelectorAll(".achieveUnlockTime");
@@ -133,13 +138,20 @@ export default class FAchievementSort extends Feature<CProfileStats> {
                 if (!achieveRow) { continue; }
 
                 const dateString = node.firstChild.textContent.trim();
-                const {format, formatShort} = dateSetup;
-                const unlockedTime = DateTime.fromFormat(
-                    dateString,
-                    /\d{4}/.test(dateString) ? format : formatShort
-                );
 
-                this.unlockedMap.set(this.defaultSort[i]!, unlockedTime.toUnixInteger());
+                const {format, formatShort} = dateSetup;
+                const fmt = /\d{4}/.test(dateString) ? format : formatShort;
+                const unlockedTime = DateTime.fromFormat(dateString, fmt).toUnixInteger();
+
+                if (Number.isNaN(unlockedTime)) {
+                    this.logError(
+                        new Error("Invalid unlocked time"),
+                        `Failed to parse "${dateString}" with format "${fmt}"`
+                    );
+                    return;
+                }
+
+                this.unlockedMap.set(this.defaultSort[i]!, unlockedTime);
             }
         }
     }
