@@ -28,6 +28,8 @@
 
         usingLanguageReturnLocale = strings[__usingLanguageReturn]!
             .replace("__base__", strings[`options_lang_${warningLanguage}`] ?? warningLanguage);
+
+        showLanguage = true;
     }
 
     function resetLanguageCode(): void {
