@@ -8,7 +8,7 @@ import DOMHelper from "@Content/Modules/DOMHelper";
 import AugmentedSteam from "@Content/Modules/AugmentedSteam";
 import User from "@Content/Modules/User";
 import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
-import UpdateHandler from "@Core/UpdateHandler";
+import ChangelogHandler from "@Core/Update/ChangelogHandler";
 import ITAD from "@Content/Modules/ITAD";
 import type Context from "@Content/Modules/Context/Context";
 import Environment, {ContextType} from "@Core/Environment";
@@ -70,7 +70,7 @@ export default class Page {
 
         ProgressBar();
         AugmentedSteam.init();
-        await UpdateHandler.checkVersion(AugmentedSteam.clearCache);
+        await ChangelogHandler.checkVersion();
         await ITAD.init();
         await context().applyFeatures();
     }

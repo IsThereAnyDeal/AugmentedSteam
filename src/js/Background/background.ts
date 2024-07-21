@@ -11,6 +11,9 @@ import InventoryApi from "@Background/Modules/Inventory/InventoryApi";
 import CacheApi from "@Background/Modules/Cache/CacheApi";
 import {SettingsStore} from "@Options/Data/Settings";
 import Environment, {ContextType} from "@Core/Environment";
+import SettingsMigration from "@Core/Update/SettingsMigration";
+import Version from "@Core/Version";
+import {EAction} from "@Background/EAction";
 
 Environment.CurrentContext = ContextType.Background;
 
@@ -22,6 +25,19 @@ type Message = {
 };
 
 export const Unrecognized = Symbol("Unrecognized");
+
+browser.runtime.onInstalled.addListener(async (detail) => {
+    if (detail.reason !== "update" || detail.previousVersion === undefined) {
+        return;
+    }
+
+    const oldVersion = Version.fromString(detail.previousVersion);
+
+    await IndexedDB;
+    await SettingsMigration.migrate(oldVersion);
+    await (new CacheApi()).handle(EAction.CacheClear);
+    console.log("Update done");
+});
 
 browser.runtime.onMessage.addListener((
     message: Message,
