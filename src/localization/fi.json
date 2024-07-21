@@ -261,7 +261,6 @@
         "icon": "Kuvake",
         "name": "Nimi",
         "show_alternative_linux_icon": "Näytä vaihtoehtoinen Linux-kuvake",
-        "hidetmsymbols": "Tavaramerkki- ja tekijänoikeussymbolit pelien nimissä",
         "metacritic": "Näytä Metacriticin käyttäjien arviot",
         "opencritic": "Näytä Opencritic.com tiedot",
         "hideactivelistings": "Piilota aktiiviset listaukset Kauppapaikan kotisivulla",

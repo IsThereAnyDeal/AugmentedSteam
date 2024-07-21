@@ -258,7 +258,6 @@
         "icon": "图标",
         "name": "名称",
         "show_alternative_linux_icon": "显示替代版本 Linux 图标",
-        "hidetmsymbols": "游戏标题中的商标及版权符号",
         "metacritic": "显示 Metacritic 用户评分",
         "opencritic": "显示 Opencritic.com 信息",
         "hideactivelistings": "默认隐藏市场主页的订单列表",
@@ -416,7 +415,8 @@
         "about_desc": "Augmented Steam 是 Enhanced Steam 扩展程序的衍生版本。",
         "about_desc_links": "访问此扩展程序的__website__或 __discord__ 了解更多。",
         "footer_fork": "来自 IsThereAnyDeal 的衍生版本",
-        "footer_author": "原始作者 jshackles"
+        "footer_author": "原始作者 jshackles",
+        "show_players_info": "显示玩家数信息"
     },
     "ready": {
         "loading": "Augmented Steam 数据载入中...",
@@ -441,7 +441,8 @@
         "owned": "已拥有",
         "notinterested": "不感兴趣",
         "collection": "在收藏库中",
-        "waitlist": "在观察列表中"
+        "waitlist": "在观察列表中",
+        "ignored_owned": "已忽略（拥有）"
     },
     "wallet": {
         "custom_amount": "充值自定义金额",
@@ -869,5 +870,9 @@
         "zw": "津巴布韦"
     },
     "using_language_return": "点击这里以__base__浏览 Steam。",
-    "using_language": "您正在以__current__浏览 Steam。"
+    "using_language": "您正在以__current__浏览 Steam。",
+    "another_store": "其他商店",
+    "thewordunknown": "未知",
+    "badge_level": "等级 __level__",
+    "ignored_owned": "您忽略的在其他平台上玩过的游戏"
 }

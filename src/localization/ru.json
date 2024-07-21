@@ -261,7 +261,6 @@
         "icon": "Значок",
         "name": "Название",
         "show_alternative_linux_icon": "Показывать альтернативный значок Linux",
-        "hidetmsymbols": "Символы торговых марок и авторских прав в названиях игр",
         "metacritic": "Показывать пользовательский рейтинг Metacritic",
         "opencritic": "Показывать информацию Opencritic.com",
         "hideactivelistings": "Скрыть активные лоты на площадке по умолчанию",

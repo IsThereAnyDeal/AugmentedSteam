@@ -259,7 +259,6 @@
         "icon": "ไอคอน",
         "name": "ชื่อ",
         "show_alternative_linux_icon": "แสดงไอคอน Linux อีกรูปแบบ",
-        "hidetmsymbols": "เครื่องหมายการค้าและเครื่องหมายลิขสิทธิ์ในชื่อเกม",
         "metacritic": "แสดงคะแนนจากผู้ใช้ใน Metacritic",
         "opencritic": "แสดงรายละเอียดจาก Opencritic.com",
         "hideactivelistings": "ซ่อนรายการความเคลื่อนไหวทั้งหมดในหน้าแรกของตลาดเป็นค่าเริ่มต้น",
@@ -416,7 +415,8 @@
         "about_desc": "Augmented Steam เป็นเวอร์ชันแยกของส่วนเสริม Enhanced Steam",
         "about_desc_links": "เยี่ยมชม__website__ของส่วนเสริมหรือ __discord__ ของเราสำหรับข้อมูลเพิ่มเติม",
         "footer_fork": "เวอร์ชันแยกสร้างโดย IsThereAnyDeal",
-        "footer_author": "ผู้สร้างเวอร์ชันต้นฉบับโดย jshackles"
+        "footer_author": "ผู้สร้างเวอร์ชันต้นฉบับโดย jshackles",
+        "show_players_info": "แสดงข้อมูลจำนวนผู้เล่น"
     },
     "ready": {
         "loading": "Augmented Steam กำลังโหลดข้อมูล...",
@@ -441,7 +441,8 @@
         "owned": "เป็นเจ้าของแล้ว",
         "notinterested": "ละเว้น",
         "collection": "มีในชุดสะสมแล้ว",
-        "waitlist": "มีในสิ่งที่อยากได้แล้ว"
+        "waitlist": "มีในสิ่งที่อยากได้แล้ว",
+        "ignored_owned": "ละเว้น (เป็นเจ้าของแล้ว)"
     },
     "wallet": {
         "custom_amount": "เพิ่มจำนวนแบบกำหนดเอง",
@@ -653,5 +654,9 @@
         "zw": "ซิมบับเว"
     },
     "using_language_return": "คลิกที่นี่เพื่อเปิดหาบน Steam ในภาษา__base__",
-    "using_language": "คุณกำลังเปิดหาบน Steam ในภาษา__current__"
+    "using_language": "คุณกำลังเปิดหาบน Steam ในภาษา__current__",
+    "another_store": "ร้านค้าอื่น",
+    "thewordunknown": "ไม่รู้จัก",
+    "badge_level": "เลเวล __level__",
+    "ignored_owned": "เกมที่คุณละเว้นเมื่อเล่นบนแพลตฟอร์มอื่น"
 }
