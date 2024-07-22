@@ -6,23 +6,24 @@
 
     export let type: "app"|"sub"|"bundle";
     export let gameid: number;
+    export let isCommunity: boolean = false;
 </script>
 
 
 {#if Settings.showitadlinks}
-    <ExtraLink href="https://isthereanydeal.com/steam/{type}/{gameid}/" icon="itad_ico">
-        {L(__viewOnWebsite, {"website": "IsThereAnyDeal"})}
+    <ExtraLink href="https://isthereanydeal.com/steam/{type}/{gameid}/" icon="itad_ico" {isCommunity}>
+        {isCommunity ? "ITAD" : L(__viewOnWebsite, {"website": "IsThereAnyDeal"})}
     </ExtraLink>
 {/if}
 
 {#if Settings.showsteamdb}
-    <ExtraLink href="https://steamdb.info/{type}/{gameid}/" icon="steamdb_ico">
-        {L(__viewOnWebsite, {"website": "SteamDB"})}
+    <ExtraLink href="https://steamdb.info/{type}/{gameid}/" icon="steamdb_ico" {isCommunity}>
+        {isCommunity ? "SteamDB" : L(__viewOnWebsite, {"website": "SteamDB"})}
     </ExtraLink>
 {/if}
 
 {#if Settings.showbartervg}
-    <ExtraLink href="https://barter.vg/steam/{type}/{gameid}/" icon="bartervg_ico">
-        {L(__viewOnWebsite, {"website": "Barter.vg"})}
+    <ExtraLink href="https://barter.vg/steam/{type}/{gameid}/" icon="bartervg_ico" {isCommunity}>
+        {isCommunity ? "Barter.vg" : L(__viewOnWebsite, {"website": "Barter.vg"})}
     </ExtraLink>
 {/if}
