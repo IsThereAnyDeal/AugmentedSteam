@@ -87,6 +87,10 @@
 
 
 <style>
+    /* Fix space between prices and the purchase container when an "ADVANCED ACCESS" banner is present */
+    .itad-pricing + :global(.game_area_purchase_game_wrapper .advanced_access_header_wrapper) {
+        margin-top: -7px;
+    }
     .itad-pricing {
         padding: 5px 5px 5px 42px;
         height: auto !important;
