@@ -1229,46 +1229,26 @@ video.highlight_movie:hover + .html5_video_overlay {
 }
 .es_regional_icon {
   padding-left: 23px !important;
+  background-image: url("extension://img/flags/world.png") !important;
   background-repeat: no-repeat !important;
   background-position: 8px 8px !important;
 }
 .es_regional_icon.price {
   padding-left: 30px !important;
 }
-.es_regional_container {
-  z-index: 10;
-  background: linear-gradient(to bottom, #33425a 5%, #282f3d 100%);
-  padding: 7px 8px;
-  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.8);
-  border: 1px solid black;
-  margin-top: -25px;
-  text-align: left;
-}
-.es_regional_container > .es_regional_arrow {
-  border-top: 9px solid transparent;
-  border-bottom: 9px solid transparent;
-  border-left: 8px solid #313f56;
-  position: absolute;
-  top: 12px;
-  right: -8px;
-  width: 0;
-  height: 0;
-}
+
 /**
- * Raise the purchase container's z-index on hover so the popup shows on top of subsequent purchase containers.
- * Must be lower than the default z-index for CModal (1000) to avoid the dialogs glitching out when clicking inside the purchase container.
- * Set to 501 in order to prevent it colliding with subscription dropdown (see issue 1969)
+ * Raise the popup's z-index so it shows on top of subsequent purchase containers.
+ * Set to higher than 500 (see #1969)
  */
-.es_regional_prices.game_area_purchase_game:hover {
-  z-index: 501;
-}
-.es_regional_prices:not(.es_regional_always) .es_regional_container {
+body > .es_regional_container {
+  z-index: 1000;
   display: none;
   position: absolute;
   pointer-events: none;
-  top: 20px;
-  right: 100%;
+  height: min-content;
 }
+
 .es_regional_always::after {
   content: "";
   display: block;
@@ -1280,73 +1260,6 @@ video.highlight_movie:hover + .html5_video_overlay {
   float: right;
   margin-bottom: 5px;
   margin-top: auto;
-}
-.es_regional_onmouse:hover .es_regional_container {
-  display: block !important;
-}
-
-/** Regional price comparison popup */
-.es-regprice {
-  display: flex;
-  align-items: baseline;
-  font-size: 14px;
-  white-space: nowrap;
-}
-.es-regprice__converted {
-  font-size: 12px;
-  text-align: right;
-  flex-grow: 1;
-  min-width: 60px;
-  margin-left: 5px
-}
-.es-regprice__perc {
-  font-size: 12px;
-  margin-left: 5px;
-  width: 60px;
-  text-align: right;
-}
-.es-regprice__perc::after {
-  content: "";
-  width: 0;
-  height: 0;
-  margin-left: 4px;
-  margin-bottom: 2px;
-  position: relative;
-  display: inline-block;
-  border-color: transparent;
-  border-style: solid;
-}
-.es-regprice__perc--higher {
-  color: #ff1717;
-}
-.es-regprice__perc--equal {
-  color: #e5e500;
-}
-.es-regprice__perc--lower {
-  color: #60ad0a;
-}
-.es-regprice__perc--higher::after {
-  border-width: 0 5px 5px 5px;
-  border-bottom-color: #ff1717;
-}
-.es-regprice__perc--equal::after {
-  width: 6px;
-  content: "=";
-}
-.es-regprice__perc--lower::after {
-  border-width: 5px 5px 0 5px;
-  border-top-color: #60ad0a;
-}
-.es-regprice__none {
-  font-size: 12px;
-}
-
-/**
- * https://github.com/IsThereAnyDeal/AugmentedSteam/issues/389
- * Fix unclickable dropdowns
- */
-.ds_options_tooltip {
-  z-index: 99999 !important;
 }
 
 /***************************************
@@ -2492,10 +2405,6 @@ label.es_dlc_label > input:checked::after {
 
 .es_screenshot_open_btn i {
   background-image: url('extension://img/screenshot_open.png');
-}
-
-.es_regional_icon {
-  background-image: url("extension://img/flags/world.png") !important;
 }
 
 .itad-pricing {
