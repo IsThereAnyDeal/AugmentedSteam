@@ -3,6 +3,7 @@ import FFriendsSort from "./FFriendsSort";
 import FInviteFriendsToGroup from "./FInviteFriendsToGroup";
 import FGroupsManageButton from "./FGroupsManageButton";
 import FGroupsSort from "./FGroupsSort";
+import FFriendsAppendNickname from "./FFriendsAppendNickname";
 import {ContextType} from "@Content/Modules/Context/ContextType";
 import {CommunityUtils} from "@Content/Modules/Community/CommunityUtils";
 import HTML from "@Core/Html/Html";
@@ -19,6 +20,7 @@ export default class CFriendsAndGroups extends CCommunityBase {
             FInviteFriendsToGroup,
             FGroupsManageButton,
             FGroupsSort,
+            FFriendsAppendNickname,
         ]);
 
         this.myProfile = CommunityUtils.currentUserIsOwner();

@@ -328,6 +328,8 @@
         "no_data": "No data found"
     },
     "options": {
+        "friends_and_groups": "Friends and Groups",
+        "friends_append_nickname": "Append nicknames to friends' names",
         "settings_mngmt": {
             "import": "Import",
             "import_success": "Successfully imported settings",

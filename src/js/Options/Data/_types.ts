@@ -155,6 +155,7 @@ export interface SettingsSchema {
     show_profile_link_images: "gray" | "color" | "none",
     show_custom_themes: boolean,
     profile_pinned_bg: boolean,
+    friends_append_nickname: boolean,
     profile_steamrepcn: boolean,
     profile_steamgifts: boolean,
     profile_steamtrades: boolean,
