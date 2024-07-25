@@ -1,4 +1,4 @@
-import {ContextType} from "@Content/Modules/Context/ContextType";
+import ContextType from "@Content/Modules/Context/ContextType";
 import Feature from "@Content/Modules/Context/Feature";
 import HTML from "@Core/Html/Html";
 import type CBase from "@Content/Features/Common/CBase";

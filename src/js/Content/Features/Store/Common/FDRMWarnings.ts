@@ -4,7 +4,7 @@ import {L} from "@Core/Localization/Localization";
 import {__drmThirdParty, __drmThirdPartySub} from "@Strings/_strings";
 import type CBundle from "@Content/Features/Store/Bundle/CBundle";
 import Settings from "@Options/Data/Settings";
-import {ContextType} from "@Content/Modules/Context/ContextType";
+import ContextType from "@Content/Modules/Context/ContextType";
 import type CSub from "@Content/Features/Store/Sub/CSub";
 import type CApp from "@Content/Features/Store/App/CApp";
 

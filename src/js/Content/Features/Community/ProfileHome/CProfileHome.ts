@@ -14,7 +14,7 @@ import FViewSteamId from "./FViewSteamId";
 import FPinnedBackground from "./FPinnedBackground";
 import type {TProfileData} from "@Background/Modules/AugmentedSteam/_types";
 import AugmentedSteamApiFacade from "@Content/Modules/Facades/AugmentedSteamApiFacade";
-import {ContextType} from "@Content/Modules/Context/ContextType";
+import ContextType from "@Content/Modules/Context/ContextType";
 import {SteamId} from "@Content/Modules/SteamId";
 import EarlyAccessUtils from "@Content/Modules/EarlyAccess/EarlyAccessUtils";
 

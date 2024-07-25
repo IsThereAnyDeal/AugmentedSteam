@@ -1,5 +1,5 @@
 import Context from "../../../Modules/Context/Context";
-import {ContextType} from "../../../Modules/Context/ContextType";
+import ContextType from "@Content/Modules/Context/ContextType";
 import FCountTradeItems from "./FCountTradeItems";
 import FMyTradeOffersLink from "./FMyTradeOffersLink";
 
