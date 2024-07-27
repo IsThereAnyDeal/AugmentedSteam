@@ -28,7 +28,11 @@ export default class FRemoveGuidesLangFilter extends Feature<CGuides> {
                  * so avoid replacing the node and breaking the day select dropdown.
                  */
                 if (node.hasAttribute("onclick")) {
-                    HTML.replace(node, node.outerHTML); // Sanitize click listeners
+                    const newTab = HTML.replace(node, node.outerHTML)!; // Sanitize click listeners
+
+                    newTab.addEventListener("click", () => {
+                        window.location.href = newLink.href;
+                    });
                 }
             }
         }
