@@ -14,7 +14,6 @@ import HTML from "@Core/Html/Html";
 import AugmentedSteamApiFacade from "@Content/Modules/Facades/AugmentedSteamApiFacade";
 import SteamFacade from "@Content/Modules/Facades/SteamFacade";
 import RequestData from "@Content/Modules/RequestData";
-import DOMHelper from "@Content/Modules/DOMHelper";
 
 export default class FShowMarketOverview extends Feature<CInventory> {
 
@@ -83,22 +82,18 @@ export default class FShowMarketOverview extends Feature<CInventory> {
             // In own inventory, only add the average price of three cards to booster packs
             if (thisItem.dataset.cardsPrice && thisItem.dataset.cardsPrice !== "nodata") {
 
-                const priceInfoDiv = firstDiv.querySelector("div:nth-child(2)")!;
+                const priceInfoContent = firstDiv.querySelector("div:nth-child(2)");
 
                 /*
-                 * Due to race conditions the lowest price might have already been fetched (e.g. when request is loaded from cache).
-                 * Therefore the Ajax handler wouldn't get triggered.
-                 * This comparison checks for the existence of the text node "Starting at: ..."
+                 * Cards prices might have already been fetched (e.g. when clicking on the same pack twice),
+                 * causing a race condition with Steam's Ajax handler, so avoid appending to the `elPriceInfoContent` container
+                 * See: https://github.com/SteamDatabase/SteamTracking/blob/46fb53b73a61fe2f85fa4c35901360318e118db5/steamcommunity.com/public/javascript/economy_v2.js#L3574
                  */
-                if (priceInfoDiv.firstChild!.nodeType === Node.TEXT_NODE) {
-                    priceInfoDiv.append(L(__avgPrice_3cards, {"price": thisItem.dataset.cardsPrice}));
-                } else {
-                    document.addEventListener("as_marketOverviewPopulation", () => {
-                        firstDiv!.querySelector("div:nth-child(2)")!
-                            .append(L(__avgPrice_3cards, {price: thisItem.dataset.cardsPrice!}));
-                    }, {once: true});
-
-                    DOMHelper.insertScript("scriptlets/Community/Inventory/marketOverviewPopulation.js", {hashName});
+                if (priceInfoContent) {
+                    HTML.afterEnd(
+                        priceInfoContent,
+                        `<div style="margin-left: 1em;">${L(__avgPrice_3cards, {price: thisItem.dataset.cardsPrice!})}</div>`
+                    );
                 }
             }
 
