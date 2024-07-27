@@ -23,7 +23,13 @@ export default class FRemoveGuidesLangFilter extends Feature<CGuides> {
 
                 linkNode.href = newLink.href;
 
-                HTML.replace(node, node.outerHTML); // Sanitize click listeners
+                /*
+                 * There's no `onclick` attribute when filtering by Most Popular,
+                 * so avoid replacing the node and breaking the day select dropdown.
+                 */
+                if (node.hasAttribute("onclick")) {
+                    HTML.replace(node, node.outerHTML); // Sanitize click listeners
+                }
             }
         }
 
