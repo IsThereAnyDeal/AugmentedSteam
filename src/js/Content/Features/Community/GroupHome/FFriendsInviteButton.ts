@@ -8,7 +8,9 @@ import HTML from "@Core/Html/Html";
 export default class FFriendsInviteButton extends Feature<CGroupHome> {
 
     override checkPrerequisites(): boolean {
-        return User.isSignedIn && document.querySelector(".grouppage_join_area") === null;
+        return User.isSignedIn
+            && this.context.groupId !== null
+            && document.querySelector(".grouppage_join_area") === null;
     }
 
     apply() {
