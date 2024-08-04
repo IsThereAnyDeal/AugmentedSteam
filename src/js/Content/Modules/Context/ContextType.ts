@@ -1,5 +1,5 @@
 
-enum ContextType {
+const enum ContextType {
     ACCOUNT,
     APP,
     BUNDLE,
