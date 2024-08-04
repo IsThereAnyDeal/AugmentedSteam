@@ -13,40 +13,25 @@
     let hasWarning: boolean = false;
     let hasError: boolean = false;
 
-    function update() {
-        progress = started > 0
-            ? Math.min(100, 100 * (done / started))
-            : 0;
+    $: if (started > 0) {
+        progress = Math.min(100, 100 * (done / started));
 
-        isLoading = started > 0 && (done + failed) < started;
-    }
-
-    function reset(): void {
-        started = 0;
-        done = 0;
-        failed = 0;
-        hasWarning = false;
-        hasError = false;
-        update();
+        isLoading = (done + failed) < started;
     }
 
     onMount(() => {
         function onStart(): void {
-            started = started+1;
-            update();
+            started += 1;
         }
 
         function onDone(): void {
-            done = done + 1;
-            update();
+            done += 1;
         }
 
         function onError(e: Event) {
-            failed = failed + 1;
-            update();
+            failed += 1;
 
-            // @ts-ignore
-            const name = e.detail.name ?? null;
+            const name = (<CustomEvent>e).detail.name ?? null;
 
             if (name === "ServerOutageError") {
                 hasWarning = true;
@@ -57,13 +42,11 @@
 
         document.addEventListener("asRequestStart", onStart);
         document.addEventListener("asRequestDone", onDone);
-        // @ts-ignore
         document.addEventListener("asRequestError", onError);
 
         return () => {
             document.removeEventListener("asRequestStart", onStart);
             document.removeEventListener("asRequestDone", onDone);
-            // @ts-ignore
             document.removeEventListener("asRequestError", onError);
         }
     });
