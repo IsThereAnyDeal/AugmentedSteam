@@ -1,5 +1,5 @@
 import Feature from "@Content/Modules/Context/Feature";
-import type {ContextType} from "@Content/Modules/Context/ContextType";
+import type ContextType from "@Content/Modules/Context/ContextType";
 import Errors from "@Core/Errors/Errors";
 
 export default class Context {

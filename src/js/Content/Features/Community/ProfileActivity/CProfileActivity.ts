@@ -6,7 +6,7 @@ import FReplaceCommunityHubLinks from "./FReplaceCommunityHubLinks";
 import FToggleComments from "./FToggleComments";
 import FPatchBlotterFunc from "./FPatchBlotterFunc";
 import CCommunityBase from "@Content/Features/Community/CCommunityBase";
-import {ContextType} from "@Content/Modules/Context/ContextType";
+import ContextType from "@Content/Modules/Context/ContextType";
 import ASEventHandler from "@Content/Modules/ASEventHandler";
 import EarlyAccessUtils from "@Content/Modules/EarlyAccess/EarlyAccessUtils";
 import SpamComments from "@Content/Modules/Community/SpamComments";

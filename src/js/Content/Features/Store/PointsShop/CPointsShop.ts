@@ -1,6 +1,6 @@
 import FBackgroundPreviewLink from "./FBackgroundPreviewLink";
 import Context from "@Content/Modules/Context/Context";
-import {ContextType} from "@Content/Modules/Context/ContextType";
+import ContextType from "@Content/Modules/Context/ContextType";
 
 export default class CPointsShop extends Context {
 

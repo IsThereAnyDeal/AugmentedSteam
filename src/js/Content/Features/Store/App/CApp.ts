@@ -37,7 +37,7 @@ import FSteamPeek from "./FSteamPeek";
 import FSupportInfo from "./FSupportInfo";
 import FUserNotes from "./FUserNotes.js";
 import FWidescreenCertification from "./FWidescreenCertification";
-import {ContextType} from "@Content/Modules/Context/ContextType";
+import ContextType from "@Content/Modules/Context/ContextType";
 import FExtraLinksApp from "@Content/Features/Store/Common/FExtraLinksApp";
 import FExtraLinksAppError from "@Content/Features/Store/Common/FExtraLinksAppError";
 import CStoreBase from "@Content/Features/Store/Common/CStoreBase";

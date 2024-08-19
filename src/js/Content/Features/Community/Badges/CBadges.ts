@@ -4,7 +4,7 @@ import CCommunityBase from "../CCommunityBase";
 import FCardExchangeLinks from "../FCardExchangeLinks";
 import FBadgeSortAndFilter from "./FBadgeSortAndFilter";
 import FBadgeCalculations from "./FBadgeCalculations";
-import {ContextType} from "@Content/Modules/Context/ContextType";
+import ContextType from "@Content/Modules/Context/ContextType";
 import {CommunityUtils} from "@Content/Modules/Community/CommunityUtils";
 import DOMHelper from "@Content/Modules/DOMHelper";
 import RequestData from "@Content/Modules/RequestData";

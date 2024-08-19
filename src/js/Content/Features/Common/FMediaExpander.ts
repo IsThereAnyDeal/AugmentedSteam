@@ -4,7 +4,7 @@ import type CSharedFiles from "@Content/Features/Community/SharedFiles/CSharedFi
 import Feature from "@Content/Modules/Context/Feature";
 import HTML from "@Core/Html/Html";
 import LocalStorage from "@Core/Storage/LocalStorage";
-import {ContextType} from "@Content/Modules/Context/ContextType";
+import ContextType from "@Content/Modules/Context/ContextType";
 import DOMHelper from "@Content/Modules/DOMHelper";
 import type CApp from "@Content/Features/Store/App/CApp";
 

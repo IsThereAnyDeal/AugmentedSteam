@@ -1,6 +1,6 @@
 import Feature from "@Content/Modules/Context/Feature";
 import type CBundle from "@Content/Features/Store/Bundle/CBundle";
-import {ContextType} from "@Content/Modules/Context/ContextType";
+import ContextType from "@Content/Modules/Context/ContextType";
 import Settings from "@Options/Data/Settings";
 import CommonLinks from "@Content/Features/Store/Common/ExtraLinks/CommonLinks.svelte";
 import type CSub from "@Content/Features/Store/Sub/CSub";

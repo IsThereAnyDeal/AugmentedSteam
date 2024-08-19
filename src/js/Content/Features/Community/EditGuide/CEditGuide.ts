@@ -1,7 +1,7 @@
 import FMultiLanguageGuide from "./FMultiLanguageGuide";
 import FCustomTags from "./FCustomTags";
 import Context from "@Content/Modules/Context/Context";
-import {ContextType} from "@Content/Modules/Context/ContextType";
+import ContextType from "@Content/Modules/Context/ContextType";
 
 export default class CEditGuide extends Context {
 

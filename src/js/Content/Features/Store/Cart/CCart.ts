@@ -1,6 +1,6 @@
 import FCartHistoryLink from "./FCartHistoryLink";
 import Context from "@Content/Modules/Context/Context";
-import {ContextType} from "@Content/Modules/Context/ContextType";
+import ContextType from "@Content/Modules/Context/ContextType";
 
 export default class CCart extends Context {
 

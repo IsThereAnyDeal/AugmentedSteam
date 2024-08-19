@@ -2,7 +2,7 @@ import {__year} from "@Strings/_strings";
 import {L} from "@Core/Localization/Localization";
 import Feature from "@Content/Modules/Context/Feature";
 import type CInventory from "@Content/Features/Community/Inventory/CInventory";
-import {ContextType} from "@Content/Modules/Context/ContextType";
+import ContextType from "@Content/Modules/Context/ContextType";
 import DOMHelper from "@Content/Modules/DOMHelper";
 import type CMarketListing from "@Content/Features/Community/MarketListing/CMarketListing";
 
