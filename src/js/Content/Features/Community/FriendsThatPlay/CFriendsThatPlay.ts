@@ -1,4 +1,4 @@
-import {ContextType} from "../../../Modules/Context/ContextType";
+import ContextType from "@Content/Modules/Context/ContextType";
 import CCommunityBase from "../CCommunityBase";
 import FFriendsCount from "./FFriendsCount";
 import FFriendsPlaytimeSort from "./FFriendsPlaytimeSort";

@@ -3,7 +3,7 @@ import FAlternativeLinuxIcon from "./FAlternativeLinuxIcon";
 import FSkipGotSteamDialog from "./FSkipGotSteamDialog";
 import FHorizontalScrolling from "./FHorizontalScrolling";
 import CBase from "@Content/Features/Common/CBase";
-import {ContextType} from "@Content/Modules/Context/ContextType";
+import ContextType from "@Content/Modules/Context/ContextType";
 import HighlightsTagsUtils from "@Content/Modules/Highlights/HighlightsTagsUtils";
 import EarlyAccessUtils from "@Content/Modules/EarlyAccess/EarlyAccessUtils";
 import type Feature from "@Content/Modules/Context/Feature";

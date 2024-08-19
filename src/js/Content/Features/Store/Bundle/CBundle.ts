@@ -3,7 +3,7 @@ import CStoreBase from "../Common/CStoreBase";
 import FDRMWarnings from "../Common/FDRMWarnings";
 import FExtraLinksCommon from "../Common/FExtraLinksCommon";
 import FITADPrices from "../Common/FITADPrices";
-import {ContextType} from "@Content/Modules/Context/ContextType";
+import ContextType from "@Content/Modules/Context/ContextType";
 
 export default class CBundle extends CStoreBase {
 

@@ -1,4 +1,4 @@
-import { ContextType } from "@Content/Modules/Context/ContextType";
+import ContextType from "@Content/Modules/Context/ContextType";
 import CCommunityBase from "../CCommunityBase";
 import FAchievementSort from "./FAchievementSort";
 import FShowHiddenAchievements from "./FShowHiddenAchievements";
