@@ -133,11 +133,10 @@
      * Local styles
      */
     .es_regional {
-        background: linear-gradient(to bottom, #33425a 5%, #282f3d 100%);
+        background: linear-gradient(120deg, #2c3c4a 5%, #42515f 100%);
         padding: 7px 8px;
-        box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.8);
-        border: 1px solid black;
         text-align: left;
+        border-radius: 4px;
     }
     .es_regional--always {
         display: block;
@@ -156,12 +155,14 @@
         position: absolute;
         pointer-events: none;
         height: min-content;
+        box-shadow: 2px 2px 15px rgba(0,0,0,0.4);
+        border: 1px solid #16202d;
     }
 
     .es_regional_arrow {
         border-top: 9px solid transparent;
         border-bottom: 9px solid transparent;
-        border-left: 8px solid #313f56;
+        border-left: 8px solid #3c4b59;
         position: absolute;
         top: 12px;
         right: -8px;
