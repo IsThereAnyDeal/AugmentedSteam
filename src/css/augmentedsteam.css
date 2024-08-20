@@ -1215,59 +1215,13 @@ video.highlight_movie:hover + .html5_video_overlay {
   color: #5fafdd;
 }
 
-/***************************************
- * App pages
- * Common/FRegionalPricing
- **************************************/
-.es_regional_prices .game_purchase_action,
-.es_regional_prices .discount_block.game_purchase_discount {
-  overflow-x: initial !important;
-  overflow: visible !important;
-}
-.es_regional_prices:not(.es_regional_always) .es_regional_onmouse {
-  cursor: help;
-}
-.es_regional_icon {
-  padding-left: 23px !important;
-  background-image: url("extension://img/flags/world.png") !important;
-  background-repeat: no-repeat !important;
-  background-position: 8px 8px !important;
-}
-.es_regional_icon.price {
-  padding-left: 30px !important;
-}
-
-/**
- * Raise the popup's z-index so it shows on top of subsequent purchase containers.
- * Set to higher than 500 (see #1969)
- */
-body > .es_regional_container {
-  z-index: 1000;
-  display: none;
-  position: absolute;
-  pointer-events: none;
-  height: min-content;
-}
-
-.es_regional_always::after {
-  content: "";
-  display: block;
-  clear: both;
-}
-.es_regional_always .es_regional_container {
-  display: block;
-  position: relative;
-  float: right;
-  margin-bottom: 5px;
-  margin-top: auto;
-}
 
 /***************************************
  * App pages
  * Common/FExtraLinks
  **************************************/
 .es_extralinks_ctn .es_app_btn:last-of-type {
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }
 .es_extralinks_ctn {
   text-align: center;

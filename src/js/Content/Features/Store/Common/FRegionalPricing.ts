@@ -76,16 +76,11 @@ export default class FRegionalPricing extends Feature<CSub> {
                     props: {
                         countries,
                         prices,
-                        errors,
+                        errors
                     }
                 }));
             } else if (Settings.showregionalprice === "mouse") {
                 const priceNode = node.querySelector(".price, .discount_prices")!;
-                priceNode.classList.add("es_regional_onmouse");
-
-                if (!Settings.regional_hideworld) {
-                    priceNode.classList.add("es_regional_icon");
-                }
 
                 (new self_({
                     target: document.body,
@@ -93,7 +88,7 @@ export default class FRegionalPricing extends Feature<CSub> {
                         countries,
                         prices,
                         errors,
-                        priceNode,
+                        priceNode
                     }
                 }));
             }
