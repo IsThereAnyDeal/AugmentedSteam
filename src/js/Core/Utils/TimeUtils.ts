@@ -1,42 +1,27 @@
 
 export class Timer {
 
-    private _id: number|undefined;
-    private _promise: Promise<void>|null = null;
+    private promise: Promise<void>;
 
     constructor(duration: number) {
-        this._promise = new Promise(resolve => {
-            this._id = setTimeout(() => resolve(), duration);
-        });
+        this.promise = new Promise(resolve => setTimeout(resolve, duration));
     }
 
-    then(
-        onSuccess: ((value: void) => PromiseLike<void>|void)|undefined|null,
-        onFail: ((reason: any) => PromiseLike<never>)|undefined = undefined
-    ) {
-        if (this._promise) {
-            return this._promise.then(onSuccess, onFail);
-        }
-
-        throw new Error("Timer has been cleared before");
-    }
-
-    clear() {
-        clearTimeout(this._id);
-        this._promise = null;
+    then(onDone: (value: void) => void|Promise<void>) {
+        return this.promise.then(onDone);
     }
 }
 
 export class ResettableTimer {
 
-    private _id: number|undefined;
+    private id: number|undefined;
     private _running: boolean = false;
 
-    private readonly onDone: () => void|Promise<void>;
+    private readonly callback: () => void|Promise<void>;
     private readonly duration: number;
 
-    constructor(onDone: () => void|Promise<void>, duration: number) {
-        this.onDone = onDone;
+    constructor(callback: () => void|Promise<void>, duration: number) {
+        this.callback = callback;
         this.duration = duration;
 
         this.reset();
@@ -47,21 +32,22 @@ export class ResettableTimer {
     }
 
     reset(): void {
-        if (typeof this._id !== "undefined") {
-            clearTimeout(this._id);
+        if (typeof this.id !== "undefined") {
+            clearTimeout(this.id);
         }
 
-        this._id = setTimeout(async() => {
-            await this.onDone();
+        this.id = setTimeout(async() => {
+            await this.callback();
             this._running = false;
         }, this.duration);
 
         this._running = true;
     }
 
-    stop() {
-        if (typeof this._id !== "undefined") {
-            clearTimeout(this._id);
+    stop(): void {
+        if (typeof this.id !== "undefined") {
+            clearTimeout(this.id);
+            this.id = undefined;
         }
 
         this._running = false;
@@ -75,8 +61,8 @@ export default class TimeUtils {
         return new Timer(duration);
     }
 
-    static resettableTimer(onDone: () => void|Promise<void>, duration: number): ResettableTimer {
-        return new ResettableTimer(onDone, duration);
+    static resettableTimer(callback: () => void|Promise<void>, duration: number): ResettableTimer {
+        return new ResettableTimer(callback, duration);
     }
 
     static now(): number {
