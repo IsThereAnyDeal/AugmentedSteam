@@ -8,7 +8,11 @@
 </script>
 
 
-<a class="btnv6_blue_hoverfade btn_medium {isCommunity ? "es_community_btn" : "es_app_btn"} {icon}" use:external {href}>
+<a class="btnv6_blue_hoverfade btn_medium {icon}"
+    class:es_community_btn={isCommunity}
+    class:es_app_btn={!isCommunity}
+    use:external {href}
+>
     <span>
         {#if iconUrl}
             <i class="ico16" style="background: url({iconUrl}); background-size: contain;"></i>
