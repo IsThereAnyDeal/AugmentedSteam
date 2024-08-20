@@ -14,7 +14,7 @@ import HTML from "@Core/Html/Html";
 import SteamFacade from "@Content/Modules/Facades/SteamFacade";
 import UserNotes from "@Content/Features/Store/Common/UserNotes";
 import Clipboard from "@Content/Modules/Clipboard";
-import {ResettableTimer, Timer} from "@Core/Utils/TimeUtils";
+import TimeUtils from "@Core/Utils/TimeUtils";
 
 type Wishlist = Array<[string, {
     name: string,
@@ -195,7 +195,7 @@ export default class FExportWishlist extends Feature<CWishlist> {
 
             if (!dlBtn || !copyBtn) {
                 // wait for popup to show up to apply events
-                await new Timer(10);
+                await TimeUtils.timer(10);
                 continue;
             }
 

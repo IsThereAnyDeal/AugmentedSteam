@@ -1,5 +1,5 @@
 
-export class Timer {
+class Timer {
 
     private promise: Promise<void>;
 
