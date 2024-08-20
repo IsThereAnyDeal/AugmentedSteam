@@ -12,6 +12,8 @@
         __options_communityDefaultTab,
         __options_confirmdeletecomment,
         __options_friendActivity,
+        __options_friendsAndGroups,
+        __options_friendsAppendNickname,
         __options_general,
         __options_group,
         __options_groupLinks,
@@ -146,6 +148,11 @@
                 <Toggle bind:value={$settings.profile_showcase_twitch_profileonly}>{L(__options_profileShowcaseTwitchProfileonly)}</Toggle>
             </SubOptions>
         {/if}
+    </OptionGroup>
+
+    <OptionGroup>
+        <h3>{L(__options_friendsAndGroups)}</h3>
+        <Toggle bind:value={$settings.friends_append_nickname}>{L(__options_friendsAppendNickname)}</Toggle>
     </OptionGroup>
 
     <OptionGroup>

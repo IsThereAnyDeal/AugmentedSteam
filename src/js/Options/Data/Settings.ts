@@ -142,6 +142,7 @@ export const DefaultSettings: Readonly<SettingsSchema> = {
     "show_profile_link_images": "gray",
     "show_custom_themes": true,
     "profile_pinned_bg": false,
+    "friends_append_nickname": false,
     "profile_steamrepcn": true,
     "profile_steamgifts": true,
     "profile_steamtrades": true,
