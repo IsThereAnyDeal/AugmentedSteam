@@ -46,13 +46,13 @@ export default class Page {
         try {
             // TODO What errors can be "suppressed" here?
             try {
-                await SettingsStore;
+                await SettingsStore.init();
                 await bootstrapDomPurify();
             } catch (err) {
                 console.error(err);
             }
 
-            await Promise.all([Localization, User, CurrencyManager]);
+            await Promise.all([Localization.init(), User.init(), CurrencyManager.init()]);
         } catch (err) {
             console.group("Augmented Steam initialization");
             console.error("Failed to initialize Augmented Steam");

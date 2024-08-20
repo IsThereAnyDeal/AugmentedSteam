@@ -38,7 +38,7 @@ browser.runtime.onMessage.addListener((
 
     (async function(): Promise<void> {
         try {
-            await Promise.all([IndexedDB, SettingsStore]);
+            await Promise.all([IndexedDB.init(), SettingsStore.init()]);
 
             let response: any = undefined;
             let handlers: MessageHandlerInterface[] = [

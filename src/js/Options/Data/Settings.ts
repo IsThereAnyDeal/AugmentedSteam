@@ -222,15 +222,11 @@ export class SettingsStore {
         this.data = await this.storage.getObject(DefaultSettings);
     }
 
-    private static init(): Promise<void> {
+    static init(): Promise<void> {
         if (!this.promise) {
             this.promise = this.load();
         }
         return this.promise;
-    }
-
-    private static then(onDone: (value: void) => void|Promise<void>): Promise<void> {
-        return this.init().then(onDone);
     }
 
     static getDefault<K extends keyof SettingsSchema>(key: K): SettingsSchema[K] {

@@ -18,7 +18,7 @@ export default class User {
     private static _sessionId: string|null;
     private static _webApiToken: string;
 
-    private static init(): Promise<void> {
+    static init(): Promise<void> {
         if (!this.promise) {
             this.promise = (async () => {
                 const avatarNode = document.querySelector<HTMLAnchorElement>("#global_actions > a.user_avatar");
@@ -76,10 +76,6 @@ export default class User {
         }
 
         return this.promise;
-    }
-
-    private static then(onDone: (value: void) => void|Promise<void>): Promise<void> {
-        return User.init().then(onDone);
     }
 
     static get isSignedIn(): boolean {

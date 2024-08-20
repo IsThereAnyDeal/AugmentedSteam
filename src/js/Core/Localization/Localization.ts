@@ -20,7 +20,7 @@ export default class Localization {
         return ExtensionResources.getJSON(`/localization/compiled/${code}.json`);
     }
 
-    private static init(): Promise<void> {
+    static init(): Promise<void> {
         if (!this.promise) {
             this.promise = (async () => {
                 const stored = Settings.language;
@@ -44,10 +44,6 @@ export default class Localization {
         }
 
         return this.promise;
-    }
-
-    private static then(onDone: (value: void) => void|Promise<void>): Promise<void> {
-        return Localization.init().then(onDone);
     }
 }
 

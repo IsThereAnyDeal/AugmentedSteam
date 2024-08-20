@@ -93,7 +93,7 @@ export default class CurrencyManager {
         this._rates = await AugmentedSteamApiFacade.getRates(toCurrencies);
     }
 
-    private static init(): Promise<void> {
+    static init(): Promise<void> {
         if (!this.promise) {
             this.promise = (async () => {
                 try {
@@ -107,9 +107,5 @@ export default class CurrencyManager {
         }
 
         return this.promise;
-    }
-
-    private static then(onDone: (value: void) => void|Promise<void>): Promise<void> {
-        return CurrencyManager.init().then(onDone);
     }
 }

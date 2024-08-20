@@ -84,8 +84,8 @@ export default class ContextMenu {
     }
 
     static async build(): Promise<void> {
-        await SettingsStore;
-        await Localization;
+        await SettingsStore.init();
+        await Localization.init();
 
         for (const [option, entry] of Object.entries(ContextMenu.queryLinks)) {
             let [locale, query_, enabled] = entry;
@@ -109,7 +109,7 @@ export default class ContextMenu {
     }
 
     public static async update(): Promise<void> {
-        await SettingsStore;
+        await SettingsStore.init();
         if (!await Permissions.contains(["contextMenus"])) {
             Settings.context_steam_store = false;
             Settings.context_steam_market = false

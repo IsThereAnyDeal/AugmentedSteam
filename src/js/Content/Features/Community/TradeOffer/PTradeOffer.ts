@@ -11,8 +11,8 @@ import {SettingsStore} from "@Options/Data/Settings";
 (async function() {
 
     try {
-        await SettingsStore;
-        await Localization;
+        await SettingsStore.init();
+        await Localization.init();
     } catch (err) {
         console.group("Augmented Steam initialization");
         console.error("Failed to initialize Augmented Steam");
