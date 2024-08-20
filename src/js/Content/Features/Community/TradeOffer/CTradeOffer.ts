@@ -6,9 +6,13 @@ import FMyTradeOffersLink from "./FMyTradeOffersLink";
 export default class CTradeOffer extends Context {
 
     constructor() {
-        super(ContextType.TRADE_OFFER, [
-            FCountTradeItems,
+
+        const isErrorPage = document.querySelector(".error_page_links") !== null;
+
+        super(ContextType.TRADE_OFFER, isErrorPage ? [
             FMyTradeOffersLink,
+        ] : [
+            FCountTradeItems,
         ]);
     }
 }
