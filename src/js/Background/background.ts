@@ -33,7 +33,7 @@ browser.runtime.onInstalled.addListener(async (detail) => {
 
     const oldVersion = Version.fromString(detail.previousVersion);
 
-    await IndexedDB;
+    await IndexedDB.init();
     await SettingsMigration.migrate(oldVersion);
     await (new CacheApi()).handle(EAction.CacheClear);
     console.log("Update done");
