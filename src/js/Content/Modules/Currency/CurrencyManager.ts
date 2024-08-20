@@ -7,7 +7,7 @@ import SteamStoreApiFacade from "@Content/Modules/Facades/SteamStoreApiFacade";
 
 export default class CurrencyManager {
 
-    private static _loadPromise: Promise<void>;
+    private static promise: Promise<void>;
     private static _rates: Record<string, Record<string, number>>;
 
     private static readonly _defaultCurrency: string = "USD";
@@ -93,9 +93,9 @@ export default class CurrencyManager {
         this._rates = await AugmentedSteamApiFacade.getRates(toCurrencies);
     }
 
-    static async init(): Promise<void> {
-        if (!this._loadPromise) {
-            this._loadPromise = (async () => {
+    private static init(): Promise<void> {
+        if (!this.promise) {
+            this.promise = (async () => {
                 try {
                     await this._loadCurrency();
                     await this._loadRates();
@@ -105,13 +105,11 @@ export default class CurrencyManager {
                 }
             })();
         }
-        return this._loadPromise;
+
+        return this.promise;
     }
 
-    static then(
-        onFulfil: (value: void) => PromiseLike<void>,
-        onReject: (value: void) => PromiseLike<never>
-    ) {
-        return CurrencyManager.init().then(onFulfil, onReject);
+    private static then(onDone: (value: void) => void|Promise<void>): Promise<void> {
+        return CurrencyManager.init().then(onDone);
     }
 }

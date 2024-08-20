@@ -6,7 +6,7 @@ import RequestData from "@Content/Modules/RequestData";
 
 export default class User {
 
-    private static _promise: Promise<void>;
+    private static promise: Promise<void>;
 
     private static _signedIn: boolean;
     private static _steamId: string;
@@ -18,9 +18,9 @@ export default class User {
     private static _sessionId: string|null;
     private static _webApiToken: string;
 
-    static async promise(): Promise<void> {
-        if (!this._promise) {
-            this._promise = (async () => {
+    private static init(): Promise<void> {
+        if (!this.promise) {
+            this.promise = (async () => {
                 const avatarNode = document.querySelector<HTMLAnchorElement>("#global_actions > a.user_avatar");
 
                 try {
@@ -75,14 +75,11 @@ export default class User {
             })();
         }
 
-        return this._promise;
+        return this.promise;
     }
 
-    static then(
-        onFulfill: ((value: void) => PromiseLike<void>|void),
-        onReject: (reason: any) => PromiseLike<never>
-    ): Promise<void> {
-        return User.promise().then(onFulfill, onReject);
+    private static then(onDone: (value: void) => void|Promise<void>): Promise<void> {
+        return User.init().then(onDone);
     }
 
     static get isSignedIn(): boolean {

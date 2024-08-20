@@ -210,7 +210,7 @@ class Event {
 
 export class SettingsStore {
 
-    private static initPromise: Promise<void>;
+    private static promise: Promise<void>;
 
     private static data: SettingsSchema;
     private static storage: StorageInterface<SettingsSchema> = new SyncedStorage<SettingsSchema>();
@@ -222,19 +222,15 @@ export class SettingsStore {
         this.data = await this.storage.getObject(DefaultSettings);
     }
 
-    static async init(): Promise<void> {
-        if (!this.initPromise) {
-            this.initPromise = this.load();
+    private static init(): Promise<void> {
+        if (!this.promise) {
+            this.promise = this.load();
         }
-        return this.initPromise;
+        return this.promise;
     }
 
-    // init shortcut
-    static then(
-        onDone: (value: void) => PromiseLike<void>,
-        onCatch: (reason: any) => PromiseLike<never>
-    ): Promise<void> {
-        return this.init().then(onDone, onCatch);
+    private static then(onDone: (value: void) => void|Promise<void>): Promise<void> {
+        return this.init().then(onDone);
     }
 
     static getDefault<K extends keyof SettingsSchema>(key: K): SettingsSchema[K] {
