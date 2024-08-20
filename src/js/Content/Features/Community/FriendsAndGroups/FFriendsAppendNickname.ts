@@ -15,6 +15,7 @@ export default class FFriendsAppendNickname extends Feature<CFriendsAndGroups> {
     apply(): void | Promise<void> {
         document.addEventListener("as_subpageNav", () => this.callback());
         this.callback();
+        this.handleMiniProfile();
     }
 
     private async callback(): Promise<void> {
@@ -62,5 +63,51 @@ export default class FFriendsAppendNickname extends Feature<CFriendsAndGroups> {
                 console.error(e);
             }
         }
+    }
+
+    private handleMiniProfile(): void {
+        const miniProfileNode = document.querySelector(".miniprofile_hover");
+        if (!miniProfileNode) {
+            return;
+        }
+
+        const observer = new MutationObserver(() => {
+            const parent = miniProfileNode.querySelector(".player_content");
+            if (!parent) {
+                return;
+            }
+
+            const personaNode = parent.querySelector<HTMLElement>(".persona")!;
+
+            /*
+             * It seems like Steam is caching entire built profile somwehow, so we only need to swap
+             */
+            if (personaNode.dataset.swapped) {
+                return;
+            }
+
+            const secondaryNode = parent.querySelector<HTMLElement>(".secondaryname");
+            if (!secondaryNode) {
+                return;
+            }
+
+            const personaName = personaNode.textContent ?? "";
+            const secondaryName = secondaryNode.textContent ?? "";
+
+            observer.disconnect();
+
+            secondaryNode.textContent = personaName;
+            personaNode.textContent = secondaryName.substring(1, secondaryName.length-1);
+            personaNode.dataset.swapped = "1";
+
+            observer.observe(miniProfileNode, {
+                childList: true,
+                subtree: true
+            })
+        });
+        observer.observe(miniProfileNode, {
+            childList: true,
+            subtree: true
+        });
     }
 }
