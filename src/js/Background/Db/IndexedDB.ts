@@ -21,7 +21,7 @@ export default class IndexedDB {
 
     public static db: IDBPDatabase<Schema>;
 
-    static async init() {
+    static init(): Promise<void> {
         if (!this.promise) {
             this.promise = (async () => {
                 this.db = await openDB<Schema>("Augmented Steam", Info.db_version, {
@@ -41,13 +41,6 @@ export default class IndexedDB {
         }
 
         return this.promise;
-    }
-
-    static then(
-        onDone: (value: void) => PromiseLike<void>,
-        onCatch: (reason: any) => PromiseLike<never>
-    ): Promise<void> {
-        return IndexedDB.init().then(onDone, onCatch);
     }
 
     private static async cleanup() {

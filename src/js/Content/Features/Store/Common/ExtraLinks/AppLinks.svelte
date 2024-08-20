@@ -4,7 +4,7 @@
     import {__viewOnWebsite, __wikiArticle, __youtubeGameplay, __youtubeReviews} from "@Strings/_strings";
     import Settings from "@Options/Data/Settings";
     import ExtraLink from "@Content/Features/Store/Common/ExtraLinks/ExtraLink.svelte";
-    import CommonLinks from "@Content/Features/Store/Common/ExtraLinks/CommonLinks.svelte";
+    import CommonExtraLinks from "@Content/Features/Common/CommonExtraLinks.svelte";
 
     export let appid: number;
     export let communityAppid: number;
@@ -12,7 +12,7 @@
 </script>
 
 
-<CommonLinks type="app" gameid={appid} />
+<CommonExtraLinks type="app" gameid={appid} />
 
 {#if Settings.showsteamcardexchange}
     <ExtraLink href="https://www.steamcardexchange.net/index.php?gamepage-appid-{communityAppid}/" icon="cardexchange_btn">

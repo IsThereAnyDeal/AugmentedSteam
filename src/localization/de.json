@@ -121,7 +121,7 @@
     "apppage_legal": "Rechtliche Hinweise",
     "apppage_franchise": "Franchise",
     "apppage_morefromfranchise": "Mehr von diesem Franchise",
-    "bug_feature": "Fehler melden / Verbesserungsvorschläge",
+    "bug_feature": "Feedback",
     "always": "Immer",
     "rating_details": "Bewertungsdetails ansehen",
     "drops_worth_avg": "Ungefährer Wert",
@@ -208,7 +208,7 @@
     "no_price_data": "Keine Preisdaten verfügbar",
     "user_score": "Nutzerwertung",
     "market_popular_items_toggle": "Live-Aktualisierung von beliebten Artikeln umschalten",
-    "show_progressbar": "Augmented-Steam-Fortschritts- und Statusbalken anzeigen",
+    "show_progressbar": "Fortschritts- und Statusbalken von Augmented Steam anzeigen",
     "achievements": {
         "option": "Fertigstellungsbalken für Errungenschaften anzeigen",
         "summary": "__unlocked__ von __total__ (__percentage__%) Errungenschaften freigeschaltet:"
@@ -261,7 +261,7 @@
         "icon": "Symbol",
         "name": "Name",
         "show_alternative_linux_icon": "Alternatives Linux-Symbol zeigen",
-        "hidetmsymbols": "Marken- und Copyrightsymbole in Spieltiteln",
+        "hidetmsymbols": "Marken- und Urheberrechtssymbole in Spieltiteln ausblenden",
         "metacritic": "Metacritic-Nutzerwertungen",
         "opencritic": "OpenCritic-Wertungen und -Rezensionen anzeigen",
         "hideactivelistings": "Standardmäßig alle aktiven Angebote im Markt ausblenden",

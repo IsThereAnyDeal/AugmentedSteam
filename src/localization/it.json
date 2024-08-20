@@ -257,7 +257,6 @@
         "icon": "Icona",
         "name": "Nome",
         "show_alternative_linux_icon": "Mostra icona di Linux alternativa",
-        "hidetmsymbols": "Simboli di Copyright e Trademark nei titoli dei giochi",
         "metacritic": "Mostra i voti degli utenti Metacritic",
         "opencritic": "Visualizza informazioni da Opencritic.com",
         "hideactivelistings": "Nascondi le inserzioni attive sulla homepage del Mercato",

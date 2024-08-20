@@ -45,6 +45,13 @@
         selection.splice(index, 1);
         $settings.regional_countries = selection;
     }
+    
+    function handleChange(index: number, e: Event) {
+        const country = (<HTMLSelectElement>e.target!).value;
+
+        selection.splice(index, 1, country);
+        $settings.regional_countries = selection;
+    }
 
     onMount(() => {
         localizedCountries = LocalizedCountryList()
@@ -76,7 +83,7 @@
                 {#each selection as country, index}
                     <div class="option">
                         <span class="es-flag es-flag--{country}"></span>
-                        <Select bind:value={country} options={localizedCountries} />
+                        <Select value={country} options={localizedCountries} on:change={e => handleChange(index, e)} />
                         <button type="button" on:click={() => handleRemove(index)}>
                             <DeleteIcon />
                         </button>

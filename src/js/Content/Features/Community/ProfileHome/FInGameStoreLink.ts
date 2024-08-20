@@ -39,9 +39,19 @@ export default class FInGameStoreLink extends Feature<CProfileHome> {
             return;
         }
 
-        HTML.inner(node,
-            `<a href="//store.steampowered.com/app/${appid}" target="_blank">
-                <span data-tooltip-text="${L(__viewInStore)}">${node.textContent}</span>
-            </a>`);
+        // Find the text node and replace it to avoid removing the `.private_app_indicator` image
+        for (const n of node.childNodes) {
+            if (n.nodeType === Node.TEXT_NODE && n.textContent!.trim() !== "") {
+
+                HTML.beforeEnd(node,
+                    `<a href="//store.steampowered.com/app/${appid}" target="_blank">
+                        <span data-tooltip-text="${L(__viewInStore)}">${n.textContent}</span>
+                    </a>`);
+
+                n.remove();
+
+                break;
+            }
+        }
     }
 }

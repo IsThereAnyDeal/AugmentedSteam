@@ -259,7 +259,6 @@
         "icon": "アイコン",
         "name": "名前",
         "show_alternative_linux_icon": "代わりのLinuxアイコンを表示する",
-        "hidetmsymbols": "ゲームタイトル中の商標・版権記号",
         "metacritic": "Metacriticのユーザースコアを表示",
         "opencritic": "Opencritic.com の情報を表示",
         "hideactivelistings": "デフォルトでマーケットのホームページのアクティブリストをすべて非表示",

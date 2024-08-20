@@ -5,23 +5,26 @@ import type CGroupHome from "@Content/Features/Community/GroupHome/CGroupHome";
 
 export default class FGroupLinks extends Feature<CGroupHome> {
 
-    override checkPrerequisites(): boolean | Promise<boolean> {
-        return Settings.group_steamgifts;
+    override checkPrerequisites(): boolean {
+        return Settings.group_steamgifts && this.context.groupId !== null;
     }
 
     override apply(): void {
 
-        const anchor = document.querySelector<HTMLElement>(".responsive_hidden > .rightbox")
+        const anchor = document.querySelector(".responsive_hidden > .rightbox")
             ?.parentElement
             ?.nextElementSibling;
-        if (anchor) {
-            (new self_({
-                target: anchor.parentElement!,
-                anchor: anchor as HTMLElement,
-                props: {
-                    groupId: this.context.groupId
-                }
-            }));
+
+        if (!anchor) {
+            throw new Error("Node not found");
         }
+
+        (new self_({
+            target: anchor.parentElement!,
+            anchor,
+            props: {
+                groupId: this.context.groupId!
+            }
+        }));
     }
 }

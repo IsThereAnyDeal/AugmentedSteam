@@ -2,7 +2,7 @@ import Feature from "@Content/Modules/Context/Feature";
 import type CStoreBase from "@Content/Features/Store/Common/CStoreBase";
 import Settings from "@Options/Data/Settings";
 import ExtensionResources from "@Core/ExtensionResources";
-import {ContextType} from "@Content/Modules/Context/ContextType";
+import ContextType from "@Content/Modules/Context/ContextType";
 import DOMHelper from "@Content/Modules/DOMHelper";
 
 export default class FAlternativeLinuxIcon extends Feature<CStoreBase> {

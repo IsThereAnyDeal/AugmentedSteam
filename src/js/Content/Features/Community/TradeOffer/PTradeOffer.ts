@@ -6,11 +6,13 @@
 import CTradeOffer from "./CTradeOffer";
 import "../../../../../css/community/tradeoffer.css"
 import Localization from "@Core/Localization/Localization";
+import {SettingsStore} from "@Options/Data/Settings";
 
 (async function() {
 
     try {
-        await Localization;
+        await SettingsStore.init();
+        await Localization.init();
     } catch (err) {
         console.group("Augmented Steam initialization");
         console.error("Failed to initialize Augmented Steam");

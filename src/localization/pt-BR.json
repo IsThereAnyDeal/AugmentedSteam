@@ -259,7 +259,6 @@
         "icon": "Ícone",
         "name": "Nome",
         "show_alternative_linux_icon": "Exibir ícone alternativo do Linux",
-        "hidetmsymbols": "Símbolos de marca registrada em títulos de jogos",
         "metacritic": "Exibir pontuação de usuários do Metacritic",
         "opencritic": "Exibir avaliações e análises do site Opencritic",
         "hideactivelistings": "Ocultar todos os anúncios ativos na página inicial por padrão",

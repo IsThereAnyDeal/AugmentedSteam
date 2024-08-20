@@ -1,7 +1,7 @@
 import CCommunityBase from "../CCommunityBase";
 import FBackgroundSelection from "./FBackgroundSelection";
 import FStyleSelection from "./FStyleSelection";
-import {ContextType} from "@Content/Modules/Context/ContextType";
+import ContextType from "@Content/Modules/Context/ContextType";
 import User from "@Content/Modules/User";
 import AugmentedSteamApiFacade from "@Content/Modules/Facades/AugmentedSteamApiFacade";
 import type {TProfileData} from "@Background/Modules/AugmentedSteam/_types";

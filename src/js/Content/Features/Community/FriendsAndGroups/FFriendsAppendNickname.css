@@ -1,0 +1,19 @@
+
+.friend_block_content.has-note {
+    display: flex;
+    flex-direction: column;
+}
+.persona.offline .friend_block_content.has-note {
+    margin-top: 0;
+    margin-bottom: 0;
+    height: 50px;
+    justify-content: center;
+}
+
+.friend_block_content.has-note .player_nickname_hint {
+    display: block;
+    font-size: 12px;
+    line-height: 12px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}

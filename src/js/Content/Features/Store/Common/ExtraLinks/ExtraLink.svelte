@@ -4,10 +4,15 @@
     export let href: string;
     export let icon: string = "";
     export let iconUrl: string|null = null;
+    export let isCommunity: boolean = false;
 </script>
 
 
-<a class="btnv6_blue_hoverfade btn_medium es_app_btn {icon}" use:external {href}>
+<a class="btnv6_blue_hoverfade btn_medium {icon}"
+    class:es_community_btn={isCommunity}
+    class:es_app_btn={!isCommunity}
+    use:external {href}
+>
     <span>
         {#if iconUrl}
             <i class="ico16" style="background: url({iconUrl}); background-size: contain;"></i>
@@ -26,6 +31,10 @@
     }
     .es_app_btn .ico16 {
         margin-right: 12px !important;
+    }
+
+    .es_community_btn .ico16 {
+        margin-right: 3px !important;
     }
 
     .steamdb_ico i {

@@ -1,7 +1,7 @@
 import FCustomizer from "../Common/FCustomizer";
 import FHomePageTab from "./FHomePageTab";
 import CStoreBase from "@Content/Features/Store/Common/CStoreBase";
-import {ContextType} from "@Content/Modules/Context/ContextType";
+import ContextType from "@Content/Modules/Context/ContextType";
 import User from "@Content/Modules/User";
 
 export default class CStoreFront extends CStoreBase {

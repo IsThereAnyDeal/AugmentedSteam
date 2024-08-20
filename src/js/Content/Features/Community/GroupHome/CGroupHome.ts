@@ -1,30 +1,32 @@
-import {ContextType} from "../../../Modules/Context/ContextType";
+import ContextType from "@Content/Modules/Context/ContextType";
 import CCommunityBase from "../CCommunityBase";
 import FFriendsInviteButton from "./FFriendsInviteButton";
 import FGroupLinks from "@Content/Features/Community/GroupHome/FGroupLinks";
 
 export default class CGroupHome extends CCommunityBase {
 
-    // @ts-ignore
-    public readonly groupId: string;
+    public readonly groupId: string|null = null;
 
     constructor() {
+
         // Don't apply features if there's an error message (e.g. non-existent group)
-        if (document.getElementById("message") !== null) {
-            super(ContextType.GROUP_HOME);
+        const hasFeatures = document.getElementById("message") === null;
+
+        super(ContextType.GROUP_HOME, hasFeatures ? [
+            FFriendsInviteButton,
+            FGroupLinks,
+        ] : []);
+
+        if (!hasFeatures) {
             return;
         }
 
-        super(ContextType.GROUP_HOME, [
-            FFriendsInviteButton,
-            FGroupLinks,
-        ]);
-
-        const groupIdNode = document.querySelector<HTMLInputElement>("input[name=groupId], input[name=abuseID]");
-        if (!groupIdNode) {
-            throw new Error("Did not find groupId");
-        }
-
-        this.groupId = groupIdNode.value;
+        // Check `#leave_group_form` when logged in; fallback to the join chat button otherwise
+        this.groupId = document.querySelector<HTMLInputElement>("input[name=groupId]")?.value
+            ?? document.querySelector(".joinchat_bg")
+                ?.getAttribute("onclick")
+                ?.match(/OpenGroupChat\(\s*'(\d+)'/)
+                ?.[1]
+            ?? null;
     }
 }

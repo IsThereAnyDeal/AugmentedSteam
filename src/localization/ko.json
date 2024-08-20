@@ -196,7 +196,6 @@
         "icon": "아이콘",
         "name": "이름",
         "show_alternative_linux_icon": "다른 리눅스 아이콘 표시",
-        "hidetmsymbols": "게임 타이틀의 상표 · 저작권 기호",
         "metacritic": "Metacritic 유저 점수를 보임",
         "opencritic": "Opencritic.com 정보 표시",
         "hideactivelistings": "상점 홈페이지에 있는 모든 활동 목록을 숨김니다.",

@@ -234,7 +234,6 @@
         "icon": "Biểu tượng",
         "name": "Tên",
         "show_alternative_linux_icon": "Show alternative Linux icon",
-        "hidetmsymbols": "Trademark and Copyright symbols in game titles",
         "metacritic": "Show Metacritic user scores",
         "opencritic": "Xem điểm và đánh giá Opencritic",
         "hideactivelistings": "Hide all active listings on Market homepage by default",

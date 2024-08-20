@@ -2,7 +2,7 @@ import FSkipAgecheck from "../../Common/FSkipAgecheck";
 import FCommunityAppPageLinks from "./FCommunityAppPageLinks";
 import FCommunityAppPageWishlist from "./FCommunityAppPageWishlist";
 import CCommunityBase from "@Content/Features/Community/CCommunityBase";
-import {ContextType} from "@Content/Modules/Context/ContextType";
+import ContextType from "@Content/Modules/Context/ContextType";
 import AppId from "@Core/GameId/AppId";
 import type Feature from "@Content/Modules/Context/Feature";
 import type Context from "@Content/Modules/Context/Context";

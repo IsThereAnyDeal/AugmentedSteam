@@ -1,4 +1,4 @@
-import {ContextType} from "../../../Modules/Context/ContextType";
+import ContextType from "@Content/Modules/Context/ContextType";
 import CApp from "../App/CApp";
 import FMediaExpander from "../../Common/FMediaExpander";
 

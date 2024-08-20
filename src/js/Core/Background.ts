@@ -3,10 +3,10 @@ import ErrorParser from "@Core/Errors/ErrorParser";
 
 export default class Background {
 
-    static send<Response>(action: string, params: Record<string, any>={}): Promise<Response> {
+    static async send<Response>(action: string, params: Record<string, any>={}): Promise<Response> {
         document.dispatchEvent(new CustomEvent("asRequestStart"));
         try {
-            const result = browser.runtime.sendMessage({action, params});
+            const result = await browser.runtime.sendMessage({action, params});
             document.dispatchEvent(new CustomEvent("asRequestDone"));
             return result;
         } catch(e: any) {

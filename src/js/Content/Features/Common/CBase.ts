@@ -3,7 +3,7 @@ import FDisableLinkFilter from "./FDisableLinkFilter";
 import FKeepSSACheckboxState from "./FKeepSSACheckboxState";
 import FDefaultCommunityTab from "./FDefaultCommunityTab";
 import Context from "@Content/Modules/Context/Context";
-import {ContextType} from "@Content/Modules/Context/ContextType";
+import ContextType from "@Content/Modules/Context/ContextType";
 import type Feature from "@Content/Modules/Context/Feature";
 import FEarlyAccess from "@Content/Features/Common/FEarlyAccess";
 

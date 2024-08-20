@@ -142,6 +142,7 @@ export const DefaultSettings: Readonly<SettingsSchema> = {
     "show_profile_link_images": "gray",
     "show_custom_themes": true,
     "profile_pinned_bg": false,
+    "friends_append_nickname": false,
     "profile_steamrepcn": true,
     "profile_steamgifts": true,
     "profile_steamtrades": true,
@@ -210,7 +211,7 @@ class Event {
 
 export class SettingsStore {
 
-    private static initPromise: Promise<void>;
+    private static promise: Promise<void>;
 
     private static data: SettingsSchema;
     private static storage: StorageInterface<SettingsSchema> = new SyncedStorage<SettingsSchema>();
@@ -222,19 +223,11 @@ export class SettingsStore {
         this.data = await this.storage.getObject(DefaultSettings);
     }
 
-    static async init(): Promise<void> {
-        if (!this.initPromise) {
-            this.initPromise = this.load();
+    static init(): Promise<void> {
+        if (!this.promise) {
+            this.promise = this.load();
         }
-        return this.initPromise;
-    }
-
-    // init shortcut
-    static then(
-        onDone: (value: void) => PromiseLike<void>,
-        onCatch: (reason: any) => PromiseLike<never>
-    ): Promise<void> {
-        return this.init().then(onDone, onCatch);
+        return this.promise;
     }
 
     static getDefault<K extends keyof SettingsSchema>(key: K): SettingsSchema[K] {

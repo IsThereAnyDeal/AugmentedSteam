@@ -1,8 +1,7 @@
 import Feature from "@Content/Modules/Context/Feature";
 import type CBundle from "@Content/Features/Store/Bundle/CBundle";
-import {ContextType} from "@Content/Modules/Context/ContextType";
-import Settings from "@Options/Data/Settings";
-import CommonLinks from "@Content/Features/Store/Common/ExtraLinks/CommonLinks.svelte";
+import ContextType from "@Content/Modules/Context/ContextType";
+import CommonExtraLinks from "@Content/Features/Common/CommonExtraLinks.svelte";
 import type CSub from "@Content/Features/Store/Sub/CSub";
 
 export default class FExtraLinksCommon extends Feature<CSub|CBundle> {
@@ -27,7 +26,7 @@ export default class FExtraLinksCommon extends Feature<CSub|CBundle> {
             throw new Error("Node not found");
         }
 
-        (new CommonLinks({
+        (new CommonExtraLinks({
             target,
             anchor: target.firstElementChild!,
             props: {type, gameid}

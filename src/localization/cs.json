@@ -200,7 +200,6 @@
         "icon": "Ikona",
         "name": "Název",
         "show_alternative_linux_icon": "Zobrazit alternativní ikonu Linuxu",
-        "hidetmsymbols": "TM a copyright symboly v názvech her",
         "metacritic": "Ukázat uživatelská hodnocení Metacritic",
         "opencritic": "Ukázat informace z Opencritic.com",
         "hideactivelistings": "Schovat všechny aktivní prodávané položky z hlavní stránky Tržiště při načtení",
