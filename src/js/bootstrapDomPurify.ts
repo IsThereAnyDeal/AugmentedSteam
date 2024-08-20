@@ -12,7 +12,7 @@ export default async function() {
     if (initialized) { return; }
     initialized = true;
 
-    await SettingsStore;
+    await SettingsStore.init();
     const allowOpenInNewTab = Settings.openinnewtab;
 
     /*

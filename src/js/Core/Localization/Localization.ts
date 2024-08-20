@@ -13,7 +13,7 @@ interface TLocale {
 
 export default class Localization {
 
-    private static _promise: Promise<void>|null = null;
+    private static promise: Promise<void>;
     public static locale: TLocale;
 
     static load(code: string): Promise<TLocale> {
@@ -21,8 +21,8 @@ export default class Localization {
     }
 
     static init(): Promise<void> {
-        if (!this._promise) {
-            this._promise = (async () => {
+        if (!this.promise) {
+            this.promise = (async () => {
                 const stored = Settings.language;
                 let current = Language.getCurrentSteamLanguage();
                 if (current === null) {
@@ -43,14 +43,7 @@ export default class Localization {
             })();
         }
 
-        return this._promise;
-    }
-
-    static then(
-        onfulfilled: ((value: void) => Promise<void>) | undefined | null,
-        onrejected: ((reason: any) => Promise<void>) | undefined | null
-    ): Promise<void> {
-        return Localization.init().then(onfulfilled, onrejected);
+        return this.promise;
     }
 }
 
