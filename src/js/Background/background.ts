@@ -41,9 +41,8 @@ browser.runtime.onInstalled.addListener(async (detail) => {
 
 browser.runtime.onMessage.addListener((
     message: Message,
-    sender: MessageSender,
-    sendResponse: (...params: any) => void
-): true|undefined => {
+    sender: MessageSender
+): undefined|Promise<any> => {
 
     if (!sender || !sender.tab) { // not from a tab, ignore
         return;
@@ -52,12 +51,12 @@ browser.runtime.onMessage.addListener((
         return;
     }
 
-    (async function(): Promise<void> {
+    return (async () => {
         try {
             await Promise.all([IndexedDB.init(), SettingsStore.init()]);
 
             let response: any = undefined;
-            let handlers: MessageHandlerInterface[] = [
+            const handlers: MessageHandlerInterface[] = [
                 new AugmentedSteamApi(),
                 new SteamCommunityApi(),
                 new InventoryApi(),
@@ -67,7 +66,7 @@ browser.runtime.onMessage.addListener((
                 new CacheApi()
             ];
 
-            for (let handler of handlers) {
+            for (const handler of handlers) {
                 response = await handler.handle(message);
                 if (response !== Unrecognized) {
                     break;
@@ -75,10 +74,10 @@ browser.runtime.onMessage.addListener((
             }
 
             if (response === Unrecognized) {
-                throw new Error(`Did not recognize message`);
+                throw new Error("Unknown message");
             }
 
-            sendResponse(response);
+            return response;
         } catch (err) {
             console.group(`Callback: "${message.action}"`);
             console.error("Failed to execute %o", message);
@@ -88,8 +87,6 @@ browser.runtime.onMessage.addListener((
             throw new Error((<Error>err).toString());
         }
     })();
-
-    return true;
 });
 
 ContextMenu.register();
