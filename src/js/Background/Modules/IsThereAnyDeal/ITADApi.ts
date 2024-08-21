@@ -92,6 +92,10 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
         let collection = await this.fetchJson<{id: string}[]>(url, {
             headers: {"authorization": "Bearer " + accessToken}
         });
+        if (!collection.length) {
+            return null;
+        }
+
         let gids = collection.map(entry => entry.id);
         return await this.fetchSteamIds(gids);
     }
@@ -106,6 +110,9 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
         let waitlist = await this.fetchJson<{id: string}[]>(url, {
             headers: {"authorization": "Bearer " + accessToken}
         });
+        if (!waitlist.length) {
+            return null;
+        }
 
         let gids = waitlist.map(entry => entry.id);
         return await this.fetchSteamIds(gids);
