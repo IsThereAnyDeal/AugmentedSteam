@@ -71,16 +71,28 @@ export default class SteamFacade {
         Messenger.call(MessageHandler.SteamFacade, "collapseLongStrings", [selector]);
     }
 
-    // @param appid required, rest is optional
     static removeFromWishlist(
         appid: number,
-        divToHide: string|undefined = undefined,
-        divToShowSuccess: string|undefined = undefined,
-        divToShowError: string|undefined = undefined,
-        navref: string|undefined = undefined,
-        divToHide2: string|undefined = undefined,
-    ) {
+        divToHide: string,
+        divToShowSuccess: string,
+        divToShowError: string,
+        navref?: string,
+        divToHide2?: string,
+    ): void {
         Messenger.call(MessageHandler.SteamFacade, "removeFromWishlist", [
+            appid, divToHide, divToShowSuccess, divToShowError, navref, divToHide2
+        ]);
+    }
+
+    static addToWishlist(
+        appid: number,
+        divToHide: string,
+        divToShowSuccess: string,
+        divToShowError: string,
+        navref?: string,
+        divToHide2?: string,
+    ): void {
+        Messenger.call(MessageHandler.SteamFacade, "addToWishlist", [
             appid, divToHide, divToShowSuccess, divToShowError, navref, divToHide2
         ]);
     }

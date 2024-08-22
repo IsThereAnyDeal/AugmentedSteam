@@ -65,9 +65,12 @@
             CollapseLongStrings(selector);
         }
 
-        // @param appid required, rest is optional
         static removeFromWishlist(appid, divToHide, divToShowSuccess, divToShowError, navref, divToHide2) {
             RemoveFromWishlist(appid, divToHide, divToShowSuccess, divToShowError, navref, divToHide2);
+        }
+
+        static addToWishlist(appid, divToHide, divToShowSuccess, divToShowError, navref, divToHide2) {
+            AddToWishlist(appid, divToHide, divToShowSuccess, divToShowError, navref, divToHide2);
         }
 
         // events
