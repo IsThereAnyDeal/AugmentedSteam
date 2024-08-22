@@ -4,7 +4,6 @@
  */
 
 import CTradeOffer from "./CTradeOffer";
-import "../../../../../css/community/tradeoffer.css"
 import Localization from "@Core/Localization/Localization";
 import {SettingsStore} from "@Options/Data/Settings";
 
