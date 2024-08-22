@@ -12,7 +12,13 @@ class Timer {
     }
 }
 
-export class ResettableTimer {
+export interface IResettableTimer {
+    readonly running: boolean,
+    reset: () => void,
+    stop: () => void,
+}
+
+class ResettableTimer implements IResettableTimer {
 
     private id: number|undefined;
     private _running: boolean = false;
@@ -27,7 +33,7 @@ export class ResettableTimer {
         this.reset();
     }
 
-    get running() {
+    get running(): boolean {
         return this._running;
     }
 
@@ -61,7 +67,7 @@ export default class TimeUtils {
         return new Timer(duration);
     }
 
-    static resettableTimer(callback: () => void|Promise<void>, duration: number): ResettableTimer {
+    static resettableTimer(callback: () => void|Promise<void>, duration: number): IResettableTimer {
         return new ResettableTimer(callback, duration);
     }
 

@@ -1,5 +1,6 @@
 import HTMLParser from "@Core/Html/HtmlParser";
-import TimeUtils, {ResettableTimer} from "@Core/Utils/TimeUtils";
+import TimeUtils from "@Core/Utils/TimeUtils";
+import type {IResettableTimer} from "@Core/Utils/TimeUtils";
 import FAlternativeLinuxIcon from "../Common/FAlternativeLinuxIcon";
 import FWishlistHighlights from "./FWishlistHighlights";
 import FWishlistITADPrices from "./FWishlistITADPrices";
@@ -91,7 +92,7 @@ export default class CWishlist extends CStoreBase {
             await this.triggerCallbacks(alreadyLoaded, done);
         }
 
-        let timer: ResettableTimer|null = null;
+        let timer: IResettableTimer|null = null;
         const delayedWork: Set<HTMLElement> = new Set();
 
         new MutationObserver(mutations => {
