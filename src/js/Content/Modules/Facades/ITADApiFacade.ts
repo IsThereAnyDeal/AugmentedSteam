@@ -1,4 +1,5 @@
 import type {
+    TCollectionCopy,
     TGetStoreListResponse, TInCollectionResponse,
     TInWaitlistResponse,
     TLastImportResponse
@@ -48,7 +49,7 @@ export default class ITADApiFacade {
         return Background.send(EAction.InCollection, {storeIds});
     }
 
-    static async getFromCollection(storeId: string) {
+    static async getFromCollection(storeId: string): Promise<TCollectionCopy[]|null> {
         return Background.send(EAction.GetFromCollection, {storeId});
     }
 }

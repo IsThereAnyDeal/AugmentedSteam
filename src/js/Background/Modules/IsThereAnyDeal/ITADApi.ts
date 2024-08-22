@@ -2,6 +2,8 @@ import Api from "../Api";
 import Config from "config";
 import IndexedDB from "@Background/Db/IndexedDB";
 import type {
+    TCollectionCopiesResponse,
+    TCollectionCopy,
     TGetStoreListResponse,
     TInCollectionResponse,
     TInWaitlistResponse,
@@ -46,6 +48,9 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
         }});
     }
 
+    /**
+     * @return Promise<Map<string,string>>    Map<steamId, itadId>
+     */
     private async fetchSteamIds(gids: string[]): Promise<Map<string, string>> {
         const url = this.getUrl("unstable/id-lookup/shop/61/v2");
         let obj = await this.fetchJson<Record<string, string[]|null>>(url, {
@@ -82,18 +87,51 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
         return map;
     }
 
-    private async fetchCollection(): Promise<Map<string, string>|null> {
+    private async fetchCollection(): Promise<Map<string, TCollectionCopy[]>|null> {
         const accessToken = await AccessToken.load();
         if (!accessToken) {
             return null;
         }
 
-        const url = this.getUrl("/collection/games/v1");
-        let collection = await this.fetchJson<{id: string}[]>(url, {
-            headers: {"authorization": "Bearer " + accessToken}
-        });
-        let gids = collection.map(entry => entry.id);
-        return await this.fetchSteamIds(gids);
+        const collectionResponse = await this.fetchJson<{id: string}[]>(
+            this.getUrl("/collection/games/v1"), {
+                headers: {"authorization": "Bearer " + accessToken}
+            });
+
+        const collection = new Map<string, TCollectionCopy[]>();
+        for (let game of collectionResponse) {
+            collection.set(game.id, []);
+        }
+
+        const copiesResponse = await this.fetchJson<TCollectionCopiesResponse>(
+            this.getUrl("/collection/copies/v1"), {
+                headers: {"authorization": "Bearer " + accessToken}
+            });
+
+        for (let item of copiesResponse) {
+            const gid = item.game.id;
+            let copy: TCollectionCopy = {
+                redeemed: item.redeemed
+            };
+            if (item.shop) {
+                copy.shop = item.shop.name;
+            }
+            if (item.note) {
+                copy.note = item.note;
+            }
+            if (item.tags.length > 0) {
+                copy.tags = item.tags.map(tag => tag.tag);
+            }
+
+            collection.get(gid)?.push(copy);
+        }
+
+        const idMap = await this.fetchSteamIds([...collection.keys()])
+        let result: Map<string, TCollectionCopy[]> = new Map<string, TCollectionCopy[]>();
+        for (let [steamId, itadId] of idMap.entries()) {
+            result.set(steamId, collection.get(itadId) ?? []);
+        }
+        return result;
     }
 
     private async fetchWaitlist() {
@@ -226,7 +264,7 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
             });
 
             if (response.ok) {
-                return IndexedDB.putMany("collection", [...map])
+                return IndexedDB.putMany("collection", [...map.keys()].map(key => [key, []]))
             }
         }
 
@@ -339,7 +377,7 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
         return IndexedDB.contains("collection", storeIds);
     }
 
-    private async getFromCollection(storeId: string): Promise<string|null> {
+    private async getFromCollection(storeId: string): Promise<TCollectionCopy[]|null> {
         await this.importCollection(false);
         return (await IndexedDB.get("collection", storeId)) ?? null;
     }
