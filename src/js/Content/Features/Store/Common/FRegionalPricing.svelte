@@ -6,6 +6,7 @@
     import {L} from "@Core/Localization/Localization";
     import {__regionUnavailable} from "@Strings/_strings";
     import type {PackageDetailsPrice} from "./FRegionalPricing";
+    import "@CSS/flags.css";
 
     export let countries: string[];
     export let prices: Record<string, PackageDetailsPrice>;
