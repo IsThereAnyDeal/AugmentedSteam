@@ -464,6 +464,7 @@ export const __options_lang_vietnamese = "options_lang_vietnamese";
 export const __options_addCustomLink = "options_addCustomLink";
 export const __options_autoDetect = "options_autoDetect";
 export const __options_addToWaitlist = "options_addToWaitlist";
+export const __options_collectionBannerNotOwned = "options_collectionBannerNotOwned";
 export const __options_maintainers = "options_maintainers";
 export const __options_withHelpOf = "options_withHelpOf";
 export const __options_contributors = "options_contributors";

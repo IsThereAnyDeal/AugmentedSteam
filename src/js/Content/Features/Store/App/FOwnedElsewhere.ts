@@ -7,7 +7,8 @@ import Settings from "@Options/Data/Settings";
 export default class FOwnedElsewhere extends Feature<CApp> {
 
     override async checkPrerequisites(): Promise<boolean> {
-        return Settings.itad_import_library && await ITADApiFacade.isConnected();
+        return Settings.itad_import_library && await ITADApiFacade.isConnected()
+            && (!this.context.isOwned || !Settings.collection_banner_notowned);
     }
 
     override async apply(): Promise<void> {

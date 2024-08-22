@@ -2,7 +2,13 @@
 
 <script lang="ts">
     import {L} from "@Core/Localization/Localization";
-    import {__itad_import, __libraryMenu, __options_addToWaitlist, __wishlist,} from "@Strings/_strings";
+    import {
+        __itad_import,
+        __libraryMenu,
+        __options_addToWaitlist,
+        __options_collectionBannerNotOwned,
+        __wishlist,
+    } from "@Strings/_strings";
     import {type Writable, writable} from "svelte/store";
     import Settings from "../../Data/Settings";
     import OptionGroup from "./Components/OptionGroup.svelte";
@@ -24,7 +30,14 @@
         <OptionGroup title={L(__itad_import)}>
             <Toggle bind:value={$settings.itad_import_library}>{L(__libraryMenu)}</Toggle>
             <Toggle bind:value={$settings.itad_import_wishlist}>{L(__wishlist)}</Toggle>
+        </OptionGroup>
+
+        <OptionGroup>
             <Toggle bind:value={$settings.add_to_waitlist}>{L(__options_addToWaitlist)}</Toggle>
+        </OptionGroup>
+
+        <OptionGroup>
+            <Toggle bind:value={$settings.collection_banner_notowned}>{L(__options_collectionBannerNotOwned)}</Toggle>
         </OptionGroup>
     </Section>
 </div>

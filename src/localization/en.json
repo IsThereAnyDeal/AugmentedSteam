@@ -508,6 +508,7 @@
         "add_custom_link": "Add custom link",
         "auto_detect": "Auto-detect",
         "add_to_waitlist": "Show \"Add to Waitlist\" dropdown on app pages",
+        "collection_banner_not_owned": "Only show In Collection banner when I don't own the game on Steam",
         "maintainers": "Project Maintainers",
         "with_help_of": "with a lot of help by our __contributors__",
         "contributors": "wonderful contributors",
