@@ -558,9 +558,9 @@
     },
     "itad": {
         "import": "Periodically import:",
-        "last_import": "Last import...",
-        "from": "from ITAD:",
-        "to": "to ITAD:",
+        "last_import": "Last import",
+        "from": "from ITAD",
+        "to": "to ITAD",
         "sync_now": "Sync now",
         "option": "Show menu option to sync data to IsThereAnyDeal.com",
         "send_to_itad": "Send owned games to IsThereAnyDeal",
