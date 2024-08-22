@@ -6,7 +6,7 @@ import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
 import AugmentedSteamApiFacade from "@Content/Modules/Facades/AugmentedSteamApiFacade";
 import Price from "@Content/Modules/Currency/Price";
 import HTML from "@Core/Html/Html";
-import {CommunityUtils} from "@Content/Modules/Community/CommunityUtils";
+import CommunityUtils from "@Content/Modules/Community/CommunityUtils";
 import DOMHelper from "@Content/Modules/DOMHelper";
 
 export default class FCardMarketLinks extends Feature<CGameCard> {
