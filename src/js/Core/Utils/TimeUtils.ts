@@ -23,11 +23,11 @@ class ResettableTimer implements IResettableTimer {
     private id: number|undefined;
     private _running: boolean = false;
 
-    private readonly callback: () => void|Promise<void>;
+    private readonly onDone: () => void|Promise<void>;
     private readonly duration: number;
 
-    constructor(callback: () => void|Promise<void>, duration: number) {
-        this.callback = callback;
+    constructor(onDone: () => void|Promise<void>, duration: number) {
+        this.onDone = onDone;
         this.duration = duration;
 
         this.reset();
@@ -43,7 +43,7 @@ class ResettableTimer implements IResettableTimer {
         }
 
         this.id = setTimeout(async() => {
-            await this.callback();
+            await this.onDone();
             this._running = false;
         }, this.duration);
 
@@ -67,8 +67,8 @@ export default class TimeUtils {
         return new Timer(duration);
     }
 
-    static resettableTimer(callback: () => void|Promise<void>, duration: number): IResettableTimer {
-        return new ResettableTimer(callback, duration);
+    static resettableTimer(onDone: () => void|Promise<void>, duration: number): IResettableTimer {
+        return new ResettableTimer(onDone, duration);
     }
 
     static now(): number {
