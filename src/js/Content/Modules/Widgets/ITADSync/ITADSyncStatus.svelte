@@ -2,7 +2,6 @@
     import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";
     import {L} from "@Core/Localization/Localization";
     import {__itad_from, __itad_lastImport, __itad_syncNow, __itad_to, __never} from "@Strings/_strings";
-    import Settings from "@Options/Data/Settings";
     import EITADSyncStatus from "@Content/Modules/Widgets/ITADSync/EITADSyncStatus";
 
     export let status: EITADSyncStatus = EITADSyncStatus.OK;
@@ -43,12 +42,10 @@
         {from ? new Date(from * 1000).toLocaleString() : L(__never)}
     </div>
 
-    {#if Settings.itad_import_library || Settings.itad_import_wishlist}
-        <div class="asi-status">
-            <div class="asi-label">{L(__itad_to)}</div>
-            {to ? new Date(to * 1000).toLocaleString() : L(__never)}
-        </div>
-    {/if}
+    <div class="asi-status">
+        <div class="asi-label">{L(__itad_to)}</div>
+        {to ? new Date(to * 1000).toLocaleString() : L(__never)}
+    </div>
 
     {#if status !== EITADSyncStatus.Loading}
         <div>

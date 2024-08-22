@@ -1,7 +1,7 @@
 import User from "@Content/Modules/User";
 import Settings from "@Options/Data/Settings";
 import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";
-import ITADSyncMenu from "@Content/Modules/Widgets/ITADSyncMenu.svelte";
+import ITADSyncMenu from "@Content/Modules/Widgets/ITADSync/ITADSyncMenu.svelte";
 
 export default class ITAD {
     static async init() {

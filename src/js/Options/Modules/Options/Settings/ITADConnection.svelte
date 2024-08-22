@@ -13,8 +13,13 @@
     import {L} from "@Core/Localization/Localization";
     import {onMount} from "svelte";
     import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";
+    import ITADSyncStatus from "@Content/Modules/Widgets/ITADSync/ITADSyncStatus.svelte";
+    import EITADSyncStatus from "@Content/Modules/Widgets/ITADSync/EITADSyncStatus";
 
     let promise: Promise<boolean>;
+
+    let statusComponent: ITADSyncStatus;
+    let status: EITADSyncStatus;
 
     function handleAuthorize(): void {
         promise = (async () => {
@@ -32,6 +37,7 @@
 
     onMount(() => {
         promise = ITADApiFacade.isConnected();
+        statusComponent.updateLastImport();
     });
 </script>
 
@@ -54,9 +60,15 @@
     {L(__error)}
 {/await}
 
-<div class="box info">
-    <p>{L(__itad_info_itadSteam)}</p>
-    <p>{L(__itad_info_steamItad)}</p>
+<div class="info">
+    <div class="box">
+        <p>{L(__itad_info_itadSteam)}</p>
+        <p>{L(__itad_info_steamItad)}</p>
+    </div>
+
+    <div class="sync box">
+        <ITADSyncStatus bind:status bind:this={statusComponent} />
+    </div>
 </div>
 
 
@@ -94,6 +106,9 @@
         font-size: 0.92em;
         margin: 15px 0;
         line-height: 1.5;
+        display: grid;
+        grid-template-columns: auto 160px;
+        gap: 15px;
     }
 
     p {

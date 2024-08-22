@@ -1,6 +1,6 @@
 <script lang="ts">
     import ExtensionResources from "@Core/ExtensionResources";
-    import ITADSyncStatus from "@Content/Modules/Widgets/ITADSyncStatus.svelte";
+    import ITADSyncStatus from "@Content/Modules/Widgets/ITADSync/ITADSyncStatus.svelte";
     import EITADSyncStatus from "@Content/Modules/Widgets/ITADSync/EITADSyncStatus";
 
     const itadLogo = ExtensionResources.getURL("img/itad.png");
