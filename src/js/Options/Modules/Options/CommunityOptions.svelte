@@ -151,11 +151,6 @@
     </OptionGroup>
 
     <OptionGroup>
-        <h3>{L(__options_friendsAndGroups)}</h3>
-        <Toggle bind:value={$settings.friends_append_nickname}>{L(__options_friendsAppendNickname)}</Toggle>
-    </OptionGroup>
-
-    <OptionGroup>
         <h3>{L(__options_profileLinks)}</h3>
         {#if $settings.language === "schinese" || $settings.language === "tchinese"}
             <Toggle bind:value={$settings.profile_steamrepcn}>
@@ -200,6 +195,10 @@
     <Toggle bind:value={$settings.group_steamgifts}>
         <span class="link"><i class="es_sites_icons es_steamgifts_icon"></i>SteamGifts</span>
     </Toggle>
+</Section>
+
+<Section title={L(__options_friendsAndGroups)}>
+    <Toggle bind:value={$settings.friends_append_nickname}>{L(__options_friendsAppendNickname)}</Toggle>
 </Section>
 
 <Section title={L(__options_friendActivity)}>

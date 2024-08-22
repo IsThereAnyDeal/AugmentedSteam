@@ -54,6 +54,7 @@ export default class FFriendsAppendNickname extends Feature<CFriendsAndGroups> {
                     const persona = player.personaname;
                     const nickname = node.previousSibling!.textContent!.trim();
 
+                    node.querySelector("br")?.remove();
                     node.after(...node.children); // Fix last online text styles
                     node.previousSibling!.textContent = persona;
                     node.textContent = nickname;
