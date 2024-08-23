@@ -1,28 +1,3 @@
-import HTMLParser from "@Core/Html/HtmlParser";
-
-export class SteamId {
-
-    private static _steamId: string|null;
-
-    static getSteamId() {
-        if (this._steamId) {
-            return this._steamId;
-        }
-
-        if (document.querySelector("#reportAbuseModal")) {
-            this._steamId = document.querySelector<HTMLInputElement>("input[name=abuseID]")?.value ?? null;
-        } else {
-            this._steamId = HTMLParser.getStringVariable("g_steamID");
-        }
-
-        if (!this._steamId) {
-            const profileData = HTMLParser.getObjectVariable("g_rgProfileData");
-            this._steamId = profileData?.steamid ?? null;
-        }
-
-        return this._steamId;
-    }
-}
 
 export class SteamIdDetail {
 

@@ -15,8 +15,8 @@ import FPinnedBackground from "./FPinnedBackground";
 import type {TProfileData} from "@Background/Modules/AugmentedSteam/_types";
 import AugmentedSteamApiFacade from "@Content/Modules/Facades/AugmentedSteamApiFacade";
 import ContextType from "@Content/Modules/Context/ContextType";
-import {SteamId} from "@Content/Modules/SteamId";
 import EarlyAccessUtils from "@Content/Modules/EarlyAccess/EarlyAccessUtils";
+import HTMLParser from "@Core/Html/HtmlParser";
 
 export default class CProfileHome extends CCommunityBase {
 
@@ -49,7 +49,7 @@ export default class CProfileHome extends CCommunityBase {
             return;
         }
 
-        this.steamId = SteamId.getSteamId();
+        this.steamId = this.getSteamId();
         this.isPrivateProfile = document.body.classList.contains("private_profile");
         if (this.steamId) {
             this.data = AugmentedSteamApiFacade.getProfileData(this.steamId)
@@ -70,5 +70,24 @@ export default class CProfileHome extends CCommunityBase {
         this.dependency(FCustomStyle,
             [FCustomBackground, true]
         )
+    }
+
+    private getSteamId(): string|null {
+        let steamId: string|null = null;
+
+        // Try to get steamid from the deprecated "report abuse" form (only appears when logged in)
+        const node = document.querySelector<HTMLInputElement>("input[name=abuseID]");
+        if (node) {
+            steamId = node.value;
+        } else {
+            steamId = HTMLParser.getStringVariable("g_steamID");
+        }
+
+        if (!steamId) {
+            const profileData = HTMLParser.getObjectVariable("g_rgProfileData");
+            steamId = profileData?.steamid ?? null;
+        }
+
+        return steamId;
     }
 }
