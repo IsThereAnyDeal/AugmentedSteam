@@ -8,7 +8,7 @@ import FShowMarketOverview from "./FShowMarketOverview";
 import FInventoryGoTo from "./FInventoryGoTo";
 import FPriceHistoryZoomYear from "../FPriceHistoryZoomYear";
 import ContextType from "@Content/Modules/Context/ContextType";
-import {CommunityUtils} from "@Content/Modules/Community/CommunityUtils";
+import CommunityUtils from "@Content/Modules/Community/CommunityUtils";
 import DOMHelper from "@Content/Modules/DOMHelper";
 import ASEventHandler from "@Content/Modules/ASEventHandler";
 

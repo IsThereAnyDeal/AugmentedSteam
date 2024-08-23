@@ -5,7 +5,7 @@ import FGroupsManageButton from "./FGroupsManageButton";
 import FGroupsSort from "./FGroupsSort";
 import FFriendsAppendNickname from "./FFriendsAppendNickname";
 import ContextType from "@Content/Modules/Context/ContextType";
-import {CommunityUtils} from "@Content/Modules/Community/CommunityUtils";
+import CommunityUtils from "@Content/Modules/Community/CommunityUtils";
 import HTML from "@Core/Html/Html";
 import DOMHelper from "@Content/Modules/DOMHelper";
 
