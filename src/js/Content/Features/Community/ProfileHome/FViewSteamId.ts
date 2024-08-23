@@ -1,13 +1,7 @@
-import {__close, __copied, __steamidOfUser, __viewSteamid} from "@Strings/_strings";
-import {L} from "@Core/Localization/Localization";
+import self_ from "./FViewSteamId.svelte";
 import type CProfileHome from "@Content/Features/Community/ProfileHome/CProfileHome";
 import Feature from "@Content/Modules/Context/Feature";
 import Settings from "@Options/Data/Settings";
-import HTML from "@Core/Html/Html";
-import ExtensionResources from "@Core/ExtensionResources";
-import {SteamIdDetail} from "@Content/Modules/SteamId";
-import SteamFacade from "@Content/Modules/Facades/SteamFacade";
-import Clipboard from "@Content/Modules/Clipboard";
 
 export default class FViewSteamId extends Feature<CProfileHome> {
 
@@ -16,46 +10,6 @@ export default class FViewSteamId extends Feature<CProfileHome> {
     }
 
     override apply(): void {
-
-        const dropdown = document.querySelector("#profile_action_dropdown .popup_body.popup_menu");
-        if (dropdown) {
-            HTML.beforeEnd(dropdown,
-                `<a class="popup_menu_item" id="es_steamid">
-                    <img src="//community.cloudflare.steamstatic.com/public/images/skin_1/iconForums.png">&nbsp; ${L(__viewSteamid)}
-                </a>`);
-        } else {
-            const actions = document.querySelector(".profile_header_actions");
-            if (actions) {
-                HTML.beforeEnd(actions,
-                    `<a class="btn_profile_action btn_medium" id="es_steamid">
-                        <span>${L(__viewSteamid)}</span>
-                    </a>`);
-            }
-        }
-
-        document.querySelector("#es_steamid")!
-            .addEventListener("click", () => this._showSteamIdDialog());
-    }
-
-    private async _showSteamIdDialog(): Promise<void> {
-
-        async function copySteamId(e: MouseEvent) {
-            const elem = (<HTMLElement>(e.target)).closest(".es-copy");
-            if (!elem) { return; }
-
-            const result = await Clipboard.set(elem.querySelector<HTMLElement>(".es-copy__id")!.textContent!);
-            if (!result) { return; }
-
-            elem.addEventListener("transitionend", () => {
-                elem.classList.remove("is-copied");
-            }, {"once": true});
-
-            elem.classList.add("is-copied");
-        }
-
-        document.addEventListener("click", copySteamId);
-
-        const imgUrl = ExtensionResources.getURL("img/clippy.svg");
 
         const steamId = new SteamIdDetail(this.context.steamId!);
         const ids = [
@@ -66,25 +20,133 @@ export default class FViewSteamId extends Feature<CProfileHome> {
             `https://steamcommunity.com/profiles/${steamId.id64}`
         ];
 
-        let html = "";
-        for (const id of ids) {
-            if (!id) { continue; }
-            html += `<p>
-                        <a class="es-copy">
-                            <span class="es-copy__id">${id}</span>
-                            <img src="${imgUrl}" class="es-copy__icon">
-                            <span class="es-copy__copied">${L(__copied)}</span>
-                        </a>
-                    </p>`;
+        const dropdown = document.querySelector("#profile_action_dropdown .popup_body.popup_menu");
+        if (dropdown) {
+            new self_({
+                target: dropdown,
+                props: {ids}
+            });
+        } else {
+            const actions = document.querySelector(".profile_header_actions");
+            if (actions) {
+                new self_({
+                    target: actions,
+                    props: {
+                        ids,
+                        ownProfile: true
+                    }
+                });
+            }
+        }
+    }
+}
+
+class SteamIdDetail {
+
+    /*
+     * @see https://developer.valvesoftware.com/wiki/SteamID
+     */
+
+    private readonly _y: number;
+    private readonly _accountNumber: number;
+    private readonly _instance: number;
+    private readonly _type: number;
+    private readonly _universe: number;
+    private readonly _steamId64: string;
+
+    constructor(steam64str: string) {
+        if (!steam64str) {
+            throw new Error("Missing first parameter 'steam64str'.");
         }
 
+        const [upper32, lower32] = this.getBinary(steam64str);
+        this._y = lower32 & 1;
+        this._accountNumber = (lower32 & (((1 << 31) - 1) << 1)) >> 1;
+        this._instance = (upper32 & ((1 << 20) - 1));
+        this._type = (upper32 & (((1 << 4) - 1) << 20)) >> 20;
+        this._universe = (upper32 & (((1 << 8) - 1) << 24)) >> 24;
 
-        SteamFacade.hideMenu("profile_action_dropdown_link", "profile_action_dropdown");
-        await SteamFacade.showAlertDialog(
-            L(__steamidOfUser).replace("__user__", (await SteamFacade.global("g_rgProfileData")).personaname),
-            html,
-            L(__close)
+        this._steamId64 = steam64str;
+    }
+
+    private divide(str: string|number[]): [number[], 1|0] {
+        const length = str.length;
+        const result = [];
+        let num = 0;
+        for (let i = 0; i < length; i++) {
+            num += Number(str[i]);
+
+            const r = Math.floor(num / 2);
+            num = ((num - (2 * r)) * 10);
+
+            if (r !== 0 || result.length !== 0) {
+                result.push(r);
+            }
+        }
+
+        return [result, num > 0 ? 1 : 0];
+    }
+
+    private getBinary(str: string): [number, number] {
+        let upper32 = 0;
+        let lower32 = 0;
+        let index = 0;
+        let bit = 0;
+        let _str: string|number[] = str;
+        do {
+            [_str, bit] = this.divide(_str);
+
+            if (bit) {
+                if (index < 32) {
+                    lower32 |= (1 << index);
+                } else {
+                    upper32 |= (1 << (index - 32));
+                }
+            }
+
+            index++;
+        } while (_str.length > 0);
+
+        return [upper32, lower32];
+    }
+
+    get id2(): string {
+        return `STEAM_${this._universe}:${this._y}:${this._accountNumber}`;
+    }
+
+    get id3(): string|null {
+        const map = new Map(
+            [
+                [0, "I"], // invalid
+                [1, "U"], // individual
+                [2, "M"], // multiset
+                [3, "G"], // game server
+                [4, "A"], // anon game server
+                [5, "P"], // pending
+                [6, "C"], // content server
+                [7, "g"], // clan
+                // [8, "T / L / C"], // chat // TODO no idea what does this mean
+                [9, "a"] // anon user
+            ]
         );
-        document.removeEventListener("click", copySteamId);
+
+        let type = null;
+        if (map.has(this._type)) {
+            type = map.get(this._type);
+        }
+
+        if (!type) {
+            return null;
+        }
+
+        return `[${type}:${this._universe}:${(this._accountNumber << 1) | this._y}]`;
+    }
+
+    get id64(): string {
+        return this._steamId64;
+    }
+
+    get id64hex(): string {
+        return `steam:${BigInt(this._steamId64).toString(16)}`;
     }
 }
