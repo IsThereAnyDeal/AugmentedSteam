@@ -6,6 +6,7 @@ import HTML from "@Core/Html/Html";
 import LocalStorage from "@Core/Storage/LocalStorage";
 import DOMHelper from "@Content/Modules/DOMHelper";
 import AugmentedSteamApiFacade from "@Content/Modules/Facades/AugmentedSteamApiFacade";
+import "./FSteamPeek.css";
 
 export default class FSteamPeek extends Feature<CApp> {
 
