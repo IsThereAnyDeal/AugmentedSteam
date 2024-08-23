@@ -1838,9 +1838,6 @@ label.es_dlc_label > input:checked::after {
   background-image: url('extension://img/screenshot_open.png');
 }
 
-.itad-pricing {
-  background-image: url("extension://img/itad.png");
-}
 
 .es_external_icon::after {
   content: " " url("extension://img/ico_external_link.gif"); /* https://store.steampowered.com/public/images/v5/ico_external_link.gif */
