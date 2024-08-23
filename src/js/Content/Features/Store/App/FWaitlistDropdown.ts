@@ -157,7 +157,7 @@ export default class FWaitlistDropdown extends Feature<CApp> {
             parent.classList.add("loading");
 
             await new Promise<void>(resolve => {
-                // @ts-ignore
+                // @ts-expect-error
                 document.addEventListener("addRemoveWishlist", (e: CustomEvent<boolean>) => {
                     if (e.detail) {
                         wishlisted = !wishlisted;
@@ -182,7 +182,7 @@ export default class FWaitlistDropdown extends Feature<CApp> {
 
             if (wishlisted) {
                 await new Promise<void>(resolve => {
-                    // @ts-ignore
+                    // @ts-expect-error
                     document.addEventListener("addRemoveWishlist", (e: CustomEvent<boolean>) => {
                         if (e.detail) {
                             wishlisted = !wishlisted;
@@ -211,7 +211,7 @@ export default class FWaitlistDropdown extends Feature<CApp> {
              */
 
             await new Promise<void>(resolve => {
-                // @ts-ignore
+                // @ts-expect-error
                 document.addEventListener("addRemoveWishlist", (e: CustomEvent<boolean>) => {
                     if (e.detail) {
                         wishlisted = !wishlisted;
