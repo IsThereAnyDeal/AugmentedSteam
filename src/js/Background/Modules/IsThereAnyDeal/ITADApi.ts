@@ -58,7 +58,7 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
      * @return Promise<Map<string,string>>    Map<steamId, itadId>
      */
     private async fetchSteamIds(gids: string[]): Promise<Map<string, string>> {
-        const url = this.getUrl("unstable/id-lookup/shop/61/v2");
+        const url = this.getUrl("lookup/shop/61/id/v1");
         let obj = await this.fetchJson<Record<string, string[]|null>>(url, {
             method: "POST",
             headers: {"content-type": "application/json"},
@@ -77,7 +77,7 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
     }
 
     private async fetchGameIds(steamIds: string[]): Promise<Map<string, string>> {
-        const url = this.getUrl("unstable/id-lookup/itad/61/v2");
+        const url = this.getUrl("lookup/id/shop/61/v1");
         let obj = await this.fetchJson<Record<string, string|null>>(url, {
             method: "POST",
             headers: {"content-type": "application/json"},
