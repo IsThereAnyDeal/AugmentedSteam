@@ -57,6 +57,9 @@ export enum EAction {
     RemoveFromWaitlist = "itad.removefromwaitlist",
     InCollection = "itad.incollection",
     GetFromCollection = "itad.getfromcollection",
+    ITAD_Notes_Pull = "itad.notes.pull",
+    ITAD_Notes_Push = "itad.notes.push",
+    ITAD_Notes_Delete = "itad.notes.delete",
 
     Notes_Get = "notes.get",
     Notes_Set = "notes.set",

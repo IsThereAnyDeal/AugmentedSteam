@@ -13,6 +13,13 @@ class ServerOutageError extends Error {
     }
 }
 
+class OAuthUnauthorized extends Error {
+    constructor(msg?: string) {
+        super(msg);
+        this.name = "OAuth Unauthorized";
+    }
+}
+
 class HTTPError extends Error {
     public code: number;
 
@@ -35,5 +42,6 @@ export default {
     LoginError,
     ServerOutageError,
     HTTPError,
-    FeatureDependencyError
+    FeatureDependencyError,
+    OAuthUnauthorized
 };

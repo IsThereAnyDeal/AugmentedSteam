@@ -1,6 +1,6 @@
 (function(){
     const params = JSON.parse(document.currentScript.dataset.params);
-    const {title, desc, strCloudStorage, strCancel, strLocalStorage} = params;
+    const {title, desc, strCancel, strLocalStorage} = params;
 
     const modal = ShowConfirmDialog(title, desc, strLocalStorage, strCancel);
 

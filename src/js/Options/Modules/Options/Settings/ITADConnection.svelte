@@ -13,32 +13,42 @@
     import {L} from "@Core/Localization/Localization";
     import {onMount} from "svelte";
     import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";
+    import ITADSyncStatus from "@Content/Modules/Widgets/ITADSync/ITADSyncStatus.svelte";
+    import ESyncStatus from "@Core/Sync/ESyncStatus";
 
-    let promise: Promise<boolean>;
+    export let isConnected: boolean = false;
+
+    let promise: Promise<void>;
+
+    let statusComponent: ITADSyncStatus;
+    let status: ESyncStatus;
 
     function handleAuthorize(): void {
         promise = (async () => {
             await ITADApiFacade.authorize();
-            return true;
+            isConnected = true;
         })();
     }
 
     function handleDisconnect(): void {
         promise = (async () => {
             await ITADApiFacade.disconnect();
-            return false;
+            isConnected = false;
         })();
     }
 
     onMount(() => {
-        promise = ITADApiFacade.isConnected();
+        promise = (async () => {
+            isConnected = await ITADApiFacade.isConnected();
+        })();
+        statusComponent.updateLastImport();
     });
 </script>
 
 
 {#await promise}
     {L(__loading)}
-{:then isConnected}
+{:then _}
     {#if isConnected}
         <button type="button" on:click={handleDisconnect}>
             <span class="label">{L(__status)}</span>
@@ -54,9 +64,17 @@
     {L(__error)}
 {/await}
 
-<div class="box info">
-    <p>{L(__itad_info_itadSteam)}</p>
-    <p>{L(__itad_info_steamItad)}</p>
+<div class="info">
+    <div class="box box--text">
+        <p>{L(__itad_info_itadSteam)}</p>
+        <p>{L(__itad_info_steamItad)}</p>
+    </div>
+
+    <div class="sync box box--text">
+        {#key isConnected}
+            <ITADSyncStatus {isConnected} bind:status bind:this={statusComponent} />
+        {/key}
+    </div>
 </div>
 
 
@@ -91,9 +109,10 @@
 
 
     .info {
-        font-size: 0.92em;
         margin: 15px 0;
-        line-height: 1.5;
+        display: grid;
+        grid-template-columns: auto 160px;
+        gap: 15px;
     }
 
     p {

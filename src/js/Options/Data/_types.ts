@@ -184,6 +184,8 @@ export interface SettingsSchema {
     itad_import_library: boolean,
     itad_import_wishlist: boolean,
     add_to_waitlist: boolean,
+    collection_banner_notowned: boolean,
+    itad_sync_notes: boolean,
 
     context_steam_store: boolean,
     context_steam_market: boolean,

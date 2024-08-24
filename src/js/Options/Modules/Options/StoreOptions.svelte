@@ -191,9 +191,8 @@
         </OptionGroup>
         <OptionGroup>
             <Select value={$settings.user_notes_adapter} label={L(__options_userNotes_loc)} options={[
-                ["synced_storage", L(__options_userNotes_syncedStorage)],
                 ["idb", L(__options_userNotes_local)],
-                /* ["itad", "options.user_notes.itad"], */
+                ["synced_storage", L(__options_userNotes_syncedStorage)]
             ]} on:change={handleUserNotesAdapterChange} />
         </OptionGroup>
     </Section>

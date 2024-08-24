@@ -9,11 +9,11 @@ import {
     type StoreValue
 } from "idb";
 import Migration from "@Background/Db/Migration";
-import type {ADB5} from "@Background/Db/Schemas/ADB5";
 import LocalStorage from "@Core/Storage/LocalStorage";
 import TimeUtils from "@Core/Utils/TimeUtils";
+import type ADB6 from "@Background/Db/Schemas/ADB6";
 
-type Schema = ADB5;
+type Schema = ADB6;
 
 export default class IndexedDB {
 
@@ -28,7 +28,7 @@ export default class IndexedDB {
                     upgrade: Migration.upgrade,
                     blocked() {
                         console.error("Failed to upgrade database, there is already an open connection");
-                    },
+                    }
                 });
 
                 let dbCleanup = await LocalStorage.get("db_cleanup");
