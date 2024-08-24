@@ -3,6 +3,7 @@
     import ITADSyncStatus from "@Content/Modules/Widgets/ITADSync/ITADSyncStatus.svelte";
     import ESyncStatus from "@Core/Sync/ESyncStatus";
     import SyncIndicator from "@Core/Sync/SyncIndicator.svelte";
+    import Settings from "@Options/Data/Settings";
 
     const itadLogo = ExtensionResources.getURL("img/itad.png");
 
@@ -18,7 +19,9 @@
 
     <div class="asi__hover">
         <div class="asi__content">
-            <ITADSyncStatus isConnected bind:status bind:this={statusComponent} />
+            <ITADSyncStatus isConnected
+                            enableSync={Settings.itad_sync_library || Settings.itad_sync_wishlist}
+                            bind:status bind:this={statusComponent} />
         </div>
     </div>
 </div>

@@ -31,7 +31,7 @@
 <div>
     <Section title="IsThereAnyDeal">
         <OptionGroup>
-            <ITADConnection bind:isConnected />
+            <ITADConnection {settings} bind:isConnected />
         </OptionGroup>
     </Section>
 

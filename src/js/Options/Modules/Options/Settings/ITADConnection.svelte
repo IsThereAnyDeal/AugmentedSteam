@@ -15,7 +15,10 @@
     import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";
     import ITADSyncStatus from "@Content/Modules/Widgets/ITADSync/ITADSyncStatus.svelte";
     import ESyncStatus from "@Core/Sync/ESyncStatus";
+    import {type Writable} from "svelte/store";
+    import type {SettingsSchema} from "@Options/Data/_types";
 
+    export let settings: Writable<SettingsSchema>;
     export let isConnected: boolean = false;
 
     let promise: Promise<void>;
@@ -72,7 +75,9 @@
 
     <div class="sync box box--text">
         {#key isConnected}
-            <ITADSyncStatus {isConnected} bind:status bind:this={statusComponent} />
+            <ITADSyncStatus {isConnected}
+                            enableSync={$settings.itad_sync_library || $settings.itad_sync_wishlist}
+                            bind:status bind:this={statusComponent} />
         {/key}
     </div>
 </div>

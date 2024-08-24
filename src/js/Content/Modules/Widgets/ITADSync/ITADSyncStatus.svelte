@@ -4,8 +4,10 @@
     import {__itad_from, __itad_lastImport, __itad_syncNow, __itad_to, __loading, __never} from "@Strings/_strings";
     import ESyncStatus from "@Core/Sync/ESyncStatus";
     import SyncIndicator from "@Core/Sync/SyncIndicator.svelte";
+    import {fade} from "svelte/transition";
 
     export let isConnected: boolean;
+    export let enableSync: boolean;
     export let status: ESyncStatus = ESyncStatus.OK;
 
     let from: number|null = null;
@@ -49,8 +51,8 @@
         {to ? new Date(to * 1000).toLocaleString() : L(__never)}
     </div>
 
-    {#if isConnected}
-        <div>
+    {#if isConnected && enableSync}
+        <div transition:fade={{duration: 200}}>
             {#if status === ESyncStatus.Loading}
                 <span><SyncIndicator status={ESyncStatus.Loading} /> {L(__loading)}</span>
             {:else}
