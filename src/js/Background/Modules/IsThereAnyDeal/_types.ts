@@ -55,5 +55,5 @@ export type TNotesList = [number, string][];
 
 export interface TPushNotesStatus {
     pushed: number
-    errors: [number, string][]
+    errors: [number, string, Record<string, string|number>|undefined][]
 }

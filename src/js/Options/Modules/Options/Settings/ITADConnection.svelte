@@ -16,7 +16,9 @@
     import ITADSyncStatus from "@Content/Modules/Widgets/ITADSync/ITADSyncStatus.svelte";
     import ESyncStatus from "@Core/Sync/ESyncStatus";
 
-    let promise: Promise<boolean>;
+    export let isConnected: boolean = false;
+
+    let promise: Promise<void>;
 
     let statusComponent: ITADSyncStatus;
     let status: ESyncStatus;
@@ -24,19 +26,21 @@
     function handleAuthorize(): void {
         promise = (async () => {
             await ITADApiFacade.authorize();
-            return true;
+            isConnected = true;
         })();
     }
 
     function handleDisconnect(): void {
         promise = (async () => {
             await ITADApiFacade.disconnect();
-            return false;
+            isConnected = false;
         })();
     }
 
     onMount(() => {
-        promise = ITADApiFacade.isConnected();
+        promise = (async () => {
+            isConnected = await ITADApiFacade.isConnected();
+        })();
         statusComponent.updateLastImport();
     });
 </script>
@@ -44,7 +48,7 @@
 
 {#await promise}
     {L(__loading)}
-{:then isConnected}
+{:then _}
     {#if isConnected}
         <button type="button" on:click={handleDisconnect}>
             <span class="label">{L(__status)}</span>
@@ -67,7 +71,9 @@
     </div>
 
     <div class="sync box box--text">
-        <ITADSyncStatus bind:status bind:this={statusComponent} />
+        {#key isConnected}
+            <ITADSyncStatus {isConnected} bind:status bind:this={statusComponent} />
+        {/key}
     </div>
 </div>
 

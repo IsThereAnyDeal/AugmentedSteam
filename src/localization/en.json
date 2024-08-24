@@ -633,7 +633,8 @@
         "sync_failed": "__n__ note(s) failed to sync",
         "sync_error": "Your note failed to sync",
         "sync_error_empty": "Note is empty",
-        "sync_error_unknown": "ITAD does not know this game"
+        "sync_error_unknown": "ITAD does not know this game",
+        "sync_error_length": "Note is too long (__length__, max: __max__)"
     },
     "queue": {
         "new": "New Queue",

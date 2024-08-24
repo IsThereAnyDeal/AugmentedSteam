@@ -16,12 +16,14 @@
     import SyncIndicator from "@Core/Sync/SyncIndicator.svelte";
     import ESyncStatus from "@Core/Sync/ESyncStatus";
 
+    export let isConnected: boolean;
+
     let loading: boolean = false;
     let pullStatus: number|null = null;
     let pushStatus: TPushNotesStatus|null = null;
 
     async function pullNotes(): Promise<void> {
-        if (loading) {
+        if (loading || !isConnected) {
             return;
         }
 
@@ -39,7 +41,7 @@
     }
 
     async function pushNotes(): Promise<void> {
-        if (loading) {
+        if (loading || !isConnected) {
             return;
         }
 
@@ -59,7 +61,7 @@
 </script>
 
 
-<div class="buttons" class:is-loading={loading}>
+<div class="buttons" class:is-disabled={loading || !isConnected}>
     <button type="button" on:click={pushNotes}>
         <span>{L(__userNote_syncButtonPush)}</span>
         <SyncPushIcon />
@@ -95,9 +97,9 @@
                         {L(__userNote_syncFailed, {n: pushStatus.errors.length})}
                     </div>
                     <div class="error-list">
-                        {#each pushStatus.errors as [appid, error]}
+                        {#each pushStatus.errors as [appid, error, params]}
                             <a href="https://store.steampowered.com/app/{appid}">app/{appid}</a>
-                            <div>{L(error)}</div>
+                            <div>{L(error, params ?? null)}</div>
                         {/each}
                     </div>
                 </div>
@@ -114,7 +116,7 @@
         gap: 10px;
         transition: opacity 100ms;
     }
-    .buttons.is-loading {
+    .buttons.is-disabled {
         pointer-events: none;
         opacity: 0.2;
     }

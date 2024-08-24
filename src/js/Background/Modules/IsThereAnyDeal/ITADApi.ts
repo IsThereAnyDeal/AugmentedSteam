@@ -22,9 +22,9 @@ import Errors from "@Core/Errors/Errors";
 import LocalStorage from "@Core/Storage/LocalStorage";
 import TimeUtils from "@Core/Utils/TimeUtils";
 import {Unrecognized} from "@Background/background";
-import {__userNote_syncErrorEmpty, __userNote_syncErrorUnknown} from "@Strings/_strings";
+import {__userNote_syncErrorEmpty, __userNote_syncErrorLength, __userNote_syncErrorUnknown} from "@Strings/_strings";
 
-const MaxItemsPerRequest = 1000;
+const MaxNoteLength = 250;
 const RequiredScopes = [
     "wait_read",
     "wait_write",
@@ -447,6 +447,14 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
             note = note.trim();
             if (note === "") {
                 status.errors.push([appid, __userNote_syncErrorEmpty]);
+                continue;
+            }
+
+            if (note.length > MaxNoteLength) {
+                status.errors.push([appid, __userNote_syncErrorLength, {
+                    length: note.length,
+                    max: MaxNoteLength
+                }]);
                 continue;
             }
 

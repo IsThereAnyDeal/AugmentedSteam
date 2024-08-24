@@ -1,9 +1,11 @@
 <script lang="ts">
     import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";
     import {L} from "@Core/Localization/Localization";
-    import {__itad_from, __itad_lastImport, __itad_syncNow, __itad_to, __never} from "@Strings/_strings";
+    import {__itad_from, __itad_lastImport, __itad_syncNow, __itad_to, __loading, __never} from "@Strings/_strings";
     import ESyncStatus from "@Core/Sync/ESyncStatus";
+    import SyncIndicator from "@Core/Sync/SyncIndicator.svelte";
 
+    export let isConnected: boolean;
     export let status: ESyncStatus = ESyncStatus.OK;
 
     let from: number|null = null;
@@ -47,9 +49,13 @@
         {to ? new Date(to * 1000).toLocaleString() : L(__never)}
     </div>
 
-    {#if status !== ESyncStatus.Loading}
+    {#if isConnected}
         <div>
-            <button type="button" class="asi__sync-now" on:click={syncNow}>{L(__itad_syncNow)}</button>
+            {#if status === ESyncStatus.Loading}
+                <span><SyncIndicator status={ESyncStatus.Loading} /> {L(__loading)}</span>
+            {:else}
+                <button type="button" class="asi__sync-now" on:click={syncNow}>{L(__itad_syncNow)}</button>
+            {/if}
         </div>
     {/if}
 </div>

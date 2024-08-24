@@ -562,6 +562,7 @@ export const __userNote_syncFailed = "userNote_syncFailed";
 export const __userNote_syncError = "userNote_syncError";
 export const __userNote_syncErrorEmpty = "userNote_syncErrorEmpty";
 export const __userNote_syncErrorUnknown = "userNote_syncErrorUnknown";
+export const __userNote_syncErrorLength = "userNote_syncErrorLength";
 export const __queue_new = "queue_new";
 export const __queue_newTooltip = "queue_newTooltip";
 export const __workshop_workshop = "workshop_workshop";

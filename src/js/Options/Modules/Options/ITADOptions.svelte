@@ -20,13 +20,14 @@
     import NotesSyncControls from "@Options/Modules/Options/Settings/NotesSyncControls.svelte";
 
     let settings: Writable<SettingsSchema> = writable(Settings);
+    let isConnected: boolean;
 </script>
 
 
 <div>
     <Section title="IsThereAnyDeal">
         <OptionGroup>
-            <ITADConnection />
+            <ITADConnection bind:isConnected />
         </OptionGroup>
 
         <OptionGroup title={L(__itad_import)}>
@@ -52,7 +53,7 @@
         </div>
 
         <OptionGroup>
-            <NotesSyncControls />
+            <NotesSyncControls {isConnected} />
         </OptionGroup>
 
         <OptionGroup>
