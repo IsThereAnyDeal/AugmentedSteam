@@ -194,10 +194,9 @@ export default class AugmentedSteam {
 
     static init() {
         document.addEventListener("asRequestError", e => {
-            // @ts-ignore
-            const name = e.detail.name ?? null;
-            // @ts-ignore
-            const message = e.detail.message ?? null;
+            const {detail} = e as CustomEvent;
+            const name = detail.name ?? null;
+            const message = detail.message ?? null;
 
             if (name === "LoginError" && message !== null) {
                 this.addLoginWarning(message);
