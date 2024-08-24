@@ -7,13 +7,15 @@ import Settings from "@Options/Data/Settings";
 export default class FOwnedElsewhere extends Feature<CApp> {
 
     override async checkPrerequisites(): Promise<boolean> {
-        return Settings.itad_import_library && await ITADApiFacade.isConnected()
-            && (!this.context.isOwned || !Settings.collection_banner_notowned);
+        return (!this.context.isOwned || !Settings.collection_banner_notowned)
+            && await ITADApiFacade.isConnected();
     }
 
     override async apply(): Promise<void> {
         const response = await ITADApiFacade.getFromCollection(this.context.storeid);
-        if (!response) { return; }
+        if (response === null) {
+            return;
+        }
 
         const node = document.querySelector<HTMLElement>(".queue_overflow_ctn")!;
 

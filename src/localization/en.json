@@ -557,6 +557,8 @@
         "certifications": "WSGF Widescreen Certifications"
     },
     "itad": {
+        "enable_sync_library": "Enable library sync",
+        "enable_sync_wishlist": "Enable wishlist sync",
         "import": "Periodically import:",
         "last_import": "Last import",
         "from": "from ITAD",

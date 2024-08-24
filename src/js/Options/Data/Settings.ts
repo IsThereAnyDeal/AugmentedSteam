@@ -175,8 +175,8 @@ export const DefaultSettings: Readonly<SettingsSchema> = {
     profile_showcase_own_twitch: false,
     profile_showcase_twitch_profileonly: false,
 
-    itad_import_library: false,
-    itad_import_wishlist: false,
+    itad_sync_library: true,
+    itad_sync_wishlist: true,
     add_to_waitlist: false,
     collection_banner_notowned: false,
     itad_sync_notes: false,

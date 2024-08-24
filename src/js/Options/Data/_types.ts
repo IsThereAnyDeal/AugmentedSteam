@@ -181,8 +181,8 @@ export interface SettingsSchema {
     profile_showcase_own_twitch: boolean,
     profile_showcase_twitch_profileonly: boolean,
 
-    itad_import_library: boolean,
-    itad_import_wishlist: boolean,
+    itad_sync_library: boolean,
+    itad_sync_wishlist: boolean,
     add_to_waitlist: boolean,
     collection_banner_notowned: boolean,
     itad_sync_notes: boolean,

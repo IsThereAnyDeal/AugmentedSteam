@@ -1,5 +1,4 @@
 import User from "@Content/Modules/User";
-import Settings from "@Options/Data/Settings";
 import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";
 import ITADSyncMenu from "@Content/Modules/Widgets/ITADSync/ITADSyncMenu.svelte";
 
@@ -15,7 +14,7 @@ export default class ITAD {
             (new ITADSyncMenu({target, anchor}));
         }
 
-        if (User.isSignedIn && (Settings.itad_import_library || Settings.itad_import_wishlist)) {
+        if (User.isSignedIn) {
             await ITADApiFacade.sync();
         }
     }

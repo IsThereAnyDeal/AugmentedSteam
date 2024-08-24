@@ -309,7 +309,7 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
         let newOwnedPackages: number[] = [];
         let newWishlisted: number[] = [];
 
-        if (Settings.itad_import_library) {
+        if (Settings.itad_sync_library) {
             const lastOwnedApps = new Set(await itadImport.get("lastOwnedApps") ?? []);
             const lastOwnedPackages = new Set(await itadImport.get("lastOwnedPackages") ?? []);
 
@@ -320,7 +320,7 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
             newOwnedPackages = ownedPackages.filter(id => !lastOwnedPackages.has(id));
         }
 
-        if (Settings.itad_import_wishlist) {
+        if (Settings.itad_sync_wishlist) {
             const lastWishlisted = new Set(await itadImport.get("lastWishlisted") ?? []);
 
             wishlisted = await dynamicStore.get("wishlisted") ?? [];
@@ -350,13 +350,18 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
 
         await Promise.all(promises);
 
-        let lastImport = await this.getLastImport();
-        lastImport.to = TimeUtils.now();
+        if (promises.length > 0) {
+            let lastImport = await this.getLastImport();
+            lastImport.to = TimeUtils.now();
 
-        await LocalStorage.set("lastItadImport", lastImport);
+            await LocalStorage.set("lastItadImport", lastImport);
+        }
     }
 
     private async importWaitlist(force: boolean): Promise<void> {
+        if (!Settings.itad_sync_wishlist) {
+            return;
+        }
         if (force || await IndexedDB.isStoreExpired("waitlist")) {
             const data = await this.fetchWaitlist();
             await IndexedDB.replaceAll("waitlist", data ? [...data.entries()] : []);
@@ -366,6 +371,9 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
     }
 
     private async importCollection(force: boolean): Promise<void> {
+        if (!Settings.itad_sync_library) {
+            return;
+        }
         if (force || await IndexedDB.isStoreExpired("collection")) {
             const data = await this.fetchCollection();
             await IndexedDB.replaceAll("collection", data ? [...data.entries()] : []);
@@ -378,7 +386,10 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
         await this.exportToItad(force);
         await this.importWaitlist(force);
         await this.importCollection(force);
-        await this.pullNotes();
+
+        if (Settings.itad_sync_notes) {
+            await this.pullNotes();
+        }
     }
 
     private async inWaitlist(storeIds: string[]): Promise<TInWaitlistResponse> {

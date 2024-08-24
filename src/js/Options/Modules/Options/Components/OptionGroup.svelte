@@ -6,7 +6,7 @@
 
 
 <div class="group">
-    {#if title}<div>{title}</div>{/if}
+    {#if title}<div class="title">{title}</div>{/if}
     <slot></slot>
 </div>
 
@@ -18,5 +18,10 @@
 
     .group + :global(.group) {
         border-top: 1px solid #262833;
+    }
+
+    .title {
+        margin-bottom: 5px;
+        margin-left: 10px;
     }
 </style>

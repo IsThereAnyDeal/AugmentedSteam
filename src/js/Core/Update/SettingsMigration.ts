@@ -92,5 +92,12 @@ export default class SettingsMigration {
             await storage.remove("show_survey_info");
             await storage.remove("show_steamchart_info");
         }
+
+        if (oldVersion.isSameOrBefore("4.0.1")) {
+            await SettingsStore.set("itad_sync_library", (await storage.get("itad_import_library") ?? true));
+            await SettingsStore.set("itad_sync_wishlist", (await storage.get("itad_import_wishlist") ?? true));
+            await storage.remove("itad_import_library");
+            await storage.remove("itad_import_wishlist");
+        }
     }
 }
