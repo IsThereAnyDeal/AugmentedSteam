@@ -1,6 +1,7 @@
 import Version from "@Core/Version";
 import {SyncedStorage} from "@Core/Storage/SyncedStorage";
 import {SettingsStore} from "@Options/Data/Settings";
+import AccessToken from "@Background/Modules/IsThereAnyDeal/AccessToken";
 
 export default class SettingsMigration {
 
@@ -98,6 +99,7 @@ export default class SettingsMigration {
             await SettingsStore.set("itad_sync_wishlist", (await storage.get("itad_import_wishlist") ?? true));
             await storage.remove("itad_import_library");
             await storage.remove("itad_import_wishlist");
+            await AccessToken.clear(); // new scopes are required
         }
     }
 }
