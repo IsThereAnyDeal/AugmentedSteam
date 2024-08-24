@@ -52,10 +52,10 @@ export default class UserNotes {
             if (Settings.itad_sync_notes && await ITADApiFacade.isConnected()) {
                 const status = await ITADApiFacade.pushNote(appid, note);
                 if (status.errors.length != 0) {
-                    const [, error, params] = status.errors[0];
+                    const [, error, params] = status.errors[0]!;
                     await SteamFacade.showAlertDialog(
                         L(__userNote_syncError),
-                        L(error, params ?? null)
+                        L(error, params)
                     );
                 }
             }

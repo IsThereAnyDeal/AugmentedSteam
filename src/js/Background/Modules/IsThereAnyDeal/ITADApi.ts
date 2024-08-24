@@ -440,6 +440,10 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
             errors: []
         }
 
+        if (notes.length === 0) {
+            return status;
+        }
+
         const map: Map<number, string> = new Map<number, string>(notes);
         const appids = [...map.keys()].map(appid => `app/${appid}`);
 
@@ -453,7 +457,7 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
         for (let [appid, note] of map.entries()) {
             note = note.trim();
             if (note === "") {
-                status.errors.push([appid, __userNote_syncErrorEmpty]);
+                status.errors.push([appid, __userNote_syncErrorEmpty, null]);
                 continue;
             }
 
@@ -467,7 +471,7 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
 
             const gid: string|null = gids.get(`app/${appid}`) ?? null;
             if (gid === null) {
-                status.errors.push([appid, __userNote_syncErrorUnknown]);
+                status.errors.push([appid, __userNote_syncErrorUnknown, null]);
                 continue;
             }
 

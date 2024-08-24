@@ -18,7 +18,7 @@
 
     <div class="asi__hover">
         <div class="asi__content">
-            <ITADSyncStatus bind:status bind:this={statusComponent} />
+            <ITADSyncStatus isConnected bind:status bind:this={statusComponent} />
         </div>
     </div>
 </div>

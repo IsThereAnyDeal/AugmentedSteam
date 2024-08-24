@@ -99,7 +99,7 @@
                     <div class="error-list">
                         {#each pushStatus.errors as [appid, error, params]}
                             <a href="https://store.steampowered.com/app/{appid}">app/{appid}</a>
-                            <div>{L(error, params ?? null)}</div>
+                            <div>{L(error, params)}</div>
                         {/each}
                     </div>
                 </div>
