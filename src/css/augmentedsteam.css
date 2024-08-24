@@ -1821,13 +1821,6 @@ label.es_dlc_label > input:checked::after {
   max-width: 100%;
 }
 
-/*
- * Dialogs
- */
-.as_feature_hint_option {
-  color: white;
-}
-
 
 .es_slider_toggle i,
 .es_screenshot_fullscreen_toggle i {
