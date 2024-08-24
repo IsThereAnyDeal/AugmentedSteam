@@ -3,6 +3,7 @@ import {L} from "@Core/Localization/Localization";
 import type CTradeOffer from "@Content/Features/Community/TradeOffer/CTradeOffer";
 import Feature from "@Content/Modules/Context/Feature";
 import HTML from "@Core/Html/Html";
+import "./FCountTradeItems.css";
 
 export default class FCountTradeItems extends Feature<CTradeOffer> {
 

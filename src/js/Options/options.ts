@@ -1,5 +1,3 @@
-"use strict";
-
 import Options from "./OptionsPage.svelte";
 import Environment, {ContextType} from "@Core/Environment";
 
