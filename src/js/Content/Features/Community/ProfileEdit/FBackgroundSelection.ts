@@ -1,6 +1,7 @@
 import HTML from "@Core/Html/Html";
 import StringUtils from "@Core/Utils/StringUtils";
-import TimeUtils, {ResettableTimer} from "@Core/Utils/TimeUtils";
+import TimeUtils from "@Core/Utils/TimeUtils";
+import type {IResettableTimer} from "@Core/Utils/TimeUtils";
 import {
     __customBackground,
     __customBackgroundHelp,
@@ -129,7 +130,7 @@ export default class FBackgroundSelection extends Feature<CProfileEdit> {
                 node.classList.add("is-selected");
             });
 
-            let timer: ResettableTimer|null = null;
+            let timer: IResettableTimer|null = null;
 
             // Most of this logic is from https://github.com/SteamDatabase/SteamTracking/blob/6db3e47a120c5c938a0ab37186d39b02b14d27d9/steamcommunity.com/public/javascript/global.js#L2726
             gameFilterNode.addEventListener("keyup", () => {

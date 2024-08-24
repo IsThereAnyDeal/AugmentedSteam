@@ -1,5 +1,6 @@
 import LocalStorage from "@Core/Storage/LocalStorage";
-import TimeUtils, {ResettableTimer} from "@Core/Utils/TimeUtils";
+import TimeUtils from "@Core/Utils/TimeUtils";
+import type {IResettableTimer} from "@Core/Utils/TimeUtils";
 import Feature from "@Content/Modules/Context/Feature";
 import type CApp from "@Content/Features/Store/App/CApp";
 
@@ -66,7 +67,7 @@ export default class FHDPlayer extends Feature<CApp> {
         const video: HTMLVideoElement = children[0] as HTMLVideoElement;
         const overlay: HTMLElement = children[1] as HTMLElement;
 
-        let timer: ResettableTimer|null = null;
+        let timer: IResettableTimer|null = null;
 
         video.addEventListener("mousemove", () => {
             if (timer) {
