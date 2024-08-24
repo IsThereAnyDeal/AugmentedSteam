@@ -2,7 +2,7 @@ import type {
     TCollectionCopy,
     TGetStoreListResponse, TInCollectionResponse,
     TInWaitlistResponse,
-    TLastImportResponse
+    TLastImportResponse, TNotesList, TPushNotesStatus
 } from "@Background/Modules/IsThereAnyDeal/_types";
 import Background from "@Core/Background";
 import {EAction} from "@Background/EAction";
@@ -51,5 +51,24 @@ export default class ITADApiFacade {
 
     static async getFromCollection(storeId: string): Promise<TCollectionCopy[]|null> {
         return Background.send(EAction.GetFromCollection, {storeId});
+    }
+
+    static async pullNotes(): Promise<TNotesList> {
+        return Background.send(EAction.ITAD_Notes_Pull);
+    }
+
+    static async pushNotes(notes: TNotesList): Promise<TPushNotesStatus> {
+        return Background.send(EAction.ITAD_Notes_Push, {notes});
+    }
+
+    /**
+     * Just a convenience wrapper around PushNotes
+     */
+    static async pushNote(appid: number, note: string): Promise<TPushNotesStatus> {
+        return Background.send(EAction.ITAD_Notes_Push, {notes: [[appid, note]]});
+    }
+
+    static async deleteNote(appid: number): Promise<void> {
+        return Background.send(EAction.ITAD_Notes_Delete, {appids: [appid]});
     }
 }

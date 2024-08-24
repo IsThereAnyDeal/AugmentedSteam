@@ -2,9 +2,9 @@
     import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";
     import {L} from "@Core/Localization/Localization";
     import {__itad_from, __itad_lastImport, __itad_syncNow, __itad_to, __never} from "@Strings/_strings";
-    import EITADSyncStatus from "@Content/Modules/Widgets/ITADSync/EITADSyncStatus";
+    import ESyncStatus from "@Core/Sync/ESyncStatus";
 
-    export let status: EITADSyncStatus = EITADSyncStatus.OK;
+    export let status: ESyncStatus = ESyncStatus.OK;
 
     let from: number|null = null;
     let to: number|null = null;
@@ -16,14 +16,14 @@
     }
 
     async function syncNow(): Promise<void> {
-        status = EITADSyncStatus.Loading;
+        status = ESyncStatus.Loading;
 
         try {
             await ITADApiFacade.sync(true);
-            status = EITADSyncStatus.OK;
+            status = ESyncStatus.OK;
             await updateLastImport();
         } catch (e) {
-            status = EITADSyncStatus.Error;
+            status = ESyncStatus.Error;
 
             console.group("ITAD sync");
             console.error("Failed to sync with ITAD");
@@ -47,7 +47,7 @@
         {to ? new Date(to * 1000).toLocaleString() : L(__never)}
     </div>
 
-    {#if status !== EITADSyncStatus.Loading}
+    {#if status !== ESyncStatus.Loading}
         <div>
             <button type="button" class="asi__sync-now" on:click={syncNow}>{L(__itad_syncNow)}</button>
         </div>

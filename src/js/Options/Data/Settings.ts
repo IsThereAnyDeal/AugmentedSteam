@@ -179,6 +179,7 @@ export const DefaultSettings: Readonly<SettingsSchema> = {
     itad_import_wishlist: false,
     add_to_waitlist: false,
     collection_banner_notowned: false,
+    itad_sync_notes: false,
 
     context_steam_store: false,
     context_steam_market: false,

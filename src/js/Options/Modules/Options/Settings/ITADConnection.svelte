@@ -14,12 +14,12 @@
     import {onMount} from "svelte";
     import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";
     import ITADSyncStatus from "@Content/Modules/Widgets/ITADSync/ITADSyncStatus.svelte";
-    import EITADSyncStatus from "@Content/Modules/Widgets/ITADSync/EITADSyncStatus";
+    import ESyncStatus from "@Core/Sync/ESyncStatus";
 
     let promise: Promise<boolean>;
 
     let statusComponent: ITADSyncStatus;
-    let status: EITADSyncStatus;
+    let status: ESyncStatus;
 
     function handleAuthorize(): void {
         promise = (async () => {
@@ -61,12 +61,12 @@
 {/await}
 
 <div class="info">
-    <div class="box">
+    <div class="box box--text">
         <p>{L(__itad_info_itadSteam)}</p>
         <p>{L(__itad_info_steamItad)}</p>
     </div>
 
-    <div class="sync box">
+    <div class="sync box box--text">
         <ITADSyncStatus bind:status bind:this={statusComponent} />
     </div>
 </div>
@@ -103,9 +103,7 @@
 
 
     .info {
-        font-size: 0.92em;
         margin: 15px 0;
-        line-height: 1.5;
         display: grid;
         grid-template-columns: auto 160px;
         gap: 15px;

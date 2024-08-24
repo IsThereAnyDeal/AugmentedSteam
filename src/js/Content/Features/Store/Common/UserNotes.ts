@@ -11,14 +11,15 @@ import {
     __userNote_closeOnStorageDesc,
     __userNote_notEnoughSpace,
     __userNote_notEnoughSpaceDesc,
-    __userNote_saveItad,
     __userNote_saveLocal,
     __userNote_saveSyncedStorage,
-    __userNote_storageWarningDesc,
+    __userNote_storageWarningDesc, __userNote_syncError,
 } from "@Strings/_strings";
 import type AdapterInterface from "@Content/Modules/UserNotes/Adapters/AdapterInterface";
 import DOMHelper from "@Content/Modules/DOMHelper";
 import Settings from "@Options/Data/Settings";
+import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";
+import SteamFacade from "@Content/Modules/Facades/SteamFacade";
 
 export default class UserNotes {
 
@@ -47,6 +48,17 @@ export default class UserNotes {
 
         try {
             capInfo = await this._adapter.set(appid, note);
+
+            if (Settings.itad_sync_notes && await ITADApiFacade.isConnected()) {
+                const status = await ITADApiFacade.pushNote(appid, note);
+                if (status.errors.length != 0) {
+                    const errors = new Map(status.errors);
+                    await SteamFacade.showAlertDialog(
+                        L(__userNote_syncError),
+                        L(errors.get(appid)!)
+                    );
+                }
+            }
         } catch (err) {
             if (err instanceof OutOfCapacityError) {
                 return (await this._showOutOfCapacityDialog(true, err.ratio))
@@ -65,8 +77,12 @@ export default class UserNotes {
         return true;
     }
 
-    delete(appid: number): Promise<void> {
-        return this._adapter.delete(appid);
+    async delete(appid: number): Promise<void> {
+        await this._adapter.delete(appid);
+
+        if (Settings.itad_sync_notes && await ITADApiFacade.isConnected()) {
+            await ITADApiFacade.deleteNote(appid);
+        }
     }
 
     async showModalDialog(
@@ -140,7 +156,6 @@ export default class UserNotes {
             DOMHelper.insertScript("scriptlets/Store/Common/userNotesOutOfCapacityModal.js", {
                 title: L(exceeded ? __userNote_notEnoughSpace : __userNote_closeOnStorage),
                 desc: desc,
-                strCloudStorage: L(__userNote_saveItad),
                 strCancel: L(__userNote_saveSyncedStorage),
                 strLocalStorage: L(__userNote_saveLocal),
             });

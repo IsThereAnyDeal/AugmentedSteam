@@ -45,3 +45,15 @@ export type TCollectionCopy = {
     note?: string,
     tags?: string[],
 }
+
+export type TGetNotesApiResponse = Array<{
+    gid: string,
+    note: string
+}>;
+
+export type TNotesList = [number, string][];
+
+export interface TPushNotesStatus {
+    pushed: number
+    errors: [number, string][]
+}

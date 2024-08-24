@@ -1,21 +1,20 @@
 <script lang="ts">
     import ExtensionResources from "@Core/ExtensionResources";
     import ITADSyncStatus from "@Content/Modules/Widgets/ITADSync/ITADSyncStatus.svelte";
-    import EITADSyncStatus from "@Content/Modules/Widgets/ITADSync/EITADSyncStatus";
+    import ESyncStatus from "@Core/Sync/ESyncStatus";
+    import SyncIndicator from "@Core/Sync/SyncIndicator.svelte";
 
     const itadLogo = ExtensionResources.getURL("img/itad.png");
 
     let statusComponent: ITADSyncStatus;
-    let status: EITADSyncStatus;
+    let status: ESyncStatus;
 </script>
 
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="asi" on:mouseenter={() => statusComponent.updateLastImport()}>
     <img class="asi__logo" src={itadLogo} alt="ITAD logo">
-    <span class="asi__indicator"
-          class:is-loading={status === EITADSyncStatus.Loading}
-          class:is-error={status === EITADSyncStatus.Error}></span>
+    <SyncIndicator {status} />
 
     <div class="asi__hover">
         <div class="asi__content">
@@ -34,23 +33,9 @@
     .asi__logo {
         height: 20px;
     }
-    .asi__indicator {
-        margin-left: 0.4em;
-        border: 3px solid #02ba55;
-        border-radius: 50%;
+    img {
+        margin-right: 0.4em;
     }
-    .asi__indicator.is-error {
-        border-color: #d72e2e;
-    }
-    .asi__indicator.is-loading {
-        border-color: #3090ce;
-        animation: pulse 600ms alternate infinite;
-    }
-    @keyframes pulse {
-        0% { opacity: 0; }
-        100% { opacity: 1; }
-    }
-
 
     .asi__hover {
         display: none;

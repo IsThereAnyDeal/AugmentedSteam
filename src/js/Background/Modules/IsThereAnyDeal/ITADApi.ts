@@ -4,10 +4,13 @@ import IndexedDB from "@Background/Db/IndexedDB";
 import type {
     TCollectionCopiesResponse,
     TCollectionCopy,
+    TGetNotesApiResponse,
     TGetStoreListResponse,
     TInCollectionResponse,
     TInWaitlistResponse,
     TLastImportResponse,
+    TNotesList,
+    TPushNotesStatus,
     TShopInfo
 } from "./_types";
 import type MessageHandlerInterface from "@Background/MessageHandlerInterface";
@@ -19,6 +22,7 @@ import Errors from "@Core/Errors/Errors";
 import LocalStorage from "@Core/Storage/LocalStorage";
 import TimeUtils from "@Core/Utils/TimeUtils";
 import {Unrecognized} from "@Background/background";
+import {__userNote_syncErrorEmpty, __userNote_syncErrorUnknown} from "@Strings/_strings";
 
 const MaxItemsPerRequest = 1000;
 const RequiredScopes = [
@@ -26,6 +30,8 @@ const RequiredScopes = [
     "wait_write",
     "coll_read",
     "coll_write",
+    "notes_read",
+    "notes_write"
 ];
 
 export default class ITADApi extends Api implements MessageHandlerInterface {
@@ -365,6 +371,7 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
         await this.exportToItad(force);
         await this.importWaitlist(force);
         await this.importCollection(force);
+        await this.pullNotes();
     }
 
     private async inWaitlist(storeIds: string[]): Promise<TInWaitlistResponse> {
@@ -381,6 +388,123 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
         await this.importCollection(false);
         return (await IndexedDB.get("collection", storeId)) ?? null;
     }
+
+    private async pullNotes(): Promise<TNotesList> {
+        const accessToken = await AccessToken.load();
+        if (!accessToken) {
+            throw new Errors.OAuthUnauthorized();
+        }
+
+        const response = await this.fetchJson<TGetNotesApiResponse>(
+            this.getUrl("/user/notes/v1"), {
+                method: "GET",
+                headers: {
+                    "authorization": "Bearer " + accessToken,
+                    "accept": "application/json"
+                }
+            });
+
+        const notes: Map<string, string> = new Map<string, string>(
+            response.map(o => [o.gid, o.note])
+        );
+
+        const steamIds = await this.fetchSteamIds([...notes.keys()]);
+
+        const result: TNotesList = [];
+        for (let [steamId, gid] of steamIds) {
+            if (!steamId.startsWith("app/")) {
+                continue;
+            }
+
+            const appid = Number(steamId.substring(4));
+            result.push([appid, notes.get(gid)!]);
+        }
+        return result;
+    }
+
+    private async pushNotes(notes: TNotesList): Promise<TPushNotesStatus> {
+        const accessToken = await AccessToken.load();
+        if (!accessToken) {
+            throw new Errors.OAuthUnauthorized();
+        }
+
+        const status: TPushNotesStatus = {
+            pushed: 0,
+            errors: []
+        }
+
+        const map: Map<number, string> = new Map<number, string>(notes);
+        const appids = [...map.keys()].map(appid => `app/${appid}`);
+
+        const gids = await this.fetchGameIds(appids);
+
+        let toPush: Array<{
+            gid: string,
+            note: string
+        }> = [];
+
+        for (let [appid, note] of map.entries()) {
+            note = note.trim();
+            if (note === "") {
+                status.errors.push([appid, __userNote_syncErrorEmpty]);
+                continue;
+            }
+
+            const gid: string|null = gids.get(`app/${appid}`) ?? null;
+            if (gid === null) {
+                status.errors.push([appid, __userNote_syncErrorUnknown]);
+                continue;
+            }
+
+            toPush.push({gid, note});
+        }
+
+        if (toPush.length !== 0) {
+            const response = await fetch(
+                this.getUrl("/user/notes/v1"), {
+                    method: "PUT",
+                    headers: {
+                        "authorization": "Bearer " + accessToken,
+                        "content-type": "application/json",
+                        "accept": "application/json",
+                    },
+                    body: JSON.stringify(toPush)
+                });
+
+            if (!response.ok) {
+                throw new Errors.HTTPError(response.status, response.statusText);
+            }
+        }
+
+        status.pushed = toPush.length;
+        return status;
+    }
+
+    private async deleteNotes(appids: number[]): Promise<void> {
+        const accessToken = await AccessToken.load();
+        if (!accessToken) {
+            throw new Errors.OAuthUnauthorized();
+        }
+
+        const gids = await this.fetchGameIds(
+            appids.map(appid => `app/${appid}`)
+        );
+
+        const response = await fetch(
+            this.getUrl("/user/notes/v1"), {
+                method: "DELETE",
+                headers: {
+                    "authorization": "Bearer " + accessToken,
+                    "content-type": "application/json"
+                },
+                body: JSON.stringify([...gids.values()])
+            });
+
+        if (!response.ok) {
+            throw new Errors.HTTPError(response.status, response.statusText);
+        }
+    }
+
 
     handle(message: any): typeof Unrecognized|Promise<any> {
 
@@ -420,6 +544,15 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
 
             case EAction.GetFromCollection:
                 return this.getFromCollection(message.params.storeId);
+
+            case EAction.ITAD_Notes_Pull:
+                return this.pullNotes();
+
+            case EAction.ITAD_Notes_Push:
+                return this.pushNotes(message.params.notes);
+
+            case EAction.ITAD_Notes_Delete:
+                return this.deleteNotes(message.params.appids);
         }
 
         return Unrecognized;

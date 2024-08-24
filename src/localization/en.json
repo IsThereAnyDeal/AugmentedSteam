@@ -620,9 +620,20 @@
         "close_on_storage": "You are running close on storage",
         "close_on_storage_desc": "Augmented Steam is close to not being able to save any more user notes (~__perc__% storage usage) with your current storage adapter.",
         "storage_warning_desc": "You can choose to store your user notes in a local database (without synchronization) or continue using the storage method provided by your browser (where new notes can only be added if you delete some old).",
-        "save_itad": "Save notes on ITAD server",
         "save_synced_storage": "Continue using synced storage",
-        "save_local": "Store notes locally"
+        "save_local": "Store notes locally",
+        "sync_option": "Sync notes automatically",
+        "sync_info_1": "You can sync your notes between Augmented Steam and IsThereAnyDeal. If you enable automatic sync, notes will be periodically fetched from ITAD. Edits via Augmented Steam will be mirrored to ITAD immediately.",
+        "sync_info_2": "You can also manually push or pull notes between Augmented Steam and IsThereAnyDeal. We advise you to do so before enabling automatic sync, to ensure the correct version of the note is used, in case you have different notes stored for the same game.",
+        "sync_info_3": "You can see all your notes stored in the Notes and Tags section on IsThereAnyDeal.",
+        "sync_button_push": "Push notes to\nIsThereAnyDeal",
+        "sync_button_pull": "Pull notes from\nIsThereAnyDeal",
+        "sync_pulled": "__n__ note(s) were pulled from IsThereAnyDeal",
+        "sync_pushed": "__n__ note(s) were pushed to IsThereAnyDeal",
+        "sync_failed": "__n__ note(s) failed to sync",
+        "sync_error": "Your note failed to sync",
+        "sync_error_empty": "Note is empty",
+        "sync_error_unknown": "ITAD does not know this game"
     },
     "queue": {
         "new": "New Queue",
