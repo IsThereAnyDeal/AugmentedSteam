@@ -1,5 +1,5 @@
 import Feature from "@Content/Modules/Context/Feature";
-import type CApp from "@Content/Features/Store/App/CApp";
+import type CApp from "@Content/Features/Community/App/CApp";
 import type CAgeCheck from "@Content/Features/Store/AgeCheck/CAgecheck";
 import Settings from "@Options/Data/Settings";
 import ContextType from "@Content/Modules/Context/ContextType";

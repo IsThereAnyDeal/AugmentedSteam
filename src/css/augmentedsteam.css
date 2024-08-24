@@ -951,6 +951,11 @@ video.highlight_movie:hover + .html5_video_overlay {
 .queue_btn_menu.on_waitlist #queue_menu_option_on_waitlist .queue_ignore_menu_option_image.selected {
   display: inline-block;
 }
+.es-loading-wl {
+  width: 16px;
+  /* Makes the image more consistent with others */
+  filter: brightness(350%);
+}
 .queue_actions_ctn:not(.loading) .as_btn_wishlist a:hover img.es-remove-wl {
   display: inline !important;
 }

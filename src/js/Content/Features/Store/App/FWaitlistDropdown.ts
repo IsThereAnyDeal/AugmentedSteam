@@ -100,8 +100,8 @@ export default class FWaitlistDropdown extends Feature<CApp> {
         // Check response of ajax calls before updating button status
         DOMHelper.insertScript("scriptlets/Store/App/wishlistHandlers.js");
 
-        let wishlisted = wishlistArea.style.display === "none";
-        let waitlisted = (await ITADApiFacade.inWaitlist([this.context.storeid]))[this.context.storeid] ?? false;
+        let wishlisted: boolean = wishlistArea.style.display === "none";
+        let waitlisted: boolean = (await ITADApiFacade.inWaitlist([this.context.storeid]))[this.context.storeid] ?? false;
 
         const menu = parent.querySelector(".as_btn_wishlist_menu")!;
         const menuArrow = menu.querySelector(".queue_menu_arrow")!;
@@ -115,7 +115,7 @@ export default class FWaitlistDropdown extends Feature<CApp> {
         function updateDiv() {
             parent!.classList.remove("loading");
 
-            const oneActive = Boolean(wishlisted) || Boolean(waitlisted);
+            const oneActive = wishlisted || waitlisted;
 
             menuArrow.classList.toggle("queue_btn_active", oneActive);
 
@@ -156,18 +156,18 @@ export default class FWaitlistDropdown extends Feature<CApp> {
             if (parent.classList.contains("loading")) { return; }
             parent.classList.add("loading");
 
-            const result = await (new Promise<boolean>(resolve => {
+            await new Promise<void>(resolve => {
                 // @ts-expect-error
-                document.addEventListener("addRemoveWishlist",
-                    (e: CustomEvent<boolean>) => resolve(e.detail)),
-                    {once: true}
-            }));
-            if (result) {
-                wishlisted = !wishlisted;
-                updateDiv();
-            } else {
-                parent.classList.remove("loading");
-            }
+                document.addEventListener("addRemoveWishlist", (e: CustomEvent<boolean>) => {
+                    if (e.detail) {
+                        wishlisted = !wishlisted;
+                        updateDiv();
+                    } else {
+                        parent.classList.remove("loading");
+                    }
+                    resolve();
+                }, {once: true});
+            });
         });
 
         // Click remove-from-wishlist, remove from both wishlist and waitlist
@@ -182,8 +182,11 @@ export default class FWaitlistDropdown extends Feature<CApp> {
 
             if (wishlisted) {
                 await new Promise<void>(resolve => {
-                    document.addEventListener("addRemoveWishlist", () => {
-                        wishlisted = !wishlisted;
+                    // @ts-expect-error
+                    document.addEventListener("addRemoveWishlist", (e: CustomEvent<boolean>) => {
+                        if (e.detail) {
+                            wishlisted = !wishlisted;
+                        }
                         resolve();
                     }, {once: true});
                 });
@@ -198,35 +201,43 @@ export default class FWaitlistDropdown extends Feature<CApp> {
         });
 
         wishlistOption.addEventListener("click", async() => {
-            if (wishlisted) {
-                if (parent.classList.contains("loading")) { return; }
-                parent.classList.add("loading");
+            if (parent.classList.contains("loading")) { return; }
+            parent.classList.add("loading");
 
-                await new Promise<void>(resolve => {
-                    // @ts-ignore
-                    document.addEventListener("addRemoveWishlist", (e: CustomEvent<boolean>) => {
-                        if (e.detail) {
-                            wishlisted = !wishlisted;
-                            updateDiv();
-                        } else {
-                            parent.classList.remove("loading");
-                        }
-                        resolve();
-                    }, {once: true});
+            /**
+             * For removing, use Steam's method so wishlist count is updated and dynamic store cache invalidated.
+             * For adding, dispatching a click event to execute the inline `javascript:` link in `addBtn` is a CSP violation under MV3,
+             * so call Steam's method directly.
+             */
 
-                    // Use Steam's method here so wishlist count is updated and dynamic store cache invalidated
+            await new Promise<void>(resolve => {
+                // @ts-expect-error
+                document.addEventListener("addRemoveWishlist", (e: CustomEvent<boolean>) => {
+                    if (e.detail) {
+                        wishlisted = !wishlisted;
+                        updateDiv();
+                    } else {
+                        parent.classList.remove("loading");
+                    }
+                    resolve();
+                }, {once: true});
+
+                if (wishlisted) {
                     SteamFacade.removeFromWishlist(
                         this.context.appid,
                         "add_to_wishlist_area_success",
                         "add_to_wishlist_area",
-                        "add_to_wishlist_area_fail",
-                        "1_store-navigation__",
-                        "add_to_wishlist_area2"
+                        "add_to_wishlist_area_fail"
                     );
-                });
-            } else {
-                addBtn.dispatchEvent(new MouseEvent("click"));
-            }
+                } else {
+                    SteamFacade.addToWishlist(
+                        this.context.appid,
+                        "add_to_wishlist_area",
+                        "add_to_wishlist_area_success",
+                        "add_to_wishlist_area_fail"
+                    );
+                }
+            });
         });
 
         waitlistOption.addEventListener("click", async() => {
