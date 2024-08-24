@@ -322,9 +322,7 @@
         "title": "How Long to Beat",
         "main_e": "Main Story and Extras",
         "compl": "Completionist",
-        "submit": "Submit Your Time",
-        "main": "Main Story",
-        "no_data": "No data found"
+        "main": "Main Story"
     },
     "options": {
         "friends_and_groups": "Friends and Groups",
@@ -405,8 +403,6 @@
         "protondb": "Show ProtonDB links",
         "store_steamcards": "Show SteamCardExchange links",
         "spamcommentregex": "Regular Expression string:",
-        "saved_note": "Options saved",
-        "saving": "Saving...",
         "regional_hideworld": "Hide globe indicator",
         "show_astatslink": "Show AStats links",
         "show_youtubegameplay": "Show \"YouTube Gameplay\" links",
@@ -423,11 +419,9 @@
         "profile_steamid": "Show a link to view SteamIDs",
         "profile_pinned_bg": "Pin the profile background position while scrolling",
         "lowestprice": "Show on app pages",
-        "changelog": "Changelog:",
         "owned": "Items you own",
         "itadlinks": "Show IsThereAnyDeal links",
         "steamdb": "Show SteamDB links",
-        "reset_note": "Options reset",
         "profile_link_images_color": "Colored",
         "show_view_in_library": "Show \"View in Library\" button",
         "install_steam_button": "\"Install Steam\" button",
@@ -441,8 +435,7 @@
             "wishlist": "On my wishlist",
             "loc": "Storage location",
             "synced_storage": "Synced/Local storage",
-            "local": "Local database",
-            "itad": "IsThereAnyDeal server"
+            "local": "Local database"
         },
         "inventory_nav_text": "Show advanced navigation on inventory page",
         "market_total": "Automatically load transaction summary on Market",
@@ -564,9 +557,6 @@
         "from": "from ITAD",
         "to": "to ITAD",
         "sync_now": "Sync now",
-        "option": "Show menu option to sync data to IsThereAnyDeal.com",
-        "send_to_itad": "Send owned games to IsThereAnyDeal",
-        "sending": "Loading your owned games and packages and sending them to IsThereAnyDeal.com",
         "info": {
             "itad-steam": "Connecting Augmented Steam with IsThereAnyDeal allows you to apply Augmented Steam's highlighting and tagging to games in your Waitlist and Collection even if you don't have them on Steam.",
             "steam-itad": "Furthermore, it allows you to import games from your Steam Library and/or Wishlist to IsThereAnyDeal, for improved accuracy (e.g. DLCs or unlisted games). Currently this feature can only add titles, not remove them, so it's not the replacement for IsThereAnyDeal's integrated sync, but an addition to it."
@@ -614,8 +604,6 @@
     "user_note": {
         "add": "Add a note",
         "update": "Update note",
-        "add_prompt": "Enter your note",
-        "update_prompt": "Update your note",
         "add_for_game": "Note for __gamename__",
         "not_enough_space": "Not enough space to save note",
         "not_enough_space_desc": "Augmented Steam can't save any more user notes since your used storage adapter doesn't allow more data to be saved (attempting to use ~__perc__% of the storage capacity).",
@@ -656,7 +644,6 @@
     },
     "original_authors": "Original authors",
     "acknowledgements": "Acknowledgments",
-    "powered_by": "Powered by __link__",
     "countries": {
         "ad": "Andorra",
         "ae": "United Arab Emirates",
