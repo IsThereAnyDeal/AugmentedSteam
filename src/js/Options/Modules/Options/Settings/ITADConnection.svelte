@@ -31,6 +31,7 @@
             await ITADApiFacade.authorize();
             isConnected = true;
         })();
+        statusComponent.updateLastImport();
     }
 
     function handleDisconnect(): void {
@@ -38,6 +39,7 @@
             await ITADApiFacade.disconnect();
             isConnected = false;
         })();
+        statusComponent.updateLastImport();
     }
 
     onMount(() => {
@@ -74,11 +76,9 @@
     </div>
 
     <div class="sync box box--text">
-        {#key isConnected}
-            <ITADSyncStatus {isConnected}
-                            enableSync={$settings.itad_sync_library || $settings.itad_sync_wishlist}
-                            bind:status bind:this={statusComponent} />
-        {/key}
+        <ITADSyncStatus {isConnected}
+                        enableSync={$settings.itad_sync_library || $settings.itad_sync_wishlist}
+                        bind:status bind:this={statusComponent} />
     </div>
 </div>
 
