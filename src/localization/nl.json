@@ -76,7 +76,6 @@
     "badges_all": "Alle Badges",
     "es_supporter": "Enhanced Steam Supporter",
     "community": "Gemeenschap",
-    "owned_elsewhere": "Je hebt __gametitle__ al op __storelist__",
     "view_badge": "Bekijk Badge",
     "purchase_total": "Gekocht totaal:",
     "view_foil_badge": "Bekijk Folie Badge Progressie",
@@ -456,9 +455,6 @@
     },
     "itad": {
         "import": "Periodiek importeren:",
-        "last_import": "Laaste import...",
-        "from": "van ITAD:",
-        "to": "naar ITAD:",
         "sync_now": "Synchroniseer nu",
         "option": "Toon menu optie om informatie te synchroniseren met IsThereAnyDeal.com",
         "send_to_itad": "Verstuur spellen in bezit naar IsThereAnyDeal",
@@ -512,7 +508,6 @@
         "close_on_storage": "Jouw opslag zit bijna vol",
         "close_on_storage_desc": "Augmented Steam kan bijna niet meer gebruiker notities opslaan (~__perc__% opslag gebruikt) met de huidige opslag adapter.",
         "storage_warning_desc": "Je kan ervoor kiezen om jouw gebruiker notities in een lokale database (niet gesynchroniseerd) op te slaan, of doorgaan met het gebruiken van de opslag methode van jouw browser (waar nieuwe notities alleen kan worden opgeslagen als er oude worden verwijderd).",
-        "save_itad": "Notities opslaan op de ITAD server",
         "save_synced_storage": "Ga door met synced opslag gebruiken",
         "save_local": "Notities lokaal opslaan"
     },

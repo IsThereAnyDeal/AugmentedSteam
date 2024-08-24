@@ -76,7 +76,6 @@
     "badges_all": "Wszystkie odznaki",
     "es_supporter": "Zwolennik Enhanced Steam",
     "community": "Społeczność",
-    "owned_elsewhere": "Już posiadasz __gametitle__ w __storelist__",
     "view_badge": "Zobacz odznakę",
     "purchase_total": "Wartość zakupów:",
     "view_foil_badge": "Zobacz postęp foliowanej odznaki",
@@ -461,9 +460,6 @@
     },
     "itad": {
         "import": "Okresowe importowanie:",
-        "last_import": "Ostatni import...",
-        "from": "z ITAD:",
-        "to": "na ITAD:",
         "sync_now": "Synchronizuj teraz",
         "option": "Wyświetlaj w menu podręcznym Augmented Steam opcję synchronizacji danych z IsThereAnyDeal.com",
         "send_to_itad": "Wyślij posiadane gry do IsThereAnyDeal",
@@ -523,7 +519,6 @@
         "close_on_storage": "Zaczyna ci brakować miejsca",
         "close_on_storage_desc": "Augmented Steam jest bliski braku możliwości zapisywania kolejnych notatek użytkownika (~__perc__% wykorzystania pamięci) przy używaniu obecnej lokalizacji przechowywania.",
         "storage_warning_desc": "Możesz wybrać przechowywanie notatek użytkownika w lokalnej bazie danych (bez synchronizacji) lub kontynuować korzystanie z metody przechowywania udostępnionej w przeglądarce (gdzie nowe notatki można dodawać tylko po usunięciu niektórych starszych).",
-        "save_itad": "Zapisz notatki na serwerze ITAD",
         "save_synced_storage": "Kontynuuj korzystanie z pamięci zsynchronizowanej",
         "save_local": "Przechowuj notatki lokalnie"
     },
@@ -875,7 +870,6 @@
     },
     "using_language_return": "Kliknij tutaj, aby zmienić go na __base__.",
     "using_language": "Aktualnie przeglądasz Steam w języku __current__m.",
-    "another_store": "innym sklepie",
     "thewordunknown": "Nieznane",
     "badge_level": "Poziom __level__",
     "ignored_owned": "Tytuły ignorowane oznaczone jako grane na innej platformie"

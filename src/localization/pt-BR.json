@@ -76,7 +76,6 @@
     "badges_all": "Todas as insígnias",
     "es_supporter": "Apoiador do Enhanced Steam",
     "community": "Comunidade",
-    "owned_elsewhere": "Você já possui __gametitle__ na __storelist__",
     "view_badge": "Ver insígnia",
     "purchase_total": "Total de compras:",
     "view_foil_badge": "Ver progresso da insígnia brilhante",
@@ -459,9 +458,6 @@
     },
     "itad": {
         "import": "Importar periodicamente:",
-        "last_import": "Última importação...",
-        "from": "de ITAD:",
-        "to": "para ITAD:",
         "sync_now": "Sincronizar",
         "option": "Exibir opção para sincronizar dados com IsThereAnyDeal.com",
         "send_to_itad": "Enviar dados de jogos na conta para IsThereAnyDeal",
@@ -521,7 +517,6 @@
         "close_on_storage": "O seu armazenamento está quase cheio",
         "close_on_storage_desc": "O Augmented Steam está próximo de não poder salvar mais nenhuma observação de usuário (~__perc__% de armazenamento usado) com o seu adaptador de armazenamento atual.",
         "storage_warning_desc": "Você pode escolher salvar as suas observações de usuário em um banco de dados local (sem sincronização) ou continuar a usar o método de armazenamento fornecido pelo seu navegador (onde novas observações só podem ser adicionadas ao deletar algumas antigas).",
-        "save_itad": "Salvar observações no servidor do ITAD",
         "save_synced_storage": "Continuar a usar o armazenamento sincronizado",
         "save_local": "Salvar observações localmente"
     },
@@ -872,6 +867,5 @@
         "zw": "Zimbábue"
     },
     "using_language_return": "Clique aqui para navegar o Steam em __base__.",
-    "using_language": "Você está navegando o Steam em __current__.",
-    "another_store": "outra loja"
+    "using_language": "Você está navegando o Steam em __current__."
 }

@@ -76,7 +76,6 @@
     "badges_all": "所有徽章",
     "es_supporter": "Enhanced Steam 支持者",
     "community": "社群",
-    "owned_elsewhere": "你已於 __storelist__ 擁有 __gametitle__",
     "view_badge": "檢視徽章",
     "purchase_total": "購買總額：",
     "view_foil_badge": "檢視閃亮徽章進度",
@@ -261,6 +260,7 @@
         "icon": "圖示",
         "name": "名稱",
         "show_alternative_linux_icon": "顯示另類 Linux 圖示",
+        "hidetmsymbols": "隱藏遊戲名稱中的商標與智財權符號",
         "metacritic": "顯示 Metacritic 使用者評分",
         "opencritic": "顯示來自 Opencritic.com 的評論與評價",
         "hideactivelistings": "預設隱藏市集首頁的所有上架物品清單",
@@ -419,7 +419,8 @@
         "about_desc": "Augmented Steam 是 Enhanced Steam 的分支版本。",
         "about_desc_links": "歡迎造訪我們的__website__或 __discord__ 了解更多。",
         "footer_fork": "IsThereAnyDeal 開發的分支版本",
-        "footer_author": "原作者：jshackles"
+        "footer_author": "原作者：jshackles",
+        "show_players_info": "顯示玩家數資訊"
     },
     "ready": {
         "loading": "Augmented Steam 資料載入中…",
@@ -444,7 +445,8 @@
         "owned": "已擁有",
         "notinterested": "已忽略",
         "collection": "已加入 Collection",
-        "waitlist": "已加入 Waitlist"
+        "waitlist": "已加入 Waitlist",
+        "ignored_owned": "已忽略 (在其他平台玩過)"
     },
     "wallet": {
         "custom_amount": "新增自訂金額",
@@ -461,9 +463,6 @@
     },
     "itad": {
         "import": "定期匯入：",
-        "last_import": "上次匯入…",
-        "from": "從 ITAD：",
-        "to": "到 ITAD：",
         "sync_now": "立即同步",
         "option": "顯示將資料同步到 IsThereAnyDeal.com 的選單選項",
         "send_to_itad": "將擁有的遊戲同步到 IsThereAnyDeal",
@@ -523,7 +522,6 @@
         "close_on_storage": "儲存空間即將用盡",
         "close_on_storage_desc": "你目前選用的儲存方式即將無法儲存更多便箋了（已使用 __perc__% 的儲存空間）。",
         "storage_warning_desc": "你可以選擇將便箋儲存於本地資料庫（無法同步）或繼續使用瀏覽器提供的儲存空間（需先刪除一些舊便箋才能加入新的）。",
-        "save_itad": "將便箋儲存至 ITAD 伺服器",
         "save_synced_storage": "繼續使用可同步的儲存空間",
         "save_local": "於本地端儲存便箋"
     },
@@ -633,5 +631,8 @@
     "on_wishlist_and_waitlist": "於願望清單和 Waitlist 內",
     "remove": "移除",
     "using_language_return": "按此改以 __base__ 瀏覽 Steam。",
-    "using_language": "你正在以 __current__ 瀏覽 Steam。"
+    "using_language": "你正在以 __current__ 瀏覽 Steam。",
+    "thewordunknown": "未知",
+    "badge_level": "等級 __level__",
+    "ignored_owned": "因在其他平台玩過而標記為已忽略的項目"
 }

@@ -76,7 +76,6 @@
     "badges_all": "Όλα τα εμβλήματα",
     "es_supporter": "Υποστηρικτής Enhanced Steam",
     "community": "Κοινότητα",
-    "owned_elsewhere": "Κατέχετε ήδη το __gametitle__ στο __storelist__",
     "view_badge": "Εμφάνιση Εμβλήματος",
     "purchase_total": "Σύνολο αγοράς:",
     "view_foil_badge": "Προβολή προόδου ασημένιου εμβλήματος",
@@ -430,9 +429,6 @@
     },
     "itad": {
         "import": "Περιοδική εισαγωγή:",
-        "last_import": "Τελευταία εισαγωγή...",
-        "from": "από το ITAD",
-        "to": "στο ITAD",
         "sync_now": "Συγχρονισμός τώρα",
         "option": "Εμφάνιση επιλογής μενού για συγχρονισμό δεδομένων στο IsThereAnyDeal.com",
         "send_to_itad": "Αποστολή παιχνίδια που έχετε στο IsThereAnyDeal",

@@ -76,7 +76,6 @@
     "badges_all": "Tutte le medaglie",
     "es_supporter": "Sostenitore di Enhanced Steam",
     "community": "Comunità",
-    "owned_elsewhere": "__gametitle__ è già nella tua libreria di __storelist__",
     "view_badge": "Mostra la medaglia",
     "purchase_total": "Acquisti totali:",
     "view_foil_badge": "Visualizza il progresso della medaglia Foil",
@@ -455,9 +454,6 @@
     },
     "itad": {
         "import": "Importa periodicamente",
-        "last_import": "Ultima importazione...",
-        "from": "da ITAD:",
-        "to": "a ITAD:",
         "sync_now": "Sincronizza ora",
         "option": "Mostra opzione del menu per sincronizzare i dati con IsThereAnyDeal.com",
         "send_to_itad": "Invia i giochi in libreria a IsThereAnyDeal",
@@ -516,7 +512,6 @@
         "close_on_storage": "Spazio di archiviazione in esaurimento",
         "close_on_storage_desc": "Molto presto (~__perc__% di utilizzo dello spazio di archiviazione) Augmented Steam non sarà più in grado di salvare altre note dell'utente usando l'attuale sistema di archiviazione.",
         "storage_warning_desc": "Puoi scegliere di archiviare le note utente in un database locale (senza sincronizzazione) o continuare con il metodo di archiviazione del browser (dove le nuove note possono essere aggiunte eliminando alcune note vecchie).",
-        "save_itad": "Salva note sul server ITAD",
         "save_synced_storage": "Continua a usare lo spazio di archiviazione sincronizzato",
         "save_local": "Memorizza le note localmente"
     },

@@ -76,7 +76,6 @@
     "badges_all": "Alle Abzeichen",
     "es_supporter": "Enhanced-Steam-Unterstützer",
     "community": "Community",
-    "owned_elsewhere": "Sie besitzen __gametitle__ bereits auf __storelist__",
     "view_badge": "Abzeichen ansehen",
     "purchase_total": "Kaufsumme:",
     "view_foil_badge": "Fortschritt für Glanzabzeichen anzeigen",
@@ -464,9 +463,6 @@
     },
     "itad": {
         "import": "Regelmäßig importieren:",
-        "last_import": "Letzter Import ...",
-        "from": "von ITAD:",
-        "to": "nach ITAD:",
         "sync_now": "Jetzt synchronisieren",
         "option": "Menüoption anzeigen zum Synchroniseren von Daten mit IsThereAnyDeal.com",
         "send_to_itad": "Spiele in Ihrem Besitz an IsThereAnyDeal senden",
@@ -526,7 +522,6 @@
         "close_on_storage": "Der Speicherplatz wird knapp",
         "close_on_storage_desc": "Augmented Steam steht kurz davor, mit dem aktuellen Speicheradapter keine Benutzernotizen mehr speichern zu können (~ __perc__ % Speicherverbrauch).",
         "storage_warning_desc": "Sie können wählen, ob Sie Ihre Notizen in einer lokalen Datenbank speichern (ohne Synchronisation) oder weiterhin die Speichermethode Ihres Browsers verwenden wollen (wo neue Notizen nur hinzugefügt werden können, wenn Sie alte löschen).",
-        "save_itad": "Notizen auf ITAD-Server speichern",
         "save_synced_storage": "Synchronisierten Speicher weiter verwenden",
         "save_local": "Notizen lokal speichern"
     },
@@ -878,7 +873,6 @@
     },
     "using_language_return": "Hier anklicken, um Steam in __base__ zu verwenden.",
     "using_language": "Sie verwenden Steam in __current__.",
-    "another_store": "anderer Shop",
     "thewordunknown": "Unbekannt",
     "badge_level": "Level __level__",
     "ignored_owned": "Ignorierte, da auf anderer Plattform gespielte Spiele"

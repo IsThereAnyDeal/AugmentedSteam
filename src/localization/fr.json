@@ -76,7 +76,6 @@
     "badges_all": "Tous les badges",
     "es_supporter": "Supporter Enhanced Steam",
     "community": "Communauté",
-    "owned_elsewhere": "Vous possédez déjà __gametitle__ sur __storelist__",
     "view_badge": "Voir le badge",
     "purchase_total": "Total des achats:",
     "view_foil_badge": "Voir la progression du badge premium",
@@ -464,9 +463,6 @@
     },
     "itad": {
         "import": "Importer périodiquement :",
-        "last_import": "Dernière importation...",
-        "from": "d'ITAD :",
-        "to": "vers ITAD :",
         "sync_now": "Synchroniser maintenant",
         "option": "Afficher une option dans le menu pour synchroniser les données vers IsThereAnyDeal.com",
         "send_to_itad": "Envoyer la liste des jeux possédés vers IsThereAnyDeal",
@@ -526,7 +522,6 @@
         "close_on_storage": "Vous êtes à court de stockage",
         "close_on_storage_desc": "Augmented Steam est sur le point de ne plus pouvoir enregistrer de notes utilisateur (~__perc__% d'utilisation du stockage) avec votre adaptateur de stockage actuel.",
         "storage_warning_desc": "Vous pouvez choisir de stocker vos notes utilisateur dans une base de données locale (sans synchronisation) ou de continuer à utiliser la méthode de stockage fournie par votre navigateur (où de nouvelles notes ne peuvent être ajoutées que si vous en supprimez des plus anciennes).",
-        "save_itad": "Enregistrer des notes sur le serveur ITAD",
         "save_synced_storage": "Continuer d'utiliser l'espace de stockage synchronisé",
         "save_local": "Stocker les notes localement"
     },
@@ -878,7 +873,6 @@
     },
     "using_language_return": "Cliquez ici pour naviguer sur Steam en __base__.",
     "using_language": "Vous naviguez sur Steam en __current__.",
-    "another_store": "Autre Magasin",
     "thewordunknown": "Inconnu",
     "badge_level": "Niveau __level__",
     "ignored_owned": "Jeux ignorés car joués sur d'autres plates-formes"

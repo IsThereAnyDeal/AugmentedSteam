@@ -76,7 +76,6 @@
     "badges_all": "Kaikki merkit",
     "es_supporter": "Enhanced Steamin tukija",
     "community": "Yhteisö",
-    "owned_elsewhere": "__gametitle__ on jo listalla __storelist__",
     "view_badge": "Näytä merkki",
     "purchase_total": "Ostokset yhteensä:",
     "view_foil_badge": "Näytä kiiltomerkin edistyminen",
@@ -461,9 +460,6 @@
     },
     "itad": {
         "import": "Määräajoin tapahtuva tuonti:",
-        "last_import": "Viimeisin tuonti...",
-        "from": "ITADista:",
-        "to": "ITADiin:",
         "sync_now": "Synkronoi nyt",
         "option": "Näytä valikkovaihtoehto tietojen synkronoimiseksi IsThereAnyDeal.com:iin",
         "send_to_itad": "Lähetä omistamasi pelit IsThereAnyDeal:iin",
@@ -522,7 +518,6 @@
         "close_on_storage": "Tallennustilasi on täyttymässä",
         "close_on_storage_desc": "Augmented Steam ei pian pysty tallentamaan enää käyttäjän muistiinpanoja (~__perc__% tallennustilan käyttö) nykyisellä tallennussovittimellasi.",
         "storage_warning_desc": "Voit tallentaa käyttäjän muistiinpanot paikalliseen tietokantaan (ilman synkronointia) tai jatkaa selaimesi tarjoaman tallennustavan käyttämistä (johon uusia muistiinpanoja voidaan lisätä vain, jos poistat vanhoja).",
-        "save_itad": "Tallenna muistiinpano ITAD serverille",
         "save_synced_storage": "Jatka synkronoidun tallennustilan käyttöä",
         "save_local": "Tallenna muistiinpanot vain paikallisesti"
     },

@@ -76,7 +76,6 @@
     "badges_all": "全部徽章",
     "es_supporter": "Enhanced Steam 支持者",
     "community": "社区",
-    "owned_elsewhere": "您已在 __storelist__ 拥有 __gametitle__",
     "view_badge": "查看徽章",
     "purchase_total": "消费总计：",
     "view_foil_badge": "查看闪亮徽章进度",
@@ -458,9 +457,6 @@
     },
     "itad": {
         "import": "定时导入：",
-        "last_import": "最新导入...",
-        "from": "从 ITAD：",
-        "to": "至 ITAD：",
         "sync_now": "立刻同步",
         "option": "在菜单中显示与 IsThereAnyDeal.com 同步数据选项",
         "send_to_itad": "与 IsThereAnyDeal 同步已拥有游戏",
@@ -519,7 +515,6 @@
         "close_on_storage": "您的存储空间即将耗尽",
         "close_on_storage_desc": "根据您选择的存储方式，Augmented Steam 即将无法保存更多用户备注（已使用约 __perc__% 存储空间）。",
         "storage_warning_desc": "您可以选择在本地数据库存储用户备注（无同步功能），或继续使用您的浏览器提供的存储方式（您必须删除一些旧备注才能添加新备注）。",
-        "save_itad": "在 ITAD 服务器存储备注",
         "save_synced_storage": "继续使用同步存储",
         "save_local": "在本地存储备注"
     },
@@ -871,7 +866,6 @@
     },
     "using_language_return": "点击这里以__base__浏览 Steam。",
     "using_language": "您正在以__current__浏览 Steam。",
-    "another_store": "其他商店",
     "thewordunknown": "未知",
     "badge_level": "等级 __level__",
     "ignored_owned": "您忽略的在其他平台上玩过的游戏"

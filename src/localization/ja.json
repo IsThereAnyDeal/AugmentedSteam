@@ -76,7 +76,6 @@
     "badges_all": "全バッジ",
     "es_supporter": "Enhanced Steam サポーター",
     "community": "コミュニティ",
-    "owned_elsewhere": "__gametitle__はすでに__storelist__で持っています",
     "view_badge": "バッジを表示",
     "purchase_total": "購入合計:",
     "view_foil_badge": "キラバッジの進捗状況を表示",
@@ -165,7 +164,7 @@
         "title": "ウィッシュリストを空にする",
         "removing": "__total__個のアプリから__cur__個目を削除しています…"
     },
-    "about": "アバウト",
+    "about": "この拡張機能について",
     "never": "表示しない",
     "coupon_available": "クーポンが利用できます!",
     "launch_random": "ランダムなゲームを起動",
@@ -280,7 +279,7 @@
         "regional_price_mouse": "価格をマウスオーバーで",
         "lowestprice_header": "価格履歴情報",
         "stores_all": "すべてのストアを比較",
-        "view_in_currency": "貨幣で表示：",
+        "view_in_currency": "通貨:",
         "show_early_access": "早期アクセスの画像バナーを表示",
         "profile_link_images_gray": "グレースケール",
         "quickinv": "「今すぐ売却」ボタンをインベントリ内のSteamコミュニティアイテムに表示する",
@@ -459,16 +458,13 @@
     },
     "itad": {
         "import": "定期インポート：",
-        "last_import": "最後のインポート…",
-        "from": "ITADから：",
-        "to": "ITADへ：",
         "sync_now": "直ちに同期する",
         "option": "IsThereAnyDeal.comとデータを同期するかどうかのオプションを表示する",
         "send_to_itad": "所持しているゲームの情報をIsThereAnyDealに送信",
         "sending": "既に所持しているゲームやゲームセットの情報を読み込みIsThereAnyDeal.comに送信する",
         "info": {
-            "itad-steam": "Augmented SteamをIsThereAnyDealと接続すると、あなたはSteamにてそれらのゲームを所持していない場合にもかかわらず、IsThereAnyDealのウェイトリストとコレクションをAugmented Steamでハイライトやタグすることができます。",
-            "steam-itad": "また、精確さをさらに上げるため、ゲームをSteamライブラリまたはウィッシュリストからIsThereAnyDealへインポートすることも可能（例えば、DLCまたは収録されていないゲーム）。今、削除機能は実装されていないため、この機能を使ってアイテムを追加するだけができる。IsThereAnyDealが統合した同期機能の代わりに成れないが、補充としてはできる。"
+            "itad-steam": "Augmented SteamをIsThereAnyDealと接続すると、Steamでゲームを所持していない場合も、IsThereAnyDealのウェイトリストとコレクションをAugmented Steamでハイライトやタグすることができます。",
+            "steam-itad": "また、精確さをさらに上げるため、ゲームをSteamライブラリまたはウィッシュリストからIsThereAnyDealへインポートすることも可能（例えば、DLCまたは収録されていないゲーム）です。今、削除機能は実装されていないため、この機能を使ってアイテムを追加するだけができます。IsThereAnyDealが統合した同期機能の代わりにはなれませんが、補充としてはできます。"
         }
     },
     "tradeoffer": {
@@ -520,7 +516,6 @@
         "close_on_storage": "ストレージが不足しています",
         "close_on_storage_desc": "Augmented Steam は、現在のストレージアダプターでは、ユーザーノートをこれ以上保存できなくなる可能性が近づいています。(ストレージ使用量 ~__perc__%)",
         "storage_warning_desc": "ユーザーノートをローカル データベースに保存する(同期なし) か、ブラウザーが提供する保存方法を引き続き使用する(古いメモを削除した場合にのみ新しいメモを追加できる)かを選択できます。",
-        "save_itad": "メモをITADサーバに保存",
         "save_synced_storage": "同期されたストレージを引き続き使用する",
         "save_local": "メモをローカルに保存する"
     },
@@ -872,7 +867,6 @@
     },
     "using_language_return": "__base__ で Steam を閲覧するにはここをクリックしてください。",
     "using_language": "あなたは現在 __current__ でSteamを閲覧しています。",
-    "another_store": "他のストア",
     "thewordunknown": "不明",
     "badge_level": "レベル __level__",
     "ignored_owned": "他のプラットフォームでプレイしたため無視したゲーム"

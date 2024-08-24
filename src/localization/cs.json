@@ -63,7 +63,6 @@
     "badges_all": "Všechny odznaky",
     "es_supporter": "Podporovatel Enhanced Steamu",
     "community": "Komunita",
-    "owned_elsewhere": "Již vlastníte __gametitle__ v __storelist__",
     "view_badge": "Zobrazit odznak",
     "purchase_total": "Nákupy celkem:",
     "view_foil_badge": "Zobrazit postup foil odznaku",
@@ -344,9 +343,6 @@
         "certifications": "Optimalizováno pro širokoúhlé monitory"
     },
     "itad": {
-        "last_import": "Poslední import...",
-        "from": "z ITAD:",
-        "to": "do ITAD:",
         "sync_now": "Synchronizovat nyní",
         "option": "Zobrazit nabídku Možností synchronizace dat do IsThereAnyDeal.com",
         "send_to_itad": "Odeslat vlastněné hry na IsThereAnyDeal",

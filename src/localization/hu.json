@@ -76,7 +76,6 @@
     "badges_all": "Összes kitűző",
     "es_supporter": "Enhanced Steam Támogató",
     "community": "Közösség",
-    "owned_elsewhere": "Már birtoklod: __gametitle__ itt:__storelist__",
     "view_badge": "Kitűzők mutatása",
     "purchase_total": "Vásárlás összesen:",
     "view_foil_badge": "Fóliás kitűzőállapot megnézése",
@@ -439,9 +438,6 @@
     },
     "itad": {
         "import": "Időszakos importálás:",
-        "last_import": "Utolsó import...",
-        "from": "ITAD-ről:",
-        "to": "ITAD-re:",
         "sync_now": "Szinkronizálás",
         "option": "Adatok szinkronizálása menü megjelenítése a IsThereAnyDeal.com-hoz",
         "send_to_itad": "Saját játékok elküldése a(z) IsThereAnyDeal-nek",
@@ -489,7 +485,6 @@
         "update_prompt": "Frissítsd a jegyzeted",
         "add_for_game": "Jegyzetek ehhez: __gamename__",
         "not_enough_space": "Nincs elég hely a jegyzet mentéséhez",
-        "save_itad": "Jegyzetek mentése az ITAD szerveren",
         "save_local": "Jegyzetek lokális tárolása"
     },
     "queue": {

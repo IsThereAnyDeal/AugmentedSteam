@@ -76,7 +76,6 @@
     "badges_all": "Tüm Rozetler",
     "es_supporter": "Enhanced Steam Destekçisi",
     "community": "Topluluk",
-    "owned_elsewhere": "Bu __gametitle__ oyununa zaten __storelist__ mağazasında sahipsin.",
     "view_badge": "Rozeti Göster",
     "purchase_total": "Satın alma toplamı:",
     "view_foil_badge": "Parlak Rozet İlerlemesine Bak",
@@ -461,9 +460,6 @@
     },
     "itad": {
         "import": "Periyodik olarak içe al:",
-        "last_import": "Son içe alma...",
-        "from": "ITAD'dan:",
-        "to": "ITAD'a:",
         "sync_now": "Şimdi eşitle",
         "option": "IsThereAnyDeal.com ile verileri eşitlemek için menü seçeneği göster",
         "send_to_itad": "Sahip olunan oyunları IsThereAnyDeal'a gönder",
@@ -523,7 +519,6 @@
         "close_on_storage": "Depolama alanı dolmak üzere",
         "close_on_storage_desc": "Augmented Steam, mevcut depolama konumuna daha fazla kullanıcı notu (~__perc__% depolama kullanımı) kaydedemeyecek.",
         "storage_warning_desc": "Kullanıcı notlarınızı yerel bir veritabanında (eşitleme olmadan) depolamayı seçebilir veya tarayıcınız tarafından sağlanan depolama yöntemini kullanmaya devam edebilirsiniz (burada yeni notlar yalnızca bazı eskileri silerseniz eklenebilir).",
-        "save_itad": "Notları ITAD sunucusuna kaydet",
         "save_synced_storage": "Eşitlenmiş depolama alanını kullanmaya devam et",
         "save_local": "Notları yerel olarak depola"
     },

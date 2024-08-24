@@ -76,7 +76,6 @@
     "badges_all": "Todas las Insignias",
     "es_supporter": "Mecenas de Enhanced Steam",
     "community": "Comunidad",
-    "owned_elsewhere": "Ya tienes __gametitle__ en __storelist__",
     "view_badge": "Ver Insignia",
     "purchase_total": "Compra total:",
     "view_foil_badge": "Ver Progreso de Insignia Reflectante",
@@ -459,9 +458,6 @@
     },
     "itad": {
         "import": "Importar periódicamente:",
-        "last_import": "Última importación...",
-        "from": "de ITAD:",
-        "to": "a ITAD:",
         "sync_now": "Sincronizar ahora",
         "option": "Mostrar opción de menú para sincronizar datos con IsThereAnyDeal.com",
         "send_to_itad": "Enviar los juegos que tienes a IsThereAnyDeal",
@@ -521,7 +517,6 @@
         "close_on_storage": "Te estás quedando con poco almacenamiento",
         "close_on_storage_desc": "Augmented Steam está cerca de no poder guardar más notas de usuario (~__perc__% de uso de almacenamiento) con su adaptador de almacenamiento actual.",
         "storage_warning_desc": "Puede optar por almacenar sus notas de usuario en una base de datos local (sin sincronización) o continuar utilizando el método de almacenamiento proporcionado por su navegador (donde las nuevas notas se pueden agregar solo si elimina algunas antiguas).",
-        "save_itad": "Guardar notas en el server de ITAD",
         "save_synced_storage": "Continuar usando el almacenamiento sincronizado",
         "save_local": "Almacenar notas localmente"
     },
