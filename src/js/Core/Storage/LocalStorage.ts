@@ -41,8 +41,8 @@ interface LocalStorageSchema extends StorageSchema {
         expiry: number
     },
     review_filters: {
-        context: string,
-        language: string,
+        context: string|undefined,
+        language: string|undefined,
         minPlaytime?: string,
         maxPlaytime?: string
     }
