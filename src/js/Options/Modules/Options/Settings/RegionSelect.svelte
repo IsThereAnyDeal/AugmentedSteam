@@ -19,7 +19,7 @@
     import DeleteIcon from "../../Icons/DeleteIcon.svelte";
     import {slide} from "svelte/transition";
     import OptionGroup from "../Components/OptionGroup.svelte";
-    import "@CSS/flags.css";
+    import FlagIcon from "../../Icons/FlagIcon.svelte";
 
     export let settings: Writable<SettingsSchema>;
 
@@ -46,7 +46,7 @@
         selection.splice(index, 1);
         $settings.regional_countries = selection;
     }
-    
+
     function handleChange(index: number, e: Event) {
         const country = (<HTMLSelectElement>e.target!).value;
 
@@ -83,7 +83,7 @@
             <div>
                 {#each selection as country, index}
                     <div class="option">
-                        <span class="es-flag es-flag--{country}"></span>
+                        <FlagIcon {country} />
                         <Select value={country} options={localizedCountries} on:change={e => handleChange(index, e)} />
                         <button type="button" on:click={() => handleRemove(index)}>
                             <DeleteIcon />
@@ -112,7 +112,7 @@
         align-items: center;
     }
 
-    .es-flag {
+    .option > :global(.es-flag) {
         margin: 0;
     }
 

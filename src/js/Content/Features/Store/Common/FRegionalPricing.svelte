@@ -6,7 +6,7 @@
     import {L} from "@Core/Localization/Localization";
     import {__regionUnavailable} from "@Strings/_strings";
     import type {PackageDetailsPrice} from "./FRegionalPricing";
-    import "@CSS/flags.css";
+    import FlagIcon from "@Options/Modules/Icons/FlagIcon.svelte";
 
     export let countries: string[];
     export let prices: Record<string, PackageDetailsPrice>;
@@ -79,7 +79,8 @@
     {/if}
     {#each countries as country}
         {@const apiPrice = prices[country]}
-        <div class="es-regprice es-flag es-flag--{country}">
+        <div class="es-regprice">
+        <FlagIcon {country} />
             {#if apiPrice}
                 {@const priceRegion = new Price(apiPrice.final / 100, apiPrice.currency)}
                 {@const priceUser = getPriceUser(priceRegion, country)}
