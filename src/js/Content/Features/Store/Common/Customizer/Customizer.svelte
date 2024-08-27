@@ -132,3 +132,82 @@
         {/each}
     </div>
 </div>
+
+
+<style>
+    /* Taken from: https://store.cloudflare.steamstatic.com/public/css/v6/home.css */
+    #es_customize_btn {
+        text-align: left;
+    }
+    #es_customize_btn .es_customize_title {
+        display: inline-block;
+        padding-right: 3px;
+        padding-left: 8px;
+        margin: 0 1px;
+        line-height: 20px;
+        text-align: center;
+        font-size: 11px;
+        cursor: pointer;
+        color: #ffffff;
+        text-transform: uppercase;
+    }
+    #es_customize_btn .es_customize_title img {
+        vertical-align: text-bottom;
+    }
+    #es_customize_btn:hover .es_customize_title {
+        text-decoration: none;
+        color: #111111;
+        border-radius: 1px;
+        background: linear-gradient(135deg, #ffffff 0%, #919aa3 100%);
+    }
+    #es_customize_btn .home_viewsettings_popup {
+        position: absolute;
+        color: #384959;
+        padding: 12px 11px;
+        width: 200px;
+        z-index: 10;
+        box-shadow: 0 0 12px #000000;
+        background: linear-gradient(to bottom, #e3eaef 5%, #c7d5e0 95%);
+        right: 0px;
+        opacity: 0;
+        visibility: hidden;
+        transition: visibility 0s 0.2s, opacity 0.2s ease-in-out;
+    }
+    #es_customize_btn.active .home_viewsettings_popup {
+        opacity: 1;
+        visibility: visible;
+        transition: visibility, opacity 0.2s ease-in-out;
+    }
+    #es_customize_btn .home_viewsettings_instructions {
+        margin-bottom: 12px;
+        font-size: 12px;
+    }
+    #es_customize_btn .home_viewsettings_checkboxrow {
+        background: rgba(0, 0, 0, 0.2);
+        margin-bottom: 1px;
+        padding: 2px;
+        line-height: 14px;
+        color: #222d3d;
+        font-size: 10px;
+        cursor: pointer;
+    }
+    #es_customize_btn .home_viewsettings_checkboxrow:hover {
+        color: #ffffff;
+        background: rgba(0, 0, 0, 0.3);
+    }
+    #es_customize_btn .home_viewsettings_checkbox {
+        float: left;
+        margin-right: 5px;
+        display: block;
+        width: 14px;
+        height: 14px;
+        background-image: url('https://store.cloudflare.steamstatic.com/public/images/v6/customize_checkboxes.png');
+        background-position: 0px 0px;
+    }
+    #es_customize_btn .home_viewsettings_checkbox.checked {
+        background-position: 0px 28px;
+    }
+    #es_customize_btn .home_viewsettings_label {
+        text-transform: capitalize;
+    }
+</style>

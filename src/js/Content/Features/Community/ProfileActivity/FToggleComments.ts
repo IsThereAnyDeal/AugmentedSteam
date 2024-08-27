@@ -56,7 +56,7 @@ export default class FToggleComments extends Feature<CProfileActivity> {
             const _strTitle = "Augmented Steam";
             const _strDescription =
                 `${L(__featureHint_desc)}<br><br>
-                <span class="as_feature_hint_option">${L(__options_hideannouncementcomments)}</span><br><br>
+                <span style="color: white;">${L(__options_hideannouncementcomments)}</span><br><br>
                 ${L(__featureHint_reminder)}`;
 
             const _strOKButton = L(__thewordyes);

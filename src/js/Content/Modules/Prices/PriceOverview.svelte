@@ -97,6 +97,7 @@
         border-bottom: 0;
         font-size: 12px;
         color: #a8b2ba;
+        background-image: url("extension://img/itad.png");
         background-color: rgba(0, 0, 0, 0.2);
         background-repeat: no-repeat;
         background-position: 9px center;

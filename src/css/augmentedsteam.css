@@ -75,168 +75,12 @@
   transition: visibility, opacity 200ms ease-in-out;
 }
 
-/**
- * Customize button on storefront and app pages
- * Taken from: https://store.cloudflare.steamstatic.com/public/css/v6/home.css
- */
-#es_customize_btn {
-  text-align: left;
-}
-#es_customize_btn .es_customize_title {
-  display: inline-block;
-  padding-right: 3px;
-  padding-left: 8px;
-  margin: 0 1px;
-  line-height: 20px;
-  text-align: center;
-  font-size: 11px;
-  cursor: pointer;
-  color: #ffffff;
-  text-transform: uppercase;
-}
-#es_customize_btn .es_customize_title img {
-  vertical-align: text-bottom;
-}
-#es_customize_btn:hover .es_customize_title {
-  text-decoration: none;
-  color: #111111;
-  border-radius: 1px;
-  background: linear-gradient(135deg, #ffffff 0%, #919aa3 100%);
-}
-#es_customize_btn .home_viewsettings_popup {
-  position: absolute;
-  color: #384959;
-  padding: 12px 11px;
-  width: 200px;
-  z-index: 10;
-  box-shadow: 0 0 12px #000000;
-  background: linear-gradient(to bottom, #e3eaef 5%, #c7d5e0 95%);
-  right: 0px;
-  opacity: 0;
-  visibility: hidden;
-  transition: visibility 0s 0.2s, opacity 0.2s ease-in-out;
-}
-#es_customize_btn.active .home_viewsettings_popup {
-  opacity: 1;
-  visibility: visible;
-  transition: visibility, opacity 0.2s ease-in-out;
-}
-#es_customize_btn .home_viewsettings_instructions {
-  margin-bottom: 12px;
-  font-size: 12px;
-}
-#es_customize_btn .home_viewsettings_checkboxrow {
-  background: rgba(0, 0, 0, 0.2);
-  margin-bottom: 1px;
-  padding: 2px;
-  line-height: 14px;
-  color: #222d3d;
-  font-size: 10px;
-  cursor: pointer;
-}
-#es_customize_btn .home_viewsettings_checkboxrow:hover {
-  color: #ffffff;
-  background: rgba(0, 0, 0, 0.3);
-}
-#es_customize_btn .home_viewsettings_checkbox {
-  float: left;
-  margin-right: 5px;
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  background-image: url('https://store.cloudflare.steamstatic.com/public/images/v6/customize_checkboxes.png');
-  background-position: 0px 0px;
-}
-#es_customize_btn .home_viewsettings_checkbox.checked {
-  background-position: 0px 28px;
-}
-#es_customize_btn .home_viewsettings_label {
-  text-transform: capitalize;
-}
-
-.es_tabs {
-  position: relative;
-  overflow-x: auto;
-  white-space: nowrap;
-  height: 31px;
-}
-.es_tabs .home_tab {
-  margin-top: 6px;
-  border: none;
-  display: inline-block;
-  margin-right: 0px;
-  border-top-left-radius: 3px;
-  border-top-right-radius: 3px;
-  font-size: 13px;
-  color: #2f89bc;
-  line-height: 24px;
-  cursor: pointer;
-  vertical-align: top;
-}
-.es_tabs .home_tab.active {
-  background: linear-gradient(top, rgba(103,193,245,1) 0%,rgba(103,193,245,0) 100%);
-  margin-top: 0;
-  box-shadow: none;
-  padding: 1px;
-}
-.es_tabs .home_tab:hover {
-  color: #ffffff;
-}
-.es_tabs .home_tab .tab_content {
-  border-top-left-radius: 3px;
-  border-top-right-radius: 3px;
-  font-size: 13px;
-  color: #4f94bc;
-  line-height: 24px;
-  padding: 0 10px;
-  cursor: pointer;
-  vertical-align: top;
-}
-.es_tabs .home_tab.active .tab_content {
-  line-height: 29px;
-  font-size: 14px;
-  color: #ffffff;
-  background: #1a2737;
-  text-shadow: -1px -1px rgba( 0, 0, 0, 0.25 );
-  cursor: default;
-  margin-top: 0;
-  box-shadow: none;
-}
-.es_tabs .home_tab .tab_content:hover {
-  color: #ffffff;
-  background: linear-gradient(-60deg,  #67c1f5 0%,#417a9b 100%);
-}
-
-#recommended_block_content.es_steam_active > .es_sp_similar {
-  display: none;
-}
-#recommended_block_content.es_sp_active > .es_steam_similar {
-  display: none;
-}
-.es_sp_similar:last-of-type:hover > .es_sp_similar__link {
-  color: #ffffff;
-}
-.es_sp_similar__link {
-  width: 171px;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  box-sizing: border-box;
-  padding: 0 10px;
-  white-space: normal;
-  text-align: center;
-  background-color: #1b2838;
-  color: #67c1f5;
-}
 
 img.astats_icon {
   width: 16px;
   margin-left: 4px;
 }
 
-.es_tab.active .tab_content {
-  background-color: #0003 !important;
-}
 
 .es_each {
   color: #626366;
@@ -256,11 +100,6 @@ img.astats_icon {
   height: 31px;
   float: left;
   margin-left: 3px;
-}
-
-.es_btn_systemreqs {
-  margin-bottom: 10px;
-  margin-top: 10px;
 }
 
 .wishlist_row {
@@ -288,50 +127,6 @@ img.astats_icon {
   vertical-align: top;
   line-height: 32px;
   margin-left: 5px;
-}
-
-
-.performance-graph {
-  margin-top: -10px;
-  background: linear-gradient(135deg, rgba(97, 100, 101, 0.3) 0%, rgba(226, 244, 255, 0.3) 100%);
-  width: 98%;
-  border-radius: 6px;
-  border: 1px solid #524f4e;
-  overflow: hidden;
-}
-.performance-graph .row {
-  height: 18px;
-  overflow: hidden;
-}
-.performance-graph .row .nvidia {
-  background: #72b100;
-  color: black;
-}
-.performance-graph .row .amd {
-  background: #8f0e10;
-}
-.performance-graph .row .intel {
-  background: #0b5997;
-  color: #fafaf2;
-}
-.performance-graph .row .other {
-  background: black;
-}
-.performance-graph .left-bar {
-  height: 100%;
-  text-align: center;
-  float: left;
-  position: relative;
-}
-.performance-graph .right-bar {
-  background: rgba(0, 0, 0, 0.0);
-  min-width: 30px;
-  height: 100%;
-  text-align: left;
-  float: left;
-}
-.performance-graph .right-bar span {
-  padding-left: 5px;
 }
 
 /***************************************
@@ -636,19 +431,6 @@ img.astats_icon {
 .as_flyout_menus .popup_menu .popup_menu_item {
   color: #e5e4dc;
   margin: 0 8px;
-}
-
-/***************************************
- * Achievement stats page
- * FAchievementSort
- **************************************/
-.esi_ach_unlocked + .esi_ach_locked,
-.esi_ach_locked + .esi_ach_unlocked {
-  margin-top: 62px;
-}
-.esi_ach_avatars {
-  min-height: 66px;
-  margin-bottom: 18px;
 }
 
 /***************************************
@@ -1647,6 +1429,7 @@ label.es_dlc_label > input:checked::after {
 }
 
 
+/* Customizer, SpamComments */
 .esi-shown {
   display: block !important;
 }
@@ -2038,21 +1821,6 @@ label.es_dlc_label > input:checked::after {
   max-width: 100%;
 }
 
-/*
- * Dialogs
- */
-.as_feature_hint_option {
-  color: white;
-}
-
-
-.progress::-moz-es_progress__bar {
-  background-color: #51771d;
-}
-.progress.error::-moz-es_progress__bar {
-  background-color: #b31414;
-}
-
 
 .es_slider_toggle i,
 .es_screenshot_fullscreen_toggle i {
@@ -2063,9 +1831,6 @@ label.es_dlc_label > input:checked::after {
   background-image: url('extension://img/screenshot_open.png');
 }
 
-.itad-pricing {
-  background-image: url("extension://img/itad.png");
-}
 
 .es_external_icon::after {
   content: " " url("extension://img/ico_external_link.gif"); /* https://store.steampowered.com/public/images/v5/ico_external_link.gif */
