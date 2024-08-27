@@ -107,6 +107,12 @@
         static openFriendChatInWebChat(steamid, accountid) {
             OpenFriendChatInWebChat(steamid, accountid);
         }
+
+        // edit guide
+
+        static submitGuide() {
+            SubmitGuide();
+        }
     }
 
     document.addEventListener("as_SteamFacade", async function(e) {
