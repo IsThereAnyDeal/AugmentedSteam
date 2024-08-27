@@ -1,11 +1,15 @@
 import {L} from "@Core/Localization/Localization";
 import {
+    __addFullgameToWaitlist,
+    __addFullgameToWishlist,
     __addToWaitlist,
     __addToWishlist,
     __onWaitlist,
     __onWishlistAndWaitlist,
     __removeFromWaitlistTooltip,
     __removeFromWishlistAndWaitlistTooltip,
+    __removeFullgameFromWaitlistTooltip,
+    __removeFullgameFromWishlistAndWaitlistTooltip,
     __theworddefault,
     __wishlist,
 } from "@Strings/_strings";
@@ -17,6 +21,7 @@ import HTML from "@Core/Html/Html";
 import ExtensionResources from "@Core/ExtensionResources";
 import SteamFacade from "@Content/Modules/Facades/SteamFacade";
 import DOMHelper from "@Content/Modules/DOMHelper";
+import AppId from "@Core/GameId/AppId";
 
 export default class FWaitlistDropdown extends Feature<CApp> {
 
@@ -31,6 +36,22 @@ export default class FWaitlistDropdown extends Feature<CApp> {
         const parent = document.querySelector<HTMLElement>(".queue_actions_ctn");
         if (!parent) {
             return;
+        }
+
+        /**
+         * Link a demo app's appid to its parent appid.
+         * Steam does so when wishlisting, but we'll use the real appid for convenience.
+         */
+        let appid: number = this.context.appid;
+        let storeid: string = this.context.storeid;
+
+        const isDemoApp = document.querySelector("img[src$='/ico_demo.gif']") !== null;
+        if (isDemoApp) {
+            const communityBtn = document.querySelector<HTMLAnchorElement>("a[href^='https://steamcommunity.com/app/']");
+            if (communityBtn) {
+                appid = AppId.fromUrl(communityBtn.href)!;
+                storeid = `app/${appid}`;
+            }
         }
 
         const wishlistArea = parent.querySelector<HTMLElement>("#add_to_wishlist_area")!;
@@ -67,7 +88,7 @@ export default class FWaitlistDropdown extends Feature<CApp> {
                             </div>
                             <div class="queue_menu_option_label">
                                 <div class="option_title">${L(__wishlist)} (${L(__theworddefault)})</div>
-                                <div class="option_subtitle">${L(__addToWishlist)}</div>
+                                <div class="option_subtitle">${isDemoApp ? L(__addFullgameToWishlist) : L(__addToWishlist)}</div>
                             </div>
                         </div>
                         <div class="queue_menu_option" id="queue_menu_option_on_waitlist">
@@ -77,7 +98,7 @@ export default class FWaitlistDropdown extends Feature<CApp> {
                             </div>
                             <div class="queue_menu_option_label">
                                 <div class="option_title">Waitlist</div>
-                                <div class="option_subtitle">${L(__addToWaitlist)}</div>
+                                <div class="option_subtitle">${isDemoApp ? L(__addFullgameToWaitlist) : L(__addToWaitlist)}</div>
                             </div>
                         </div>
                     </div>
@@ -101,7 +122,7 @@ export default class FWaitlistDropdown extends Feature<CApp> {
         DOMHelper.insertScript("scriptlets/Store/App/wishlistHandlers.js");
 
         let wishlisted: boolean = wishlistArea.style.display === "none";
-        let waitlisted: boolean = (await ITADApiFacade.inWaitlist([this.context.storeid]))[this.context.storeid] ?? false;
+        let waitlisted: boolean = (await ITADApiFacade.inWaitlist([storeid]))[storeid] ?? false;
 
         const menu = parent.querySelector(".as_btn_wishlist_menu")!;
         const menuArrow = menu.querySelector(".queue_menu_arrow")!;
@@ -109,7 +130,7 @@ export default class FWaitlistDropdown extends Feature<CApp> {
         const waitlistOption = parent.querySelector("#queue_menu_option_on_waitlist")!;
 
         // Native localized text
-        const removeFromWishlistLabel = wishlistSuccessArea.querySelector("span")!.lastChild!.textContent;
+        const removeFromWishlistLabel = wishlistSuccessArea.querySelector("span")!.lastChild!.textContent!;
         const removeFromWishlistTooltip = wishlistSuccessArea.querySelector("a")!.dataset.tooltipText;
 
         function updateDiv() {
@@ -125,16 +146,17 @@ export default class FWaitlistDropdown extends Feature<CApp> {
             wishlistArea.style.display = oneActive ? "none" : "";
             wishlistSuccessArea.style.display = oneActive ? "" : "none";
 
-            let text, tooltip;
+            let text: string|undefined = undefined;
+            let tooltip: string|undefined = undefined;
             if (wishlisted && !waitlisted) {
                 text = removeFromWishlistLabel;
                 tooltip = removeFromWishlistTooltip;
             } else if (!wishlisted && waitlisted) {
                 text = L(__onWaitlist);
-                tooltip = L(__removeFromWaitlistTooltip);
+                tooltip = isDemoApp ? L(__removeFullgameFromWaitlistTooltip) : L(__removeFromWaitlistTooltip);
             } else if (wishlisted && waitlisted) {
                 text = L(__onWishlistAndWaitlist);
-                tooltip = L(__removeFromWishlistAndWaitlistTooltip);
+                tooltip = isDemoApp ? L(__removeFullgameFromWishlistAndWaitlistTooltip) : L(__removeFromWishlistAndWaitlistTooltip);
             } else {
                 tooltip = removeFromWishlistTooltip;
             }
@@ -193,7 +215,7 @@ export default class FWaitlistDropdown extends Feature<CApp> {
             }
 
             if (waitlisted) {
-                await ITADApiFacade.removeFromWaitlist(this.context.appid);
+                await ITADApiFacade.removeFromWaitlist(appid);
                 waitlisted = !waitlisted;
             }
 
@@ -224,14 +246,14 @@ export default class FWaitlistDropdown extends Feature<CApp> {
 
                 if (wishlisted) {
                     SteamFacade.removeFromWishlist(
-                        this.context.appid,
+                        appid,
                         "add_to_wishlist_area_success",
                         "add_to_wishlist_area",
                         "add_to_wishlist_area_fail"
                     );
                 } else {
                     SteamFacade.addToWishlist(
-                        this.context.appid,
+                        appid,
                         "add_to_wishlist_area",
                         "add_to_wishlist_area_success",
                         "add_to_wishlist_area_fail"
@@ -245,9 +267,9 @@ export default class FWaitlistDropdown extends Feature<CApp> {
             parent.classList.add("loading");
 
             if (waitlisted) {
-                await ITADApiFacade.removeFromWaitlist(this.context.appid);
+                await ITADApiFacade.removeFromWaitlist(appid);
             } else {
-                await ITADApiFacade.addToWaitlist(this.context.appid);
+                await ITADApiFacade.addToWaitlist(appid);
             }
 
             waitlisted = !waitlisted;
