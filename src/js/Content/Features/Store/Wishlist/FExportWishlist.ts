@@ -1,6 +1,7 @@
 import Downloader from "@Core/Downloader";
 import {L} from "@Core/Localization/Localization";
 import {
+    __cancel,
     __export_copyClipboard,
     __export_download,
     __export_format,
@@ -14,9 +15,9 @@ import HTML from "@Core/Html/Html";
 import SteamFacade from "@Content/Modules/Facades/SteamFacade";
 import UserNotes from "@Content/Features/Store/Common/UserNotes";
 import Clipboard from "@Content/Modules/Clipboard";
-import TimeUtils from "@Core/Utils/TimeUtils";
+import DOMHelper from "@Content/Modules/DOMHelper";
 
-type Wishlist = Array<[string, {
+type WishlistData = Array<[string, {
     name: string,
     type: string,
     release_string: string,
@@ -28,16 +29,22 @@ type Wishlist = Array<[string, {
 }]>;
 
 enum ExportMethod {
-    download,
-    copyToClipboard
+    download = "download",
+    copy = "copy"
 }
+
+type ExportForm = {
+    method: ExportMethod,
+    type: "text"|"json",
+    format: string
+};
 
 class WishlistExporter {
 
-    private readonly wishlist: Wishlist;
+    private readonly wishlist: WishlistData;
     private readonly notes: Promise<Map<number, string|null>>;
 
-    constructor(wishlist: Wishlist) {
+    constructor(wishlist: WishlistData) {
         this.wishlist = wishlist;
 
         const userNotes = new UserNotes()
@@ -117,99 +124,70 @@ export default class FExportWishlist extends Feature<CWishlist> {
     override apply(): void {
         HTML.afterBegin("#cart_status_data", `<div class="es-wbtn" id="es_export_wishlist"><div>${L(__export_wishlist)}</div></div>`);
 
-        document.querySelector("#es_export_wishlist")!.addEventListener("click", async() => {
-            const appInfo = await SteamFacade.global("g_rgAppInfo");
-            const wl: Wishlist = (await SteamFacade.global<{rgVisibleApps: string[]}>("g_Wishlist")).rgVisibleApps.map(
-                appid => [appid, appInfo[appid]]
-            );
-            this._showDialog(wl);
+        document.querySelector("#es_export_wishlist")!.addEventListener("click", () => {
+            this.showDialog();
+        });
+
+        // @ts-expect-error
+        document.addEventListener("as_exportWishlist", (e: CustomEvent<ExportForm>) => {
+            this.exportWishlist(e.detail);
         });
     }
 
-    /*
-     * Using Valve's CModal API here is very hard, since, when trying to copy data to the clipboard, it has to originate from
-     * a short-lived event handler for a user action.
-     * Since we'd use our Messenger class to pass information in between these two contexts, we would "outrange" this specific event
-     * handler, resulting in a denial of access to the clipboard function.
-     * This could be circumvented by adding the appropriate permissions, but doing so would prompt users to explicitly accept the
-     * changed permissions on an update.
-     *
-     * If we don't use the Messenger, we'd have to move the whole handler part (including WishlistExporter) to
-     * the page context side.
-     *
-     * Final solution is to query the action buttons of the dialog and adding some extra click handlers on the content script side.
-     */
-    async _showDialog(wl: Array<[string, any]>): Promise<void> {
+    private showDialog(): void {
 
-        async function exportWishlist(method: ExportMethod): Promise<void> {
-            const type = document.querySelector<HTMLInputElement>("input[name='es_wexport_type']:checked")!.value;
-            const format = document.querySelector<HTMLInputElement>("#es-wexport-format")!.value;
+        const template
+            = `<div class="es-wexport">
+                <h2>${L(__export_type)}</h2>
+                <div>
+                    <label class="es-wexport__label"><input type="radio" name="es_wexport_type" value="text" checked> ${L(__export_text)}</label>
+                    <label class="es-wexport__label"><input type="radio" name="es_wexport_type" value="json"> JSON</label>
+                </div>
+            </div>
+            <div class="es-wexport es-wexport__format">
+                <h2>${L(__export_format)}</h2>
+                <div>
+                    <input type="text" id="es-wexport-format" class="es-wexport__input" value="%title%"><br>
+                    <div class="es-wexport__symbols">%title%, %id%, %appid%, %url%, %release_date%, %price%, %discount%, %base_price%, %type%, %note%</div>
+                </div>
+            </div>`;
 
-            const wishlist = new WishlistExporter(wl);
+        DOMHelper.insertScript("scriptlets/Store/Wishlist/exportWishlistModal.js", {
+            title: L(__export_wishlist),
+            template,
+            strSave: L(__export_download),
+            strCancel: L(__cancel),
+            strSaveSecondary: L(__export_copyClipboard),
+            ExportMethod
+        });
+    }
 
-            let result = "";
-            let filename = "";
-            let filetype = "";
-            if (type === "json") {
-                result = await wishlist.toJson();
-                filename = "wishlist.json";
-                filetype = "application/json";
-            } else if (type === "text" && format) {
-                result = await wishlist.toText(format);
-                filename = "wishlist.txt";
-                filetype = "text/plain";
-            }
+    private async exportWishlist(options: ExportForm): Promise<void> {
 
-            if (method === ExportMethod.copyToClipboard) {
-                Clipboard.set(result);
-            } else if (method === ExportMethod.download) {
-                Downloader.download(new Blob([result], {"type": `${filetype};charset=UTF-8`}), filename);
-            }
+        const {method, type, format} = options;
+        const appInfo = await SteamFacade.global("g_rgAppInfo");
+        const wl: WishlistData = (await SteamFacade.global<{rgVisibleApps: string[]}>("g_Wishlist")).rgVisibleApps.map(
+            appid => [appid, appInfo[appid]]
+        );
+        const wishlist = new WishlistExporter(wl);
+
+        let data = "";
+        let filename = "";
+        let filetype = "";
+        if (type === "json") {
+            data = await wishlist.toJson();
+            filename = "wishlist.json";
+            filetype = "application/json";
+        } else if (type === "text" && format) {
+            data = await wishlist.toText(format);
+            filename = "wishlist.txt";
+            filetype = "text/plain";
         }
 
-        SteamFacade.showConfirmDialog(
-            L(__export_wishlist),
-            `<div id="es_export_form">
-                    <div class="es-wexport">
-                        <h2>${L(__export_type)}</h2>
-                        <div>
-                            <label class="es-wexport__label"><input type="radio" name="es_wexport_type" value="text" checked> ${L(__export_text)}</label>
-                            <label class="es-wexport__label"><input type="radio" name="es_wexport_type" value="json"> JSON</label>
-                        </div>
-                    </div>
-                    <div class="es-wexport es-wexport__format">
-                        <h2>${L(__export_format)}</h2>
-                        <div>
-                            <input type="text" id="es-wexport-format" class="es-wexport__input" value="%title%"><br>
-                            <div class="es-wexport__symbols">%title%, %id%, %appid%, %url%, %release_date%, %price%, %discount%, %base_price%, %type%, %note%</div>
-                        </div>
-                    </div>
-                </div>`,
-            L(__export_download),
-            null, // use default "Cancel"
-            L(__export_copyClipboard)
-        );
-
-        for (let i=0; i<10; i++) {
-            const [dlBtn, copyBtn] = document.querySelectorAll(".newmodal_buttons > .btn_medium");
-
-            if (!dlBtn || !copyBtn) {
-                // wait for popup to show up to apply events
-                await TimeUtils.timer(10);
-                continue;
-            }
-
-            // Capture this s.t. the CModal doesn't get destroyed before we can grab this information
-            dlBtn!.addEventListener("click", () => exportWishlist(ExportMethod.download), true);
-            copyBtn!.addEventListener("click", () => exportWishlist(ExportMethod.copyToClipboard), true);
-
-            const format = document.querySelector<HTMLElement>(".es-wexport__format");
-            for (const el of document.getElementsByName("es_wexport_type")) {
-                el.addEventListener("click", e => {
-                    const target = e.target as HTMLInputElement;
-                    format!.classList.toggle("es-grayout", target.value === "json");
-                });
-            }
+        if (method === ExportMethod.copy) {
+            Clipboard.set(data);
+        } else if (method === ExportMethod.download) {
+            Downloader.download(new Blob([data], {"type": `${filetype};charset=UTF-8`}), filename);
         }
     }
 }
