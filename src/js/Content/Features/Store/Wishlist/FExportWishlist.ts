@@ -120,10 +120,12 @@ export default class FExportWishlist extends Feature<CWishlist> {
 
     private async showDialog(): Promise<void> {
 
+        let form: ExportWishlistForm|undefined;
+
         const observer = new MutationObserver(() => {
             const modal = document.querySelector("#as_export_form");
             if (modal) {
-                const form = new ExportWishlistForm({
+                form = new ExportWishlistForm({
                     target: modal,
                     props: {
                         type: this.type,
@@ -131,8 +133,8 @@ export default class FExportWishlist extends Feature<CWishlist> {
                     }
                 });
                 form.$on("setup", () => {
-                    this.format = form.format;
-                    this.type = form.type;
+                    this.format = form!.format;
+                    this.type = form!.type;
                 });
                 observer.disconnect();
             }
@@ -149,6 +151,8 @@ export default class FExportWishlist extends Feature<CWishlist> {
             null, // use default "Cancel"
             L(__export_copyClipboard)
         );
+
+        form?.$destroy();
 
         if (response === "CANCEL") {
             return;
