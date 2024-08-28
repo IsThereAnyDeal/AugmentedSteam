@@ -14,7 +14,7 @@
 <div class="profile_count_link">
     <a class="link" {href} use:external>
         {#if iconType !== "none"}
-            <ProfileLinkIcon {id} {iconType} {iconUrl} />
+            <ProfileLinkIcon {id} {iconUrl} gray={iconType === "gray"} />
         {/if}
         <span class="count_link_label"><slot></slot></span>
         <span class="profile_count_link_total">&nbsp;</span> <!-- Steam spacing -->
