@@ -61,6 +61,7 @@
     import HideSpamCommentsSettings from "./Settings/HideSpamCommentsSettings.svelte";
     import SubOptions from "./Components/SubOptions.svelte";
     import QuickSellSettings from "./Settings/QuickSellSettings.svelte";
+    import ProfileLink from "./Components/ProfileLink.svelte";
 
     let settings: Writable<SettingsSchema> = writable(Settings);
 </script>
@@ -154,34 +155,32 @@
         <h3>{L(__options_profileLinks)}</h3>
         {#if $settings.language === "schinese" || $settings.language === "tchinese"}
             <Toggle bind:value={$settings.profile_steamrepcn}>
-                <span class="link">
-                    <i class="es_sites_icons es_steamrepcn_icon"></i>SteamrepCN
-                </span>
+                <ProfileLink id="steamrepcn">SteamrepCN</ProfileLink>
             </Toggle>
         {/if}
         <Toggle bind:value={$settings.profile_steamrep}>
-            <span class="link"><i class="es_sites_icons es_steamrep_icon"></i>SteamRep</span>
+            <ProfileLink id="steamrep">SteamRep</ProfileLink>
         </Toggle>
         <Toggle bind:value={$settings.profile_steamdbcalc}>
-            <span class="link"><i class="es_sites_icons es_steamdbcalc_icon"></i>SteamDB</span>
+            <ProfileLink id="steamdbcalc">SteamDB</ProfileLink>
         </Toggle>
         <Toggle bind:value={$settings.profile_steamgifts}>
-            <span class="link"><i class="es_sites_icons es_steamgifts_icon"></i>SteamGifts</span>
+            <ProfileLink id="steamgifts">SteamGifts</ProfileLink>
         </Toggle>
         <Toggle bind:value={$settings.profile_steamtrades}>
-            <span class="link"><i class="es_sites_icons es_steamtrades_icon"></i>SteamTrades</span>
+            <ProfileLink id="steamtrades">SteamTrades</ProfileLink>
         </Toggle>
         <Toggle bind:value={$settings.profile_bartervg}>
-            <span class="link"><i class="es_sites_icons es_bartervg_icon"></i>Barter.vg</span>
+            <ProfileLink id="bartervg">Barter.vg</ProfileLink>
         </Toggle>
         <Toggle bind:value={$settings.profile_astats}>
-            <span class="link"><i class="es_sites_icons es_astats_icon"></i>Achievement Stats</span>
+            <ProfileLink id="astats">Achievement Stats</ProfileLink>
         </Toggle>
         <Toggle bind:value={$settings.profile_backpacktf}>
-            <span class="link"><i class="es_sites_icons es_backpacktf_icon"></i>Backpack.tf</span>
+            <ProfileLink id="backpacktf">Backpack.tf</ProfileLink>
         </Toggle>
         <Toggle bind:value={$settings.profile_astatsnl}>
-            <span class="link"><i class="es_sites_icons es_astatsnl_icon"></i>AStats.nl</span>
+            <ProfileLink id="astatsnl">Astats.nl</ProfileLink>
         </Toggle>
     </OptionGroup>
 
@@ -205,11 +204,3 @@
     <Toggle bind:value={$settings.replacecommunityhublinks}>{L(__options_replacecommunityhublinks)}</Toggle>
     <Toggle bind:value={$settings.hideannouncementcomments}>{L(__options_hideannouncementcomments)}</Toggle>
 </Section>
-
-
-<style>
-    .link {
-        display: flex;
-        align-items: center;
-    }
-</style>

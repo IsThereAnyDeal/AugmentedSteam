@@ -12,6 +12,12 @@
 </script>
 
 
+{#if (language === "schinese" || language === "tchinese") && Settings.profile_steamrepcn}
+    <ProfileLink id="steamrepcn" href="https://steamrepcn.com/profiles/{steamId}">
+        {language === "schinese" ? "查看信誉记录" : "確認信譽記錄"}
+    </ProfileLink>
+{/if}
+
 {#if Settings.profile_steamrep}
     <ProfileLink id="steamrep" href="https://steamrep.com/profiles/{steamId}">SteamRep</ProfileLink>
 {/if}
@@ -45,12 +51,6 @@
 {#if Settings.profile_astats}
     <ProfileLink id="astatsnl" href="https://astats.astats.nl/astats/User_Info.php?steamID64={steamId}">
         Astats.nl
-    </ProfileLink>
-{/if}
-
-{#if (language === "schinese" || language === "tchinese") && Settings.profile_steamrepcn}
-    <ProfileLink id="steamrepcn" href="https://steamrepcn.com/profiles/{steamId}">
-        {language === "schinese" ? "查看信誉记录" : "確認信譽記錄"}
     </ProfileLink>
 {/if}
 
