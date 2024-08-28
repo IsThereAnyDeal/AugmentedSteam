@@ -1,21 +1,13 @@
 import Downloader from "@Core/Downloader";
 import {L} from "@Core/Localization/Localization";
-import {
-    __cancel,
-    __export_copyClipboard,
-    __export_download,
-    __export_format,
-    __export_text,
-    __export_type,
-    __export_wishlist,
-} from "@Strings/_strings";
+import {__export_copyClipboard, __export_download, __export_wishlist,} from "@Strings/_strings";
 import Feature from "@Content/Modules/Context/Feature";
 import type CWishlist from "@Content/Features/Store/Wishlist/CWishlist";
 import HTML from "@Core/Html/Html";
 import SteamFacade from "@Content/Modules/Facades/SteamFacade";
 import UserNotes from "@Content/Features/Store/Common/UserNotes";
 import Clipboard from "@Content/Modules/Clipboard";
-import DOMHelper from "@Content/Modules/DOMHelper";
+import ExportWishlistForm from "@Content/Features/Store/Wishlist/Components/ExportWishlistForm.svelte";
 
 type WishlistData = Array<[string, {
     name: string,
@@ -29,15 +21,9 @@ type WishlistData = Array<[string, {
 }]>;
 
 enum ExportMethod {
-    download = "download",
-    copy = "copy"
+    download,
+    copy
 }
-
-type ExportForm = {
-    method: ExportMethod,
-    type: "text"|"json",
-    format: string
-};
 
 class WishlistExporter {
 
@@ -121,50 +107,64 @@ class WishlistExporter {
 
 export default class FExportWishlist extends Feature<CWishlist> {
 
+    private type: "text"|"json" = "text";
+    private format: string = "%title%";
+
     override apply(): void {
         HTML.afterBegin("#cart_status_data", `<div class="es-wbtn" id="es_export_wishlist"><div>${L(__export_wishlist)}</div></div>`);
 
         document.querySelector("#es_export_wishlist")!.addEventListener("click", () => {
             this.showDialog();
         });
-
-        // @ts-expect-error
-        document.addEventListener("as_exportWishlist", (e: CustomEvent<ExportForm>) => {
-            this.exportWishlist(e.detail);
-        });
     }
 
-    private showDialog(): void {
+    private async showDialog(): Promise<void> {
 
-        const template
-            = `<div class="es-wexport">
-                <h2>${L(__export_type)}</h2>
-                <div>
-                    <label class="es-wexport__label"><input type="radio" name="es_wexport_type" value="text" checked> ${L(__export_text)}</label>
-                    <label class="es-wexport__label"><input type="radio" name="es_wexport_type" value="json"> JSON</label>
-                </div>
-            </div>
-            <div class="es-wexport es-wexport__format">
-                <h2>${L(__export_format)}</h2>
-                <div>
-                    <input type="text" id="es-wexport-format" class="es-wexport__input" value="%title%"><br>
-                    <div class="es-wexport__symbols">%title%, %id%, %appid%, %url%, %release_date%, %price%, %discount%, %base_price%, %type%, %note%</div>
-                </div>
-            </div>`;
-
-        DOMHelper.insertScript("scriptlets/Store/Wishlist/exportWishlistModal.js", {
-            title: L(__export_wishlist),
-            template,
-            strSave: L(__export_download),
-            strCancel: L(__cancel),
-            strSaveSecondary: L(__export_copyClipboard),
-            ExportMethod
+        const observer = new MutationObserver(() => {
+            const modal = document.querySelector("#as_export_form");
+            if (modal) {
+                const form = new ExportWishlistForm({
+                    target: modal,
+                    props: {
+                        type: this.type,
+                        format: this.format
+                    }
+                });
+                form.$on("change", () => {
+                    this.format = form.format;
+                    this.type = form.type;
+                });
+                observer.disconnect();
+            }
         });
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+
+        const response = await SteamFacade.showConfirmDialog(
+            L(__export_wishlist),
+            `<div id="as_export_form"></div>`,
+            L(__export_download),
+            null, // use default "Cancel"
+            L(__export_copyClipboard)
+        );
+
+        if (response === "CANCEL") {
+            return;
+        }
+
+        this.exportWishlist(
+            response === "OK"
+                ? ExportMethod.download
+                : ExportMethod.copy,
+            this.type,
+            this.format
+        )
     }
 
-    private async exportWishlist(options: ExportForm): Promise<void> {
+    private async exportWishlist(method: ExportMethod, type: "text"|"json", format: string): Promise<void> {
 
-        const {method, type, format} = options;
         const appInfo = await SteamFacade.global("g_rgAppInfo");
         const wl: WishlistData = (await SteamFacade.global<{rgVisibleApps: string[]}>("g_Wishlist")).rgVisibleApps.map(
             appid => [appid, appInfo[appid]]
