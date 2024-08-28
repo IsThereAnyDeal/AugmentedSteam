@@ -130,7 +130,7 @@ export default class FExportWishlist extends Feature<CWishlist> {
                         format: this.format
                     }
                 });
-                form.$on("change", () => {
+                form.$on("setup", () => {
                     this.format = form.format;
                     this.type = form.type;
                 });
@@ -144,7 +144,7 @@ export default class FExportWishlist extends Feature<CWishlist> {
 
         const response = await SteamFacade.showConfirmDialog(
             L(__export_wishlist),
-            `<div id="as_export_form"></div>`,
+            `<div id="as_export_form" style="width:580px"></div>`,
             L(__export_download),
             null, // use default "Cancel"
             L(__export_copyClipboard)
@@ -154,16 +154,9 @@ export default class FExportWishlist extends Feature<CWishlist> {
             return;
         }
 
-        this.exportWishlist(
-            response === "OK"
-                ? ExportMethod.download
-                : ExportMethod.copy,
-            this.type,
-            this.format
-        )
-    }
-
-    private async exportWishlist(method: ExportMethod, type: "text"|"json", format: string): Promise<void> {
+        const method = response === "OK"
+            ? ExportMethod.download
+            : ExportMethod.copy;
 
         const appInfo = await SteamFacade.global("g_rgAppInfo");
         const wl: WishlistData = (await SteamFacade.global<{rgVisibleApps: string[]}>("g_Wishlist")).rgVisibleApps.map(
@@ -174,12 +167,12 @@ export default class FExportWishlist extends Feature<CWishlist> {
         let data = "";
         let filename = "";
         let filetype = "";
-        if (type === "json") {
+        if (this.type === "json") {
             data = await wishlist.toJson();
             filename = "wishlist.json";
             filetype = "application/json";
-        } else if (type === "text" && format) {
-            data = await wishlist.toText(format);
+        } else if (this.type === "text" && this.format) {
+            data = await wishlist.toText(this.format);
             filename = "wishlist.txt";
             filetype = "text/plain";
         }
