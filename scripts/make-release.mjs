@@ -111,7 +111,7 @@ run("npm install");
 console.log("4. build...");
 for (const platform of ["firefox", "chrome", "edge"]) {
     console.log(`...${platform}`);
-    run(`npm run build ${platform} -- --production`);
+    run(`node scripts/build.mjs ${platform} --production`);
     await zip(`${sourceDir}/dist/prod.${platform}`, platform);
 }
 
