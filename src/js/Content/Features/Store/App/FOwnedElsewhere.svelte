@@ -55,7 +55,7 @@
         background-image: linear-gradient(to right, #bd9d1b 0%, #856d0e 100%) !important
     }
     .ds_owned_flag {
-        background-color: #ffe000;
+        background-color: #ffe000 !important;
     }
     .already_in_library {
         color: #ffe000;
