@@ -45,6 +45,7 @@
             "@Content/*": ["./src/js/Content/*"],
             "@Background/*": ["./src/js/Background/*"],
             "@Strings/*": ["./src/localization/compiled/*"],
+            "@Icons/*": ["./src/js/Icons/*"],
             "config": ["./src/js/config"],
         }
     }

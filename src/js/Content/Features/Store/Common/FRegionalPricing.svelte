@@ -6,7 +6,7 @@
     import {L} from "@Core/Localization/Localization";
     import {__regionUnavailable} from "@Strings/_strings";
     import type {PackageDetailsPrice} from "./FRegionalPricing";
-    import FlagIcon from "@Options/Modules/Icons/FlagIcon.svelte";
+    import FlagIcon from "@Icons/FlagIcon.svelte";
 
     export let countries: string[];
     export let prices: Record<string, PackageDetailsPrice>;

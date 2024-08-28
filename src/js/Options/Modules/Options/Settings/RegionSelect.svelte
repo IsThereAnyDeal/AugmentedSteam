@@ -19,7 +19,7 @@
     import DeleteIcon from "../../Icons/DeleteIcon.svelte";
     import {slide} from "svelte/transition";
     import OptionGroup from "../Components/OptionGroup.svelte";
-    import FlagIcon from "../../Icons/FlagIcon.svelte";
+    import FlagIcon from "@Icons/FlagIcon.svelte";
 
     export let settings: Writable<SettingsSchema>;
 
