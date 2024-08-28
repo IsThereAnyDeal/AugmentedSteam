@@ -192,7 +192,7 @@
 <Section title={L(__options_group)}>
     <h3>{L(__options_groupLinks)}</h3>
     <Toggle bind:value={$settings.group_steamgifts}>
-        <span class="link"><i class="es_sites_icons es_steamgifts_icon"></i>SteamGifts</span>
+        <ProfileLink id="steamgifts">SteamGifts</ProfileLink>
     </Toggle>
 </Section>
 
