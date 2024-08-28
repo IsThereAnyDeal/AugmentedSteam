@@ -18,13 +18,12 @@ import AugmentedSteamApiFacade from "@Content/Modules/Facades/AugmentedSteamApiF
 
 export default class FBackgroundSelection extends Feature<CProfileEdit> {
 
-    private _currentImage: string = "";
-    private _currentAppid: number = 0;
-    private _selectedImage: string = "";
-    private _selectedAppid: number = 0;
-    private _active: boolean = false;
-    private _root: HTMLElement|null = null;
-    private _games: Array<{
+    private active: boolean = false;
+    private currentImage: string = "";
+    private currentAppid: number = 0;
+    private selectedImage: string = "";
+    private selectedAppid: number = 0;
+    private games: Array<{
         appid: number,
         title: string,
         safeTitle: string,
@@ -38,25 +37,27 @@ export default class FBackgroundSelection extends Feature<CProfileEdit> {
 
         const {img, appid} = result.bg || {};
 
-        this._currentImage = img || "";
-        this._currentAppid = appid ?? 0;
-        this._selectedImage = this._currentImage;
-        this._selectedAppid = this._currentAppid;
+        this.currentImage = img || "";
+        this.currentAppid = appid ?? 0;
+        this.selectedImage = this.currentImage;
+        this.selectedAppid = this.currentAppid;
         return true;
     }
 
-    apply() {
-
-        this._active = false;
-        this._root = document.querySelector<HTMLElement>("#react_root");
-
-        this._checkPage();
-
-        new MutationObserver(() => { this._checkPage(); })
-            .observe(this._root!, {"childList": true, "subtree": true});
+    override apply(): void {
+        document.addEventListener("as_profileNav", () => this.callback());
+        this.callback();
     }
 
-    async _checkPage() {
+    private async callback() {
+        if (!document.querySelector('[href$="/edit/background"].active')) {
+            document.querySelector(".js-bg-selection")?.remove();
+            this.active = false;
+            return;
+        }
+
+        if (this.active) { return; }
+        this.active = true;
 
         const html
             = `<div class="js-bg-selection as-pd">
@@ -83,157 +84,143 @@ export default class FBackgroundSelection extends Feature<CProfileEdit> {
                 </div>
             </div>`;
 
-        if (document.querySelector('[href$="/edit/background"].active')) {
+        HTML.beforeEnd(this.context.root!.querySelector(":scope > div:last-child > div:last-child"), html);
 
-            if (this._active) { return; } // Happens because the below code will trigger the observer again
+        const gameFilterNode = document.querySelector<HTMLInputElement>(".js-pd-game")!;
+        const listNode = document.querySelector<HTMLElement>(".js-pd-list")!;
+        const imagesNode = document.querySelector<HTMLElement>(".js-pd-imgs")!;
 
-            HTML.beforeEnd(this._root!.querySelector(":scope > div:last-child > div:last-child"), html);
-            this._active = true;
+        const games = await this.getGamesList(listNode);
 
-            const gameFilterNode = document.querySelector<HTMLInputElement>(".js-pd-game");
-            const listNode = document.querySelector<HTMLElement>(".js-pd-list");
-            const imagesNode = document.querySelector<HTMLElement>(".js-pd-imgs");
-
-            if (!gameFilterNode || !listNode || !imagesNode) {
-                return;
+        // Show current selection
+        if (this.selectedAppid) {
+            const game = games.find(({appid}) => appid === this.selectedAppid);
+            if (game) {
+                gameFilterNode.value = game.title;
+                this.selectGame(this.selectedAppid, imagesNode);
             }
-
-            const games = await this._getGamesList(listNode);
-
-            // Show current selection
-            if (this._selectedAppid) {
-                const game = games.find(({appid}) => appid === this._selectedAppid);
-                if (game) {
-                    gameFilterNode.value = game.title;
-                    this._selectGame(this._selectedAppid, imagesNode);
-                }
-            }
-
-            listNode.addEventListener("click", ({target}) => {
-                const appid = Number((<HTMLElement>target).dataset.appid ?? 0);
-                if (!appid || appid === this._selectedAppid) { return; }
-
-                this._selectedImage = ""; // Clear current selection so selected image and appid remain in sync
-                this._selectGame(appid, imagesNode);
-
-                document.querySelector(".js-pd-item.is-selected")?.classList.remove("is-selected");
-                (<HTMLElement>target).classList.add("is-selected");
-            });
-
-            imagesNode.addEventListener("click", ({target}) => {
-                const node = (<HTMLElement>target).closest<HTMLElement>(".js-pd-img");
-                if (!node || node.dataset.img === this._selectedImage) { return; }
-
-                this._selectedImage = node.dataset.img ?? "";
-
-                document.querySelector(".js-pd-img.is-selected")?.classList.remove("is-selected");
-                node.classList.add("is-selected");
-            });
-
-            let timer: IResettableTimer|null = null;
-
-            // Most of this logic is from https://github.com/SteamDatabase/SteamTracking/blob/6db3e47a120c5c938a0ab37186d39b02b14d27d9/steamcommunity.com/public/javascript/global.js#L2726
-            gameFilterNode.addEventListener("keyup", () => {
-
-                if (!timer) {
-                    timer = TimeUtils.resettableTimer(() => {
-
-                        const searchString = gameFilterNode.value.toLowerCase();
-                        const terms = searchString.split(" ").filter(term => term !== "");
-                        if (terms.length === 0) {
-                            HTML.inner(listNode, "");
-                            return;
-                        }
-
-                        const regexes = terms.map(term => new RegExp(StringUtils.escapeRegExp(term), "i"));
-
-                        let matchingGames = games.filter(game => {
-                            const {title, safeTitle} = game;
-                            let match = true;
-
-                            for (const regex of regexes) {
-                                if (!regex.test(safeTitle) && !regex.test(title)) {
-                                    match = false;
-                                    break;
-                                }
-                            }
-
-                            if (match) {
-                                game.levenshtein = StringUtils.levenshtein(title.trim().toLowerCase(), searchString);
-                            }
-
-                            return match;
-                        });
-
-                        if (matchingGames.length === 0) {
-                            HTML.inner(listNode, "");
-                            return;
-                        }
-
-                        matchingGames.sort((a, b) => {
-                            if (a.levenshtein === b.levenshtein) {
-                                return a.title.localeCompare(b.title);
-                            }
-                            return a.levenshtein - b.levenshtein;
-                        });
-
-                        matchingGames = matchingGames.slice(0, 20);
-
-                        let list = "";
-                        for (const {appid, title} of matchingGames) {
-                            const selected = this._selectedAppid === appid ? " is-selected" : "";
-
-                            list += `<div class="as-pd__item${selected} js-pd-item" data-appid="${appid}">${title}</div>`;
-                        }
-                        HTML.inner(listNode, list);
-                    }, 200);
-                }
-
-                timer.reset();
-            });
-
-            document.querySelector(".js-pd-bg-clear")!.addEventListener("click", async() => {
-                if (!this._currentImage && !this._currentAppid) { return; }
-
-                await AugmentedSteamApiFacade.clearOwn(this.context.steamId);
-
-                window.location.href = `${Config.ApiServerHost}/profile/background/delete/v2`;
-            });
-
-            document.querySelector(".js-pd-bg-save")!.addEventListener("click", async() => {
-                if (!this._selectedImage || !this._selectedAppid) { return; }
-                if (this._selectedImage === this._currentImage && this._selectedAppid === this._currentAppid) { return; }
-
-                await AugmentedSteamApiFacade.clearOwn(this.context.steamId);
-
-                const appid = encodeURIComponent(this._selectedAppid);
-                const img = encodeURIComponent(this._selectedImage);
-                window.location.href = `${Config.ApiServerHost}/profile/background/save/v2?appid=${appid}&img=${img}`;
-            });
-
-        } else if (this._active) {
-            document.querySelector(".js-bg-selection")?.remove();
-            this._active = false;
         }
+
+        listNode.addEventListener("click", ({target}) => {
+            const appid = Number((<HTMLElement>target).dataset.appid ?? 0);
+            if (!appid || appid === this.selectedAppid) { return; }
+
+            this.selectedImage = ""; // Clear current selection so selected image and appid remain in sync
+            this.selectGame(appid, imagesNode);
+
+            document.querySelector(".js-pd-item.is-selected")?.classList.remove("is-selected");
+            (<HTMLElement>target).classList.add("is-selected");
+        });
+
+        imagesNode.addEventListener("click", ({target}) => {
+            const node = (<HTMLElement>target).closest<HTMLElement>(".js-pd-img");
+            if (!node || node.dataset.img === this.selectedImage) { return; }
+
+            this.selectedImage = node.dataset.img ?? "";
+
+            document.querySelector(".js-pd-img.is-selected")?.classList.remove("is-selected");
+            node.classList.add("is-selected");
+        });
+
+        let timer: IResettableTimer|null = null;
+
+        // Most of this logic is from https://github.com/SteamDatabase/SteamTracking/blob/6db3e47a120c5c938a0ab37186d39b02b14d27d9/steamcommunity.com/public/javascript/global.js#L2726
+        gameFilterNode.addEventListener("keyup", () => {
+
+            if (!timer) {
+                timer = TimeUtils.resettableTimer(() => {
+
+                    const searchString = gameFilterNode.value.toLowerCase();
+                    const terms = searchString.split(" ").filter(term => term !== "");
+                    if (terms.length === 0) {
+                        HTML.inner(listNode, "");
+                        return;
+                    }
+
+                    const regexes = terms.map(term => new RegExp(StringUtils.escapeRegExp(term), "i"));
+
+                    let matchingGames = games.filter(game => {
+                        const {title, safeTitle} = game;
+                        let match = true;
+
+                        for (const regex of regexes) {
+                            if (!regex.test(safeTitle) && !regex.test(title)) {
+                                match = false;
+                                break;
+                            }
+                        }
+
+                        if (match) {
+                            game.levenshtein = StringUtils.levenshtein(title.trim().toLowerCase(), searchString);
+                        }
+
+                        return match;
+                    });
+
+                    if (matchingGames.length === 0) {
+                        HTML.inner(listNode, "");
+                        return;
+                    }
+
+                    matchingGames.sort((a, b) => {
+                        if (a.levenshtein === b.levenshtein) {
+                            return a.title.localeCompare(b.title);
+                        }
+                        return a.levenshtein - b.levenshtein;
+                    });
+
+                    matchingGames = matchingGames.slice(0, 20);
+
+                    let list = "";
+                    for (const {appid, title} of matchingGames) {
+                        const selected = this.selectedAppid === appid ? " is-selected" : "";
+
+                        list += `<div class="as-pd__item${selected} js-pd-item" data-appid="${appid}">${title}</div>`;
+                    }
+                    HTML.inner(listNode, list);
+                }, 200);
+            }
+
+            timer.reset();
+        });
+
+        document.querySelector(".js-pd-bg-clear")!.addEventListener("click", async() => {
+            if (!this.currentImage && !this.currentAppid) { return; }
+
+            await AugmentedSteamApiFacade.clearOwn(this.context.steamId);
+
+            window.location.href = `${Config.ApiServerHost}/profile/background/delete/v2`;
+        });
+
+        document.querySelector(".js-pd-bg-save")!.addEventListener("click", async() => {
+            if (!this.selectedImage || !this.selectedAppid) { return; }
+            if (this.selectedImage === this.currentImage && this.selectedAppid === this.currentAppid) { return; }
+
+            await AugmentedSteamApiFacade.clearOwn(this.context.steamId);
+
+            const appid = encodeURIComponent(this.selectedAppid);
+            const img = encodeURIComponent(this.selectedImage);
+            window.location.href = `${Config.ApiServerHost}/profile/background/save/v2?appid=${appid}&img=${img}`;
+        });
     }
 
     // From https://github.com/SteamDatabase/SteamTracking/blob/6db3e47a120c5c938a0ab37186d39b02b14d27d9/steamcommunity.com/public/javascript/global.js#L2790
-    _getSafeString(value: string): string {
+    private getSafeString(value: string): string {
         return value.toLowerCase().replace(/[\s.-:!?,']+/g, "");
     }
 
-    async _selectGame(appid: number, imagesNode: HTMLElement): Promise<void> {
+    private async selectGame(appid: number, imagesNode: HTMLElement): Promise<void> {
 
-        this._selectedAppid = appid;
+        this.selectedAppid = appid;
         let images = "";
 
         const result = await AugmentedSteamApiFacade.fetchProfileBackground(appid);
         for (const [url, title] of result) {
-            const selected = this._selectedImage === url ? " is-selected" : "";
+            const selected = this.selectedImage === url ? " is-selected" : "";
 
             images
                 += `<div class="as-pd__item${selected} js-pd-img" data-img="${url}">
-                        <img src="${this._getImageUrl(url)}" class="as-pd__img">
+                        <img src="${this.getImageUrl(url)}" class="as-pd__img">
                         <div>${title}</div>
                     </div>`;
         }
@@ -241,13 +228,13 @@ export default class FBackgroundSelection extends Feature<CProfileEdit> {
         HTML.inner(imagesNode, images);
     }
 
-    _getImageUrl(name: string): string {
+    private getImageUrl(name: string): string {
         return `https://steamcommunity.com/economy/image/${name}/622x349`;
     }
 
-    async _getGamesList(listNode: HTMLElement) {
+    private async getGamesList(listNode: HTMLElement) {
 
-        if (this._games === undefined) {
+        if (this.games === undefined) {
 
             HTML.inner(listNode,
                 `<div class="es_loading">
@@ -257,12 +244,12 @@ export default class FBackgroundSelection extends Feature<CProfileEdit> {
 
 
             const games = await AugmentedSteamApiFacade.fetchProfileBackgroundGames();
-            this._games = [];
+            this.games = [];
             for (const game of games) {
-                this._games.push({
+                this.games.push({
                     appid: game[0],
                     title: game[1],
-                    safeTitle: this._getSafeString(game[1]),
+                    safeTitle: this.getSafeString(game[1]),
                     levenshtein: 0
                 });
             }
@@ -270,6 +257,6 @@ export default class FBackgroundSelection extends Feature<CProfileEdit> {
             listNode.querySelector(".es_loading")?.remove();
         }
 
-        return this._games;
+        return this.games;
     }
 }

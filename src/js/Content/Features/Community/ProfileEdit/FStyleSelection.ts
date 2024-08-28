@@ -9,31 +9,32 @@ import AugmentedSteamApiFacade from "@Content/Modules/Facades/AugmentedSteamApiF
 
 export default class FStyleSelection extends Feature<CProfileEdit> {
 
-    private _currentStyle: string|null = null;
-    private _active: boolean = false;
-    private _root: HTMLElement|null = null;
+    private active: boolean = false;
+    private currentStyle: string|null = null;
 
     override async checkPrerequisites(): Promise<boolean> {
 
         const result = await this.context.data;
         if (!result) { return false; }
 
-        this._currentStyle = result.style;
+        this.currentStyle = result.style;
         return true;
     }
 
-    apply(): void {
-
-        this._active = false;
-        this._root = document.querySelector("#react_root")!;
-
-        this._checkPage();
-
-        new MutationObserver(() => { this._checkPage(); })
-            .observe(this._root!, {"childList": true, "subtree": true});
+    override apply(): void {
+        document.addEventListener("as_profileNav", () => this.callback());
+        this.callback();
     }
 
-    private _checkPage(): void {
+    private callback(): void {
+        if (!document.querySelector('[href$="/edit/theme"].active')) {
+            document.querySelector(".js-style-selection")?.remove();
+            this.active = false;
+            return;
+        }
+
+        if (this.active) { return; }
+        this.active = true;
 
         const html
             = `<div class="js-style-selection as-pd">
@@ -70,56 +71,45 @@ export default class FStyleSelection extends Feature<CProfileEdit> {
                 </div>
             </div>`;
 
-        if (document.querySelector('[href$="/edit/theme"].active')) {
+        HTML.beforeEnd(this.context.root!.querySelector(":scope > div:last-child > div:last-child"), html);
 
-            if (this._active) { return; } // Happens because the below code will trigger the observer again
+        const styleSelectNode = document.querySelector<HTMLInputElement>(".js-pd-style-select")!;
+        const stylePreviewNode = document.querySelector<HTMLImageElement>(".js-pd-style-preview")!;
 
-            HTML.beforeEnd(this._root!.querySelector(":scope > div:last-child > div:last-child"), html);
-            this._active = true;
+        // Show current selection
+        if (this.currentStyle) {
+            styleSelectNode.value = this.currentStyle;
 
-            const styleSelectNode = document.querySelector<HTMLInputElement>(".js-pd-style-select");
-            const stylePreviewNode = document.querySelector<HTMLImageElement>(".js-pd-style-preview");
-            if (!styleSelectNode || !stylePreviewNode) { return; }
-
-            // Show current selection
-            if (this._currentStyle) {
-                styleSelectNode.value = this._currentStyle;
-
-                if (this._currentStyle === "remove") {
-                    stylePreviewNode.style.display = "none";
-                } else {
-                    stylePreviewNode.src = ExtensionResources.getURL(`img/profile_styles/${this._currentStyle}/preview.png`);
-                }
+            if (this.currentStyle === "remove") {
+                stylePreviewNode.style.display = "none";
             } else {
-                styleSelectNode.value = "remove";
+                stylePreviewNode.src = ExtensionResources.getURL(`img/profile_styles/${this.currentStyle}/preview.png`);
             }
-
-            styleSelectNode.addEventListener("change", () => {
-                if (styleSelectNode.value === "remove") {
-                    stylePreviewNode.style.display = "none";
-                } else {
-                    stylePreviewNode.style.display = "block";
-                    stylePreviewNode.src = ExtensionResources.getURL(`img/profile_styles/${styleSelectNode.value}/preview.png`);
-                }
-            });
-
-            document.querySelector(".js-pd-style-save")!.addEventListener("click", async() => {
-                if (styleSelectNode.value === "remove" && !this._currentStyle) { return; }
-                if (styleSelectNode.value === this._currentStyle) { return; }
-
-                await AugmentedSteamApiFacade.clearOwn(this.context.steamId);
-
-                if (styleSelectNode.value === "remove") {
-                    window.location.href = `${Config.ApiServerHost}/profile/style/delete/v2`;
-                } else {
-                    const style = encodeURIComponent(styleSelectNode.value);
-                    window.location.href = `${Config.ApiServerHost}/profile/style/save/v2?style=${style}`;
-                }
-            });
-
-        } else if (this._active) {
-            document.querySelector(".js-style-selection")?.remove();
-            this._active = false;
+        } else {
+            styleSelectNode.value = "remove";
         }
+
+        styleSelectNode.addEventListener("change", () => {
+            if (styleSelectNode.value === "remove") {
+                stylePreviewNode.style.display = "none";
+            } else {
+                stylePreviewNode.style.display = "block";
+                stylePreviewNode.src = ExtensionResources.getURL(`img/profile_styles/${styleSelectNode.value}/preview.png`);
+            }
+        });
+
+        document.querySelector(".js-pd-style-save")!.addEventListener("click", async() => {
+            if (styleSelectNode.value === "remove" && !this.currentStyle) { return; }
+            if (styleSelectNode.value === this.currentStyle) { return; }
+
+            await AugmentedSteamApiFacade.clearOwn(this.context.steamId);
+
+            if (styleSelectNode.value === "remove") {
+                window.location.href = `${Config.ApiServerHost}/profile/style/delete/v2`;
+            } else {
+                const style = encodeURIComponent(styleSelectNode.value);
+                window.location.href = `${Config.ApiServerHost}/profile/style/save/v2?style=${style}`;
+            }
+        });
     }
 }
