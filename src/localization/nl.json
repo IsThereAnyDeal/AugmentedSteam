@@ -229,9 +229,7 @@
         "title": "Lengte om uit te spelen",
         "main_e": "Hoofdverhaal en Extra's",
         "compl": "Perfectionist",
-        "submit": "Verstuur jouw tijd",
-        "main": "Hoofdverhaal",
-        "no_data": "Geen Gegevens Gevonden"
+        "main": "Hoofdverhaal"
     },
     "options": {
         "community_default_tab": "Standaard community thuispagina tabblad",
@@ -295,7 +293,6 @@
         "protondb": "Toon ProtonDB links",
         "store_steamcards": "Toon SteamCardExchange links op winkelpagina's",
         "spamcommentregex": "Reguliere Expressie string:",
-        "saved_note": "Opties bewaard",
         "regional_hideworld": "Verberg globale indicator",
         "show_astatslink": "Toon AStats link op app pagina's",
         "show_youtubegameplay": "Toon YouTube gameplay video's op app pagina's",
@@ -309,11 +306,9 @@
         "lowestprice_onwishlist": "Toon op verlanglijst",
         "steamrepapi": "Toon SteamRep status op profiel pagina's",
         "lowestprice": "Toon",
-        "changelog": "Veranderingen:",
         "owned": "Items die jij hebt",
         "itadlinks": "Toon IsThereAnyDeal links",
         "steamdb": "Toon SteamDB links",
-        "reset_note": "Opties gereset",
         "profile_link_images_color": "Gekleurd",
         "show_view_in_library": "Toon de \"Bekijk in bibliotheek\" knop voor games die je bezit",
         "install_steam_button": "\"Installeer Steam\" knop",
@@ -396,15 +391,13 @@
         "contributors": "geweldige bijdragers",
         "apppage": "App pagina",
         "exfgls": "Laat een bericht zien als Family Sharing niet mogelijk is voor een app",
-        "saving": "Aan het opslaan...",
         "user_notes": {
             "user_notes": "Gebruiker notities",
             "app": "Op app pagina's",
             "wishlist": "Op mijn wenslijst",
             "loc": "Opslag locatie",
             "synced_storage": "Synced/locale opslag",
-            "local": "Locale opslag",
-            "itad": "IsThereAnyDeal server"
+            "local": "Locale opslag"
         },
         "show_custom_themes": "Laat aangepaste thema's zien",
         "oneclickremovewl": "Bevestiging bij het verwijderen van voorwerpen overslaan",
@@ -456,9 +449,6 @@
     "itad": {
         "import": "Periodiek importeren:",
         "sync_now": "Synchroniseer nu",
-        "option": "Toon menu optie om informatie te synchroniseren met IsThereAnyDeal.com",
-        "send_to_itad": "Verstuur spellen in bezit naar IsThereAnyDeal",
-        "sending": "Spellen en pakketten die je in bezit hebt worden geladen en naar IsThereAnyDeal.com verstuurd",
         "info": {
             "itad-steam": "Door Augmented Steam te verbinden met IsThereAnyDeal kun je de highlights en tagging van Augmented Steam toepassen op games in je Wachtlijst en Collectie, zelfs als je ze niet op Steam hebt.",
             "steam-itad": "Bovendien kunt u games uit uw Steam-bibliotheek en/of verlanglijstje importeren in IsThereAnyDeal, voor verbeterde nauwkeurigheid. Momenteel kan deze functie alleen titels toevoegen, niet verwijderen, dus het is geen vervanging voor de geïntegreerde synchronisatie van IsThereAnyDeal, maar een aanvulling daarop."
@@ -500,8 +490,6 @@
     "user_note": {
         "add": "Een notitie toevoegen",
         "update": "Notitie updaten",
-        "add_prompt": "Notitie schrijven",
-        "update_prompt": "Notitie updaten",
         "add_for_game": "Notitie voor __gamename__",
         "not_enough_space": "Niet genoeg ruimte om je notitie op te slaan",
         "not_enough_space_desc": "Augmented Steam niet nier meer gebruiker notities opslaan omdat jouw gekozen opslag adapter niet meer data toestaat (geprobeerd ~__perc__% van de opslag te gebruiken).",
@@ -529,7 +517,6 @@
     },
     "original_authors": "Originele makers",
     "acknowledgements": "Erkenningen",
-    "powered_by": "Mede mogelijk gemaakt door __link__",
     "help_translate": "Help on om Augmented Steam te vertalen via POEditor",
     "filters": "Augmented Steam filters",
     "search_filters": {

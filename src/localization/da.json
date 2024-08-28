@@ -152,9 +152,7 @@
         "title": "How Long to Beat",
         "main_e": "Hovedhistorie og ekstra",
         "compl": "Fuldførnist",
-        "submit": "Indsend din tid",
-        "main": "Hovedhistorie",
-        "no_data": "Ingen data fundet"
+        "main": "Hovedhistorie"
     },
     "options": {
         "wsgf": "Vis WSGF (Widescreen) info ",
@@ -194,17 +192,14 @@
         "pcgw": "Vis PCGamingWiki links",
         "store_steamcards": "Vis SteamCardExchange links på butik sider",
         "spamcommentregex": "Regulære udtryk streng:",
-        "saved_note": "Indstillinger gemt",
         "regional_hideworld": "Skjul globe indikator",
         "show_astatslink": "Vis AStats link på app sider",
         "guest": "Elementer, du har et gæstepas til",
         "lowestprice_onwishlist": "Vis på ønskeliste",
         "steamrepapi": "Vis SteamRep status på profilsider",
         "lowestprice": "Vis",
-        "changelog": "Ændringslog",
         "owned": "Genstande du ejer",
         "steamdb": "Vis SteamDB links",
-        "reset_note": "Indstillinger nulstillet",
         "profile_link_images_color": "Farvet",
         "show_empty_wishlist": "Vis \"Tøm ønskeseddel\" knappen",
         "inventory_nav_text": "Vis Avanceret navigation på rygsæk side",
@@ -290,11 +285,6 @@
         "silver": "Denne medalje er tildelt til spil, der har modtaget en beregnet kategori b for deres __type__ støtte.  Alle spil af denne slags er uden store fejl, men har mindst én plet, der forhindrer en perfekt score.",
         "limited": "Denne score er tildelt til spil, der har modtaget en beregnet kategori c for deres __type__ støtte.  Alle spil af denne slags har en vis grad af __type__ støtte, men har betydelige problemer.",
         "certifications": "WSGF Widescreen certificeringer"
-    },
-    "itad": {
-        "option": "Vis menupunkt til synkronisering af data til IsThereAnyDeal.com",
-        "send_to_itad": "Send ejede spil til IsThereAnyDeal",
-        "sending": "Indlæser dine ejede spil og pakker og sender dem til IsThereAnyDeal.com"
     },
     "tradeoffer": {
         "num_item": "__num__ genstand",

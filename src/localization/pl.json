@@ -230,9 +230,7 @@
         "title": "How Long to Beat",
         "main_e": "Główny wątek i dodatki",
         "compl": "Kompletne ukończenie",
-        "submit": "Podaj swój czas",
-        "main": "Główny wątek",
-        "no_data": "Nie znaleziono danych"
+        "main": "Główny wątek"
     },
     "options": {
         "community_default_tab": "Domyślna zakładka na stronie głównej Społeczności Steam:",
@@ -297,7 +295,6 @@
         "protondb": "Wyświetlaj odnośniki do ProtonDB",
         "store_steamcards": "Wyświetlaj odnośniki do SteamCardExchange",
         "spamcommentregex": "Wyrażenie regularne:",
-        "saved_note": "Zapisano zmiany",
         "regional_hideworld": "Ukrywaj ikonę globusa",
         "show_astatslink": "Wyświetlaj odnośniki do AStats",
         "show_youtubegameplay": "Wyświetlaj odnośniki „Gameplaye na YouTube”",
@@ -311,11 +308,9 @@
         "lowestprice_onwishlist": "Wyświetlaj po najechaniu kursorem na tytuły na liście życzeń",
         "steamrepapi": "Wyświetlaj status SteamRep",
         "lowestprice": "Wyświetlaj na stronach aplikacji",
-        "changelog": "Lista zmian:",
         "owned": "Posiadane tytuły",
         "itadlinks": "Wyświetlaj odnośniki do IsThereAnyDeal",
         "steamdb": "Wyświetlaj odnośniki do SteamDB",
-        "reset_note": "Zresetowano opcje",
         "profile_link_images_color": "Kolorowe",
         "show_view_in_library": "Wyświetlaj przycisk „Zobacz w bibliotece” na stronach posiadanych gier",
         "install_steam_button": "Przycisk „Zainstaluj Steam”:",
@@ -398,15 +393,13 @@
         "contributors": "super współautorów",
         "apppage": "Strona aplikacji",
         "exfgls": "Wyświetlaj ostrzeżenie, jeśli aplikacja wykluczona jest z funkcji udostępniania gier",
-        "saving": "Zapisywanie...",
         "user_notes": {
             "user_notes": "Notatki użytkownika",
             "app": "Na stronach aplikacji",
             "wishlist": "Na mojej liście życzeń",
             "loc": "Lokalizacja przechowywania:",
             "synced_storage": "Pamięć synchronizowana/lokalna",
-            "local": "Lokalna baza danych",
-            "itad": "Serwer IsThereAnyDeal"
+            "local": "Lokalna baza danych"
         },
         "show_custom_themes": "Wyświetlaj niestandardowe motywy",
         "oneclickremovewl": "Wyłącz potwierdzenia przy usuwaniu produktów",
@@ -461,9 +454,6 @@
     "itad": {
         "import": "Okresowe importowanie:",
         "sync_now": "Synchronizuj teraz",
-        "option": "Wyświetlaj w menu podręcznym Augmented Steam opcję synchronizacji danych z IsThereAnyDeal.com",
-        "send_to_itad": "Wyślij posiadane gry do IsThereAnyDeal",
-        "sending": "Trwa wczytywanie pakietów i gier z twojej biblioteki, i wysyłanie ich do IsThereAnyDeal.com",
         "info": {
             "itad-steam": "Połączenie Augmented Steam z IsThereAnyDeal pozwoli ci użyć podświetlania i oznaczania gier na twojej liście życzeń i w kolekcji, nawet jeżeli nie masz ich dodanych na platformie Steam.",
             "steam-itad": "Co więcej, umożliwia importowanie gier z biblioteki Steam i/lub listy życzeń do IsThereAnyDeal, aby zwiększyć dokładność (np. DLC lub gry niepubliczne). Obecnie ta funkcja może tylko dodawać tytuły, a nie je usuwać, więc nie zastępuje zintegrowanej synchronizacji IsThereAnyDeal, ale jest dodatkiem do niej."
@@ -511,8 +501,6 @@
     "user_note": {
         "add": "Dodaj notatkę",
         "update": "Zaktualizuj notatkę",
-        "add_prompt": "Wprowadź treść notatki",
-        "update_prompt": "Zaktualizuj treść notatki",
         "add_for_game": "Notatka dla __gamename__",
         "not_enough_space": "Za mało miejsca, aby zapisać notatkę",
         "not_enough_space_desc": "Augmented Steam nie może zapisać więcej notatek użytkownika, ponieważ używana lokalizacja przechowywania nie pozwala na zapisanie większej ilości danych (próba wykorzystania ~__perc__% pojemności pamięci).",
@@ -540,7 +528,6 @@
     },
     "original_authors": "Pierwotni autorzy",
     "acknowledgements": "Podziękowania",
-    "powered_by": "Powered by __link__",
     "help_translate": "Pomóż nam w tłumaczeniu dodatku Augmented Steam w serwisie POEditor",
     "filters": "Filtry dodatku Augmented Steam",
     "search_filters": {

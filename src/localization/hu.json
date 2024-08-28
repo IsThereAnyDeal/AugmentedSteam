@@ -222,9 +222,7 @@
         "title": "How Long to Beat",
         "main_e": "Főszál és mellékfeladatok",
         "compl": "Összesen",
-        "submit": "A Te időd megosztása",
-        "main": "Főszál",
-        "no_data": "Nem található adat"
+        "main": "Főszál"
     },
     "options": {
         "community_default_tab": "Alapértelmezett közösségi főoldal fül:",
@@ -287,7 +285,6 @@
         "protondb": "ProtonDB linkek mutatása",
         "store_steamcards": "SteamCardExchange link mutatása az áruház oldalain",
         "spamcommentregex": "Reguláris kifejezés:",
-        "saved_note": "Beállítások mentve",
         "regional_hideworld": "Globális mutató elrejtése",
         "show_astatslink": "AStats hivatkozás mutatása az áruház oldalain",
         "show_youtubegameplay": "YouTube játékmenet videók mutatása az app oldalakon",
@@ -301,11 +298,9 @@
         "lowestprice_onwishlist": "Mutassa a kívánságlistát",
         "steamrepapi": "SteamRep statisztika mutatása a profil oldalakon",
         "lowestprice": "Mutat",
-        "changelog": "Változások:",
         "owned": "Tárgyaid",
         "itadlinks": "IsThereAnyDeal linkek mutatása",
         "steamdb": "Mutassa a SteamDB linkeket",
-        "reset_note": "Beállítások törlése",
         "profile_link_images_color": "Színezett",
         "show_view_in_library": "\"Megtekintés a könyvtárban\" gomb mutatása birtokolt játékoknál",
         "install_steam_button": "\"Steam telepítése\" gomb",
@@ -388,13 +383,11 @@
         "contributors": "nagyszerű közreműködőinktől",
         "apppage": "App oldal",
         "exfgls": "Figyelmeztetés ha egy app ki van zárva a Családi Megosztásból",
-        "saving": "Mentés...",
         "user_notes": {
             "user_notes": "Jegyzetek",
             "app": "App oldalakon",
             "wishlist": "Kivánságlistámon",
-            "local": "Lokális adatbázis",
-            "itad": "IsThereAnyDeal szerver"
+            "local": "Lokális adatbázis"
         },
         "show_custom_themes": "Egyéni témák megjelenítése",
         "hideannouncementcomments": "Kommentek automatikus elrejtése csoport bejelentések alatt"
@@ -439,9 +432,6 @@
     "itad": {
         "import": "Időszakos importálás:",
         "sync_now": "Szinkronizálás",
-        "option": "Adatok szinkronizálása menü megjelenítése a IsThereAnyDeal.com-hoz",
-        "send_to_itad": "Saját játékok elküldése a(z) IsThereAnyDeal-nek",
-        "sending": "A saját játékok és csomagok betöltése és elküldése a(z) IsThereAnyDeal.com-nak",
         "info": {
             "itad-steam": "Az Augmented Steam összekapcsolása az IsThereAnyDeal-lel engedélyezi a játékaid kiemelését és címkézését a gyűjteményedben akkor is, ha nincsenek meg Steam-en.",
             "steam-itad": "Továbbá, engedélyezi a játékaid importálását a Steam könyvtáradból és/vagy kívánságlistádról az IsThereAnyDeal-re további pontosságért (pl. DLC-k, vagy nem listázott játékok). Ez a funkció jelenleg csak hozzáadni tud címeket, törölni nem, így nem teljesen pótolja az IsThereAnyDeal integrált szinkronizációját, csak bővíti."
@@ -481,8 +471,6 @@
     "user_note": {
         "add": "Jegyzet hozzáadása",
         "update": "Jegyzet frissítése",
-        "add_prompt": "Írd be a jegyzeted",
-        "update_prompt": "Frissítsd a jegyzeted",
         "add_for_game": "Jegyzetek ehhez: __gamename__",
         "not_enough_space": "Nincs elég hely a jegyzet mentéséhez",
         "save_local": "Jegyzetek lokális tárolása"
@@ -505,7 +493,6 @@
     },
     "original_authors": "Eredeti készítők",
     "acknowledgements": "Elismerések",
-    "powered_by": "Powered by __link__",
     "help_translate": "Segíts az Augmented Steam fordításában a POEditor-on",
     "filters": "Augmented Steam szűrői",
     "search_filters": {

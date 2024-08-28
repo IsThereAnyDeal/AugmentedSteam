@@ -227,9 +227,7 @@
         "title": "通关时间",
         "main_e": "主线剧情和支线",
         "compl": "完美收集",
-        "submit": "提交您的时长",
-        "main": "主线剧情",
-        "no_data": "找不到数据"
+        "main": "主线剧情"
     },
     "options": {
         "community_default_tab": "默认社区中心页面",
@@ -293,7 +291,6 @@
         "protondb": "显示 ProtonDB 链接",
         "store_steamcards": "在商店页面显示 SteamCardExchange 链接",
         "spamcommentregex": "正则表达式字符串：",
-        "saved_note": "选项已保存",
         "regional_hideworld": "隐藏地球小图标",
         "show_astatslink": "在游戏页面显示 AStats 链接",
         "show_youtubegameplay": "在商店页面显示 YouTube 实况视频",
@@ -307,11 +304,9 @@
         "lowestprice_onwishlist": "在愿望单中显示",
         "steamrepapi": "在个人资料页面显示 SteamRep 状态",
         "lowestprice": "显示",
-        "changelog": "更新日志：",
         "owned": "已拥有的物品",
         "itadlinks": "显示 IsThereAnyDeal 链接",
         "steamdb": "显示 SteamDB 链接",
-        "reset_note": "重置选项",
         "profile_link_images_color": "彩色",
         "show_view_in_library": "为已拥有游戏显示“在库中查看”按钮",
         "install_steam_button": "“安装 Steam”按钮",
@@ -394,15 +389,13 @@
         "contributors": "了不起的贡献者们",
         "apppage": "商店页面",
         "exfgls": "如果游戏不支持家庭共享则显示提醒",
-        "saving": "正在保存……",
         "user_notes": {
             "user_notes": "用户备注",
             "app": "在商店页面",
             "wishlist": "在愿望单",
             "loc": "存储位置",
             "synced_storage": "同步存储",
-            "local": "本地数据库",
-            "itad": "IsThereAnyDeal 服务器"
+            "local": "本地数据库"
         },
         "show_custom_themes": "显示自定义主题",
         "oneclickremovewl": "删除物品时跳过确认",
@@ -458,9 +451,6 @@
     "itad": {
         "import": "定时导入：",
         "sync_now": "立刻同步",
-        "option": "在菜单中显示与 IsThereAnyDeal.com 同步数据选项",
-        "send_to_itad": "与 IsThereAnyDeal 同步已拥有游戏",
-        "sending": "载入您已拥有的游戏与合集包，并将信息发送到 IsThereAnyDeal.com",
         "info": {
             "itad-steam": "将 Augmented Steam 连接至 IsThereAnyDeal，则 Augmented Steam 可以高亮显示并标记您的观察列表（Waitlist）与收藏库（Collection）中的游戏，即使您不在 Steam 上拥有它们。",
             "steam-itad": "并且，您还可以将 Steam 库和/或愿望单中的游戏导入至 IsThereAnyDeal, 而且更准确（例如，准确处理 DLC 或缺失的游戏）。目前此功能只能添加项目，不能删除，所以无法完全替代 IsThereAnyDeal 内置的同步功能，仅仅是个补充。"
@@ -507,8 +497,6 @@
     "user_note": {
         "add": "添加备注",
         "update": "更新备注",
-        "add_prompt": "输入备注内容",
-        "update_prompt": "更新您的备注",
         "add_for_game": "__gamename__ 的备注",
         "not_enough_space": "没有足够的空间存储备注",
         "not_enough_space_desc": "Augmented Steam 无法保存更多用户备注，因为您选择的存储方式不允许存储更多数据（已使用约 __perc__% 存储空间）。",
@@ -536,7 +524,6 @@
     },
     "original_authors": "原版作者",
     "acknowledgements": "致谢",
-    "powered_by": "数据来自 __link__",
     "help_translate": "在 POEditor 帮助我们翻译 Augmented Steam",
     "filters": "Augmented Steam 筛选",
     "search_filters": {

@@ -152,9 +152,7 @@
         "title": "Hur länge att avklaras",
         "main_e": "Huvudstory och extra",
         "compl": "Perfektionist",
-        "submit": "Skicka din tid",
-        "main": "Huvudstory",
-        "no_data": "Ingen data hittades"
+        "main": "Huvudstory"
     },
     "options": {
         "wsgf": "Visa WSGF (Widescreen) information",
@@ -194,17 +192,14 @@
         "pcgw": "Visa PCGamingWiki länkar",
         "store_steamcards": "Visa SteamCardExchange-länkar på butikssidor",
         "spamcommentregex": "Reguljär uttryck sträng:",
-        "saved_note": "Inställningar sparad",
         "regional_hideworld": "Dölja globe indikator",
         "show_astatslink": "Vista AStats-länk på app-sidor",
         "guest": "Föremål som du har gästpass till",
         "lowestprice_onwishlist": "Visa på Önskelistan",
         "steamrepapi": "Visa status för SteamRep på profilsidan",
         "lowestprice": "Visa",
-        "changelog": "Ändringslogg",
         "owned": "Föremål du äger",
         "steamdb": "Visa SteamDB länkar",
-        "reset_note": "Inställningar är återställda",
         "profile_link_images_color": "Färgad",
         "show_empty_wishlist": "Visa \"Töm Önskelista\" knappen",
         "inventory_nav_text": "Visa avancerad navigation i förrådssidorna",
@@ -290,11 +285,6 @@
         "silver": "Denna medalj utdelas till spel som har fått beräknade betyget B för deras __type__ stöd.  Alla dessa spel är utan större brister, men har åtminstone en fläck som förhindrar ett perfekt resultat.",
         "limited": "Denna poäng tilldelas spel som har fått en beräknad klass C för deras __type__ stöd.  Alla dessa spel har viss __type__ stöd men har betydande problem.",
         "certifications": "WSGF Widescreen certifieringar"
-    },
-    "itad": {
-        "option": "Visa menyn Alternativ för att synkroniseringsdata till IsThereAnyDeal.com",
-        "send_to_itad": "Skicka ägda spel till IsThereAnyDeal",
-        "sending": "Laddar din ägda spel och paket och skicka dem till IsThereAnyDeal.com"
     },
     "tradeoffer": {
         "num_item": "__num__ Objekt",

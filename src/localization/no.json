@@ -152,9 +152,7 @@
         "title": "Hvor lang tid å slå",
         "main_e": "Hovedhistorie og ekstra",
         "compl": "Perfeksjonist",
-        "submit": "Send Din Tid",
-        "main": "Hoved Historie",
-        "no_data": "Ingen data funnet"
+        "main": "Hoved Historie"
     },
     "options": {
         "wsgf": "Vis WSGF (Widescreen)-informasjon",
@@ -194,17 +192,14 @@
         "pcgw": "Vis PCGamingWiki-lenker",
         "store_steamcards": "Vis SteamCardExchange-lenker på butikksider",
         "spamcommentregex": "Regulær uttrykksstreng:",
-        "saved_note": "Innstillinger lagret",
         "regional_hideworld": "Skjul klodeindikator",
         "show_astatslink": "Vis AStats-lenke på programsider",
         "guest": "Gjenstander du har et gjestepass for",
         "lowestprice_onwishlist": "Vis på ønskeliste",
         "steamrepapi": "Vis SteamRep-status på profilsider",
         "lowestprice": "Vis",
-        "changelog": "Endringslogg:",
         "owned": "Gjenstander du eier",
         "steamdb": "Vis SteamDB-lenker",
-        "reset_note": "Innstillinger tilbakestilt",
         "profile_link_images_color": "Farget",
         "show_empty_wishlist": "Vis \"Tom ønskeliste\"-knappen",
         "inventory_nav_text": "Vis avansert navigasjon på lagerside",
@@ -290,11 +285,6 @@
         "silver": "Denne medaljen er tildelt spill som har mottatt kalkulert karakter B for deres __type__-støtte.  Alle disse spillene er uten særlig store feil, men har minst én blemme som forhindrer et perfekt resultat.",
         "limited": "Dette resultatet tildeles spill som har mottatt kalkulert grad C for deres __type__-støtte.  Alle disse spillene har et visst nivå av __type__-støtte men har noen betydelige problemer.",
         "certifications": "WSGF widescreen-sertifiseringer"
-    },
-    "itad": {
-        "option": "Vis meny for å synkroniserisere data til IsThereAnyDeal.com",
-        "send_to_itad": "Send eide spill til IsThereAnyDeal",
-        "sending": "Laster spill og pakker du eier og sender dem til IsThereAnyDeal.com"
     },
     "tradeoffer": {
         "num_item": "__num__ element",

@@ -230,9 +230,7 @@
         "title": "Läpäisyn kesto",
         "main_e": "Päätarina ja ekstrat",
         "compl": "Perfektionisti",
-        "submit": "Kerro oma aikasi",
-        "main": "Päätarina",
-        "no_data": "Tietoja ei löytynyt"
+        "main": "Päätarina"
     },
     "options": {
         "community_default_tab": "Vakio yhteisön kotisivu",
@@ -296,7 +294,6 @@
         "protondb": "Näytä ProtonDB linkit",
         "store_steamcards": "Näytä SteamCardExchange-linkit kauppasivuilla",
         "spamcommentregex": "Säännöllisen lausekkeen merkkijono:",
-        "saved_note": "Asetukset tallennettu",
         "regional_hideworld": "Piilota maapallo-kuvake",
         "show_astatslink": "Näytä AStats-linkki sovellussivuilla",
         "show_youtubegameplay": "Näytä \"YouTube pelivideo\" linkit",
@@ -310,11 +307,9 @@
         "lowestprice_onwishlist": "Näytä toivelistalla",
         "steamrepapi": "Näytä SteamRep tila profiileissa",
         "lowestprice": "Näytä",
-        "changelog": "Muutoshistoria:",
         "owned": "Tuotteet jotka omistat",
         "itadlinks": "Näytä IsThereAnyDeal linkit",
         "steamdb": "Näytä SteamDB linkit",
-        "reset_note": "Asetukset nollattu",
         "profile_link_images_color": "Värillinen",
         "show_view_in_library": "Näytä \"Näytä kirjastossa\" nappi",
         "install_steam_button": "\"Asenna Steam\" nappi",
@@ -397,15 +392,13 @@
         "contributors": "upeiden avustajiemme",
         "apppage": "Sovellus sivu",
         "exfgls": "Näytä muistutus jos sovellus ei kuulu Family Sharingiin",
-        "saving": "Tallennetaan...",
         "user_notes": {
             "user_notes": "Käyttäjän muistiinpanot",
             "app": "Sovellukset sivuilla",
             "wishlist": "Toivelistallani",
             "loc": "Tallennustilan sijainti",
             "synced_storage": "Synkronoitu / Paikallinen tallennustila",
-            "local": "Paikallinen tietokanta",
-            "itad": "IsThereAnyDeal serveri"
+            "local": "Paikallinen tietokanta"
         },
         "show_custom_themes": "Näytä muokattavat teemat",
         "oneclickremovewl": "Ohita varmistus poistaessa esineitä",
@@ -461,9 +454,6 @@
     "itad": {
         "import": "Määräajoin tapahtuva tuonti:",
         "sync_now": "Synkronoi nyt",
-        "option": "Näytä valikkovaihtoehto tietojen synkronoimiseksi IsThereAnyDeal.com:iin",
-        "send_to_itad": "Lähetä omistamasi pelit IsThereAnyDeal:iin",
-        "sending": "Omistamiesi pelien ja pakettien lataus ja lähetys IsThereAnyDeal.com:iin",
         "info": {
             "itad-steam": "Kun yhdistät Augmented Steamin IsThereAnyDealiin, voit käyttää Augmented Steamin korostusta ja tägejä odotuslistaaso ja kokoelmasi peleihin, vaikka sinulla ei olisi niitä Steamissa.",
             "steam-itad": "Lisäksi sen avulla voit tuoda pelejä Steam-kirjastostasi ja/tai toivelistastasi IsThereAnyDealiin tarkkuuden parantamiseksi (esim. DLC:t tai listaamattomat pelit). Tällä hetkellä tämä ominaisuus voi vain lisätä nimikkeitä, ei poistaa niitä, joten se ei korvaa IsThereAnyDealin integroitua synkronointia, vaan lisäys siihen."
@@ -510,8 +500,6 @@
     "user_note": {
         "add": "Lisää muistiinpano",
         "update": "Päivitä muistiinpano",
-        "add_prompt": "Kirjoita muistiinpanosi",
-        "update_prompt": "Päivitä muistiinpanosi",
         "add_for_game": "__gamername__ muistiinpano",
         "not_enough_space": "Tallennus tila ei riitä tallentamaan muistiinpanoa",
         "not_enough_space_desc": "Augmented Steam ei voi tallentaa enempää käyttäjän muistiinpanoja, koska käytetty tallennussovitin ei salli enempää tietojen tallentamista (yritetään käyttää ~__perc__% tallennuskapasiteetista).",
@@ -539,7 +527,6 @@
     },
     "original_authors": "Alkuperäinen tekijä",
     "acknowledgements": "Huomiot",
-    "powered_by": "Toiminnan pohjalla __link_",
     "help_translate": "Auta meitä kääntämään Augmented Steam POEditorilla",
     "filters": "Augmented Steam suodattimet",
     "search_filters": {

@@ -228,9 +228,7 @@
         "title": "How Long to Beat",
         "main_e": "História principal e extras",
         "compl": "Completacionista",
-        "submit": "Envie o seu tempo",
-        "main": "História principal",
-        "no_data": "Nenhum dado encontrado"
+        "main": "História principal"
     },
     "options": {
         "community_default_tab": "Aba padrão da página inicial da comunidade",
@@ -294,7 +292,6 @@
         "protondb": "Exibir links para o site ProtonDB",
         "store_steamcards": "Exibir links para o site SteamCardExchange",
         "spamcommentregex": "String de expressão regular:",
-        "saved_note": "Opções salvas",
         "regional_hideworld": "Ocultar indicador de globo",
         "show_astatslink": "Exibir links para o site AStats",
         "show_youtubegameplay": "Exibir links de \"Gameplay no YouTube\"",
@@ -308,11 +305,9 @@
         "lowestprice_onwishlist": "Exibir na lista de desejos ao passar o mouse por cima",
         "steamrepapi": "Exibir estado do SteamRep",
         "lowestprice": "Exibir em páginas de aplicativos",
-        "changelog": "Registro de alterações:",
         "owned": "Itens que você possui",
         "itadlinks": "Exibir links para o site IsThereAnyDeal",
         "steamdb": "Exibir links para o site SteamDB",
-        "reset_note": "Opções redefinidas",
         "profile_link_images_color": "Colorido",
         "show_view_in_library": "Exibir botão \"Ver na biblioteca\"",
         "install_steam_button": "Botão \"Instale o Steam\"",
@@ -395,15 +390,13 @@
         "contributors": "maravilhosos contribuidores",
         "apppage": "Página de aplicativo",
         "exfgls": "Exibir um aviso se o aplicativo não estiver disponível no Compartilhamento de Biblioteca Steam",
-        "saving": "Salvando...",
         "user_notes": {
             "user_notes": "Observações de usuários",
             "app": "Em páginas de aplicativos",
             "wishlist": "Na minha lista de desejos",
             "loc": "Local de armazenamento",
             "synced_storage": "Armazenamento sincronizado/local",
-            "local": "Banco de dados local",
-            "itad": "Servidor do IsThereAnyDeal"
+            "local": "Banco de dados local"
         },
         "show_custom_themes": "Exibir temas personalizados",
         "oneclickremovewl": "Pular confirmação ao remover itens",
@@ -459,9 +452,6 @@
     "itad": {
         "import": "Importar periodicamente:",
         "sync_now": "Sincronizar",
-        "option": "Exibir opção para sincronizar dados com IsThereAnyDeal.com",
-        "send_to_itad": "Enviar dados de jogos na conta para IsThereAnyDeal",
-        "sending": "Carregando dados de jogos e pacotes na conta e enviando-os para IsThereAnyDeal.com",
         "info": {
             "itad-steam": "Conectar Augmented Steam com IsThereAnyDeal permite que você aplique os destaques e as marcações do Augmented Steam aos jogos da sua lista de espera e à sua Coleção, mesmo que não os possua no Steam.",
             "steam-itad": "Além disso, também permite que você importe jogos da sua Biblioteca Steam e/ou lista de desejos para o IsThereAnyDeal, para uma melhor precisão (como conteúdos adicionais ou jogos não listados). Atualmente, essa ferramenta somente pode adicionar jogos, não removê-los, então não é um substituto para a sincronização integrada do IsThereAnyDeal, mas sim uma adição."
@@ -509,8 +499,6 @@
     "user_note": {
         "add": "Adicionar observação",
         "update": "Modificar observação",
-        "add_prompt": "Insira a sua observação",
-        "update_prompt": "Modifique a sua observação",
         "add_for_game": "Observação para __gamename__",
         "not_enough_space": "Não há espaço suficiente para salvar a observação",
         "not_enough_space_desc": "O Augmented Steam não pode mais salvar nenhuma observação de usuário já que o adaptador de armazenamento usado não permite que mais nenhum dado seja salvo (tentando usar ~__perc__% da capacidade de armazenamento).",
@@ -538,7 +526,6 @@
     },
     "original_authors": "Autores originais",
     "acknowledgements": "Agradecimentos",
-    "powered_by": "Fornecido por __link__",
     "help_translate": "Ajude-nos a traduzir o Augmented Steam no POEditor",
     "filters": "Filtros do Augmented Steam",
     "search_filters": {

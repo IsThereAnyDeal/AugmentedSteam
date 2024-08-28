@@ -230,9 +230,7 @@
         "title": "通關時數",
         "main_e": "主線故事加支線",
         "compl": "完美主義者",
-        "submit": "提交你的時數",
-        "main": "主線故事",
-        "no_data": "找不到資料"
+        "main": "主線故事"
     },
     "options": {
         "community_default_tab": "預設社群中心分頁",
@@ -297,7 +295,6 @@
         "protondb": "顯示 ProtonDB 連結",
         "store_steamcards": "顯示 SteamCardExchange 連結",
         "spamcommentregex": "正則表達式字串：",
-        "saved_note": "選項已儲存",
         "regional_hideworld": "隱藏地球小圖示",
         "show_astatslink": "顯示 AStats 連結",
         "show_youtubegameplay": "顯示 YouTube 遊玩影片",
@@ -311,11 +308,9 @@
         "lowestprice_onwishlist": "在滑鼠游標移至願望清單項目上時顯示",
         "steamrepapi": "顯示 SteamRep 狀態",
         "lowestprice": "在應用程式頁面中顯示",
-        "changelog": "更新日誌：",
         "owned": "已擁有的項目",
         "itadlinks": "顯示 IsThereAnyDeal 連結",
         "steamdb": "顯示 SteamDB 連結",
-        "reset_note": "選項已重設",
         "profile_link_images_color": "彩色",
         "show_view_in_library": "顯示「在收藏庫中檢視」按鈕",
         "install_steam_button": "「安裝 Steam」按鈕",
@@ -398,15 +393,13 @@
         "contributors": "熱心付出的貢獻者",
         "apppage": "應用程式頁面",
         "exfgls": "若應用程式無法透過親友同享功能分享顯示提示訊息",
-        "saving": "儲存中...",
         "user_notes": {
             "user_notes": "便箋",
             "app": "於應用程式頁面",
             "wishlist": "於我的願望清單",
             "loc": "儲存位置",
             "synced_storage": "可同步的本地儲存空間",
-            "local": "本地資料庫",
-            "itad": "IsThereAnyDeal 伺服器"
+            "local": "本地資料庫"
         },
         "show_custom_themes": "顯示自訂主題",
         "oneclickremovewl": "移除項目時跳過確認訊息",
@@ -464,9 +457,6 @@
     "itad": {
         "import": "定期匯入：",
         "sync_now": "立即同步",
-        "option": "顯示將資料同步到 IsThereAnyDeal.com 的選單選項",
-        "send_to_itad": "將擁有的遊戲同步到 IsThereAnyDeal",
-        "sending": "正在載入你擁有的遊戲和套件並將資料發送到 IsThereAnyDeal.com",
         "info": {
             "itad-steam": "將 Augmented Steam 與 IsThereAnyDeal 連結後，你便能替 Waitlist 和 Collection 中的遊戲套用 Augmented Steam 的高亮顯示和文字標記設定，無論你是否擁有 Steam 版。",
             "steam-itad": "除此之外，你將能匯入 Steam 收藏庫和願望清單中的遊戲到 IsThereAnyDeal 以改善準確度（如 DLC 或未上架的遊戲）。目前僅能新增產品，無法移除，所以此為 IsThereAnyDeal 的內建同步功能的附加工具，尚無法完全取代。"
@@ -514,8 +504,6 @@
     "user_note": {
         "add": "新增便箋",
         "update": "更新便箋",
-        "add_prompt": "輸入你的便箋",
-        "update_prompt": "更新你的便箋",
         "add_for_game": "__gamename__ 的便箋",
         "not_enough_space": "儲存空間不足",
         "not_enough_space_desc": "Augmented Steam 無法儲存更多便箋了，因為你目前選用的儲存方式無法容納更多資料（正嘗試使用 __perc__% 的儲存空間）。",
@@ -543,7 +531,6 @@
     },
     "original_authors": "原版作者",
     "acknowledgements": "致謝",
-    "powered_by": "由 __link__ 提供",
     "help_translate": "於 POEditor 幫助我們翻譯 Augmented Steam",
     "filters": "Augmented Steam 篩選選項",
     "search_filters": {

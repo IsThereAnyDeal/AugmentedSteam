@@ -230,9 +230,7 @@
         "title": "How Long to Beat",
         "main_e": "Ana Hikaye ve Ekstralar",
         "compl": "Tamamlayıcı",
-        "submit": "Zamanınızı Gönderin",
-        "main": "Ana Hikaye",
-        "no_data": "Veri bulunamadı"
+        "main": "Ana Hikaye"
     },
     "options": {
         "community_default_tab": "Varsayılan topluluk ana sayfası sekmesi",
@@ -296,7 +294,6 @@
         "protondb": "ProtonDB bağlantılarını göster",
         "store_steamcards": "Mağaza sayfalarında SteamCardExchange bağlantılarını göster",
         "spamcommentregex": "Normal İfade dizisi:",
-        "saved_note": "Seçenekler kaydedildi",
         "regional_hideworld": "Dünya göstergesini gizle",
         "show_astatslink": "AStats bağlantısını uygulama sayfalarında göster",
         "show_youtubegameplay": "Uygulama sayfalarında YouTube oynanış videolarını göster",
@@ -310,11 +307,9 @@
         "lowestprice_onwishlist": "İstek Listesinde Göster",
         "steamrepapi": "SteamRep durumunu profil sayfalarında göster",
         "lowestprice": "Göster",
-        "changelog": "Değişiklikler:",
         "owned": "Sahip olduğunuz öğeler",
         "itadlinks": "IsThereAnyDeal bağlantılarını göster",
         "steamdb": "SteamDB bağlantılarını göster",
-        "reset_note": "Seçenekleri sıfırla",
         "profile_link_images_color": "Renkli",
         "show_view_in_library": "Sahip olunan oyunlar için \"Kütüphanede görüntüle\" düğmesini göster",
         "install_steam_button": "\"Steam Yükle\" düğmesi",
@@ -397,15 +392,13 @@
         "contributors": "çok katkısı olanlar",
         "apppage": "Uygulama sayfası",
         "exfgls": "Uygulama Aile Paylaşımı yoksa bildirim göster",
-        "saving": "Kaydediliyor...",
         "user_notes": {
             "user_notes": "Kullanıcı notları",
             "app": "Uygulama sayfalarında",
             "wishlist": "İstek listemde",
             "loc": "Depolama konumu",
             "synced_storage": "Eşitlenmiş/Yerel depo",
-            "local": "Yerel veritabanı",
-            "itad": "IsThereAnyDeal sunucu"
+            "local": "Yerel veritabanı"
         },
         "show_custom_themes": "Özel temaları göster",
         "oneclickremovewl": "Öğeleri kaldırırken onayı atla",
@@ -461,9 +454,6 @@
     "itad": {
         "import": "Periyodik olarak içe al:",
         "sync_now": "Şimdi eşitle",
-        "option": "IsThereAnyDeal.com ile verileri eşitlemek için menü seçeneği göster",
-        "send_to_itad": "Sahip olunan oyunları IsThereAnyDeal'a gönder",
-        "sending": "Sahip olduğun oyunlar ve paketler yükleniyor ve IsThereAnyDeal.com'a gönderiliyor",
         "info": {
             "itad-steam": "Augmented Steam'i IsThereAnyDeal ile bağlamak, Augmented Steam'in vurgulamasını ve etiketlemesini, Steam'de olmasan bile Bekleme Listesi ve Koleksiyondaki oyunlara uygulamanı sağlar.",
             "steam-itad": "Ayrıca, daha yüksek doğruluk için (örneğin DLC'ler veya liste dışı oyunlar) Steam Kütüphanenizden ve/veya İstek Listeniz'den IsThereAnyDeal'a oyun aktarmanıza izin verir. Şu anda bu özellik yalnızca oyunları ekleyebilir, kaldıramaz, bu nedenle IsThereAnyDeal'ın entegre eşitlemesinin yerini almaz, buna ek olarak kullanılır."
@@ -511,8 +501,6 @@
     "user_note": {
         "add": "Bir not ekle",
         "update": "Notu güncelle",
-        "add_prompt": "Notunuzu girin",
-        "update_prompt": "Notunuzu güncelleyin",
         "add_for_game": "__gamename__ için not",
         "not_enough_space": "Notu kaydetmek için yeterli alan yok",
         "not_enough_space_desc": "Kullanılmış depolama bağdaştırıcınız daha fazla veri kaydına izin vermediğinden (depolama kapasitesinin ~__perc__% kullanmaya çalışıyor) Augmented Steam daha fazla kullanıcı notu kaydedemez.",
@@ -540,7 +528,6 @@
     },
     "original_authors": "Özgün geliştiriciler",
     "acknowledgements": "Teşekkürler",
-    "powered_by": "Altyapı: __link__",
     "help_translate": "Augmented Steam'i POEditor'de çevirmemize yardım edin",
     "filters": "Augmented Steam filtreleri",
     "search_filters": {

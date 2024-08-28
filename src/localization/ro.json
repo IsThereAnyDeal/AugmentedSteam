@@ -154,9 +154,7 @@
         "title": "How Long to Beat",
         "main_e": "Povestea principală şi Extras",
         "compl": "Jocul complet",
-        "submit": "Trimite timpul tău",
-        "main": "Povestea principală",
-        "no_data": "Nu există date"
+        "main": "Povestea principală"
     },
     "options": {
         "wsgf": "Afișează informații WSGF (Panoramic)",
@@ -196,17 +194,14 @@
         "pcgw": "Afișează link-uri PCGamingWiki",
         "store_steamcards": "Arată linkurile SteamCardExchange pe paginile magazinului",
         "spamcommentregex": "Șir expresie regulată:",
-        "saved_note": "Opțiuni salvate",
         "regional_hideworld": "Ascunde indicatorul global",
         "show_astatslink": "Afișează link AStats pe paginile aplicațiilor",
         "guest": "Produse care le ai ca invitație",
         "lowestprice_onwishlist": "Afișează în Lista de dorințe",
         "steamrepapi": "Arată status-ul SteamRep pe paginile de profil",
         "lowestprice": "Afișează",
-        "changelog": "Notițe schimbări:",
         "owned": "Produse deținute",
         "steamdb": "Afișează link-uri SteamDB",
-        "reset_note": "Resetează opțiuni",
         "profile_link_images_color": "Colorat",
         "show_empty_wishlist": "Afișează butonul \"Golește lista de dorințe\"",
         "inventory_nav_text": "Arată navigarea avansată pe pagina de inventar",
@@ -292,11 +287,6 @@
         "silver": "Această medalie este acordată jocurilor care au primit nota B pentru compatibilitatea cu modul __type__.  Toate aceste jocuri sunt fără defecte majore, dar au cel puțin un cusur care împiedică un scor perfect.",
         "limited": "Acest scor este acordat jocurilor care au primit nota C pentru compatibilitatea lor cu modul __type__.  Toate aceste jocuri sunt oarecum compatibile cu __type__, dar au probleme semnificative.",
         "certifications": "Certificări Widescreen WSGF"
-    },
-    "itad": {
-        "option": "Arată opțiune in meniu pentru a sincroniza datele cu IsThereAnyDeal.com",
-        "send_to_itad": "Trimite jocurile deținute către IsThereAnyDeal",
-        "sending": "Se încarcă jocurile și pachetele pe care le deții și vor fi trimise către IsThereAnyDeal.com"
     },
     "tradeoffer": {
         "num_item": "__num__ obiect",

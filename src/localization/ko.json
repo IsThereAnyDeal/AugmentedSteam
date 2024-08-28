@@ -179,9 +179,7 @@
         "title": "플레이 타임",
         "main_e": "메인과 추가 스토리",
         "compl": "완벽하게 모두 플레이",
-        "submit": "플레이 타임 제출하기",
-        "main": "메인",
-        "no_data": "데이터를 찾을 수 없습니다"
+        "main": "메인"
     },
     "options": {
         "wsgf": "WSGF (와이드 스크린) 정보를 표시",
@@ -221,17 +219,14 @@
         "pcgw": "PCGamingWiki 링크 보기",
         "store_steamcards": "상점 페이지에서 SteamCardExchange 링크 보기",
         "spamcommentregex": "정규표현식 문자열 : ",
-        "saved_note": "설정이 저장되었습니다.",
         "regional_hideworld": "세계 표시 숨기기",
         "show_astatslink": "AStats 링크 보기",
         "guest": "손님",
         "lowestprice_onwishlist": "찜 목록 보기",
         "steamrepapi": "프로필 페이지에 SteamREP 정보를 표시합니다.",
         "lowestprice": "표시",
-        "changelog": "변경점",
         "owned": "당신이 소유한 아이템",
         "steamdb": "SteamDB 링크를 보입니다.",
-        "reset_note": "설정이 초기화 되었습니다.",
         "profile_link_images_color": "컬러",
         "show_empty_wishlist": "\"찜 목록 비우기\" 버튼 보이기",
         "inventory_nav_text": "인벤토리 페이지에서 쪽수 검색 보기",
@@ -325,11 +320,6 @@
         "silver": " __type__ 부분에서 B등급을 받아 메달을 수여한 게임입니다. 주된 결점이 없는 게임이지만 완벽한 점수를 받기에 최소한 하나의 흠이 있는 게임입니다.",
         "limited": "__type__ 부분에서 C등급을 받아 메달을 수여한 게임입니다. __type__ 지원이 어느 정도 되지만 중요한 문제가 있는 게임입니다.",
         "certifications": "WSGF 와이드스크린 인증"
-    },
-    "itad": {
-        "option": "IsThereAnyDeal.com에서 데이터 동기화 메뉴 옵션 표시",
-        "send_to_itad": "IsThereAnyDeal에 소유 게임 목록 제출",
-        "sending": "IsThereAnyDeal.com에 소유 게임과 패키지를 제출 하는중"
     },
     "tradeoffer": {
         "num_item": "__num__ 항목",

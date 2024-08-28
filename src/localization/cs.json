@@ -180,9 +180,7 @@
         "title": "Jak dlouho na překonání",
         "main_e": "Hlavní příběh a úkoly/medaile apod.",
         "compl": "Vše dokončeno",
-        "submit": "Pošlete svůj čas",
-        "main": "Hlavní příběh",
-        "no_data": "Nebyla nalezena jakákoli data"
+        "main": "Hlavní příběh"
     },
     "options": {
         "videos": "Videa",
@@ -227,17 +225,14 @@
         "pcgw": "Ukázat odkazy na PCGamingWiki",
         "store_steamcards": "Zobrazit SteamCardExchange odkazy v obchodě",
         "spamcommentregex": "Regulární výraz:",
-        "saved_note": "Nastavení uložena",
         "regional_hideworld": "Schovat indikátor země",
         "show_astatslink": "Ukázat odkaz na AStats na stránkách aplikací",
         "guest": "Položky, na které máte Guest Pass",
         "lowestprice_onwishlist": "Ukázat v Seznamu přání",
         "steamrepapi": "Ukázat SteamRep status na profilových stránkách",
         "lowestprice": "Ukázat",
-        "changelog": "Seznam změn:",
         "owned": "Položky, které vlastníte",
         "steamdb": "Ukázat odkazy na SteamDB",
-        "reset_note": "Nastavení resetována",
         "profile_link_images_color": "Barevné",
         "install_steam_button": "Tlačítko \"Nainstalovat Steam\"",
         "replace_view_client": "Nahradit \"Zobrazit ve Steam aplikaci\"",
@@ -303,7 +298,6 @@
             "export": "Exportovat",
             "reset": "Resetovat"
         },
-        "saving": "Ukládání...",
         "user_notes": {
             "loc": "Umístění úložiště"
         }
@@ -343,10 +337,7 @@
         "certifications": "Optimalizováno pro širokoúhlé monitory"
     },
     "itad": {
-        "sync_now": "Synchronizovat nyní",
-        "option": "Zobrazit nabídku Možností synchronizace dat do IsThereAnyDeal.com",
-        "send_to_itad": "Odeslat vlastněné hry na IsThereAnyDeal",
-        "sending": "Načítám vlastněné hry a balíčky a posílám je do IsThereAnyDeal.com"
+        "sync_now": "Synchronizovat nyní"
     },
     "tradeoffer": {
         "num_item": "__num__ položka",
@@ -370,8 +361,6 @@
     "user_note": {
         "add": "Přidat poznámku",
         "update": "Aktualizovat poznámku",
-        "add_prompt": "Vyplňte poznámku",
-        "update_prompt": "Aktualizovat poznámku",
         "add_for_game": "Poznámka pro __gamename__"
     },
     "workshop": {

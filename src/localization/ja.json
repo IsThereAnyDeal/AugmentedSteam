@@ -228,9 +228,7 @@
         "title": "How Long to Beat",
         "main_e": "主なストーリーとおまけ",
         "compl": "完璧主義者",
-        "submit": "あなたの時間を送信",
-        "main": "主なストーリー",
-        "no_data": "データが見つかりません"
+        "main": "主なストーリー"
     },
     "options": {
         "community_default_tab": "デフォルトのコミュニティホームページタブ",
@@ -293,7 +291,6 @@
         "protondb": "ProtonDBのリンクを表示",
         "store_steamcards": "ストアページでSteamCardExchangeのリンクを表示する",
         "spamcommentregex": "正規表現:",
-        "saved_note": "オプションを保存しました",
         "regional_hideworld": "地球儀アイコンを非表示",
         "show_astatslink": "アプリページに AStats のリンクを表示",
         "show_youtubegameplay": "アプリページでYouTube実況を表示",
@@ -307,11 +304,9 @@
         "lowestprice_onwishlist": "ウィッシュリストで表示",
         "steamrepapi": "プロフィールページにSteamRepステータスを表示する",
         "lowestprice": "表示する",
-        "changelog": "変更履歴:",
         "owned": "所有しているアイテム",
         "itadlinks": "IsThereAnyDealのリンクを表示",
         "steamdb": "SteamDBへのリンクを表示",
-        "reset_note": "オプションをリセットしました",
         "profile_link_images_color": "カラー",
         "show_view_in_library": "すでに持っているゲームに「ライブラリで表示」を表示",
         "install_steam_button": "「Steamをインストール」ボタン",
@@ -394,15 +389,13 @@
         "contributors": "協力者たち",
         "apppage": "アプリページ",
         "exfgls": "アプリがファミリーシェアリングから除外された時に通知を送る",
-        "saving": "セーブ中…",
         "user_notes": {
             "user_notes": "ユーザーノート",
             "app": "アプリページ",
             "wishlist": "自分の欲しいものリスト",
             "loc": "保存場所",
             "synced_storage": "同期済み/ローカルストレージ",
-            "local": "ローカルデータベース",
-            "itad": "IsThereAnyDeal (ITAD) サーバー"
+            "local": "ローカルデータベース"
         },
         "show_custom_themes": "カスタムテーマを表示",
         "oneclickremovewl": "アイテムを削除するときに確認をスキップする",
@@ -459,9 +452,6 @@
     "itad": {
         "import": "定期インポート：",
         "sync_now": "直ちに同期する",
-        "option": "IsThereAnyDeal.comとデータを同期するかどうかのオプションを表示する",
-        "send_to_itad": "所持しているゲームの情報をIsThereAnyDealに送信",
-        "sending": "既に所持しているゲームやゲームセットの情報を読み込みIsThereAnyDeal.comに送信する",
         "info": {
             "itad-steam": "Augmented SteamをIsThereAnyDealと接続すると、Steamでゲームを所持していない場合も、IsThereAnyDealのウェイトリストとコレクションをAugmented Steamでハイライトやタグすることができます。",
             "steam-itad": "また、精確さをさらに上げるため、ゲームをSteamライブラリまたはウィッシュリストからIsThereAnyDealへインポートすることも可能（例えば、DLCまたは収録されていないゲーム）です。今、削除機能は実装されていないため、この機能を使ってアイテムを追加するだけができます。IsThereAnyDealが統合した同期機能の代わりにはなれませんが、補充としてはできます。"
@@ -508,8 +498,6 @@
     "user_note": {
         "add": "メモを追加",
         "update": "メモを更新",
-        "add_prompt": "メモを入力",
-        "update_prompt": "自分のメモを更新",
         "add_for_game": "__gamename__のメモ",
         "not_enough_space": "メモを保存するのに十分な容量がありません",
         "not_enough_space_desc": "使用されているストレージアダプターではこれ以上のデータの保存が許可されていないため (ストレージ容量の ~__perc__% を使用しようとしています)、Augmented Steam はこれ以上ユーザーノートを保存できません。",
@@ -537,7 +525,6 @@
     },
     "original_authors": "元開発者",
     "acknowledgements": "感謝",
-    "powered_by": "Powered by __link__",
     "help_translate": "POEditorでAugmented Steamの翻訳にご協力ください",
     "filters": "Augmented Steamのフィルター",
     "search_filters": {

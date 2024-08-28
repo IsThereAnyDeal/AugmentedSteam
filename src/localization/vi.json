@@ -217,9 +217,7 @@
         "title": "How Long to Beat",
         "main_e": "Main Story and Extras",
         "compl": "Completionist",
-        "submit": "Submit Your Time",
-        "main": "Main Story",
-        "no_data": "No data found"
+        "main": "Main Story"
     },
     "options": {
         "wsgf": "Hiển thị thông tin WSGF (màn hình rộng)",
@@ -260,7 +258,6 @@
         "pcgw": "Show PCGamingWiki links",
         "store_steamcards": "Hiện liên kết SteamCardExchange trên trang cửa hàng",
         "spamcommentregex": "Regular Expression string:",
-        "saved_note": "Options saved",
         "regional_hideworld": "Hide globe indicator",
         "show_astatslink": "Show AStats link on app pages",
         "show_youtubereviews": "Xem các đường dẫn \"Đánh Giá YouTube\"",
@@ -268,10 +265,8 @@
         "lowestprice_onwishlist": "Hiển thị khi di chuột vào các vật phẩm danh sách ước",
         "steamrepapi": "Show SteamRep status on profile pages",
         "lowestprice": "Show",
-        "changelog": "Changelog:",
         "owned": "Items you own",
         "steamdb": "Show SteamDB links",
-        "reset_note": "Options reset",
         "profile_link_images_color": "Colored",
         "show_empty_wishlist": "Xem nút \"Xóa hết Danh sách ước\"",
         "show_wishlist_stats": "Xem thông số danh sách ước",
@@ -376,11 +371,6 @@
         "limited": "This score is awarded to games that have received a calculated grade of C for their __type__ support.  All of these games have some level of __type__ support but have significant issues.",
         "certifications": "WSGF Widescreen Certifications"
     },
-    "itad": {
-        "option": "Show menu option to sync data to IsThereAnyDeal.com",
-        "send_to_itad": "Send owned games to IsThereAnyDeal",
-        "sending": "Loading your owned games and packages and sending them to IsThereAnyDeal.com"
-    },
     "tradeoffer": {
         "num_item": "__num__ item",
         "num_items": "__num__ items"
@@ -414,9 +404,7 @@
     },
     "user_note": {
         "add": "Thêm ghi chú",
-        "update": "Cập nhật ghi chú",
-        "add_prompt": "Nhập ghi chú của bạn",
-        "update_prompt": "Cập nhật ghi chú của bạn"
+        "update": "Cập nhật ghi chú"
     },
     "workshop": {
         "subscribe_all": "Đăng ký Tất cả",
@@ -426,7 +414,6 @@
     },
     "original_authors": "Tác giả gốc",
     "acknowledgements": "Công nhận",
-    "powered_by": "Được cung cấp bỏi __link__",
     "help_translate": "Giúp chúng tôi chuyển ngữ Augmented Steam tại POEditor",
     "filters": "Bộ lọc Augmented Steam",
     "search_filters": {

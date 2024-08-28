@@ -230,9 +230,7 @@
         "title": "Combien de temps pour le finir",
         "main_e": "Histoire principale et extras",
         "compl": "Perfectionniste",
-        "submit": "Envoyer votre temps",
-        "main": "Histoire principale",
-        "no_data": "Aucune donnée trouvée"
+        "main": "Histoire principale"
     },
     "options": {
         "community_default_tab": "Onglet par défaut de l'accueil de la communauté",
@@ -297,7 +295,6 @@
         "protondb": "Afficher les liens ProtonDB",
         "store_steamcards": "Afficher les liens SteamCardExchange dans le magasin",
         "spamcommentregex": "Expression régulière :",
-        "saved_note": "Options sauvegardées",
         "regional_hideworld": "Cacher le globe indicateur",
         "show_astatslink": "Afficher le lien AStats dans le magasin",
         "show_youtubegameplay": "Afficher les vidéos YouTube de gameplay dans le magasin",
@@ -311,11 +308,9 @@
         "lowestprice_onwishlist": "Afficher dans la liste de souhaits",
         "steamrepapi": "Afficher le statut SteamRep sur les profils",
         "lowestprice": "Afficher dans le magasin",
-        "changelog": "Journal des modifications :",
         "owned": "Articles que vous possédez",
         "itadlinks": "Afficher les liens IsThreAnyDeal",
         "steamdb": "Afficher les liens SteamDB",
-        "reset_note": "Options réinitialisées",
         "profile_link_images_color": "Colorées",
         "show_view_in_library": "Afficher un bouton \"Voir dans la bibliothèque\" pour les jeux possédés",
         "install_steam_button": "Bouton \"Installer Steam\"",
@@ -398,15 +393,13 @@
         "contributors": "merveilleux contributeurs",
         "apppage": "Pages du magasin",
         "exfgls": "Afficher une remarque si l'application est exclue du partage familial",
-        "saving": "Enregistrement...",
         "user_notes": {
             "user_notes": "Notes utilisateur",
             "app": "Dans le magasin",
             "wishlist": "Dans ma liste de souhaits",
             "loc": "Emplacement de stockage",
             "synced_storage": "Stockage synchronisé/local",
-            "local": "Base de données locale",
-            "itad": "serveur IsThereAnyDeal"
+            "local": "Base de données locale"
         },
         "show_custom_themes": "Afficher les thèmes personnalisés",
         "oneclickremovewl": "Ignorer la confirmation lors de la suppression d'objets",
@@ -464,9 +457,6 @@
     "itad": {
         "import": "Importer périodiquement :",
         "sync_now": "Synchroniser maintenant",
-        "option": "Afficher une option dans le menu pour synchroniser les données vers IsThereAnyDeal.com",
-        "send_to_itad": "Envoyer la liste des jeux possédés vers IsThereAnyDeal",
-        "sending": "Chargement de la liste des jeux et des packages vous appartenant et envoit à IsThereAnyDeal.com",
         "info": {
             "itad-steam": "Connecter Augmented Steam avec IsThereAnyDeal vous permet d'appliquer le surlignage et les tags d'Augmented Steam aux jeux de votre liste d'attente et de votre collection même si vous ne les avez pas sur Steam.",
             "steam-itad": "De plus, cela vous permet d'importer des jeux depuis votre bibliothèque Steam et / ou votre liste de souhaits vers IsThereAnyDeal, pour une précision améliorée (par exemple, des DLC ou des jeux non répertoriés). Actuellement, cette fonctionnalité ne peut ajouter que des titres, pas les retirer, donc ce n'est pas un remplacement mais un ajout à la synchronisation intégrée d'IsThereAnyDeal."
@@ -514,8 +504,6 @@
     "user_note": {
         "add": "Ajouter une note",
         "update": "Mettre la note à jour",
-        "add_prompt": "Saisissez votre note",
-        "update_prompt": "Mettez votre note à jour",
         "add_for_game": "Note pour __gamename__",
         "not_enough_space": "Pas assez d'espace pour enregistrer la note",
         "not_enough_space_desc": "Augmented Steam ne peut plus enregistrer de notes utilisateur car l'adaptateur de stockage utilisé ne permet pas d'enregistrer plus de données (tentative d'utilisation de ~__perc__% de la capacité de stockage).",
@@ -543,7 +531,6 @@
     },
     "original_authors": "Auteurs originaux",
     "acknowledgements": "Remerciements",
-    "powered_by": "Propulsé par __link__",
     "help_translate": "Aidez-nous à traduire Augmented Steam sur POEditor",
     "filters": "Filtres Augmented Steam",
     "search_filters": {

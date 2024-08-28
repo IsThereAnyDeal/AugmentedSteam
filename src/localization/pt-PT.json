@@ -152,9 +152,7 @@
         "title": "Quanto tempo para completar",
         "main_e": "História principal e Extras",
         "compl": "Completar tudo",
-        "submit": "Submeter o teu tempo",
-        "main": "Estória principal",
-        "no_data": "Nenhum dado encontrado"
+        "main": "Estória principal"
     },
     "options": {
         "wsgf": "Mostrar informação WSGF (ecrã panorâmico)",
@@ -194,17 +192,14 @@
         "pcgw": "Mostrar hiperligações do PCGamingWiki",
         "store_steamcards": "Mostrar links para SteamCardExchange nas páginas da loja",
         "spamcommentregex": "String de expressão regular:",
-        "saved_note": "Opções guardadas",
         "regional_hideworld": "Ocultar indicador regional",
         "show_astatslink": "Mostrar link para o site AStats em páginas de aplicações",
         "guest": "Itens que tens um passe de convidado",
         "lowestprice_onwishlist": "Mostrar na Lista de Desejos",
         "steamrepapi": "Mostrar o estado da reputação na página de perfil",
         "lowestprice": "Mostrar",
-        "changelog": "Últimas atualizações:",
         "owned": "Itens adquiridos",
         "steamdb": "Mostrar hiperligações da SteamDB",
-        "reset_note": "Repor opções",
         "profile_link_images_color": "Colorido",
         "show_empty_wishlist": "Mostrar o botão \"Esvaziar Lista de Desejos\"",
         "inventory_nav_text": "Mostrar navegação avançada na página do inventário",
@@ -290,11 +285,6 @@
         "silver": "Esta medalha é dada a jogos que receberam uma nota final B pela sua compatibilidade com __type__.  Todos os jogos com esta nota não possuem grandes problemas, mas pode haver um detalhe que impede a pontuação perfeita.",
         "limited": "Esta pontuação é atribuída a jogos que receberam uma nota calculada de C pelo seu __type__ suporte. Todos estes jogos têm um certo nível de __type__ suporte mas têm problemas significantes.",
         "certifications": "Certificações WSGF"
-    },
-    "itad": {
-        "option": "Mostrar opção para sincronizar dados para isThereAnyDeal.com",
-        "send_to_itad": "Enviar os meus jogos para isThereAnyDeal",
-        "sending": "A carregar e enviar os teus jogos e pacotes para isThereAnyDeal.com"
     },
     "tradeoffer": {
         "num_item": "__num__ item",
