@@ -9,7 +9,7 @@ interface CacheEntry<V = unknown> {
     expiry: number
 }
 
-interface LocalStorageSchema extends StorageSchema {
+export interface LocalStorageSchema extends StorageSchema {
     login: TLogin,
     storeCountry: string,
     currency: CacheEntry<string>,
@@ -41,8 +41,8 @@ interface LocalStorageSchema extends StorageSchema {
         expiry: number
     },
     review_filters: {
-        context: string|undefined,
-        language: string|undefined,
+        context?: string,
+        language?: string,
         minPlaytime?: string,
         maxPlaytime?: string
     }
