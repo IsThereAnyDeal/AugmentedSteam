@@ -61,7 +61,7 @@
     import HideSpamCommentsSettings from "./Settings/HideSpamCommentsSettings.svelte";
     import SubOptions from "./Components/SubOptions.svelte";
     import QuickSellSettings from "./Settings/QuickSellSettings.svelte";
-    import ProfileLinkIcon from "@Options/Modules/Icons/ProfileLinkIcon.svelte";
+    import ProfileLinkIcon from "@Icons/ProfileLinkIcon.svelte";
 
     let settings: Writable<SettingsSchema> = writable(Settings);
 </script>

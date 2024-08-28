@@ -1,7 +1,7 @@
 <script lang="ts">
     import Settings from "@Options/Data/Settings";
     import external from "@Content/externalLink";
-    import ProfileLinkIcon from "@Options/Modules/Icons/ProfileLinkIcon.svelte";
+    import ProfileLinkIcon from "@Icons/ProfileLinkIcon.svelte";
 
     export let id: string;
     export let href: string;
