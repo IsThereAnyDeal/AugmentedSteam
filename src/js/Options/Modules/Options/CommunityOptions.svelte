@@ -61,7 +61,7 @@
     import HideSpamCommentsSettings from "./Settings/HideSpamCommentsSettings.svelte";
     import SubOptions from "./Components/SubOptions.svelte";
     import QuickSellSettings from "./Settings/QuickSellSettings.svelte";
-    import ProfileLink from "./Components/ProfileLink.svelte";
+    import ProfileLinkIcon from "@Options/Modules/Icons/ProfileLinkIcon.svelte";
 
     let settings: Writable<SettingsSchema> = writable(Settings);
 </script>
@@ -155,32 +155,32 @@
         <h3>{L(__options_profileLinks)}</h3>
         {#if $settings.language === "schinese" || $settings.language === "tchinese"}
             <Toggle bind:value={$settings.profile_steamrepcn}>
-                <ProfileLink id="steamrepcn">SteamrepCN</ProfileLink>
+                <ProfileLinkIcon id="steamrepcn" />SteamrepCN
             </Toggle>
         {/if}
         <Toggle bind:value={$settings.profile_steamrep}>
-            <ProfileLink id="steamrep">SteamRep</ProfileLink>
+            <ProfileLinkIcon id="steamrep" />SteamRep
         </Toggle>
         <Toggle bind:value={$settings.profile_steamdbcalc}>
-            <ProfileLink id="steamdbcalc">SteamDB</ProfileLink>
+            <ProfileLinkIcon id="steamdbcalc" />SteamDB
         </Toggle>
         <Toggle bind:value={$settings.profile_steamgifts}>
-            <ProfileLink id="steamgifts">SteamGifts</ProfileLink>
+            <ProfileLinkIcon id="steamgifts" />SteamGifts
         </Toggle>
         <Toggle bind:value={$settings.profile_steamtrades}>
-            <ProfileLink id="steamtrades">SteamTrades</ProfileLink>
+            <ProfileLinkIcon id="steamtrades" />SteamTrades
         </Toggle>
         <Toggle bind:value={$settings.profile_bartervg}>
-            <ProfileLink id="bartervg">Barter.vg</ProfileLink>
+            <ProfileLinkIcon id="bartervg" />Barter.vg
         </Toggle>
         <Toggle bind:value={$settings.profile_astats}>
-            <ProfileLink id="astats">Achievement Stats</ProfileLink>
+            <ProfileLinkIcon id="astats" />Achievement Stats
         </Toggle>
         <Toggle bind:value={$settings.profile_backpacktf}>
-            <ProfileLink id="backpacktf">Backpack.tf</ProfileLink>
+            <ProfileLinkIcon id="backpacktf" />Backpack.tf
         </Toggle>
         <Toggle bind:value={$settings.profile_astatsnl}>
-            <ProfileLink id="astatsnl">Astats.nl</ProfileLink>
+            <ProfileLinkIcon id="astatsnl" />Astats.nl
         </Toggle>
     </OptionGroup>
 
@@ -192,7 +192,7 @@
 <Section title={L(__options_group)}>
     <h3>{L(__options_groupLinks)}</h3>
     <Toggle bind:value={$settings.group_steamgifts}>
-        <ProfileLink id="steamgifts">SteamGifts</ProfileLink>
+        <ProfileLinkIcon id="steamgifts" />SteamGifts
     </Toggle>
 </Section>
 

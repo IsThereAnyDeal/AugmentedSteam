@@ -1,6 +1,6 @@
 <script lang="ts">
     export let id: string;
-    export let iconType: string;
+    export let iconType: string = "color";
     export let iconUrl: string|undefined = undefined;
 </script>
 
