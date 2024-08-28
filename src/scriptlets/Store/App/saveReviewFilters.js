@@ -6,19 +6,25 @@
 
     window.ShowFilteredReviews = function() {
         oldShowFilteredReviews();
-        document.dispatchEvent(new CustomEvent("filtersChanged"));
+        document.dispatchEvent(new CustomEvent("as_filtersChanged"));
     };
 
     let filtersChanged = false;
 
-    if (context && context !== "summary") {
-        filtersChanged = true;
-        document.querySelector("#review_context").value = context;
+    if (context && context !== "review_context_summary") {
+        const input = document.querySelector(`#${context}`);
+        if (input) {
+            filtersChanged = true;
+            input.checked = true;
+        }
     }
 
     if (language && language !== "review_language_mine") {
-        filtersChanged = true;
-        document.querySelector(`#${language}`).checked = true;
+        const input = document.querySelector(`#${language}`);
+        if (input) {
+            filtersChanged = true;
+            input.checked = true;
+        }
     }
 
     // Playtime filters may not be available on apps with too few reviews
