@@ -112,10 +112,6 @@
         align-items: center;
     }
 
-    .option > :global(.es-flag) {
-        margin: 0;
-    }
-
     .buttons {
         margin-top: 10px;
         display: flex;

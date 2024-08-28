@@ -80,7 +80,7 @@
     {#each countries as country}
         {@const apiPrice = prices[country]}
         <div class="es-regprice">
-        <FlagIcon {country} />
+            <FlagIcon {country} />
             {#if apiPrice}
                 {@const priceRegion = new Price(apiPrice.final / 100, apiPrice.currency)}
                 {@const priceUser = getPriceUser(priceRegion, country)}
@@ -145,7 +145,7 @@
         position: relative;
         float: right;
         margin-top: auto;
-        margin-bottom: 5px;
+        margin-top: 5px;
     }
     .es_regional--onmouse {
         /**
@@ -177,17 +177,16 @@
         align-items: baseline;
         font-size: 14px;
         white-space: nowrap;
+        gap: 5px;
     }
     .es-converted {
         font-size: 12px;
         text-align: right;
         flex-grow: 1;
         min-width: 60px;
-        margin-left: 5px
     }
     .es-perc {
         font-size: 12px;
-        margin-left: 5px;
         width: 60px;
         text-align: right;
     }
