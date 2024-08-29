@@ -1,3 +1,43 @@
+4.1.1: |
+  Hotfix notes storage. See changelog of previous version for full notes:
+  
+  First release of Augmented Steam manifest v3 on all platforms.
+  
+  This release features major changes in sync with IsThereAnyDeal. You can now sync your game notes (and see all of them at ITAD),
+  and detailed Collection view is back, better than before. If you have connected Augmented Steam with IsThereAnyDeal
+  in the past, you will need to re-connect, due to new features which require more permissions.
+  
+  # Features
+  - you can now sync your game notes with IsThereAnyDeal
+  - detail Collection view is back, now with more details than before
+  - add option to append friends nicknames directly in friends list
+  - optimized sync with ITAD
+  
+  # Bugfixes
+  - fixed switching user notes adapters
+  - fixed emptying wishlist getting stuck and not cleaning anything
+  - fixed "Open external links in new tab" option not being respected
+  - fixed regional price comparison country selection
+  - fixed customizer options not saving
+  - fixed DRM warnings (#1950)
+  - fixed regional container colliding with subscription dropdown (#1969, thx Trsnaqe)
+  - tweaked pricing position with changes to Steam UI
+  - fixed SteamPeek hovers
+  - fixed language warning not showing properly
+  - fixed groups sorting only working on own profile
+  - fixed achievements sorting
+  - fixed fetching purchase dates
+  - fixed cards page badge completion cost styling issues (#1985)
+  - improved handling of search shortcut
+  - fixed removal of private app indicator on community pages
+  - fixed invite to group and market overview
+  - fixed the "Most Popular" guides date range dropdown not working when "Don't automatically filter guides by user language" is enabled
+  - fixed race condition when showing booster cards price (#2003)
+  - fixed trade offer features
+  
+  And a lot of other tweaks and minor fixes.
+  
+
 4.1.0: |
   First release of Augmented Steam manifest v3 on all platforms.
   
