@@ -11,7 +11,7 @@ import RequestData from "@Content/Modules/RequestData";
 interface DateFormatSettings {
     format: string,
     formatShort: string,
-    options?: DateTimeOptions
+    options: DateTimeOptions
 }
 
 export default class FAchievementSort extends Feature<CProfileStats> {
@@ -139,9 +139,9 @@ export default class FAchievementSort extends Feature<CProfileStats> {
 
                 const dateString = node.firstChild.textContent.trim();
 
-                const {format, formatShort} = dateSetup;
+                const {format, formatShort, options} = dateSetup;
                 const fmt = /\d{4}/.test(dateString) ? format : formatShort;
-                const unlockedTime = DateTime.fromFormat(dateString, fmt).toUnixInteger();
+                const unlockedTime = DateTime.fromFormat(dateString, fmt, options).toUnixInteger();
 
                 if (Number.isNaN(unlockedTime)) {
                     this.logError(
