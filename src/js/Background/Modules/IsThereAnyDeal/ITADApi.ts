@@ -413,6 +413,8 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
             throw new Errors.OAuthUnauthorized();
         }
 
+        const result: TNotesList = [];
+
         const response = await this.fetchJson<TGetNotesApiResponse>(
             this.getUrl("/user/notes/v1"), {
                 method: "GET",
@@ -422,13 +424,16 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
                 }
             });
 
+        if (response.length === 0) {
+            return result;
+        }
+
         const notes: Map<string, string> = new Map<string, string>(
             response.map(o => [o.gid, o.note])
         );
 
         const steamIds = await this.fetchSteamIds([...notes.keys()]);
 
-        const result: TNotesList = [];
         for (let [steamId, gid] of steamIds) {
             if (!steamId.startsWith("app/")) {
                 continue;
