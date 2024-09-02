@@ -2,7 +2,7 @@ import {__userNote_add} from "@Strings/_strings";
 import Feature from "@Content/Modules/Context/Feature";
 import type CWishlist from "@Content/Features/Store/Wishlist/CWishlist";
 import Settings from "@Options/Data/Settings";
-import UserNotes from "@Content/Features/Store/Common/UserNotes";
+import UserNotes from "@Content/Features/Store/Common/UserNotes/UserNotes";
 import {L} from "@Core/Localization/Localization";
 import DOMHelper from "@Content/Modules/DOMHelper";
 

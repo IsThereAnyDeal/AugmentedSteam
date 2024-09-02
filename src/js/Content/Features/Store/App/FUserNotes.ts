@@ -5,7 +5,7 @@ import type CApp from "@Content/Features/Store/App/CApp";
 import Feature from "@Content/Modules/Context/Feature";
 import HTML from "@Core/Html/Html";
 import {L} from "@Core/Localization/Localization";
-import UserNotes from "@Content/Features/Store/Common/UserNotes";
+import UserNotes from "@Content/Features/Store/Common/UserNotes/UserNotes";
 
 export default class FUserNotes extends Feature<CApp> {
 

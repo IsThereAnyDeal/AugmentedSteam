@@ -15,26 +15,27 @@ export default class SteamFacade {
 
     // dialogs
 
-    static showDialog(strTitle: string, strDescription: string, rgModalParams: any=undefined): void {
+    static showDialog(strTitle: string, strDescription: string, rgModalParams?: any): void {
         Messenger.call(MessageHandler.SteamFacade, "showDialog", [strTitle, strDescription, rgModalParams]);
     }
 
     static showConfirmDialog(
         strTitle: string,
         strDescription: string,
-        strOKButton: string|null=null,
-        strCancelButton: string|null=null,
-        strSecondaryActionButton: string|null=null
+        strOKButton?: string|null, // Default "OK"
+        strCancelButton?: string|null,  // Default "Cancel"
+        strSecondaryActionButton?: string|null, // Needs a value else won't get rendered
+        needsExplicitConfirm: boolean = false // Avoids releasing Enter from auto-confirming
     ): Promise<"OK"|"SECONDARY"|"CANCEL"> {
         return Messenger.get(MessageHandler.SteamFacade, "showConfirmDialog", [
-            strTitle, strDescription, strOKButton, strCancelButton, strSecondaryActionButton
+            strTitle, strDescription, strOKButton, strCancelButton, strSecondaryActionButton, needsExplicitConfirm
         ]);
     }
 
     static showAlertDialog(
         strTitle: string,
         strDescription: string,
-        strOKButton: string|null=null
+        strOKButton?: string
     ): Promise<void> {
         return Messenger.get(MessageHandler.SteamFacade, "showAlertDialog", [
             strTitle, strDescription, strOKButton

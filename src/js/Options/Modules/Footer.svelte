@@ -15,7 +15,7 @@
     import {DefaultSettings, SettingsStore} from "../Data/Settings";
     import Downloader from "@Core/Downloader";
     import Info from "@Core/Info";
-    import UserNotes from "@Content/Features/Store/Common/UserNotes";
+    import UserNotes from "@Content/Features/Store/Common/UserNotes/UserNotes";
     import type {SettingsSchema} from "@Options/Data/_types";
     import UserNotesAdapter from "@Content/Modules/UserNotes/UserNotesAdapter";
 

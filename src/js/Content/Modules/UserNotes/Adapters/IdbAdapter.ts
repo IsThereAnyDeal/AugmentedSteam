@@ -12,10 +12,9 @@ export default class IdbAdapter implements AdapterInterface {
                 .map(([appidStr, note]) => [Number(appidStr), note ?? null]));
     }
 
-    async set(appid: number, note: string): Promise<CapacityInfo> {
+    async set(appid: number, note: string): Promise<null> {
         await Background.send(EAction.Notes_Set, {appid, note});
-        // FIXME proper capacity
-        return new CapacityInfo(false, null);
+        return null;
     }
 
     delete(appid: number): Promise<void> {
