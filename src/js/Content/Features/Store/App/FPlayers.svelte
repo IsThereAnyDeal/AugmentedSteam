@@ -6,7 +6,7 @@
     export let peakToday: number;
     export let peakAll: number;
 
-    let formatter = new Intl.NumberFormat(navigator.language);
+    const formatter = new Intl.NumberFormat(document.documentElement.lang || navigator.language);
 </script>
 
 
