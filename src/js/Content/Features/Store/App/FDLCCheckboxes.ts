@@ -55,7 +55,23 @@ export default class FDLCCheckboxes extends Feature<CApp> {
             }
 
             label.append(checkbox);
-            dlcRow.before(label);
+
+            const node = dlcRow.querySelector<HTMLElement>(":scope > div:first-child");
+            if (!node) { continue; }
+
+            // TODO remove when min version is increased to FF 121
+            if (!CSS.supports("selector(:has(a))")) {
+                if (dlcRow.classList.contains("dlc_highlight")) {
+                    node.style.display = "flex";
+                    node.style.marginLeft = "-12px";
+                } else {
+                    node.style.display = "flex";
+                    node.style.marginLeft = "-4px";
+                    node.style.padding = "0";
+                }
+            }
+
+            node.prepend(label);
         }
 
         // Toggle dsinfo on label when adding/removing wishlist via ds_options dropdown
@@ -65,8 +81,8 @@ export default class FDLCCheckboxes extends Feature<CApp> {
                 if (!target.classList.contains("game_area_dlc_row")) { continue; }
 
                 // Prevent errors when there're no labels, e.g. free dlcs
-                const label = target.previousElementSibling;
-                if (!label?.classList.contains("es_dlc_label")) { continue; }
+                const label = target.querySelector(".es_dlc_label");
+                if (!label) { continue; }
 
                 label.classList.toggle("es_dlc_wishlist", target.classList.contains("ds_wishlist"));
             }

@@ -1264,18 +1264,26 @@ video.highlight_movie:hover + .html5_video_overlay {
   display: none; /* hide dlc flag due to checkboxes (if highlighting is disabled) */
 }
 
-#es_dlc_option_panel + .game_area_dlc_list .game_area_dlc_name {
-  margin-left: 23px; /* move title out of the way */
+#es_dlc_option_panel + .game_area_dlc_list .game_area_dlc_row:not(.dlc_highlight) .game_area_dlc_name {
+  margin-left: 21px; /* if there're checkboxes, align the titles for non-recommended free dlcs */
+}
+
+.game_area_dlc_row:not(.dlc_highlight) .game_area_dlc_name:has(.es_dlc_label) {
+  display: flex;
+  margin-left: -4px !important;
+  padding: 0;
+}
+.game_area_dlc_row.dlc_highlight > div:first-child:has(.es_dlc_label) {
+  display: flex;
+  margin-left: -12px !important;
 }
 
 label.es_dlc_label {
-  position: absolute;
-  padding: 4px 11px 1px;
-  z-index: 999;
+  display: flex;
+  align-items: center;
+  padding: 0px 10px;
 }
 label.es_dlc_label > input {
-  -webkit-appearance: none;
-  -moz-appearance: none;
   appearance: none;
   background-color: #545454;
   padding: 6px;
@@ -1289,7 +1297,10 @@ label.es_dlc_label > input:checked::after {
   font-size: 12px;
   position: absolute;
   bottom: 4px;
-  left: 13px;
+  left: 12px;
+}
+.dlc_highlight label.es_dlc_label > input:checked::after {
+  bottom: 31px;
 }
 
 /***************************************
