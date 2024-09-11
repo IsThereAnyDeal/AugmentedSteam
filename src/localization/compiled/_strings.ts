@@ -418,6 +418,7 @@ export const __options_homepageDefaultTabNewreleases = "options_homepageDefaultT
 export const __options_homepageDefaultTabTopsellers = "options_homepageDefaultTabTopsellers";
 export const __options_homepageDefaultTabUpcoming = "options_homepageDefaultTabUpcoming";
 export const __options_homepageDefaultTabSpecials = "options_homepageDefaultTabSpecials";
+export const __options_homepageDefaultTabFree = "options_homepageDefaultTabFree";
 export const __options_wishlist = "options_wishlist";
 export const __options_addAnotherRegion = "options_addAnotherRegion";
 export const __options_skipGotSteam = "options_skipGotSteam";

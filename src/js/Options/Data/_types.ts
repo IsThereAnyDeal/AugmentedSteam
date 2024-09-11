@@ -116,7 +116,8 @@ export interface SettingsSchema {
         | "tab_newreleases_content_trigger"
         | "tab_topsellers_content_trigger"
         | "tab_upcoming_content_trigger"
-        | "tab_specials_content_trigger",
+        | "tab_specials_content_trigger"
+        | "tab_trendingfree_content_trigger",
     send_age_info: boolean,
     showdeckcompat: boolean,
     removebroadcasts: boolean,

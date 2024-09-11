@@ -13,6 +13,7 @@
         __options_gift,
         __options_guest,
         __options_homepageDefaultTab,
+        __options_homepageDefaultTabFree,
         __options_homepageDefaultTabNewreleases,
         __options_homepageDefaultTabRemember,
         __options_homepageDefaultTabSpecials,
@@ -228,7 +229,8 @@
                 ["tab_newreleases_content_trigger", L(__options_homepageDefaultTabNewreleases)],
                 ["tab_topsellers_content_trigger", L(__options_homepageDefaultTabTopsellers)],
                 ["tab_upcoming_content_trigger", L(__options_homepageDefaultTabUpcoming)],
-                ["tab_specials_content_trigger", L(__options_homepageDefaultTabSpecials)]
+                ["tab_specials_content_trigger", L(__options_homepageDefaultTabSpecials)],
+                ["tab_trendingfree_content_trigger", L(__options_homepageDefaultTabFree)]
             ]} />
         </OptionGroup>
     </Section>
