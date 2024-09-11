@@ -6,24 +6,26 @@ import Settings from "@Options/Data/Settings";
 export default class FHomePageTab extends Feature<CStoreFront> {
 
     override async apply(): Promise<void> {
-        document.querySelector(".home_tabs_row")
-            ?.addEventListener("click", e => {
-                const tab = (<Element>e.target).closest(".tab_content");
-                if (!tab) { return; }
 
-                SyncedStorage.set("homepage_tab_last", (<HTMLElement>tab.parentNode).id);
-            });
+        const rowParent = document.querySelector(".home_tabs_row");
+        if (!rowParent) {
+            throw new Error("Node not found");
+        }
+
+        rowParent.addEventListener("click", () => {
+            const tab = rowParent.querySelector(".home_tab.active");
+            if (!tab) { return; }
+
+            SyncedStorage.set("homepage_tab_last", tab.id);
+        });
 
         const setting = Settings.homepage_tab_selection;
-        let last: string|null = setting;
-        if (setting === "remember") {
-            last = (await SyncedStorage.get("homepage_tab_last")) ?? null;
-        }
-        if (!last) { return; }
+        const tabId: string|null = setting === "remember"
+            ? (await SyncedStorage.get("homepage_tab_last")) ?? null
+            : setting;
 
-        const tab = document.querySelector<HTMLElement>(`.home_tabs_row #${last}`);
-        if (!tab) { return; }
+        if (!tabId) { return; }
 
-        tab.click();
+        rowParent.querySelector<HTMLElement>(`#${tabId}`)?.click();
     }
 }
