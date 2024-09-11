@@ -11,10 +11,11 @@ import Localization, {L} from "@Core/Localization/Localization";
 import Settings, {SettingsStore} from "@Options/Data/Settings";
 import browser, {type Menus} from "webextension-polyfill";
 import Permissions from "@Core/Permissions";
+import type {ContextMenuKeys} from "@Options/Data/_types";
 
 export default class ContextMenu {
 
-    private static readonly queryLinks: Record<string, [string, string, () => boolean]> = {
+    private static readonly queryLinks: Record<ContextMenuKeys, [string, string, () => boolean]> = {
         "context_steam_store": [
             __options_contextSteamStore, "https://store.steampowered.com/search/?term=__query__",
             () => Settings.context_steam_store,
@@ -49,7 +50,7 @@ export default class ContextMenu {
         browser.runtime.onStartup.addListener(ContextMenu.update);
         browser.runtime.onInstalled.addListener(ContextMenu.update);
 
-        // @ts-ignore
+        // @ts-expect-error
         return Permissions.when("contextMenus", () => {
             browser.contextMenus.onClicked.addListener(ContextMenu.onClick);
         }, async () => {
@@ -60,16 +61,10 @@ export default class ContextMenu {
     }
 
     private static onClick(info: Menus.OnClickData): void {
-
-        // @ts-ignore
-        const url: string|undefined = ContextMenu.queryLinks[info.menuItemId][1];
-        if (!url) {
-            return;
-        }
-
+        const menuId = info.menuItemId as ContextMenuKeys;
         let query = info.selectionText!.trim();
 
-        if (info.menuItemId === "context_steam_keys") {
+        if (menuId === "context_steam_keys") {
             const steamKeys = query.match(/[A-Z0-9]{5}(-[A-Z0-9]{5}){2}/g);
 
             // Set the query to matched keys if any, otherwise display the selected text anyway
@@ -77,6 +72,8 @@ export default class ContextMenu {
                 query = steamKeys.join(",");
             }
         }
+
+        const url = ContextMenu.queryLinks[menuId][1];
 
         browser.tabs.create({
             url: url.replace("__query__", encodeURIComponent(query))

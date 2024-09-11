@@ -8,7 +8,19 @@ export type TCustomLink = {
     icon: string
 };
 
-export interface SettingsSchema {
+interface ContextMenu {
+    context_steam_store: boolean,
+    context_steam_market: boolean,
+    context_itad: boolean,
+    context_bartervg: boolean,
+    context_steamdb: boolean,
+    context_steamdb_instant: boolean,
+    context_steam_keys: boolean
+}
+
+export type ContextMenuKeys = keyof ContextMenu;
+
+export interface SettingsSchema extends ContextMenu {
     language: string,
 
     version: string,
@@ -186,12 +198,4 @@ export interface SettingsSchema {
     add_to_waitlist: boolean,
     collection_banner_notowned: boolean,
     itad_sync_notes: boolean,
-
-    context_steam_store: boolean,
-    context_steam_market: boolean,
-    context_itad: boolean,
-    context_bartervg: boolean,
-    context_steamdb: boolean,
-    context_steamdb_instant: boolean,
-    context_steam_keys: boolean,
 }

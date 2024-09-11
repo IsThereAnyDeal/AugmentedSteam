@@ -2,7 +2,7 @@
 
 <script lang="ts">
     import type {Writable} from "svelte/store";
-    import type {SettingsSchema} from "../../../Data/_types";
+    import type {ContextMenuKeys, SettingsSchema} from "@Options/Data/_types";
     import {
         __options_contextBartervg,
         __options_contextItad,
@@ -16,16 +16,6 @@
     import Toggle from "../Components/Toggle.svelte";
     import Permissions from "@Core/Permissions";
     import ContextMenu from "@Background/Modules/ContextMenu/ContextMenu";
-
-    type ContextMenuKeys = keyof SettingsSchema & (
-         "context_steam_store"
-       | "context_steam_market"
-       | "context_itad"
-       | "context_bartervg"
-       | "context_steamdb"
-       | "context_steamdb_instant"
-       | "context_steam_keys"
-    );
 
     export let settings: Writable<SettingsSchema>;
 
