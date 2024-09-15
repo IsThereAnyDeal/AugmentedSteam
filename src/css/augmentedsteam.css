@@ -1546,17 +1546,6 @@ video.highlight_movie:hover + .html5_video_overlay {
   background-size: auto;
 }
 
-/***************************************
- * addCustomTags() to community guides
- *
- **************************************/
-.es_tag {
-	text-transform: capitalize;
-}
-.es_tag::placeholder {
-	text-transform: none;
-}
-
 
 /* || SEARCH PAGE FILTERS */
 
