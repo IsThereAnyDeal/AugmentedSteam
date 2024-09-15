@@ -2,9 +2,9 @@
 export default class CapacityInfo {
 
     public closeToFull: boolean;
-    public utilization: number|null;
+    public utilization: number;
 
-    constructor(closeToFull: boolean = false, utilization: number|null = null) {
+    constructor(closeToFull: boolean = false, utilization: number) {
         this.closeToFull = closeToFull;
         this.utilization = utilization;
     }

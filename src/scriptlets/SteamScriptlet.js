@@ -18,11 +18,15 @@
             ShowDialog(strTitle, strDescription, rgModalParams);
         }
 
-        static showConfirmDialog(strTitle, strDescription, strOKButton, strCancelButton, strSecondaryActionButton) {
+        static showConfirmDialog(strTitle, strDescription, strOKButton, strCancelButton, strSecondaryActionButton, needsExplicitConfirm) {
             return new Promise(resolve => {
                 ShowConfirmDialog(strTitle, strDescription, strOKButton, strCancelButton, strSecondaryActionButton)
                     .done(result => resolve(result)) // "OK" / "SECONDARY"
                     .fail(() => resolve("CANCEL"));
+
+                if (needsExplicitConfirm) {
+                    $J(document).off("keyup.SharedConfirmDialog");
+                }
             })
         }
 

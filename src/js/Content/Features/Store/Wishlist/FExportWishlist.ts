@@ -5,7 +5,7 @@ import Feature from "@Content/Modules/Context/Feature";
 import type CWishlist from "@Content/Features/Store/Wishlist/CWishlist";
 import HTML from "@Core/Html/Html";
 import SteamFacade from "@Content/Modules/Facades/SteamFacade";
-import UserNotes from "@Content/Features/Store/Common/UserNotes";
+import UserNotes from "@Content/Features/Store/Common/UserNotes/UserNotes";
 import Clipboard from "@Content/Modules/Clipboard";
 import ExportWishlistForm from "@Content/Features/Store/Wishlist/Components/ExportWishlistForm.svelte";
 
@@ -140,8 +140,7 @@ export default class FExportWishlist extends Feature<CWishlist> {
             }
         });
         observer.observe(document.body, {
-            childList: true,
-            subtree: true
+            childList: true
         });
 
         const response = await SteamFacade.showConfirmDialog(
@@ -149,7 +148,8 @@ export default class FExportWishlist extends Feature<CWishlist> {
             `<div id="as_export_form" style="width:580px"></div>`,
             L(__export_download),
             null, // use default "Cancel"
-            L(__export_copyClipboard)
+            L(__export_copyClipboard),
+            true
         );
 
         form?.$destroy();

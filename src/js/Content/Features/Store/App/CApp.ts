@@ -35,7 +35,7 @@ import FShowCoupon from "./FShowCoupon";
 import FSteamDeckCompatibility from "./FSteamDeckCompatibility";
 import FSteamPeek from "./FSteamPeek";
 import FSupportInfo from "./FSupportInfo";
-import FUserNotes from "./FUserNotes.js";
+import FUserNotes from "./FUserNotes";
 import FWidescreenCertification from "./FWidescreenCertification";
 import ContextType from "@Content/Modules/Context/ContextType";
 import FExtraLinksApp from "@Content/Features/Store/Common/FExtraLinksApp";

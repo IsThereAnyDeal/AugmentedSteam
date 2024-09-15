@@ -32,7 +32,7 @@ export default class SyncedStorageAdapter implements AdapterInterface{
         return result;
     }
 
-    async set(appid: number, note: string) {
+    async set(appid: number, note: string): Promise<CapacityInfo> {
         const notes = await this.getNotesMap();
         notes.set(appid, note);
 
