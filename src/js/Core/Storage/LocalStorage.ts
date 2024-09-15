@@ -25,7 +25,6 @@ export interface LocalStorageSchema extends StorageSchema {
     show_review_section: boolean,
     hide_login_warn_store: boolean,
     hide_login_warn_community: boolean,
-    es_guide_tags: Record<string, string[]>, // TODO deprecated
     guide_tags: string[],
     market_stats: {
         startListing: string|null,
@@ -65,7 +64,6 @@ const DEFAULTS = {
     "login": {"steamId": null, "profilePath": null},
     "storeCountry": null,
     "expand_slider": false,
-    "es_guide_tags": {}, // TODO remove prefix
     "market_stats": {"startListing": null, "purchaseTotal": 0, "saleTotal": 0},
     "popular_refresh": false,
     "workshop_state": "",
