@@ -10,6 +10,7 @@ import type CApp from "@Content/Features/Store/App/CApp";
 import HTML from "@Core/Html/Html";
 import Price from "@Content/Modules/Currency/Price";
 import DOMHelper from "@Content/Modules/DOMHelper";
+import "./FDLCCheckboxes.css";
 
 export default class FDLCCheckboxes extends Feature<CApp> {
 
