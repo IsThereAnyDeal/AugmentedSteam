@@ -12,14 +12,15 @@ import {
     __userNote_notEnoughSpaceDesc,
     __userNote_saveLocal,
     __userNote_saveSyncedStorage,
-    __userNote_storageWarningDesc, __userNote_syncError,
+    __userNote_storageWarningDesc,
+    __userNote_syncError,
 } from "@Strings/_strings";
 import type AdapterInterface from "@Content/Modules/UserNotes/Adapters/AdapterInterface";
-import DOMHelper from "@Content/Modules/DOMHelper";
 import Settings from "@Options/Data/Settings";
 import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";
 import SteamFacade from "@Content/Modules/Facades/SteamFacade";
 import NotesForm from "./NotesForm.svelte";
+import CustomModal from "@Core/CustomModal";
 
 export default class UserNotes {
 
@@ -91,34 +92,23 @@ export default class UserNotes {
         const savedNote: string = (await this.get(appid))?.get(appid) ?? "";
         let note: string = window.sessionStorage.getItem(STORAGE_KEY) ?? savedNote;
 
-        const observer = new MutationObserver(() => {
-            const modal = document.querySelector("#as_notes_modal");
-            if (modal) {
+        const response = await CustomModal({
+            title: L(__userNote_addForGame, {"gamename": appName}),
+            options: {
+                okButton: L(__save),
+                explicitDismissal: true
+            },
+            modalFn: (target) => {
                 form = new NotesForm({
-                    target: modal,
+                    target,
                     props: {note}
                 });
                 form.$on("change", () => {
                     note = form!.note;
                 });
-
-                observer.disconnect();
+                return form;
             }
         });
-        observer.observe(document.body, {
-            childList: true
-        });
-
-        const response = await SteamFacade.showConfirmDialog(
-            L(__userNote_addForGame, {"gamename": appName}),
-            `<div id="as_notes_modal"></div>`,
-            {
-                okButton: L(__save),
-                explicitDismissal: true
-            }
-        );
-
-        form?.$destroy();
 
         note = note.trim().replace(/\s\s+/g, " ");
 
