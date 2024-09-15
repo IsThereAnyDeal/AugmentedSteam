@@ -86,11 +86,9 @@ export default class UserNotes {
         onNoteUpdate: (noteEl: HTMLElement, hasNote: boolean) => void
     ): Promise<void> {
 
-        const STORAGE_KEY = `es_note_autosave_${appid}`;
-
         let form: NotesForm|undefined;
         const savedNote: string = (await this.get(appid))?.get(appid) ?? "";
-        let note: string = window.sessionStorage.getItem(STORAGE_KEY) ?? savedNote;
+        let note: string = savedNote;
 
         const response = await CustomModal({
             title: L(__userNote_addForGame, {"gamename": appName}),
@@ -112,12 +110,7 @@ export default class UserNotes {
 
         note = note.trim().replace(/\s\s+/g, " ");
 
-        if (response === "OK") {
-            window.sessionStorage.removeItem(STORAGE_KEY);
-        } else {
-            if (note !== "") {
-                window.sessionStorage.setItem(STORAGE_KEY, note);
-            }
+        if (response !== "OK") {
             return;
         }
 
@@ -130,7 +123,6 @@ export default class UserNotes {
             noteEl.textContent = L(__userNote_add);
         } else {
             if (!await this.set(appid, note)) {
-                window.sessionStorage.setItem(STORAGE_KEY, note);
                 return;
             }
             noteEl.textContent = `"${note}"`;
