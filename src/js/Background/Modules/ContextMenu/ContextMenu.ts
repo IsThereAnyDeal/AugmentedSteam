@@ -10,7 +10,6 @@ import {
 import Localization, {L} from "@Core/Localization/Localization";
 import Settings, {SettingsStore} from "@Options/Data/Settings";
 import browser, {type Menus} from "webextension-polyfill";
-import Permissions from "@Core/Permissions";
 
 export default class ContextMenu {
 
@@ -45,28 +44,23 @@ export default class ContextMenu {
         ]
     };
 
-    static register(): Promise<void> {
+    static register(): void {
         browser.runtime.onStartup.addListener(ContextMenu.update);
         browser.runtime.onInstalled.addListener(ContextMenu.update);
 
-        // @ts-ignore
-        return Permissions.when("contextMenus", () => {
+        if (!browser.contextMenus.onClicked.hasListener(ContextMenu.onClick)) {
             browser.contextMenus.onClicked.addListener(ContextMenu.onClick);
-        }, async () => {
-            browser.contextMenus.onClicked.removeListener(ContextMenu.onClick);
-            await browser.contextMenus.removeAll();
-        });
-
+        }
     }
 
     private static onClick(info: Menus.OnClickData): void {
 
-        // @ts-ignore
-        const url: string|undefined = ContextMenu.queryLinks[info.menuItemId][1];
-        if (!url) {
+        const menuItem = ContextMenu.queryLinks[info.menuItemId];
+        if (!menuItem) {
             return;
         }
 
+        const url: string = menuItem[1];
         let query = info.selectionText!.trim();
 
         if (info.menuItemId === "context_steam_keys") {
@@ -101,8 +95,8 @@ export default class ContextMenu {
 
             /*
              * TODO don't recreate the context menu entries on each change, only update
-             * the affected entry (which should also prevent this error)
-             * Error when you create an entry with duplicate id
+             *  the affected entry (which should also prevent this error)
+             *  Error when you create an entry with duplicate id
              */
             () => browser.runtime.lastError);
         }
@@ -110,18 +104,7 @@ export default class ContextMenu {
 
     public static async update(): Promise<void> {
         await SettingsStore.init();
-        if (!await Permissions.contains(["contextMenus"])) {
-            Settings.context_steam_store = false;
-            Settings.context_steam_market = false
-            Settings.context_itad = false
-            Settings.context_bartervg = false
-            Settings.context_steamdb = false
-            Settings.context_steamdb_instant = false
-            Settings.context_steam_keys = false
-            return;
-        }
-
         await browser.contextMenus.removeAll();
-        return ContextMenu.build();
+        return this.build();
     }
 }

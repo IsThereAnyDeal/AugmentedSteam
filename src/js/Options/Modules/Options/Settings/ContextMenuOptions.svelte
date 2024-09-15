@@ -14,7 +14,6 @@
     } from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
     import Toggle from "../Components/Toggle.svelte";
-    import Permissions from "@Core/Permissions";
     import ContextMenu from "@Background/Modules/ContextMenu/ContextMenu";
 
     type ContextMenuKeys = keyof SettingsSchema & (
@@ -30,15 +29,6 @@
     export let settings: Writable<SettingsSchema>;
 
     async function handleChange(key: ContextMenuKeys, value: boolean): Promise<void> {
-        if (value) {
-            const permissions = ["contextMenus"];
-            const hasPermissions = await Permissions.contains(permissions);
-            if (!hasPermissions) {
-                // @ts-expect-error
-                value = await Permissions.request(permissions);
-            }
-        }
-
         $settings[key] = value;
         ContextMenu.update();
     }

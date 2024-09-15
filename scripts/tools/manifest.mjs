@@ -14,7 +14,8 @@ export default {
         open_in_tab: true
     },
     permissions: [
-        "storage"
+        "storage",
+        "contextMenus"
     ],
     host_permissions: [
         "*://*.steampowered.com/*",

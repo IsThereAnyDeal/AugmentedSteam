@@ -11,10 +11,6 @@ export default class Permissions {
     }
 
     static async remove(permissions: Manifest.OptionalPermission[]): Promise<boolean> {
-        // @ts-ignore
-        if (permissions.includes("contextMenus")) {
-            await browser.contextMenus.removeAll();
-        }
         return browser.permissions.remove({permissions});
     }
 
