@@ -49,9 +49,9 @@
         const confirm = await SteamFacade.showConfirmDialog(
             L(__playGame, {gamename}),
             `<img src="//cdn.cloudflare.steamstatic.com/steam/apps/${gameid}/header.jpg">`,
-            null,
-            null,
-            L(__visitStore)
+            {
+                secondaryActionButton: L(__visitStore)
+            }
         );
         if (confirm === "OK") {
             window.location.assign(`steam://run/${gameid}`)

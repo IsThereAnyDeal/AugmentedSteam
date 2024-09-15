@@ -59,10 +59,10 @@ export default class FToggleComments extends Feature<CProfileActivity> {
                 <span style="color: white;">${L(__options_hideannouncementcomments)}</span><br><br>
                 ${L(__featureHint_reminder)}`;
 
-            const _strOKButton = L(__thewordyes);
-            const _strCancelButton = L(__thewordno);
-
-            const result = await SteamFacade.showConfirmDialog(_strTitle, _strDescription, _strOKButton, _strCancelButton);
+            const result = await SteamFacade.showConfirmDialog(_strTitle, _strDescription, {
+                okButton: L(__thewordyes),
+                cancelButton: L(__thewordno)
+            });
 
             const hide = result === "OK";
             await SettingsStore.set("hideannouncementcomments", hide);

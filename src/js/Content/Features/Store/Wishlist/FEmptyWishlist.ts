@@ -21,7 +21,12 @@ export default class FEmptyWishlist extends Feature<CWishlist> {
 
         document.getElementById("es_empty_wishlist")!.addEventListener("click", async() => {
 
-            const result = await SteamFacade.showConfirmDialog(L(__emptyWishlist_title), L(__emptyWishlist_confirm), null, null, null, true);
+            const result = await SteamFacade.showConfirmDialog(
+                L(__emptyWishlist_title),
+                L(__emptyWishlist_confirm), {
+                    needsExplicitConfirm: true
+                });
+
             if (result !== "OK") { return; }
 
             let cur = 0;

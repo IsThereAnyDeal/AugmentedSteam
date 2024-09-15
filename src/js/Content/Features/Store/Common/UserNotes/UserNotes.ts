@@ -112,7 +112,9 @@ export default class UserNotes {
         const response = await SteamFacade.showConfirmDialog(
             L(__userNote_addForGame, {"gamename": appName}),
             `<div id="as_notes_modal"></div>`,
-            L(__save)
+            {
+                okButton: L(__save)
+            }
         );
 
         form?.$destroy();
@@ -156,10 +158,11 @@ export default class UserNotes {
         const response = await SteamFacade.showConfirmDialog(
             L(exceeded ? __userNote_notEnoughSpace : __userNote_closeOnStorage),
             desc,
-            L(__userNote_saveLocal),
-            L(__userNote_saveSyncedStorage),
-            null,
-            true
+            {
+                okButton: L(__userNote_saveLocal),
+                cancelButton: L(__userNote_saveSyncedStorage),
+                needsExplicitConfirm: true
+            }
         );
 
         if (response === "OK") {

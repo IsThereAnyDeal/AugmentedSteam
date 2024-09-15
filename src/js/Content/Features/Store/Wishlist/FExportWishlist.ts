@@ -146,11 +146,11 @@ export default class FExportWishlist extends Feature<CWishlist> {
         const response = await SteamFacade.showConfirmDialog(
             L(__export_wishlist),
             `<div id="as_export_form" style="width:580px"></div>`,
-            L(__export_download),
-            null, // use default "Cancel"
-            L(__export_copyClipboard),
-            true
-        );
+            {
+                okButton: L(__export_download),
+                secondaryActionButton: L(__export_copyClipboard),
+                needsExplicitConfirm: true
+            });
 
         form?.$destroy();
 

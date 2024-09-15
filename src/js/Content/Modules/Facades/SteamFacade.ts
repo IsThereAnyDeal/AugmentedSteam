@@ -20,15 +20,22 @@ export default class SteamFacade {
     }
 
     static showConfirmDialog(
-        strTitle: string,
-        strDescription: string,
-        strOKButton?: string|null, // Default "OK"
-        strCancelButton?: string|null,  // Default "Cancel"
-        strSecondaryActionButton?: string|null, // Needs a value else won't get rendered
-        needsExplicitConfirm: boolean = false // Avoids releasing Enter from auto-confirming
+        title: string,
+        description: string,
+        options: {
+            okButton?: string, // Default "OK"
+            cancelButton?: string,  // Default "Cancel"
+            secondaryActionButton?: string, // Needs a value else won't get rendered
+            needsExplicitConfirm?: boolean // Avoids releasing Enter from auto-confirming
+        } = {}
     ): Promise<"OK"|"SECONDARY"|"CANCEL"> {
         return Messenger.get(MessageHandler.SteamFacade, "showConfirmDialog", [
-            strTitle, strDescription, strOKButton, strCancelButton, strSecondaryActionButton, needsExplicitConfirm
+            title,
+            description,
+            options.okButton ?? null,
+            options.cancelButton ?? null,
+            options.secondaryActionButton ?? null,
+            options.needsExplicitConfirm ?? false
         ]);
     }
 
