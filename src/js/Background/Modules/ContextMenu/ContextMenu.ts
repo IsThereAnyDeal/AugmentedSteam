@@ -105,6 +105,6 @@ export default class ContextMenu {
     public static async update(): Promise<void> {
         await SettingsStore.init();
         await browser.contextMenus.removeAll();
-        return this.build();
+        return ContextMenu.build();
     }
 }
