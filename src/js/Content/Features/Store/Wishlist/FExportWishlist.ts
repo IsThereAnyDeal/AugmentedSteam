@@ -148,8 +148,7 @@ export default class FExportWishlist extends Feature<CWishlist> {
             `<div id="as_export_form" style="width:580px"></div>`,
             {
                 okButton: L(__export_download),
-                secondaryActionButton: L(__export_copyClipboard),
-                needsExplicitConfirm: true
+                secondaryActionButton: L(__export_copyClipboard)
             });
 
         form?.$destroy();

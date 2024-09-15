@@ -24,7 +24,7 @@ export default class FEmptyWishlist extends Feature<CWishlist> {
             const result = await SteamFacade.showConfirmDialog(
                 L(__emptyWishlist_title),
                 L(__emptyWishlist_confirm), {
-                    needsExplicitConfirm: true
+                    explicitConfirm: true
                 });
 
             if (result !== "OK") { return; }

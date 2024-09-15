@@ -18,13 +18,19 @@
             ShowDialog(strTitle, strDescription, rgModalParams);
         }
 
-        static showConfirmDialog(strTitle, strDescription, strOKButton, strCancelButton, strSecondaryActionButton, needsExplicitConfirm) {
+        static showConfirmDialog(strTitle, strDescription, strOKButton, strCancelButton, strSecondaryActionButton, bExplicitConfirm, bExplicitDismissal) {
+
+            let rgModalParams = {};
+            if (bExplicitDismissal) {
+                rgModalParams.bExplicitDismissalOnly = true;
+            }
+
             return new Promise(resolve => {
-                ShowConfirmDialog(strTitle, strDescription, strOKButton, strCancelButton, strSecondaryActionButton)
+                ShowConfirmDialog(strTitle, strDescription, strOKButton, strCancelButton, strSecondaryActionButton, rgModalParams)
                     .done(result => resolve(result)) // "OK" / "SECONDARY"
                     .fail(() => resolve("CANCEL"));
 
-                if (needsExplicitConfirm) {
+                if (bExplicitConfirm) {
                     $J(document).off("keyup.SharedConfirmDialog");
                 }
             })

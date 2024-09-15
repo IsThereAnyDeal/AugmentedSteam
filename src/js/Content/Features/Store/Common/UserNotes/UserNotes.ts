@@ -113,7 +113,8 @@ export default class UserNotes {
             L(__userNote_addForGame, {"gamename": appName}),
             `<div id="as_notes_modal"></div>`,
             {
-                okButton: L(__save)
+                okButton: L(__save),
+                explicitDismissal: true
             }
         );
 
@@ -161,7 +162,8 @@ export default class UserNotes {
             {
                 okButton: L(__userNote_saveLocal),
                 cancelButton: L(__userNote_saveSyncedStorage),
-                needsExplicitConfirm: true
+                explicitConfirm: true,
+                explicitDismissal: true
             }
         );
 
