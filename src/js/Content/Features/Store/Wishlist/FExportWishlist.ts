@@ -148,8 +148,7 @@ export default class FExportWishlist extends Feature<CWishlist> {
             `<div id="as_export_form" style="width:580px"></div>`,
             L(__export_download),
             null, // use default "Cancel"
-            L(__export_copyClipboard),
-            true
+            L(__export_copyClipboard)
         );
 
         form?.$destroy();

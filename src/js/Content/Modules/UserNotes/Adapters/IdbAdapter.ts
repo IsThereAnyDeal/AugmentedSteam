@@ -1,7 +1,6 @@
 import type AdapterInterface from "@Content/Modules/UserNotes/Adapters/AdapterInterface";
 import Background from "@Core/Background";
 import {EAction} from "@Background/EAction";
-import CapacityInfo from "@Content/Modules/UserNotes/CapacityInfo";
 
 export default class IdbAdapter implements AdapterInterface {
 
