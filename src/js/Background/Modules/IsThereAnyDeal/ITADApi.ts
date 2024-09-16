@@ -310,9 +310,7 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
             return;
         }
 
-        if (force) {
-            await IndexedDB.clear("dynamicStore");
-        } else {
+        if (!force) {
             const lastImport = await this.getLastImport();
 
             if (lastImport.to && TimeUtils.isInFuture(lastImport.to + PushGamesInterval)) {
@@ -332,8 +330,8 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
             const ownedPackages: number[] = await dynamicStore.get("ownedPackages") ?? [];
             await tx.done;
 
-            const newOwnedApps: number[] = ownedApps.filter(id => !lastOwnedApps.has(id));
-            const newOwnedPackages: number[] = ownedPackages.filter(id => !lastOwnedPackages.has(id));
+            const newOwnedApps: number[] = ownedApps.filter(id => force || !lastOwnedApps.has(id));
+            const newOwnedPackages: number[] = ownedPackages.filter(id => force || !lastOwnedPackages.has(id));
 
             if (newOwnedApps.length > 0 || newOwnedPackages.length > 0) {
                 await this.addToCollection(newOwnedApps, newOwnedPackages);
@@ -354,7 +352,7 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
             const wishlisted: number[] = await dynamicStore.get("wishlisted") ?? [];
             await tx.done;
 
-            const newWishlisted: number[] = wishlisted.filter(id => !lastWishlisted.has(id));
+            const newWishlisted: number[] = wishlisted.filter(id => force || !lastWishlisted.has(id));
 
             if (newWishlisted.length > 0) {
                 await this.addToWaitlist(newWishlisted);
