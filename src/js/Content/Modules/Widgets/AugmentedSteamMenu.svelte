@@ -67,7 +67,7 @@
 <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
 <div id="es_popup" class="popup_block_new" on:click={hideMenu}>
     <div class="popup_body popup_menu">
-        <a class="popup_menu_item" use:external href={ExtensionResources.getURL("html/options.html")}>{L(__thewordoptions)}</a>
+        <a class="popup_menu_item" target="_blank" href={ExtensionResources.getURL("html/options.html")}>{L(__thewordoptions)}</a>
         <a class="popup_menu_item" id="es_clear_cache" href="#clear_cache" on:click|preventDefault={clearCache}>{L(__clearCache)}</a>
         <div class="hr"></div>
         <a class="popup_menu_item" use:external href="https://github.com/IsThereAnyDeal/AugmentedSteam">{L(__contribute)}</a>
