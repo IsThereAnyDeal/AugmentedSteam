@@ -6,7 +6,8 @@
     import {slide} from "svelte/transition";
     import {L} from "@Core/Localization/Localization";
     import {
-        __loading, __userNote_syncButtonPull,
+        __loading,
+        __userNote_syncButtonPull,
         __userNote_syncButtonPush,
         __userNote_syncFailed,
         __userNote_syncPulled,
@@ -19,7 +20,7 @@
     export let isConnected: boolean;
 
     let loading: boolean = false;
-    let pullStatus: number|null = null;
+    let pullCount: number|null = null;
     let pushStatus: TPushNotesStatus|null = null;
 
     async function pullNotes(): Promise<void> {
@@ -28,16 +29,11 @@
         }
 
         loading = true;
-        pullStatus = null;
+        pullCount = null;
         pushStatus = null;
 
-        const notes = await ITADApiFacade.pullNotes();
-        const adapter = UserNotesAdapter.getAdapter();
-        for (let [appid, note] of notes) {
-            await adapter.set(appid, note);
-        }
+        pullCount = await ITADApiFacade.pullNotes();
         loading = false;
-        pullStatus = notes.length;
     }
 
     async function pushNotes(): Promise<void> {
@@ -46,7 +42,7 @@
         }
 
         loading = true;
-        pullStatus = null;
+        pullCount = null;
         pushStatus = null;
 
         const adapter = UserNotesAdapter.getAdapter();
@@ -74,16 +70,16 @@
 </div>
 
 
-{#if loading || pullStatus || pushStatus}
+{#if loading || pullCount !== null || pushStatus}
     <div class="status" transition:slide={{axis: "y", duration: 100}}>
         {#if loading}
             <span class="indicator"><SyncIndicator status={ESyncStatus.Loading} /></span>
             {L(__loading)}
         {/if}
 
-        {#if pullStatus}
+        {#if pullCount !== null}
             <span class="indicator"><SyncIndicator status={ESyncStatus.OK} /></span>
-            {L(__userNote_syncPulled, {n: pullStatus})}
+            {L(__userNote_syncPulled, {n: pullCount})}
         {/if}
 
         {#if pushStatus}

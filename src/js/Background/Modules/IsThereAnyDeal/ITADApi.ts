@@ -23,6 +23,7 @@ import LocalStorage from "@Core/Storage/LocalStorage";
 import TimeUtils from "@Core/Utils/TimeUtils";
 import {Unrecognized} from "@Background/background";
 import {__userNote_syncErrorEmpty, __userNote_syncErrorLength, __userNote_syncErrorUnknown} from "@Strings/_strings";
+import UserNotesAdapter from "@Content/Modules/UserNotes/UserNotesAdapter";
 
 const MaxNoteLength = 250;
 const RequiredScopes = [
@@ -386,7 +387,7 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
         await this.importCollection(force);
 
         if (Settings.itad_sync_notes) {
-            await this.pullNotes();
+            await this.pullNotes(force);
         }
     }
 
@@ -405,13 +406,17 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
         return (await IndexedDB.get("collection", storeId)) ?? null;
     }
 
-    private async pullNotes(): Promise<TNotesList> {
+    private async pullNotes(force: boolean): Promise<number> {
+        const TTL = 2*60;
+
+        if (!force && !(await IndexedDB.isStoreExpired("notes"))) {
+            return 0;
+        }
+
         const accessToken = await AccessToken.load();
         if (!accessToken) {
             throw new Errors.OAuthUnauthorized();
         }
-
-        const result: TNotesList = [];
 
         const response = await this.fetchJson<TGetNotesApiResponse>(
             this.getUrl("/user/notes/v1"), {
@@ -423,7 +428,8 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
             });
 
         if (response.length === 0) {
-            return result;
+            await IndexedDB.setStoreExpiry("notes", TTL);
+            return 0;
         }
 
         const notes: Map<string, string> = new Map<string, string>(
@@ -431,16 +437,18 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
         );
 
         const steamIds = await this.fetchSteamIds([...notes.keys()]);
-
+        const adapter = UserNotesAdapter.getAdapter();
         for (let [steamId, gid] of steamIds) {
             if (!steamId.startsWith("app/")) {
                 continue;
             }
 
             const appid = Number(steamId.substring(4));
-            result.push([appid, notes.get(gid)!]);
+            await adapter.set(appid, notes.get(gid)!);
         }
-        return result;
+
+        await IndexedDB.setStoreExpiry("notes", TTL);
+        return steamIds.size;
     }
 
     private async pushNotes(notes: TNotesList): Promise<TPushNotesStatus> {
@@ -579,7 +587,7 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
                 return this.getFromCollection(message.params.storeId);
 
             case EAction.ITAD_Notes_Pull:
-                return this.pullNotes();
+                return this.pullNotes(true);
 
             case EAction.ITAD_Notes_Push:
                 return this.pushNotes(message.params.notes);

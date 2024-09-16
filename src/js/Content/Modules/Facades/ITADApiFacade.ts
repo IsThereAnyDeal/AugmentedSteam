@@ -53,7 +53,7 @@ export default class ITADApiFacade {
         return Background.send(EAction.GetFromCollection, {storeId});
     }
 
-    static async pullNotes(): Promise<TNotesList> {
+    static async pullNotes(): Promise<number> {
         return Background.send(EAction.ITAD_Notes_Pull);
     }
 
