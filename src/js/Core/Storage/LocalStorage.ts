@@ -21,6 +21,12 @@ export interface LocalStorageSchema extends StorageSchema {
         from: null|number,
         to: null|number
     },
+    syncEvents: Array<{
+        section: string,
+        type: "push"|"pull",
+        timestamp: number,
+        count: number
+    }>,
     db_cleanup: number,
     show_review_section: boolean,
     hide_login_warn_store: boolean,

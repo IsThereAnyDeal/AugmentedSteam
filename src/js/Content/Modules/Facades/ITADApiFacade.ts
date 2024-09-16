@@ -2,7 +2,7 @@ import type {
     TCollectionCopy,
     TGetStoreListResponse, TInCollectionResponse,
     TInWaitlistResponse,
-    TLastImportResponse, TNotesList, TPushNotesStatus
+    TLastImportResponse, TNotesList, TPushNotesStatus, TSyncEvent
 } from "@Background/Modules/IsThereAnyDeal/_types";
 import Background from "@Core/Background";
 import {EAction} from "@Background/EAction";
@@ -31,6 +31,10 @@ export default class ITADApiFacade {
 
     static getLastImport(): Promise<TLastImportResponse> {
         return Background.send(EAction.LastImport);
+    }
+
+    static getSyncEvents(): Promise<TSyncEvent[]> {
+        return Background.send(EAction.SyncEvents);
     }
 
     static async inWaitlist(storeIds: string[]): Promise<TInWaitlistResponse> {

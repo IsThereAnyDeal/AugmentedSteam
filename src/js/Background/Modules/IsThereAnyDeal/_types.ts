@@ -11,6 +11,13 @@ export type TLastImportResponse = {
     to: number|null
 };
 
+export type TSyncEvent = {
+    section: string,
+    type: "push"|"pull",
+    timestamp: number,
+    count: number
+};
+
 export type TInWaitlistResponse = Record<string, boolean>;
 
 export type TInCollectionResponse = Record<string, boolean>;

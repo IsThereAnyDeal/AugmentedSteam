@@ -5,6 +5,9 @@
     import ESyncStatus from "@Core/Sync/ESyncStatus";
     import SyncIndicator from "@Core/Sync/SyncIndicator.svelte";
     import {fade} from "svelte/transition";
+    import {createEventDispatcher} from "svelte";
+
+    const dispatch = createEventDispatcher<{syncEvent: void}>();
 
     export let isConnected: boolean;
     export let enableSync: boolean;
@@ -26,6 +29,7 @@
             await ITADApiFacade.sync(true);
             status = ESyncStatus.OK;
             await updateLastImport();
+            dispatch("syncEvent");
         } catch (e) {
             status = ESyncStatus.Error;
 

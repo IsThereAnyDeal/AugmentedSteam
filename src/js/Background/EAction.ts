@@ -52,6 +52,7 @@ export enum EAction {
     Export = "itad.export",
     Sync = "itad.sync",
     LastImport = "itad.lastimport",
+    SyncEvents = "itad.syncevents",
     InWaitlist = "itad.inwaitlist",
     AddToWaitlist = "itad.addtowaitlist",
     RemoveFromWaitlist = "itad.removefromwaitlist",

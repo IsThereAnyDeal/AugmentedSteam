@@ -78,7 +78,7 @@
     <div class="sync box box--text">
         <ITADSyncStatus {isConnected}
                         enableSync={$settings.itad_sync_library || $settings.itad_sync_wishlist}
-                        bind:status bind:this={statusComponent} />
+                        bind:status bind:this={statusComponent} on:syncEvent />
     </div>
 </div>
 

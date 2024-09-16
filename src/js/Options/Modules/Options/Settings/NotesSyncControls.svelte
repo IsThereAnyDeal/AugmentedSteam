@@ -16,6 +16,9 @@
     import type {TPushNotesStatus} from "@Background/Modules/IsThereAnyDeal/_types";
     import SyncIndicator from "@Core/Sync/SyncIndicator.svelte";
     import ESyncStatus from "@Core/Sync/ESyncStatus";
+    import {createEventDispatcher} from "svelte";
+
+    const dispatch = createEventDispatcher<{syncEvent: void}>();
 
     export let isConnected: boolean;
 
@@ -34,6 +37,8 @@
 
         pullCount = await ITADApiFacade.pullNotes();
         loading = false;
+
+        dispatch("syncEvent");
     }
 
     async function pushNotes(): Promise<void> {
@@ -53,6 +58,8 @@
         );
 
         loading = false;
+
+        dispatch("syncEvent");
     }
 </script>
 

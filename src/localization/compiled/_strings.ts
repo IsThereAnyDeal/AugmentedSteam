@@ -506,6 +506,7 @@ export const __itad_to = "itad_to";
 export const __itad_syncNow = "itad_syncNow";
 export const __itad_info_itadSteam = "itad_info_itadSteam";
 export const __itad_info_steamItad = "itad_info_steamItad";
+export const __itad_syncEvents = "itad_syncEvents";
 export const __tradeoffer_numItem = "tradeoffer_numItem";
 export const __tradeoffer_numItems = "tradeoffer_numItems";
 export const __tradeoffer_back = "tradeoffer_back";

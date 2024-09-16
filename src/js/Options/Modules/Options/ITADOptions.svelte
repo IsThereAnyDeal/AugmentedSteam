@@ -4,8 +4,7 @@
     import {L} from "@Core/Localization/Localization";
     import {
         __itad_enableSyncLibrary,
-        __itad_enableSyncWishlist,
-        __itad_import,
+        __itad_enableSyncWishlist, __itad_syncEvents,
         __options_addToWaitlist,
         __options_collectionBannerNotOwned,
         __options_userNotes_userNotes,
@@ -22,16 +21,30 @@
     import ITADConnection from "./Settings/ITADConnection.svelte";
     import type {SettingsSchema} from "../../Data/_types";
     import NotesSyncControls from "@Options/Modules/Options/Settings/NotesSyncControls.svelte";
+    import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";
+    import SyncEvents from "@Options/Modules/Options/Settings/SyncEvents.svelte";
+    import {onMount} from "svelte";
+    import type {TSyncEvent} from "@Background/Modules/IsThereAnyDeal/_types";
 
     let settings: Writable<SettingsSchema> = writable(Settings);
     let isConnected: boolean;
+
+    let events: TSyncEvent[];
+
+    async function loadSyncEvents(): Promise<void> {
+        events = await ITADApiFacade.getSyncEvents();
+    }
+
+    onMount(() => {
+        loadSyncEvents();
+    });
 </script>
 
 
 <div>
     <Section title="IsThereAnyDeal">
         <OptionGroup>
-            <ITADConnection {settings} bind:isConnected />
+            <ITADConnection {settings} bind:isConnected on:syncEvent={loadSyncEvents} />
         </OptionGroup>
     </Section>
 
@@ -63,11 +76,17 @@
         </div>
 
         <OptionGroup>
-            <NotesSyncControls {isConnected} />
+            <NotesSyncControls {isConnected} on:syncEvent={loadSyncEvents} />
         </OptionGroup>
 
         <OptionGroup>
             <Toggle bind:value={$settings.itad_sync_notes}>{L(__userNote_syncOption)}</Toggle>
         </OptionGroup>
     </Section>
+
+    {#if events}
+        <Section title={L(__itad_syncEvents)}>
+            <SyncEvents {events} />
+        </Section>
+    {/if}
 </div>

@@ -11,7 +11,7 @@ import type {
     TLastImportResponse,
     TNotesList,
     TPushNotesStatus,
-    TShopInfo
+    TShopInfo, TSyncEvent
 } from "./_types";
 import type MessageHandlerInterface from "@Background/MessageHandlerInterface";
 import Authorization from "./Authorization";
@@ -181,6 +181,7 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
     private async disconnect(): Promise<void> {
         await AccessToken.clear();
         await LocalStorage.remove("lastItadImport");
+        await LocalStorage.remove("syncEvents");
         return IndexedDB.clear("collection", "waitlist", "itadImport");
     }
 
@@ -188,10 +189,20 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
         return (await LocalStorage.get("lastItadImport")) ?? {from: null, to: null};
     }
 
-    private async recordLastImport() {
+    private async recordLastImport(): Promise<void> {
         let lastImport = await this.getLastImport();
         lastImport.from = TimeUtils.now();
         await LocalStorage.set("lastItadImport", lastImport);
+    }
+
+    private async getSyncEvents(): Promise<TSyncEvent[]> {
+        return (await LocalStorage.get("syncEvents")) ?? [];
+    }
+
+    private async recordSyncEvent(section: string, type: "push"|"pull", count: number): Promise<void> {
+        const events = await this.getSyncEvents();
+        events.unshift({section, type, timestamp: TimeUtils.now(), count});
+        await LocalStorage.set("syncEvents", events.slice(0, 20));
     }
 
     private async removeFromWaitlist(appids: number[]) {
@@ -288,6 +299,10 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
     private async exportToItad(force: boolean): Promise<void> {
         await SettingsStore.load();
 
+        if (!Settings.itad_sync_library && !Settings.itad_sync_wishlist) {
+            return;
+        }
+
         if (force) {
             await IndexedDB.clear("dynamicStore");
         } else {
@@ -298,59 +313,48 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
             }
         }
 
-        const db = IndexedDB.db;
-        const tx = db.transaction(["dynamicStore", "itadImport"]);
-        const dynamicStore = tx.objectStore("dynamicStore");
-        const itadImport = tx.objectStore("itadImport");
-
-        let ownedApps: number[] = [];
-        let ownedPackages: number[] = [];
-        let wishlisted: number[] = [];
-
-        let newOwnedApps: number[] = [];
-        let newOwnedPackages: number[] = [];
-        let newWishlisted: number[] = [];
-
         if (Settings.itad_sync_library) {
-            const lastOwnedApps = new Set(await itadImport.get("lastOwnedApps") ?? []);
-            const lastOwnedPackages = new Set(await itadImport.get("lastOwnedPackages") ?? []);
+            const tx = IndexedDB.db.transaction(["dynamicStore", "itadImport"]);
+            const dynamicStore = tx.objectStore("dynamicStore");
+            const itadImport = tx.objectStore("itadImport");
 
-            ownedApps = await dynamicStore.get("ownedApps") ?? [];
-            ownedPackages = await dynamicStore.get("ownedPackages") ?? [];
+            const lastOwnedApps: Set<number> = new Set(await itadImport.get("lastOwnedApps") ?? []);
+            const lastOwnedPackages: Set<number> = new Set(await itadImport.get("lastOwnedPackages") ?? []);
 
-            newOwnedApps = ownedApps.filter(id => !lastOwnedApps.has(id));
-            newOwnedPackages = ownedPackages.filter(id => !lastOwnedPackages.has(id));
-        }
+            const ownedApps: number[] = await dynamicStore.get("ownedApps") ?? [];
+            const ownedPackages: number[] = await dynamicStore.get("ownedPackages") ?? [];
+            await tx.done;
 
-        if (Settings.itad_sync_wishlist) {
-            const lastWishlisted = new Set(await itadImport.get("lastWishlisted") ?? []);
+            const newOwnedApps: number[] = ownedApps.filter(id => !lastOwnedApps.has(id));
+            const newOwnedPackages: number[] = ownedPackages.filter(id => !lastOwnedPackages.has(id));
 
-            wishlisted = await dynamicStore.get("wishlisted") ?? [];
-            newWishlisted = wishlisted.filter(id => !lastWishlisted.has(id));
-        }
-
-        await tx.done;
-
-        const promises = [];
-
-        if (newOwnedApps.length > 0 || newOwnedPackages.length > 0) {
-            promises.push((async () => {
+            if (newOwnedApps.length > 0 || newOwnedPackages.length > 0) {
                 await this.addToCollection(newOwnedApps, newOwnedPackages);
                 await IndexedDB.putMany("itadImport", [
                     ["lastOwnedApps", ownedApps],
-                    ["lastOwnedPackages", ownedPackages],
-                ]);
-            })());
+                    ["lastOwnedPackages", ownedPackages]
+                ])
+            }
+            await this.recordSyncEvent("collection", "push", newOwnedApps.length + newOwnedPackages.length);
         }
 
-        if (newWishlisted.length > 0) {
-            promises.push((async () => {
+        if (Settings.itad_sync_wishlist) {
+            const tx = IndexedDB.db.transaction(["dynamicStore", "itadImport"]);
+            const dynamicStore = tx.objectStore("dynamicStore");
+            const itadImport = tx.objectStore("itadImport");
+
+            const lastWishlisted: Set<number> = new Set(await itadImport.get("lastWishlisted") ?? []);
+            const wishlisted: number[] = await dynamicStore.get("wishlisted") ?? [];
+            await tx.done;
+
+            const newWishlisted: number[] = wishlisted.filter(id => !lastWishlisted.has(id));
+
+            if (newWishlisted.length > 0) {
                 await this.addToWaitlist(newWishlisted);
                 await IndexedDB.put("itadImport", wishlisted, "lastWishlisted");
-            })());
+            }
+            await this.recordSyncEvent("waitlist", "push", newWishlisted.length);
         }
-
-        await Promise.all(promises);
 
         let lastImport = await this.getLastImport();
         lastImport.to = TimeUtils.now();
@@ -369,6 +373,7 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
             await IndexedDB.replaceAll("waitlist", data ? [...data.entries()] : []);
             await IndexedDB.setStoreExpiry("waitlist", 15*60);
             await this.recordLastImport();
+            await this.recordSyncEvent("waitlist", "pull", data?.size ?? 0);
         }
     }
 
@@ -383,6 +388,7 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
             await IndexedDB.replaceAll("collection", data ? [...data.entries()] : []);
             await IndexedDB.setStoreExpiry("collection", 15*60);
             await this.recordLastImport();
+            await this.recordSyncEvent("collection", "pull", data?.size ?? 0);
         }
     }
 
@@ -436,50 +442,50 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
                 }
             });
 
-        if (response.length === 0) {
-            await IndexedDB.setStoreExpiry("notes", TTL);
-            return 0;
-        }
-
-        const notes: Map<string, string> = new Map<string, string>(
-            response.map(o => [o.gid, o.note])
-        );
-
-        const steamIds = await this.fetchSteamIds([...notes.keys()]);
-
         const result: Map<number, string> = new Map();
-        for (let [steamId, gid] of steamIds) {
-            if (!steamId.startsWith("app/")) {
-                continue;
+
+        if (response.length !== 0) {
+            const notes: Map<string, string> = new Map<string, string>(
+                response.map(o => [o.gid, o.note])
+            );
+
+            const steamIds = await this.fetchSteamIds([...notes.keys()]);
+
+            for (let [steamId, gid] of steamIds) {
+                if (!steamId.startsWith("app/")) {
+                    continue;
+                }
+
+                const appid = Number(steamId.substring(4));
+                const note = notes.get(gid)!;
+
+                result.set(appid, note);
             }
 
-            const appid = Number(steamId.substring(4));
-            const note = notes.get(gid)!;
+            switch(Settings.user_notes_adapter) {
+                case "synced_storage":
+                    /**
+                     * A little bit of hack, but SyncedStorageAdapter may be used in Background,
+                     * and it does better handling that I would want to do here.
+                     * Synced Storage should be removed in future versions.
+                     */
+                    const adapter = new SyncedStorageAdapter();
+                    for (const [appid, note] of result) {
+                        await adapter.set(appid, note);
+                    }
+                    break;
 
-            result.set(appid, note);
-        }
-
-        switch(Settings.user_notes_adapter) {
-            case "synced_storage":
-                /**
-                 * A little bit of hack, but SyncedStorageAdapter may be used in Background,
-                 * and it does better handling that I would want to do here.
-                 * Synced Storage should be removed in future versions.
-                 */
-                const adapter = new SyncedStorageAdapter();
-                for (const [appid, note] of result) {
-                    await adapter.set(appid, note);
-                }
-                break;
-
-            case "idb":
-                await IndexedDB.putMany("notes",
-                    [...result.entries()].map(([appid, note]) => [Number(appid), note])
-                );
-                break;
+                case "idb":
+                    await IndexedDB.putMany("notes",
+                        [...result.entries()].map(([appid, note]) => [Number(appid), note])
+                    );
+                    break;
+            }
         }
 
         await IndexedDB.setStoreExpiry("notes", TTL);
+        await this.recordLastImport();
+        await this.recordSyncEvent("notes", "pull", result.size);
         return result.size;
     }
 
@@ -550,6 +556,7 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
         }
 
         status.pushed = toPush.length;
+        await this.recordSyncEvent("notes", "push", status.pushed);
         return status;
     }
 
@@ -602,6 +609,9 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
 
             case EAction.LastImport:
                 return this.getLastImport();
+
+            case EAction.SyncEvents:
+                return this.getSyncEvents();
 
             case EAction.InWaitlist:
                 return this.inWaitlist(message.params.storeIds);
