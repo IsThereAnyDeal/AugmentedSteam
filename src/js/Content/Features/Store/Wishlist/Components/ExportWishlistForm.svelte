@@ -40,40 +40,45 @@
 </script>
 
 
-<div class="es-wexport">
-    <h2>{L(__export_type)}</h2>
-    <div class="es-wexport__buttons">
-        <label><input type="radio" value="text" bind:group={type} on:change> {L(__export_text)}</label>
-        <label><input type="radio" value="json" bind:group={type} on:change> JSON</label>
-    </div>
-</div>
-
-{#if type === "text"}
-    <div class="es-wexport" transition:slide={{axis: "y", duration: 200}}>
-        <h2>{L(__export_format)}</h2>
-        <div>
-            <input type="text" id="es-wexport-format" bind:value={format} bind:this={input} on:change>
-            <div class="es-wexport__symbols">
-                {#each ["%title%", "%id%", "%appid%", "%url%", "%release_date%", "%price%", "%discount%", "%base_price%", "%type%", "%note%"] as str, index}
-                    {#if index > 0}, {/if}
-                    <button type="button" on:click={() => add(str)}>{str}</button>
-                {/each}
-            </div>
+<div class="as_wexport_container">
+    <div class="as_wexport">
+        <h2>{L(__export_type)}</h2>
+        <div class="as_wexport_buttons">
+            <label><input type="radio" value="text" bind:group={type} on:change> {L(__export_text)}</label>
+            <label><input type="radio" value="json" bind:group={type} on:change> JSON</label>
         </div>
     </div>
-{/if}
+
+    {#if type === "text"}
+        <div class="as_wexport" transition:slide={{axis: "y", duration: 200}}>
+            <h2>{L(__export_format)}</h2>
+            <div>
+                <input type="text" bind:value={format} bind:this={input} on:change>
+                <div class="as_wexport_symbols">
+                    {#each ["%title%", "%id%", "%appid%", "%url%", "%release_date%", "%price%", "%discount%", "%base_price%", "%type%", "%note%"] as str, index}
+                        {#if index > 0}, {/if}
+                        <button type="button" on:click={() => add(str)}>{str}</button>
+                    {/each}
+                </div>
+            </div>
+        </div>
+    {/if}
+</div>
 
 
 <style>
-    .es-wexport {
+    .as_wexport_container {
+        width: 580px;
+    }
+    .as_wexport {
         margin-bottom: 30px;
     }
-    .es-wexport__buttons {
+    .as_wexport_buttons {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 30px
     }
-    .es-wexport__symbols {
+    .as_wexport_symbols {
         margin-top: 2px;
         font-size: 11px;
     }
@@ -94,9 +99,9 @@
     }
     label:has(input[type=radio]:checked) {
         color: white;
-        border-color: #1a97ff
+        border-color: #1a97ff;
     }
-    label input[type=radio]{
+    label input[type=radio] {
         display: none;
     }
 
