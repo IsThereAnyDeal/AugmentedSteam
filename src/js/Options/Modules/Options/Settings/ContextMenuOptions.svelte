@@ -14,23 +14,13 @@
     } from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
     import Toggle from "../Components/Toggle.svelte";
-    import ContextMenu from "@Background/Modules/ContextMenu/ContextMenu";
-
-    type ContextMenuKeys = keyof SettingsSchema & (
-         "context_steam_store"
-       | "context_steam_market"
-       | "context_itad"
-       | "context_bartervg"
-       | "context_steamdb"
-       | "context_steamdb_instant"
-       | "context_steam_keys"
-    );
+    import ContextMenu, {type ContextMenuKeys} from "@Background/Modules/ContextMenu/ContextMenu";
 
     export let settings: Writable<SettingsSchema>;
 
     async function handleChange(key: ContextMenuKeys, value: boolean): Promise<void> {
         $settings[key] = value;
-        ContextMenu.update();
+        ContextMenu.update(key);
     }
 </script>
 

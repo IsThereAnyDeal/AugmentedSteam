@@ -10,10 +10,21 @@ import {
 import Localization, {L} from "@Core/Localization/Localization";
 import Settings, {SettingsStore} from "@Options/Data/Settings";
 import browser, {type Menus} from "webextension-polyfill";
+import type {SettingsSchema} from "@Options/Data/_types";
+
+export type ContextMenuKeys = keyof SettingsSchema & (
+      "context_steam_store"
+    | "context_steam_market"
+    | "context_itad"
+    | "context_bartervg"
+    | "context_steamdb"
+    | "context_steamdb_instant"
+    | "context_steam_keys"
+);
 
 export default class ContextMenu {
 
-    private static readonly queryLinks: Record<string, [string, string, () => boolean]> = {
+    private static readonly queryLinks: Record<ContextMenuKeys, [string, string, () => boolean]> = {
         "context_steam_store": [
             __options_contextSteamStore, "https://store.steampowered.com/search/?term=__query__",
             () => Settings.context_steam_store,
@@ -45,8 +56,8 @@ export default class ContextMenu {
     };
 
     static register(): void {
-        browser.runtime.onStartup.addListener(ContextMenu.update);
-        browser.runtime.onInstalled.addListener(ContextMenu.update);
+        browser.runtime.onStartup.addListener(ContextMenu.build);
+        browser.runtime.onInstalled.addListener(ContextMenu.build);
 
         if (!browser.contextMenus.onClicked.hasListener(ContextMenu.onClick)) {
             browser.contextMenus.onClicked.addListener(ContextMenu.onClick);
@@ -55,7 +66,7 @@ export default class ContextMenu {
 
     private static onClick(info: Menus.OnClickData): void {
 
-        const menuItem = ContextMenu.queryLinks[info.menuItemId];
+        const menuItem = ContextMenu.queryLinks[info.menuItemId as ContextMenuKeys];
         if (!menuItem) {
             return;
         }
@@ -83,28 +94,29 @@ export default class ContextMenu {
 
         for (const [option, entry] of Object.entries(ContextMenu.queryLinks)) {
             let [locale, query_, enabled] = entry;
-            if (!enabled()) {
-                continue
-            }
 
             browser.contextMenus.create({
                 id: option,
                 title: L(locale, {"query": "%s"}),
-                contexts: ["selection"]
+                contexts: ["selection"],
+                visible: enabled()
             },
 
-            /*
-             * TODO don't recreate the context menu entries on each change, only update
-             *  the affected entry (which should also prevent this error)
-             *  Error when you create an entry with duplicate id
-             */
             () => browser.runtime.lastError);
         }
     }
 
-    public static async update(): Promise<void> {
-        await SettingsStore.init();
-        await browser.contextMenus.removeAll();
-        return ContextMenu.build();
+    public static update(id: ContextMenuKeys): void {
+        const menuItem = this.queryLinks[id];
+        if (!menuItem) {
+            return;
+        }
+        const [locale, query_, enabled] = menuItem;
+
+        browser.contextMenus.update(id, {
+            title: L(locale, {"query": "%s"}),
+            contexts: ["selection"],
+            visible: enabled()
+        });
     }
 }
