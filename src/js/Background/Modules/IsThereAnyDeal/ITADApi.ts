@@ -26,6 +26,13 @@ import {__userNote_syncErrorEmpty, __userNote_syncErrorLength, __userNote_syncEr
 import SyncedStorageAdapter from "@Content/Modules/UserNotes/Adapters/SyncedStorageAdapter";
 
 const MaxNoteLength = 250;
+const SyncEventsLimit = 40;
+const StoreListTTL = 84600;
+const PushGamesInterval = 5*60;
+const PullWaitlistInterval = 15*60;
+const PullCollectionInterval = 15*60;
+const PullNotesInterval = 2*60;
+
 const RequiredScopes = [
     "wait_read",
     "wait_write",
@@ -167,7 +174,7 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
         if (await IndexedDB.isStoreExpired("storeList")) {
             let result = await this.fetchStoreList();
             await IndexedDB.replaceAll("storeList", result.map(store => [store.id, store]));
-            await IndexedDB.setStoreExpiry("storeList", 7*86400);
+            await IndexedDB.setStoreExpiry("storeList", StoreListTTL);
             return result;
         } else {
             return await IndexedDB.db.getAll("storeList");
@@ -202,7 +209,7 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
     private async recordSyncEvent(section: string, type: "push"|"pull", count: number): Promise<void> {
         const events = await this.getSyncEvents();
         events.unshift({section, type, timestamp: TimeUtils.now(), count});
-        await LocalStorage.set("syncEvents", events.slice(0, 20));
+        await LocalStorage.set("syncEvents", events.slice(0, SyncEventsLimit));
     }
 
     private async removeFromWaitlist(appids: number[]) {
@@ -308,7 +315,7 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
         } else {
             const lastImport = await this.getLastImport();
 
-            if (lastImport.to && TimeUtils.isInFuture(lastImport.to + 60)) {
+            if (lastImport.to && TimeUtils.isInFuture(lastImport.to + PushGamesInterval)) {
                 return;
             }
         }
@@ -371,7 +378,7 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
         if (force || await IndexedDB.isStoreExpired("waitlist")) {
             const data = await this.fetchWaitlist();
             await IndexedDB.replaceAll("waitlist", data ? [...data.entries()] : []);
-            await IndexedDB.setStoreExpiry("waitlist", 15*60);
+            await IndexedDB.setStoreExpiry("waitlist", PullWaitlistInterval);
             await this.recordLastImport();
             await this.recordSyncEvent("waitlist", "pull", data?.size ?? 0);
         }
@@ -386,7 +393,7 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
         if (force || await IndexedDB.isStoreExpired("collection")) {
             const data = await this.fetchCollection();
             await IndexedDB.replaceAll("collection", data ? [...data.entries()] : []);
-            await IndexedDB.setStoreExpiry("collection", 15*60);
+            await IndexedDB.setStoreExpiry("collection", PullCollectionInterval);
             await this.recordLastImport();
             await this.recordSyncEvent("collection", "pull", data?.size ?? 0);
         }
@@ -421,8 +428,6 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
 
     private async pullNotes(force: boolean): Promise<number> {
         await SettingsStore.load();
-
-        const TTL = 2*60;
 
         if (!force && !(await IndexedDB.isStoreExpired("notes"))) {
             return 0;
@@ -483,7 +488,7 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
             }
         }
 
-        await IndexedDB.setStoreExpiry("notes", TTL);
+        await IndexedDB.setStoreExpiry("notes", PullNotesInterval);
         await this.recordLastImport();
         await this.recordSyncEvent("notes", "pull", result.size);
         return result.size;

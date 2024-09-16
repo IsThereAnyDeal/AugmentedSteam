@@ -44,7 +44,10 @@
 <div>
     <Section title="IsThereAnyDeal">
         <OptionGroup>
-            <ITADConnection {settings} bind:isConnected on:syncEvent={loadSyncEvents} />
+            <ITADConnection {settings} bind:isConnected
+                            on:syncEvent={loadSyncEvents}
+                            on:connection={loadSyncEvents}
+            />
         </OptionGroup>
     </Section>
 

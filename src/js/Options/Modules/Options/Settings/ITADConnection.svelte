@@ -11,12 +11,14 @@
         __status
     } from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
-    import {onMount} from "svelte";
+    import {createEventDispatcher, onMount} from "svelte";
     import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";
     import ITADSyncStatus from "@Content/Modules/Widgets/ITADSync/ITADSyncStatus.svelte";
     import ESyncStatus from "@Core/Sync/ESyncStatus";
     import {type Writable} from "svelte/store";
     import type {SettingsSchema} from "@Options/Data/_types";
+
+    const dispatch = createEventDispatcher<{connection: void}>();
 
     export let settings: Writable<SettingsSchema>;
     export let isConnected: boolean = false;
@@ -30,6 +32,7 @@
         promise = (async () => {
             await ITADApiFacade.authorize();
             isConnected = true;
+            dispatch("connection");
         })();
         statusComponent.updateLastImport();
     }
@@ -38,6 +41,7 @@
         promise = (async () => {
             await ITADApiFacade.disconnect();
             isConnected = false;
+            dispatch("connection");
         })();
         statusComponent.updateLastImport();
     }
