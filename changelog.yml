@@ -1,3 +1,14 @@
+4.1.2: |
+  Bugfix release
+  
+  - fixed ITAD sync. Turns out, sync was like, entirely broken. Most of the time. It should be fixed now and sync should sync again.
+  - added Sync Events to options to see what and when was actually synced
+  - fixed context menus ceasing to work after few minutes 
+  - fixed Achievements sorting. Again
+  - fixed profile wishlist count for languages other than English
+  - fixed DLC checkbox for "recommended DLC"
+  - added support for Trending Free as a default home page tab
+
 4.1.1: |
   Hotfix notes storage. See changelog of previous version for full notes:
   
