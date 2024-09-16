@@ -8,14 +8,14 @@ export default class ITAD {
             return;
         }
 
+        if (User.isSignedIn) {
+            await ITADApiFacade.sync();
+        }
+
         const target = document.querySelector("#global_action_menu");
         if (target) {
             const anchor = target.firstElementChild ?? undefined;
             (new ITADSyncMenu({target, anchor}));
-        }
-
-        if (User.isSignedIn) {
-            await ITADApiFacade.sync();
         }
     }
 

@@ -243,7 +243,7 @@ export default class SteamStoreApi extends Api implements MessageHandlerInterfac
             ["ownedPackages", rgOwnedPackages],
             ["wishlisted", rgWishlist],
         ]);
-        await IndexedDB.setStoreExpiry("dynamicStore", 15*60);
+        await IndexedDB.setStoreExpiry("dynamicStore", 5*60);
     }
 
     private async getDynamicStoreStatus(ids: string[]): Promise<TDynamicStoreStatusResponse> {

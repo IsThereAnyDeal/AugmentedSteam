@@ -291,7 +291,7 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
         } else {
             const lastImport = await this.getLastImport();
 
-            if (lastImport.to && TimeUtils.isInPast(lastImport.to + 15*60)) {
+            if (lastImport.to && TimeUtils.isInFuture(lastImport.to + 60)) {
                 return;
             }
         }
@@ -350,12 +350,10 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
 
         await Promise.all(promises);
 
-        if (promises.length > 0) {
-            let lastImport = await this.getLastImport();
-            lastImport.to = TimeUtils.now();
+        let lastImport = await this.getLastImport();
+        lastImport.to = TimeUtils.now();
 
-            await LocalStorage.set("lastItadImport", lastImport);
-        }
+        await LocalStorage.set("lastItadImport", lastImport);
     }
 
     private async importWaitlist(force: boolean): Promise<void> {
@@ -365,7 +363,7 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
         if (force || await IndexedDB.isStoreExpired("waitlist")) {
             const data = await this.fetchWaitlist();
             await IndexedDB.replaceAll("waitlist", data ? [...data.entries()] : []);
-            await IndexedDB.setStoreExpiry("waitlist", TimeUtils.now() + 15*60);
+            await IndexedDB.setStoreExpiry("waitlist", 15*60);
             await this.recordLastImport();
         }
     }
@@ -377,7 +375,7 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
         if (force || await IndexedDB.isStoreExpired("collection")) {
             const data = await this.fetchCollection();
             await IndexedDB.replaceAll("collection", data ? [...data.entries()] : []);
-            await IndexedDB.setStoreExpiry("collection", TimeUtils.now() + 15*60);
+            await IndexedDB.setStoreExpiry("collection", 15*60);
             await this.recordLastImport();
         }
     }
