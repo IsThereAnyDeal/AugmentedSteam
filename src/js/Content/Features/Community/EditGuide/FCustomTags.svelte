@@ -9,7 +9,7 @@
     import RequestData from "@Content/Modules/RequestData";
     import {onMount} from "svelte";
     import AddTagForm from "./Components/AddTagForm.svelte";
-    import CustomModal from "@Core/CustomModal";
+    import CustomModal from "@Core/Modals/CustomModal";
 
     let customTags: Set<string> = new Set(); // Use Set to enforce unique tags
 

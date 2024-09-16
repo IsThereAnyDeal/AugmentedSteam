@@ -8,7 +8,7 @@ import SteamFacade from "@Content/Modules/Facades/SteamFacade";
 import UserNotes from "@Content/Features/Store/Common/UserNotes/UserNotes";
 import Clipboard from "@Content/Modules/Clipboard";
 import ExportWishlistForm from "@Content/Features/Store/Wishlist/Components/ExportWishlistForm.svelte";
-import CustomModal from "@Core/CustomModal";
+import CustomModal from "@Core/Modals/CustomModal";
 
 type WishlistData = Array<[string, {
     name: string,
