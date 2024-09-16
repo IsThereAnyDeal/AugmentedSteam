@@ -221,7 +221,7 @@ export class SettingsStore {
     public static readonly onSaveStart: Event = new Event();
     public static readonly onSaveEnd: Event = new Event();
 
-    private static async load(): Promise<void> {
+    public static async load(): Promise<void> {
         this.data = await this.storage.getObject(DefaultSettings);
     }
 

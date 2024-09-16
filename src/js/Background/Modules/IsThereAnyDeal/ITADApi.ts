@@ -15,7 +15,7 @@ import type {
 } from "./_types";
 import type MessageHandlerInterface from "@Background/MessageHandlerInterface";
 import Authorization from "./Authorization";
-import Settings from "@Options/Data/Settings";
+import Settings, {SettingsStore} from "@Options/Data/Settings";
 import AccessToken from "@Background/Modules/IsThereAnyDeal/AccessToken";
 import {EAction} from "@Background/EAction";
 import Errors from "@Core/Errors/Errors";
@@ -286,6 +286,7 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
     }
 
     private async exportToItad(force: boolean): Promise<void> {
+        await SettingsStore.load();
 
         if (force) {
             await IndexedDB.clear("dynamicStore");
@@ -358,6 +359,8 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
     }
 
     private async importWaitlist(force: boolean): Promise<void> {
+        await SettingsStore.load();
+
         if (!Settings.itad_sync_wishlist) {
             return;
         }
@@ -370,6 +373,8 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
     }
 
     private async importCollection(force: boolean): Promise<void> {
+        await SettingsStore.load();
+
         if (!Settings.itad_sync_library) {
             return;
         }
@@ -382,6 +387,8 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
     }
 
     private async sync(force: boolean): Promise<void> {
+        await SettingsStore.load();
+
         await this.exportToItad(force);
         await this.importWaitlist(force);
         await this.importCollection(force);
@@ -407,6 +414,8 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
     }
 
     private async pullNotes(force: boolean): Promise<number> {
+        await SettingsStore.load();
+
         const TTL = 2*60;
 
         if (!force && !(await IndexedDB.isStoreExpired("notes"))) {
@@ -465,13 +474,13 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
 
             case "idb":
                 await IndexedDB.putMany("notes",
-                    Object.entries(result).map(([appid, note]) => [Number(appid), note])
+                    [...result.entries()].map(([appid, note]) => [Number(appid), note])
                 );
                 break;
         }
 
         await IndexedDB.setStoreExpiry("notes", TTL);
-        return steamIds.size;
+        return result.size;
     }
 
     private async pushNotes(notes: TNotesList): Promise<TPushNotesStatus> {
