@@ -5,7 +5,7 @@ import SteamStoreApi from "./Modules/Store/SteamStoreApi";
 import ITADApi from "./Modules/IsThereAnyDeal/ITADApi";
 import AugmentedSteamApi from "./Modules/AugmentedSteam/AugmentedSteamApi";
 import UserNotesApi from "./Modules/UserNotes/UserNotesApi";
-import browser, {type Runtime} from "webextension-polyfill";
+import browser, {type Runtime, type Storage as ns} from "webextension-polyfill";
 import type MessageHandlerInterface from "@Background/MessageHandlerInterface";
 import InventoryApi from "@Background/Modules/Inventory/InventoryApi";
 import CacheApi from "@Background/Modules/Cache/CacheApi";
@@ -14,6 +14,7 @@ import Environment, {ContextType} from "@Core/Environment";
 import SettingsMigration from "@Core/Update/SettingsMigration";
 import Version from "@Core/Version";
 import {EAction} from "@Background/EAction";
+import Storage from "@Core/Storage/Storage";
 
 Environment.CurrentContext = ContextType.Background;
 
@@ -36,6 +37,16 @@ browser.runtime.onInstalled.addListener(async (detail) => {
     await IndexedDB.init();
     await SettingsMigration.migrate(oldVersion);
     await (new CacheApi()).handle(EAction.CacheClear);
+
+    /*
+     * Local storage migration
+     * TODO remove in next minor version
+     */
+    await (async function() {
+        const localStorage = new Storage<ns.LocalStorageArea, {es_guide_tags: Record<string, string[]>}>(browser.storage.local);
+        await localStorage.remove("es_guide_tags");
+    })();
+
     console.log("Update done");
 });
 
