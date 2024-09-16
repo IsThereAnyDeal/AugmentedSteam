@@ -8,6 +8,7 @@ import SteamFacade from "@Content/Modules/Facades/SteamFacade";
 import UserNotes from "@Content/Features/Store/Common/UserNotes/UserNotes";
 import Clipboard from "@Content/Modules/Clipboard";
 import ExportWishlistForm from "@Content/Features/Store/Wishlist/Components/ExportWishlistForm.svelte";
+import CustomModal from "@Core/CustomModal";
 
 type WishlistData = Array<[string, {
     name: string,
@@ -122,11 +123,15 @@ export default class FExportWishlist extends Feature<CWishlist> {
 
         let form: ExportWishlistForm|undefined;
 
-        const observer = new MutationObserver(() => {
-            const modal = document.querySelector("#as_export_form");
-            if (modal) {
+        const response = await CustomModal({
+            title: L(__export_wishlist),
+            options: {
+                okButton: L(__export_download),
+                secondaryActionButton: L(__export_copyClipboard)
+            },
+            modalFn: (target) => {
                 form = new ExportWishlistForm({
-                    target: modal,
+                    target,
                     props: {
                         type: this.type,
                         format: this.format
@@ -136,22 +141,9 @@ export default class FExportWishlist extends Feature<CWishlist> {
                     this.format = form!.format;
                     this.type = form!.type;
                 });
-                observer.disconnect();
+                return form;
             }
         });
-        observer.observe(document.body, {
-            childList: true
-        });
-
-        const response = await SteamFacade.showConfirmDialog(
-            L(__export_wishlist),
-            `<div id="as_export_form" style="width:580px"></div>`,
-            {
-                okButton: L(__export_download),
-                secondaryActionButton: L(__export_copyClipboard)
-            });
-
-        form?.$destroy();
 
         if (response === "CANCEL") {
             return;

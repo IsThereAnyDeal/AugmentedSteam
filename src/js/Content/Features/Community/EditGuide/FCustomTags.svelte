@@ -9,6 +9,7 @@
     import RequestData from "@Content/Modules/RequestData";
     import {onMount} from "svelte";
     import AddTagForm from "./Components/AddTagForm.svelte";
+    import CustomModal from "@Core/CustomModal";
 
     let customTags: Set<string> = new Set(); // Use Set to enforce unique tags
 
@@ -42,29 +43,19 @@
         let form: AddTagForm|undefined;
         let tag: string = "";
 
-        const observer = new MutationObserver(() => {
-            const modal = document.querySelector("#as_tag_form");
-            if (modal) {
+        const response = await CustomModal({
+            title: L(__customTags),
+            modalFn: (target) => {
                 form = new AddTagForm({
-                    target: modal,
+                    target,
                     props: {tag}
                 });
                 form.$on("change", () => {
                     tag = form!.tag;
                 });
-                observer.disconnect();
+                return form;
             }
         });
-        observer.observe(document.body, {
-            childList: true
-        });
-
-        const response = await SteamFacade.showConfirmDialog(
-            L(__customTags),
-            `<div id="as_tag_form"></div>`
-        );
-
-        form?.$destroy();
 
         if (response === "OK") {
             if (tag.trim() === "") {
