@@ -331,7 +331,6 @@
         "homepage_default_tab": "Onglet par défaut de la page d'accueil",
         "homepage_default_tab_remember": "Dernier choix",
         "homepage_default_tab_newreleases": "Sorties populaires",
-        "homepage_default_tab_topsellers": "Meilleures ventes",
         "homepage_default_tab_upcoming": "Bientôt",
         "homepage_default_tab_specials": "Offres",
         "wishlist": "Articles souhaités",
@@ -413,7 +412,10 @@
         "about_desc_links": "Visitez le __website__ de l'extension ou notre __discord__ pour plus d'informations.",
         "footer_fork": "un fork par IsThereAnyDeal",
         "footer_author": "auteur original jshackles",
-        "show_players_info": "Afficher les informations sur le nombre de joueurs"
+        "show_players_info": "Afficher les informations sur le nombre de joueurs",
+        "friends_and_groups": "Amis et groupes",
+        "friends_append_nickname": "Ajouter des surnoms aux noms des amis",
+        "collection_banner_not_owned": "Afficher la bannière de collection uniquement lorsque je ne possède pas le jeu sur Steam"
     },
     "ready": {
         "loading": "Chargement des données d'Augmented Steam...",
@@ -456,11 +458,16 @@
     },
     "itad": {
         "import": "Importer périodiquement :",
+        "last_import": "Dernière importation",
+        "from": "d'ITAD",
+        "to": "vers ITAD",
         "sync_now": "Synchroniser maintenant",
         "info": {
             "itad-steam": "Connecter Augmented Steam avec IsThereAnyDeal vous permet d'appliquer le surlignage et les tags d'Augmented Steam aux jeux de votre liste d'attente et de votre collection même si vous ne les avez pas sur Steam.",
             "steam-itad": "De plus, cela vous permet d'importer des jeux depuis votre bibliothèque Steam et / ou votre liste de souhaits vers IsThereAnyDeal, pour une précision améliorée (par exemple, des DLC ou des jeux non répertoriés). Actuellement, cette fonctionnalité ne peut ajouter que des titres, pas les retirer, donc ce n'est pas un remplacement mais un ajout à la synchronisation intégrée d'IsThereAnyDeal."
-        }
+        },
+        "enable_sync_library": "Activer la synchronisation de la bibliothèque",
+        "enable_sync_wishlist": "Activer la synchronisation de la liste de souhaits"
     },
     "tradeoffer": {
         "num_item": "__num__ objet",
@@ -511,7 +518,20 @@
         "close_on_storage_desc": "Augmented Steam est sur le point de ne plus pouvoir enregistrer de notes utilisateur (~__perc__% d'utilisation du stockage) avec votre adaptateur de stockage actuel.",
         "storage_warning_desc": "Vous pouvez choisir de stocker vos notes utilisateur dans une base de données locale (sans synchronisation) ou de continuer à utiliser la méthode de stockage fournie par votre navigateur (où de nouvelles notes ne peuvent être ajoutées que si vous en supprimez des plus anciennes).",
         "save_synced_storage": "Continuer d'utiliser l'espace de stockage synchronisé",
-        "save_local": "Stocker les notes localement"
+        "save_local": "Stocker les notes localement",
+        "sync_option": "Synchroniser les notes automatiquement",
+        "sync_info_1": "Vous pouvez synchroniser vos notes entre Augmented Steam et IsThereAnyDeal. Si vous activez la synchronisation automatique, les notes seront récupérées périodiquement depuis ITAD. Les modifications via Augmented Steam seront immédiatement répercutées sur ITAD.",
+        "sync_info_2": "Vous pouvez également envoyer ou récupérer manuellement des notes entre Augmented Steam et IsThereAnyDeal. Nous vous conseillons de le faire avant d'activer la synchronisation automatique, afin de vous assurer que la bonne version de la note est utilisée, au cas où vous auriez des notes différentes stockées pour le même jeu.",
+        "sync_info_3": "Vous pouvez voir toutes vos notes stockées dans la section Notes and Tags sur IsThereAnyDeal.",
+        "sync_button_push": "Envoyer des notes à\nIsThereAnyDeal",
+        "sync_button_pull": "Récupérer les notes de\nIsThereAnyDeal",
+        "sync_pulled": "__n__ note(s) ont été récupérée de IsThereAnyDeal",
+        "sync_pushed": "__n__ note(s) ont été envoyées à IsThereAnyDeal",
+        "sync_failed": "Échec de la synchronisation de __n__ note(s)",
+        "sync_error": "Échec de la synchronisation de votre note",
+        "sync_error_empty": "La note est vide",
+        "sync_error_unknown": "ITAD ne connaît pas ce jeu",
+        "sync_error_length": "La note est trop longue (__length__, max : __max__)"
     },
     "queue": {
         "new": "Nouvelle liste",
@@ -862,5 +882,10 @@
     "using_language": "Vous naviguez sur Steam en __current__.",
     "thewordunknown": "Inconnu",
     "badge_level": "Niveau __level__",
-    "ignored_owned": "Jeux ignorés car joués sur d'autres plates-formes"
+    "ignored_owned": "Jeux ignorés car joués sur d'autres plates-formes",
+    "owned_collection": "__gametitle__ est déjà dans votre collection IsThereAnyDeal",
+    "add_fullgame_to_wishlist": "Ajouter le jeu complet à votre liste de souhaits",
+    "add_fullgame_to_waitlist": "Ajouter le jeu complet à votre liste d'attente",
+    "remove_fullgame_from_waitlist_tooltip": "Retirer le jeu complet de votre liste d'attente",
+    "remove_fullgame_from_wishlist_and_waitlist_tooltip": "Retirer le jeu complet de votre liste de souhaits et de votre liste d'attente"
 }

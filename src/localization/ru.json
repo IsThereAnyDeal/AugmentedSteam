@@ -63,7 +63,7 @@
     "homepage_tabs": "Вкладки на главной странице",
     "store": "Магазин",
     "view_in_store": "Просмотреть в магазине",
-    "view_on_website": "Посмотреть на __website__",
+    "view_on_website": "Посмотреть на сайте: __website__",
     "drm_third_party": "Внимание: эта игра использует DRM-технологию сторонних поставщиков __drmlist__.",
     "hours_short": "__hours__ ч.",
     "spam_comment_show": "Скрыто спам-комментариев на этой странице: __num__ Нажмите здесь, чтобы их показать.",
@@ -331,7 +331,6 @@
         "homepage_default_tab": "Вкладка начальной страницы по умолчанию",
         "homepage_default_tab_remember": "Запомнить предыдущие",
         "homepage_default_tab_newreleases": "Популярные новинки",
-        "homepage_default_tab_topsellers": "Лидеры продаж",
         "homepage_default_tab_upcoming": "Скоро выйдут",
         "homepage_default_tab_specials": "Скидки",
         "wishlist": "Из вашего списка желаемого",
@@ -416,7 +415,8 @@
         "show_players_info": "Показывать информацию о количестве игроков",
         "friends_and_groups": "Друзья и группы",
         "friends_append_nickname": "Присвоить ники к именам друзей",
-        "collection_banner_not_owned": "Показывать баннер «В коллекции» только тогда, когда у меня нет игры в Steam"
+        "collection_banner_not_owned": "Показывать баннер «В коллекции» только тогда, когда у меня нет игры в Steam",
+        "homepage_default_tab_free": "Популярные бесплатные игры"
     },
     "ready": {
         "loading": "Augmented Steam загружается...",

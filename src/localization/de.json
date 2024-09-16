@@ -331,7 +331,6 @@
         "homepage_default_tab": "Standard-Startseiten-Tab",
         "homepage_default_tab_remember": "Vorheriges merken",
         "homepage_default_tab_newreleases": "Beliebte Neuheiten",
-        "homepage_default_tab_topsellers": "Topseller",
         "homepage_default_tab_upcoming": "Beliebt und bald verfügbar",
         "homepage_default_tab_specials": "Sonderangebote",
         "wishlist": "Artikel auf Ihrer Wunschliste",
@@ -413,7 +412,10 @@
         "about_desc_links": "Besuchen Sie für weitere Informationen die __Website__ der Erweiterung oder unseren __Discord__.",
         "footer_fork": "ein Fork von IsThereAnyDeal",
         "footer_author": "Originalautor jshackles",
-        "show_players_info": "Informationen zur Spielerzahl anzeigen"
+        "show_players_info": "Informationen zur Spielerzahl anzeigen",
+        "friends_and_groups": "Freunde und Gruppen",
+        "friends_append_nickname": "Spitznamen an Namen von Freunden anhängen",
+        "collection_banner_not_owned": "Das Banner „In Sammlung“ nur anzeigen, wenn ich das Spiel nicht auf Steam besitze"
     },
     "ready": {
         "loading": "Augmented Steam lädt Daten ...",
@@ -460,7 +462,9 @@
         "info": {
             "itad-steam": "Wenn Sie Augmented Steam mit IsThereAnyDeal verbinden, können Sie Hervorhebungen und das Tagging von Augmented Steam auf Spiele in Ihrer Warteliste und Sammlung anwenden, auch wenn Sie diese nicht auf Steam besitzen.",
             "steam-itad": "Außerdem ist es möglich, Spiele aus Ihrer Steam-Bibliothek und/oder Wunschliste in IsThereAnyDeal zu importieren, um die Genauigkeit zu verbessern (z. B. DLCs oder nicht gelistete Spiele). Derzeit kann diese Funktion nur Titel hinzufügen, nicht entfernen, sodass es kein Ersatz für die integrierte Synchronisation von IsThereAnyDeal ist, sondern eine Ergänzung dazu."
-        }
+        },
+        "enable_sync_library": "Synchronisation der Bibliothek aktivieren",
+        "enable_sync_wishlist": "Synchronisation der Wunschliste aktivieren"
     },
     "tradeoffer": {
         "num_item": "__num__ Gegenstand",
@@ -511,7 +515,20 @@
         "close_on_storage_desc": "Augmented Steam steht kurz davor, mit dem aktuellen Speicheradapter keine Benutzernotizen mehr speichern zu können (~ __perc__ % Speicherverbrauch).",
         "storage_warning_desc": "Sie können wählen, ob Sie Ihre Notizen in einer lokalen Datenbank speichern (ohne Synchronisation) oder weiterhin die Speichermethode Ihres Browsers verwenden wollen (wo neue Notizen nur hinzugefügt werden können, wenn Sie alte löschen).",
         "save_synced_storage": "Synchronisierten Speicher weiter verwenden",
-        "save_local": "Notizen lokal speichern"
+        "save_local": "Notizen lokal speichern",
+        "sync_option": "Notizen automatisch synchronisieren",
+        "sync_info_1": "Sie können Ihre Notizen zwischen Augmented Steam und IsThereAnyDeal synchronisieren. Falls Sie die automatische Synchronisation aktivieren, werden die Notizen in regelmäßigen Abständen von ITAD abgerufen. Bearbeitungen über Augmented Steam werden sofort in ITAD gespiegelt.",
+        "sync_info_2": "Sie können Notizen auch manuell zwischen Augmented Steam und IsThereAnyDeal übertragen. Wir empfehlen Ihnen, dies zu tun, bevor Sie die automatische Synchronisation aktivieren, um sicherzustellen, dass die richtige Version der Notiz verwendet wird, falls Sie verschiedene Notizen für dasselbe Spiel gespeichert haben.",
+        "sync_info_3": "Sie können alle Ihre Notizen in der Rubrik „Notizen und Tags“ auf IsThereAnyDeal sehen.",
+        "sync_button_push": "Notizen zu \nIsThereAnyDeal übertragen",
+        "sync_button_pull": "Notizen von \nIsThereAnyDeal abrufen",
+        "sync_pulled": "__n__ Notiz(en) wurden von IsThereAnyDeal abgerufen",
+        "sync_pushed": "__n__ Notiz(en) wurden zu IsThereAnyDeal übertragen",
+        "sync_failed": "__n__ Notiz(en) konnten nicht synchronisiert werden",
+        "sync_error": "Ihre Notiz konnte nicht synchronisiert werden",
+        "sync_error_empty": "Notiz ist leer",
+        "sync_error_unknown": "ITAD kennt dieses Spiel nicht",
+        "sync_error_length": "Notiz ist zu lang (__length__, Max: __max__)"
     },
     "queue": {
         "new": "Neue Liste",
@@ -614,7 +631,7 @@
     "awards": "Auszeichnungen",
     "cards_remain": "Geringste verbleibende Karten zur Vervollständigung des Sets",
     "remove_from_waitlist_tooltip": "Von Warteliste entfernen",
-    "remove_from_wishlist_and_waitlist_tooltip": "Sowohl von Wunsch- als auch von Warteliste entfernen",
+    "remove_from_wishlist_and_waitlist_tooltip": "Von Wunsch- als auch von Warteliste entfernen",
     "on_wishlist_and_waitlist": "Auf Wunsch- und Warteliste",
     "remove": "Entfernen",
     "countries": {
@@ -862,5 +879,10 @@
     "using_language": "Sie verwenden Steam in __current__.",
     "thewordunknown": "Unbekannt",
     "badge_level": "Level __level__",
-    "ignored_owned": "Ignorierte, da auf anderer Plattform gespielte Spiele"
+    "ignored_owned": "Ignorierte, da auf anderer Plattform gespielte Spiele",
+    "owned_collection": "__gametitle__ ist bereits in Ihrer IsThereAnyDeal-Sammlung",
+    "add_fullgame_to_wishlist": "Komplettes Spiel zur Wunschliste hinzufügen",
+    "add_fullgame_to_waitlist": "Komplettes Spiel zur Warteliste hinzufügen",
+    "remove_fullgame_from_waitlist_tooltip": "Komplettes Spiel von Warteliste entfernen",
+    "remove_fullgame_from_wishlist_and_waitlist_tooltip": "Komplettes Spiel sowohl von Wunsch- als auch von Warteliste entfernen"
 }
