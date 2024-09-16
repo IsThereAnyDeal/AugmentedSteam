@@ -23,7 +23,7 @@ import LocalStorage from "@Core/Storage/LocalStorage";
 import TimeUtils from "@Core/Utils/TimeUtils";
 import {Unrecognized} from "@Background/background";
 import {__userNote_syncErrorEmpty, __userNote_syncErrorLength, __userNote_syncErrorUnknown} from "@Strings/_strings";
-import UserNotesAdapter from "@Content/Modules/UserNotes/UserNotesAdapter";
+import SyncedStorageAdapter from "@Content/Modules/UserNotes/Adapters/SyncedStorageAdapter";
 
 const MaxNoteLength = 250;
 const RequiredScopes = [
@@ -437,14 +437,37 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
         );
 
         const steamIds = await this.fetchSteamIds([...notes.keys()]);
-        const adapter = UserNotesAdapter.getAdapter();
+
+        const result: Map<number, string> = new Map();
         for (let [steamId, gid] of steamIds) {
             if (!steamId.startsWith("app/")) {
                 continue;
             }
 
             const appid = Number(steamId.substring(4));
-            await adapter.set(appid, notes.get(gid)!);
+            const note = notes.get(gid)!;
+
+            result.set(appid, note);
+        }
+
+        switch(Settings.user_notes_adapter) {
+            case "synced_storage":
+                /**
+                 * A little bit of hack, but SyncedStorageAdapter may be used in Background,
+                 * and it does better handling that I would want to do here.
+                 * Synced Storage should be removed in future versions.
+                 */
+                const adapter = new SyncedStorageAdapter();
+                for (const [appid, note] of result) {
+                    await adapter.set(appid, note);
+                }
+                break;
+
+            case "idb":
+                await IndexedDB.putMany("notes",
+                    Object.entries(result).map(([appid, note]) => [Number(appid), note])
+                );
+                break;
         }
 
         await IndexedDB.setStoreExpiry("notes", TTL);
