@@ -6,8 +6,7 @@ import FWishlistHighlights from "./FWishlistHighlights";
 import FWishlistITADPrices from "./FWishlistITADPrices";
 import FWishlistUserNotes from "./FWishlistUserNotes";
 import FWishlistStats from "./FWishlistStats";
-import FEmptyWishlist from "./FEmptyWishlist";
-import FExportWishlist from "./FExportWishlist";
+import FWishlistActionButtons from "./FWishlistActionButtons";
 import FKeepEditableRanking from "./FKeepEditableRanking";
 import FOneClickRemoveFromWishlist from "./FOneClickRemoveFromWishlist";
 import FWishlistProfileLink from "./FWishlistProfileLink";
@@ -16,7 +15,7 @@ import ContextType from "@Content/Modules/Context/ContextType";
 import User from "@Content/Modules/User";
 import ASEventHandler from "@Content/Modules/ASEventHandler";
 
-interface WishlistEntry {
+export interface WishlistEntry {
     appid: number,
     priority: number,
     added: number
@@ -43,8 +42,7 @@ export default class CWishlist extends CStoreBase {
                 FWishlistITADPrices,
                 FWishlistUserNotes,
                 FWishlistStats,
-                FEmptyWishlist,
-                FExportWishlist,
+                FWishlistActionButtons,
                 FKeepEditableRanking,
                 FOneClickRemoveFromWishlist,
                 FWishlistProfileLink,
@@ -64,9 +62,6 @@ export default class CWishlist extends CStoreBase {
             const myWishlistUrlRegex = new RegExp(`^${myWishlistUrl}([/#]|$)`);
             this.myWishlist = myWishlistUrlRegex.test(window.location.href) || window.location.href.includes(`/profiles/${User.steamId}`);
         }
-
-        // Maintain the order of the buttons
-        this.dependency(FEmptyWishlist, [FExportWishlist, true]);
     }
 
     override async applyFeatures(): Promise<void> {

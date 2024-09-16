@@ -1,13 +1,11 @@
 import Downloader from "@Core/Downloader";
 import {L} from "@Core/Localization/Localization";
 import {__export_copyClipboard, __export_download, __export_wishlist,} from "@Strings/_strings";
-import Feature from "@Content/Modules/Context/Feature";
-import type CWishlist from "@Content/Features/Store/Wishlist/CWishlist";
-import HTML from "@Core/Html/Html";
 import SteamFacade from "@Content/Modules/Facades/SteamFacade";
 import UserNotes from "@Content/Features/Store/Common/UserNotes/UserNotes";
 import Clipboard from "@Content/Modules/Clipboard";
 import ExportWishlistForm from "@Content/Features/Store/Wishlist/Components/ExportWishlistForm.svelte";
+import CustomModal from "@Core/CustomModal";
 
 type WishlistData = Array<[string, {
     name: string,
@@ -105,28 +103,24 @@ class WishlistExporter {
 }
 
 
-export default class FExportWishlist extends Feature<CWishlist> {
+export default class ExportWishlist {
 
-    private type: "text"|"json" = "text";
-    private format: string = "%title%";
+    private static type: "text"|"json" = "text";
+    private static format: string = "%title%";
 
-    override apply(): void {
-        HTML.afterBegin("#cart_status_data", `<div class="es-wbtn" id="es_export_wishlist"><div>${L(__export_wishlist)}</div></div>`);
-
-        document.querySelector("#es_export_wishlist")!.addEventListener("click", () => {
-            this.showDialog();
-        });
-    }
-
-    private async showDialog(): Promise<void> {
+    static async showDialog(): Promise<void> {
 
         let form: ExportWishlistForm|undefined;
 
-        const observer = new MutationObserver(() => {
-            const modal = document.querySelector("#as_export_form");
-            if (modal) {
+        const response = await CustomModal({
+            title: L(__export_wishlist),
+            options: {
+                okButton: L(__export_download),
+                secondaryActionButton: L(__export_copyClipboard)
+            },
+            modalFn: (target) => {
                 form = new ExportWishlistForm({
-                    target: modal,
+                    target,
                     props: {
                         type: this.type,
                         format: this.format
@@ -136,22 +130,9 @@ export default class FExportWishlist extends Feature<CWishlist> {
                     this.format = form!.format;
                     this.type = form!.type;
                 });
-                observer.disconnect();
+                return form;
             }
         });
-        observer.observe(document.body, {
-            childList: true
-        });
-
-        const response = await SteamFacade.showConfirmDialog(
-            L(__export_wishlist),
-            `<div id="as_export_form" style="width:580px"></div>`,
-            {
-                okButton: L(__export_download),
-                secondaryActionButton: L(__export_copyClipboard)
-            });
-
-        form?.$destroy();
 
         if (response === "CANCEL") {
             return;

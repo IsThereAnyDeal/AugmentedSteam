@@ -889,41 +889,6 @@ video.highlight_movie:hover + .html5_video_overlay {
 }
 
 /***************************************
- * Wishlist
- * FEmptyWishlist/FExportWishlist
- **************************************/
-#cart_status_data {
-  display: flex;
-  align-items: center;
-}
-
-.es-wbtn {
-  color: #fff;
-  float: right;
-  cursor: pointer;
-  font-size: 11px;
-  text-transform: uppercase;
-  padding: 0 25px;
-  line-height: 20px;
-}
-#es_empty_wishlist {
-  margin-right: 3px;
-  background-color: #bf5a5a;
-}
-#es_empty_wishlist:hover {
-  background-color: #ffd1d1;
-  color: black;
-}
-#es_export_wishlist {
-  background-color: #6c94a0;
-  margin-right: 15px;
-}
-#es_export_wishlist:hover {
-  background-color: #dbdee1;
-  color: black;
-}
-
-/***************************************
  * App pages
  * Common/UserNotes
  **************************************/
