@@ -17,6 +17,7 @@
          */
         input.addEventListener("keydown", e => {
             if (e.key === "Enter" && !e.shiftKey) {
+                input.dispatchEvent(new Event("change")); // Workaround for FF
                 document.querySelector<HTMLElement>(".newmodal_buttons > .btn_medium")?.click();
             }
         });
