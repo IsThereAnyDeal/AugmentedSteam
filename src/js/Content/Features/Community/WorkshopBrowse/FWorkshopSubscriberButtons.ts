@@ -75,7 +75,6 @@ export default class FWorkshopSubscriberButtons extends Feature<CWorkshopBrowse>
             return;
         }
 
-        SteamFacade.dismissActiveModal();
         const waitDialog = new BlockingWaitDialog(
             this._statusTitle,
             () => this.getStatus()
