@@ -128,18 +128,19 @@ export default class FWorkshopFileSizes extends Feature<CMyWorkshop> {
         this._addFileSizes(); // Add file sizes now that data has been fetched
     }
 
-    private getStatus(): string {
-        let statusString = L(__calcWorkshopSize_calcLoading, {
+    private getStatus(): string[] {
+        const status = [];
+
+        status.push(L(__calcWorkshopSize_calcLoading, {
             "i": this._completed,
             "count": this._total
-        });
+        }));
 
         if (this._failed > 0) {
-            statusString += "<br>";
-            statusString += L(__workshop_failed, {"n": this._failed});
+            status.push(L(__workshop_failed, {"n": this._failed}));
         }
 
-        return statusString;
+        return status;
     }
 
     _getFileSizeStr(size: number): string {
