@@ -1,39 +1,52 @@
-import HTML from "@Core/Html/Html";
 import SteamFacade from "@Content/Modules/Facades/SteamFacade";
+import type {SvelteComponent} from "svelte";
+import BlockingWaitModal from "./BlockingWaitModal.svelte";
 
-let dialogCounter: number = 0;
+let counter: number = 0;
 
 export default class BlockingWaitDialog {
 
-    private readonly id: string;
+    private readonly modalId: string;
+    private modalComponent: SvelteComponent | undefined;
 
     constructor(
         private readonly title: string,
-        private readonly statusFn: () => string
+        private readonly statusFn: () => string|string[]
     ) {
-        this.id = `as_wait_dialog_${++dialogCounter}`;
-    }
-
-    private getContainer(): HTMLElement|null {
-        return document.querySelector("#" + this.id);
+        this.modalId = `as_wait_dialog-${++counter}`;
     }
 
     async update(): Promise<void> {
-        const container = this.getContainer();
-        if (container) {
-            HTML.inner(container, this.statusFn());
+        if (this.modalComponent) {
+            this.modalComponent.status = this.statusFn();
         } else {
+            const observer = new MutationObserver(() => {
+                const target = document.querySelector<HTMLDivElement>("#" + this.modalId);
+                if (target) {
+                    this.modalComponent = new BlockingWaitModal({
+                        target,
+                        props: {
+                            status: this.statusFn()
+                        }
+                    });
+                    observer.disconnect();
+                }
+            });
+            observer.observe(document.body, {
+                childList: true
+            });
+
             await SteamFacade.showBlockingWaitDialog(
                 this.title,
-                `<div id="${this.id}">${this.statusFn()}</div>`
+                `<div id="${this.modalId}"></div>`
             );
         }
     }
 
     dismiss(): void {
-        const container = this.getContainer();
-        if (container) {
-            SteamFacade.dismissActiveModal(this.id);
+        if (this.modalComponent) {
+            this.modalComponent.$destroy();
+            SteamFacade.dismissActiveModal(this.modalId);
         }
     }
 }
