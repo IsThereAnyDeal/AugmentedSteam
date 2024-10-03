@@ -32,7 +32,8 @@ export class SyncedStorage<Schema extends StorageSchema> extends Storage<ns.Sync
     }
 
     get QUOTA_BYTES_PER_ITEM(): number {
-        return browser.storage.sync.QUOTA_BYTES_PER_ITEM;
+        // see https://github.com/DefinitelyTyped/DefinitelyTyped/discussions/66696
+        return browser.storage.sync.QUOTA_BYTES_PER_ITEM ?? 8192;
     }
 }
 
