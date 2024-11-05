@@ -48,7 +48,7 @@
 
         const confirm = await SteamFacade.showConfirmDialog(
             L(__playGame, {gamename}),
-            `<img src="//cdn.cloudflare.steamstatic.com/steam/apps/${gameid}/header.jpg">`,
+            `<img src="//shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/${gameid}/header.jpg">`,
             {
                 secondaryActionButton: L(__visitStore)
             }

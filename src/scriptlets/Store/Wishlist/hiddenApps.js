@@ -16,7 +16,7 @@
     const html = (window.asHiddenApps ??= hiddenApps).map(appid => {
         return `<div class="as-wl-remove-row" data-appid="${appid}">
                 <a href="//steamcommunity.com/app/${appid}/discussions/" target="_blank">
-                    <img src="//cdn.cloudflare.steamstatic.com/steam/apps/${appid}/header_292x136.jpg" loading="lazy">
+                    <img src="//shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/${appid}/header_292x136.jpg" loading="lazy">
                 </a>
                 <a href="https://isthereanydeal.com/steam/app/${appid}/" target="_blank"><img src="${icons.itad}" title="ITAD"></a>
                 <a href="https://steamdb.info/app/${appid}/" target="_blank"><img src="${icons.steamdb}" title="SteamDB"></a>
