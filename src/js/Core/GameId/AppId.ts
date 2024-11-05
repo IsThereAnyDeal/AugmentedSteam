@@ -9,8 +9,8 @@ export default class AppId {
     }
 
     static fromCDNUrl(url: string): number|null {
-        const CDNRegex_1 = /(?:cdn\.(?:akamai|cloudflare)\.steamstatic\.com\/steam|steamcdn-a\.akamaihd\.net\/steam|steamcommunity\/public\/images)\/apps\/(\d+)\//;
-        const CDNRegex_2 = /shared\.(?:akamai|cloudflare)\.steamstatic\.com\/store_item_assets\/steam\/apps\/(\d+)\//;
+        const CDNRegex_1 = /(?:cdn\.(?:(?:akamai|cloudflare|fastly)\.)?steamstatic\.com\/steam|steamcdn-a\.akamaihd\.net\/steam|steamcommunity\/public\/images)\/apps\/(\d+)\//;
+        const CDNRegex_2 = /shared\.(?:(?:akamai|cloudflare|fastly)\.)?steamstatic\.com\/store_item_assets\/steam\/apps\/(\d+)\//;
         const m = url.match(CDNRegex_1) ?? url.match(CDNRegex_2);
         return m && m[1] !== undefined
             ? Number(m[1])
