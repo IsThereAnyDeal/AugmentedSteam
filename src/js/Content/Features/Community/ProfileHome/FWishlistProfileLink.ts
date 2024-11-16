@@ -6,7 +6,9 @@ import Settings from "@Options/Data/Settings";
 export default class FWishlistProfileLink extends Feature<CProfileHome> {
 
     override checkPrerequisites(): boolean {
-        return !this.context.isPrivateProfile && Settings.show_wishlist_link;
+        return !this.context.isPrivateProfile
+            && this.context.steamId !== null
+            && Settings.show_wishlist_link;
     }
 
     override async apply(): Promise<void> {
@@ -14,7 +16,10 @@ export default class FWishlistProfileLink extends Feature<CProfileHome> {
         const node = document.querySelector(".profile_item_links .profile_count_link")!;
         new self_({
             target: node.parentElement!,
-            anchor: node.nextElementSibling!
+            anchor: node.nextElementSibling!,
+            props: {
+                steamid: this.context.steamId!
+            }
         });
     }
 }
