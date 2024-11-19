@@ -1,6 +1,6 @@
 import Background from "@Core/Background";
 import {EAction} from "@Background/EAction";
-import type {TAppDetail, TDynamicStoreStatusResponse, TFetchWishlistResponse} from "@Background/Modules/Store/_types";
+import type {TAppDetail, TDynamicStoreStatusResponse} from "@Background/Modules/Store/_types";
 
 export default class SteamStoreApiFacade {
 
@@ -10,10 +10,6 @@ export default class SteamStoreApiFacade {
 
     static wishlistRemove(appid: number): Promise<void> {
         return Background.send(EAction.Wishlist_Remove, {appid});
-    }
-
-    static fetchWishlistCount(path: string): Promise<TFetchWishlistResponse> {
-        return Background.send(EAction.Wishlists, {path});
     }
 
     static fetchAppDetails(appid: number, filter: string|undefined=undefined): Promise<TAppDetail|null> {

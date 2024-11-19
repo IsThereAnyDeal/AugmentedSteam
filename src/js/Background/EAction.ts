@@ -35,7 +35,6 @@ export enum EAction {
 
     Wishlist_Add = "wishlist.add",
     Wishlist_Remove = "wishlist.remove",
-    Wishlists = "wishlists",
     AppDetails = "appdetails",
     Currency = "currency",
     SessionId = "sessionid",

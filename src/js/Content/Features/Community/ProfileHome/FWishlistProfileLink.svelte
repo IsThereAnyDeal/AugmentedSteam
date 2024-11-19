@@ -1,9 +1,11 @@
 <script lang="ts">
     import {onMount} from "svelte";
     import {__wishlist} from "@Strings/_strings";
-    import SteamStoreApiFacade from "@Content/Modules/Facades/SteamStoreApiFacade";
-    import Settings from "@Options/Data/Settings";
     import {L} from "@Core/Localization/Localization";
+    import Settings from "@Options/Data/Settings";
+    import RequestData from "@Content/Modules/RequestData";
+
+    export let steamid: string;
 
     let countPromise: Promise<string|null> = Promise.resolve(null);
 
@@ -16,11 +18,17 @@
                     return valueNode.textContent!.trim();
                 }
 
-                const count = await SteamStoreApiFacade.fetchWishlistCount(window.location.pathname);
-                if (count !== null) {
+                const data = await RequestData.getJson<{
+                    response: {
+                        count: number
+                    }
+                }>(`https://api.steampowered.com/IWishlistService/GetWishlistItemCount/v1/?steamid=${steamid}`, {credentials: "omit"});
+                if (data.response.count) {
+                    // Don't show if count is 0
                     const formatter = new Intl.NumberFormat(document.documentElement.lang || navigator.language);
-                    return formatter.format(count);
+                    return formatter.format(data.response.count);
                 }
+
                 return null;
             })();
         }

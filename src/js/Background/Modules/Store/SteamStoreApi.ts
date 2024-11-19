@@ -4,7 +4,6 @@ import IndexedDB from "@Background/Db/IndexedDB";
 import type {
     TAppDetail,
     TDynamicStoreStatusResponse,
-    TFetchWishlistResponse,
     TPackageDetail,
     TWishlistGame
 } from "./_types";
@@ -178,13 +177,6 @@ export default class SteamStoreApi extends Api implements MessageHandlerInterfac
         return HTMLParser.getStringVariable("g_sessionID", html);
     }
 
-    private async fetchWishlistCount(path: string): Promise<TFetchWishlistResponse> {
-        const url = this.getUrl(`/wishlist${path}`);
-        const html = await this.fetchPage(url);
-        const data = HTMLParser.getArrayVariable<TWishlistGame>("g_rgWishlistData", html);
-        return data?.length ?? null;
-    }
-
     private async fetchPurchaseDates(lang: string): Promise<Array<[string, string]>> {
         const url = this.getUrl("/account/licenses/", {"l": lang});
         const html = await this.fetchPage(url);
@@ -336,9 +328,6 @@ export default class SteamStoreApi extends Api implements MessageHandlerInterfac
 
             case EAction.Wishlist_Remove:
                 return this.wishlistRemove(message.params.appid);
-
-            case EAction.Wishlists:
-                return this.fetchWishlistCount(message.params.path);
 
             case EAction.AppDetails:
                 return this.fetchAppDetails(message.params.appid, message.params.filter ?? undefined);
