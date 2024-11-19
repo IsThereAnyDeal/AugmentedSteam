@@ -5,7 +5,7 @@ export default class HTML {
     static formatUrl(link: string): string {
         const protocolReg = /^[a-z]+:\/\//;
         const _link = protocolReg.test(link) ? link : `//${link}`;
-        return this.escape(_link);
+        return encodeURI(_link);
     }
 
     static escape(str: string): string {
