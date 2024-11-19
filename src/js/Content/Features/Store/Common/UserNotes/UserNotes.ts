@@ -20,7 +20,7 @@ import Settings from "@Options/Data/Settings";
 import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";
 import SteamFacade from "@Content/Modules/Facades/SteamFacade";
 import NotesForm from "./NotesForm.svelte";
-import CustomModal from "@Core/CustomModal";
+import CustomModal from "@Core/Modals/CustomModal";
 
 export default class UserNotes {
 
