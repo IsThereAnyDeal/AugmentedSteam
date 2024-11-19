@@ -154,15 +154,16 @@ export default class FWorkshopSubscriberButtons extends Feature<CWorkshopBrowse>
         return false;
     }
 
-    private getStatus(): string {
-        let status = L(this._method === "subscribe" ? __workshop_subscribeLoading : __workshop_unsubscribeLoading, {
+    private getStatus(): string[] {
+        const status = [];
+
+        status.push(L(this._method === "subscribe" ? __workshop_subscribeLoading : __workshop_unsubscribeLoading, {
             "i": this._completed,
             "count": this._total
-        });
+        }));
 
         if (this._failed > 0) {
-            status += "<br>";
-            status += L(__workshop_failed, {"n": this._failed});
+            status.push(L(__workshop_failed, {"n": this._failed}));
         }
 
         return status;
