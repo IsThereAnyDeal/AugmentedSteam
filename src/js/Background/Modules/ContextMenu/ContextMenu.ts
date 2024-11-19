@@ -92,11 +92,11 @@ export default class ContextMenu {
         await SettingsStore.init();
         await Localization.init();
 
-        for (const [option, entry] of Object.entries(ContextMenu.queryLinks)) {
-            let [locale, query_, enabled] = entry;
+        for (const [id, menuItem] of Object.entries(ContextMenu.queryLinks)) {
+            const [locale, query_, enabled] = menuItem;
 
             browser.contextMenus.create({
-                id: option,
+                id,
                 title: L(locale, {"query": "%s"}),
                 contexts: ["selection"],
                 visible: enabled()
