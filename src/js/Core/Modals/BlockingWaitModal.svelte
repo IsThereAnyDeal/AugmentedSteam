@@ -1,7 +1,10 @@
 <svelte:options accessors />
 
 <script lang="ts">
-    export let status: string|string[];
+    import {__wait} from "@Strings/_strings";
+    import {L} from "@Core/Localization/Localization";
+
+    export let status: string|string[] = L(__wait);
 </script>
 
 

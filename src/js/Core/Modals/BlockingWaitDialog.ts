@@ -17,30 +17,21 @@ export default class BlockingWaitDialog {
     }
 
     async update(): Promise<void> {
-        if (this.modalComponent) {
-            this.modalComponent.status = this.statusFn();
-        } else {
-            const observer = new MutationObserver(() => {
-                const target = document.querySelector<HTMLDivElement>("#" + this.modalId);
-                if (target) {
-                    this.modalComponent = new BlockingWaitModal({
-                        target,
-                        props: {
-                            status: this.statusFn()
-                        }
-                    });
-                    observer.disconnect();
-                }
-            });
-            observer.observe(document.body, {
-                childList: true
-            });
-
+        if (!this.modalComponent) {
             await SteamFacade.showBlockingWaitDialog(
                 this.title,
                 `<div id="${this.modalId}"></div>`
             );
+
+            const target = document.querySelector<HTMLDivElement>("#" + this.modalId);
+            if (target) {
+                this.modalComponent = new BlockingWaitModal({target});
+            } else {
+                throw new Error("Failed to create blocking wait dialog");
+            }
         }
+
+        this.modalComponent.status = this.statusFn();
     }
 
     dismiss(): void {
