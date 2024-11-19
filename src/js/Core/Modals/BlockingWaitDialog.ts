@@ -30,10 +30,10 @@ export default class BlockingWaitDialog {
         }
     }
 
-     dismiss(): void {
+    dismiss(): void {
         const container = this.getContainer();
         if (container) {
-            SteamFacade.dismissActiveModal();
+            SteamFacade.dismissActiveModal(this.id);
         }
     }
 }

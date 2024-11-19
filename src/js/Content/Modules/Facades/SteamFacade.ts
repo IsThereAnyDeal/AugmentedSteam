@@ -57,8 +57,8 @@ export default class SteamFacade {
         ]);
     }
 
-    static dismissActiveModal() {
-        Messenger.call(MessageHandler.SteamFacade, "dismissActiveModal");
+    static dismissActiveModal(id?: string): void {
+        Messenger.call(MessageHandler.SteamFacade, "dismissActiveModal", [id]);
     }
 
     // menu

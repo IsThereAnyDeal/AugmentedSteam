@@ -51,8 +51,17 @@
             });
         }
 
-        static dismissActiveModal() {
-            CModal.DismissActiveModal();
+        static dismissActiveModal(id) {
+            if (id) {
+                for (const modal of CModal.s_rgModalStack) {
+                    if (modal.GetContent().find(`#${id}`).length > 0) {
+                        modal.Dismiss();
+                        break;
+                    }
+                }
+            } else {
+                CModal.DismissActiveModal();
+            }
         }
 
         // menu
