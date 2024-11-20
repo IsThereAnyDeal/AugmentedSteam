@@ -5,11 +5,31 @@
         // variables
 
         static global(name) {
-            return window[name];
+            const parts = name.split(".");
+            let result = window;
+            for (let part of parts) {
+                if (typeof result[part] === "undefined") {
+                    return undefined;
+                }
+                result = result[part];
+            }
+            return result;
         }
 
         static globalSet(name, value) {
             window[name] = value;
+        }
+
+        static globalExists(name) {
+            const parts = name.split(".");
+            let result = window;
+            for (let part of parts) {
+                if (!result[part]) {
+                    return false;
+                }
+                result = result[part];
+            }
+            return true;
         }
 
         // dialogs
