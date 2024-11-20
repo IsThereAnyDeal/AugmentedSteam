@@ -6,4 +6,4 @@
 import StorePage from "../../StorePage";
 import CLicenses from "./CLicenses";
 
-(new StorePage()).run(() => new CLicenses());
+(new StorePage(CLicenses)).run();

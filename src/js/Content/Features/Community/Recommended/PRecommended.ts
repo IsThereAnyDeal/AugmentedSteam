@@ -7,4 +7,4 @@
 import CommunityPage from "../../CommunityPage";
 import CRecommended from "./CRecommended";
 
-(new CommunityPage()).run(() => new CRecommended());
+(new CommunityPage(CRecommended)).run();

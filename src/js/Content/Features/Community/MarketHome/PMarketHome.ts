@@ -6,4 +6,4 @@
 import CommunityPage from "../../CommunityPage";
 import CMarketHome from "./CMarketHome";
 
-(new CommunityPage()).run(() => new CMarketHome());
+(new CommunityPage(CMarketHome)).run();

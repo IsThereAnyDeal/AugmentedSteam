@@ -21,4 +21,4 @@
 import CommunityPage from "../CommunityPage";
 import CCommunityBase from "./CCommunityBase";
 
-(new CommunityPage()).run(() => new CCommunityBase());
+(new CommunityPage(CCommunityBase)).run();

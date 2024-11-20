@@ -7,4 +7,4 @@
 import CommunityPage from "../../CommunityPage";
 import CApp from "./CApp";
 
-(new CommunityPage()).run(() => new CApp());
+(new CommunityPage(CApp)).run();

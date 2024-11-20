@@ -6,4 +6,4 @@
 import CommunityPage from "../../CommunityPage";
 import CProfileEdit from "./CProfileEdit";
 
-(new CommunityPage()).run(() => new CProfileEdit());
+(new CommunityPage(CProfileEdit)).run();

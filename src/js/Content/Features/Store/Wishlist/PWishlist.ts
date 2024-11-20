@@ -6,4 +6,4 @@
 import StorePage from "../../StorePage";
 import CWishlist from "./CWishlist";
 
-(new StorePage()).run(() => new CWishlist());
+(new StorePage(CWishlist)).run();

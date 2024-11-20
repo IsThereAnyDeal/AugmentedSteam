@@ -6,4 +6,4 @@
 import StorePage from "@Content/Features/StorePage";
 import CAgeCheck from "@Content/Features/Store/AgeCheck/CAgecheck";
 
-(new StorePage()).run(() => new CAgeCheck());
+(new StorePage(CAgeCheck)).run();

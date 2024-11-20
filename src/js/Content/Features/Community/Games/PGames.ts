@@ -7,4 +7,4 @@
 import CommunityPage from "../../CommunityPage";
 import CGames from "./CGames";
 
-(new CommunityPage()).run(() => new CGames());
+(new CommunityPage(CGames)).run();

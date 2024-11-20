@@ -6,4 +6,4 @@
 import CommunityPage from "../../CommunityPage";
 import CInventory from "./CInventory";
 
-(new CommunityPage()).run(() => new CInventory());
+(new CommunityPage(CInventory)).run();

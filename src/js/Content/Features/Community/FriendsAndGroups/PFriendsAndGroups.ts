@@ -8,4 +8,4 @@
 import CommunityPage from "../../CommunityPage";
 import CFriendsAndGroups from "./CFriendsAndGroups";
 
-(new CommunityPage()).run(() => new CFriendsAndGroups());
+(new CommunityPage(CFriendsAndGroups)).run();

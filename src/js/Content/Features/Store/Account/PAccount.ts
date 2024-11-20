@@ -7,4 +7,4 @@
 import StorePage from "@Content/Features/StorePage";
 import CAccount from "./CAccount";
 
-(new StorePage()).run(() => new CAccount());
+(new StorePage(CAccount)).run();

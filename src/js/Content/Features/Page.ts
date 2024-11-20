@@ -33,7 +33,11 @@ window.addEventListener("unhandledrejection", unhandledrejection);
 
 export default class Page {
 
-    async run(context: () => Context): Promise<void> {
+    constructor(
+        private readonly contextClass: new() => Context
+    ) {}
+
+    async run(): Promise<void> {
         if (!document.getElementById("global_header")) { return; }
 
         try {
@@ -65,6 +69,8 @@ export default class Page {
         AugmentedSteam.init();
         await ChangelogHandler.checkVersion();
         await ITAD.init();
-        await context().applyFeatures();
+
+        const context = new (this.contextClass)();
+        await context.applyFeatures();
     }
 }

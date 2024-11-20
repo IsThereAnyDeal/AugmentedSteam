@@ -6,4 +6,4 @@
 import CommunityPage from "../../CommunityPage";
 import CMyWorkshop from "./CMyWorkshop";
 
-(new CommunityPage()).run(() => new CMyWorkshop());
+(new CommunityPage(CMyWorkshop)).run();
