@@ -11,7 +11,7 @@ export default class ManifestBuilder {
     }
 
     contentScript(script) {
-        let {matches, excludes, js, css} = script;
+        let {matches, excludes, js, css, run_at, world} = script;
 
         if (!Array.isArray(matches) || matches.length === 0) {
             return;
@@ -32,6 +32,8 @@ export default class ManifestBuilder {
             css: css && Array.isArray(css) && css.length > 0
                 ? css
                 : undefined,
+            run_at,
+            world
         })
     }
 

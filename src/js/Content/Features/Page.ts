@@ -4,7 +4,6 @@ import Info from "@Core/Info";
 import Localization from "@Core/Localization/Localization";
 import {SettingsStore} from "@Options/Data/Settings";
 import ProgressBar from "@Content/Modules/Widgets/ProgressBar";
-import DOMHelper from "@Content/Modules/DOMHelper";
 import AugmentedSteam from "@Content/Modules/AugmentedSteam";
 import User from "@Content/Modules/User";
 import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
@@ -31,12 +30,6 @@ function unhandledrejection(e: PromiseRejectionEvent) {
     console.groupEnd();
 }
 window.addEventListener("unhandledrejection", unhandledrejection);
-
-/**
- *  Inject the SteamFacade class into the DOM, providing the same interface for the page context side
- *  TODO insert directly via manifest with "world": "MAIN"?
- */
-DOMHelper.insertScript("scriptlets/SteamScriptlet.js");
 
 export default class Page {
 

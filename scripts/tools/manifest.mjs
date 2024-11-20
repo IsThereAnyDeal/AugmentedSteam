@@ -42,5 +42,18 @@ export default {
         }
     ],
     homepage_url: "https://augmentedsteam.com/",
-    background: {}
+    background: {},
+    content_scripts: [
+        {
+            matches: [
+                "*://store.steampowered.com/*",
+                "*://steamcommunity.com/*"
+            ],
+            js: [
+                "scriptlets/SteamScriptlet.js"
+            ],
+            run_at: "document_start",
+            world: "MAIN"
+        }
+    ]
 };
