@@ -23,7 +23,7 @@ export default class CFriendsAndGroups extends CCommunityBase {
             FFriendsAppendNickname,
         ]);
 
-        this.myProfile = CommunityUtils.currentUserIsOwner();
+        this.myProfile = CommunityUtils.userIsOwner(this.user);
         this._moveSearchBar();
 
         document.addEventListener("as_subpageNav", () => {

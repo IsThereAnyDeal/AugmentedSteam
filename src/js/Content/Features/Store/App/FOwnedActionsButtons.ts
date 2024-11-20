@@ -1,6 +1,5 @@
 import Feature from "@Content/Modules/Context/Feature";
 import type CApp from "@Content/Features/Store/App/CApp";
-import User from "@Content/Modules/User";
 import Settings from "@Options/Data/Settings";
 import HTML from "@Core/Html/Html";
 import {__getHelp, __viewinclient, __viewInLibrary} from "@Strings/_strings";
@@ -9,7 +8,7 @@ import {L} from "@Core/Localization/Localization";
 export default class FOwnedActionsButtons extends Feature<CApp> {
 
     override checkPrerequisites(): boolean {
-        return User.isSignedIn
+        return this.context.user.isSignedIn
             && document.querySelector(".game_area_play_stats .already_owned_actions") !== null;
     }
 

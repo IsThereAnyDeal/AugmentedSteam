@@ -1,5 +1,5 @@
-import User from "@Content/Modules/User";
 import RequestData from "@Content/Modules/RequestData";
+import type UserInterface from "@Core/User/UserInterface";
 
 interface TAchievementProgress {
     appid: number,
@@ -12,7 +12,7 @@ interface TAchievementProgress {
 
 export default class SteamApi {
 
-    static async getAchievementsProgress(appid: number): Promise<TAchievementProgress> {
+    static async getAchievementsProgress(user: UserInterface, appid: number): Promise<TAchievementProgress> {
         let responseData: {
             response?: {
                 achievement_progress: Array<TAchievementProgress>
@@ -20,8 +20,8 @@ export default class SteamApi {
         };
 
         try {
-            const token = await User.getWebApiToken();
-            const steamId = User.steamId;
+            const token = await user.getWebApiToken();
+            const steamId = user.steamId;
 
             const response = await RequestData.post(
                 `https://api.steampowered.com/IPlayerService/GetAchievementsProgress/v1/?access_token=${token}`,

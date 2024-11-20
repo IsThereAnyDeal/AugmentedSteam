@@ -5,7 +5,7 @@ import Localization from "@Core/Localization/Localization";
 import {SettingsStore} from "@Options/Data/Settings";
 import ProgressBar from "@Content/Modules/Widgets/ProgressBar";
 import AugmentedSteam from "@Content/Modules/AugmentedSteam";
-import User from "@Content/Modules/User";
+import LegacyUser from "@Core/User/LegacyUser";
 import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
 import ChangelogHandler from "@Core/Update/ChangelogHandler";
 import ITAD from "@Content/Modules/ITAD";
@@ -14,6 +14,8 @@ import Environment, {ContextType} from "@Core/Environment";
 import LanguageFactory from "@Core/Localization/LanguageFactory";
 import ApplicationConfig from "@Core/AppConfig/ApplicationConfig";
 import Language from "@Core/Localization/Language";
+import UserFactory from "@Core/User/UserFactory";
+import type UserInterface from "@Core/User/UserInterface";
 
 Environment.CurrentContext = ContextType.ContentScript;
 
@@ -44,6 +46,7 @@ export default class Page {
         if (!document.getElementById("global_header")) { return; }
 
         let language: Language|null;
+        let user: UserInterface;
 
         try {
             // TODO What errors can be "suppressed" here?
@@ -57,10 +60,10 @@ export default class Page {
             const appConfig = (new ApplicationConfig()).load();
 
             language = (new LanguageFactory(appConfig)).createFromLegacy();
+            user = await (new UserFactory(appConfig)).createFromLegacy();
 
             await Promise.all([
                 Localization.init(language),
-                User.init(),
                 CurrencyManager.init()
             ]);
         } catch (err) {
@@ -79,12 +82,13 @@ export default class Page {
         );
 
         ProgressBar();
-        AugmentedSteam.init(language?.name ?? "english");
+        AugmentedSteam.init(language?.name ?? "english", user);
         await ChangelogHandler.checkVersion();
-        await ITAD.init();
+        await ITAD.init(user);
 
         const context = new (this.contextClass)();
         context.language = language;
+        context.user = user;
         await context.applyFeatures();
     }
 }

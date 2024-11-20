@@ -1,18 +1,21 @@
-import User from "@Content/Modules/User";
 import RequestData from "@Content/Modules/RequestData";
+import type UserInterface from "@Core/User/UserInterface";
 
 export default class Workshop {
 
-    static async changeSubscription(id: string, appid: number, method: string = "subscribe"): Promise<void>
-    {
-        if (!User.sessionId) {
+    constructor(
+        private readonly user: UserInterface
+    ) {}
+
+    async changeSubscription(id: string, appid: number, method: string = "subscribe"): Promise<void> {
+        if (!this.user.sessionId) {
             throw new Error();
         }
 
         const _method = method === "subscribe" ? method : "unsubscribe";
 
         const data = {
-            sessionid: User.sessionId,
+            sessionid: this.user.sessionId,
             appid: String(appid),
             id
         };

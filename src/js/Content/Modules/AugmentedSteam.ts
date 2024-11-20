@@ -6,9 +6,9 @@ import AugmentedSteamMenu from "@Content/Modules/Widgets/AugmentedSteamMenu.svel
 import CacheApiFacade from "@Content/Modules/Facades/CacheApiFacade";
 import AugmentedSteamWarnings from "@Content/Modules/Widgets/AugmentedSteamWarnings.svelte";
 import LocalStorage from "@Core/Storage/LocalStorage";
-import User from "@Content/Modules/User";
 import Language from "@Core/Localization/Language";
 import DynamicStore from "@Content/Modules/Data/DynamicStore";
+import type UserInterface from "@Core/User/UserInterface";
 
 export default class AugmentedSteam {
 
@@ -193,7 +193,7 @@ export default class AugmentedSteam {
         return CacheApiFacade.clearCache();
     }
 
-    static init(language: string) {
+    static init(language: string, user: UserInterface) {
         document.addEventListener("asRequestError", e => {
             const {detail} = e as CustomEvent;
             const name = detail.name ?? null;
@@ -211,7 +211,7 @@ export default class AugmentedSteam {
         this.handleInstallSteamButton();
         this.cartLink();
 
-        if (User.isSignedIn) {
+        if (user.isSignedIn) {
             this.addUsernameSubmenuLinks();
             this.addRedeemLink();
             this.bindLogout();

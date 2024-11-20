@@ -2,6 +2,7 @@ import Feature from "@Content/Modules/Context/Feature";
 import type ContextType from "@Content/Modules/Context/ContextType";
 import Errors from "@Core/Errors/Errors";
 import type Language from "@Core/Localization/Language";
+import type UserInterface from "@Core/User/UserInterface";
 
 export default class Context {
 
@@ -12,6 +13,7 @@ export default class Context {
 
     // TODO move to constructor param to catch issues more easily
     public language: Language|null = null;
+    public user: UserInterface;
 
     private stats = {
         completed: 0,

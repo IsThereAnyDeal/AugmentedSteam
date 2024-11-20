@@ -2,7 +2,6 @@ import FCustomizer from "../Common/FCustomizer";
 import FHomePageTab from "./FHomePageTab";
 import CStoreBase from "@Content/Features/Store/Common/CStoreBase";
 import ContextType from "@Content/Modules/Context/ContextType";
-import User from "@Content/Modules/User";
 
 export default class CStoreFront extends CStoreBase {
 
@@ -13,7 +12,7 @@ export default class CStoreFront extends CStoreBase {
             FHomePageTab,
         ]);
 
-        if (User.isSignedIn) { // TODO ITAD status
+        if (this.user.isSignedIn) { // TODO ITAD status
             this.monitorStoreFront();
         }
     }

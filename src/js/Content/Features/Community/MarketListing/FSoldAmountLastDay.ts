@@ -2,7 +2,6 @@ import {__soldLast_24} from "@Strings/_strings";
 import {L} from "@Core/Localization/Localization";
 import Feature from "@Content/Modules/Context/Feature";
 import type CMarketListing from "@Content/Features/Community/MarketListing/CMarketListing";
-import User from "@Content/Modules/User";
 import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
 import RequestData from "@Content/Modules/RequestData";
 import HTML from "@Core/Html/Html";
@@ -15,7 +14,7 @@ export default class FSoldAmountLastDay extends Feature<CMarketListing> {
 
     async apply() {
 
-        const country = User.storeCountry;
+        const country = this.context.user.storeCountry;
         const currencyNumber = CurrencyManager.getCurrencyInfo(CurrencyManager.storeCurrency).id;
 
         const data = await RequestData.getJson<{

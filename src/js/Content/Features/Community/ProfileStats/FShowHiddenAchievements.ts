@@ -4,7 +4,6 @@ import {L} from "@Core/Localization/Localization";
 import Feature from "@Content/Modules/Context/Feature";
 import type CProfileStats from "@Content/Features/Community/ProfileStats/CProfileStats";
 import HTML from "@Core/Html/Html";
-import User from "@Content/Modules/User";
 import RequestData from "@Content/Modules/RequestData";
 
 export default class FShowHiddenAchievements extends Feature<CProfileStats> {
@@ -78,7 +77,7 @@ export default class FShowHiddenAchievements extends Feature<CProfileStats> {
 
         const params = new URLSearchParams();
         params.set("format", "json");
-        params.set("access_token", await User.getWebApiToken());
+        params.set("access_token", await this.context.user.getWebApiToken());
         params.set("appid", String(appid));
         params.set("language", this.context.language?.name ?? "en");
         params.set("x_requested_with", "AugmentedSteam");

@@ -16,7 +16,6 @@ import {L} from "@Core/Localization/Localization";
 import type CFriendsAndGroups from "@Content/Features/Community/FriendsAndGroups/CFriendsAndGroups";
 import Feature from "@Content/Modules/Context/Feature";
 import HTML from "@Core/Html/Html";
-import User from "@Content/Modules/User";
 import RequestData from "@Content/Modules/RequestData";
 import Messenger from "@Content/Modules/Messaging/Messenger";
 import {MessageHandler} from "@Content/Modules/Messaging/MessageHandler";
@@ -105,7 +104,7 @@ export default class FGroupsManageButton extends Feature<CFriendsAndGroups> {
     }
 
     async _leaveGroups() {
-        this._endpoint = new URL("friends/action", User.profileUrl);
+        this._endpoint = new URL("friends/action", this.context.user.profileUrl);
         const selected: [string, HTMLElement][] = [];
 
         for (const group of document.querySelectorAll<HTMLElement>(".group_block.selected")) {
@@ -166,13 +165,13 @@ export default class FGroupsManageButton extends Feature<CFriendsAndGroups> {
     }
 
     _leaveGroup(id: string) {
-        if (!User.sessionId) {
+        if (!this.context.user.sessionId) {
             throw new Error("Unknown session id");
         }
 
         const data = {
-            "sessionid": User.sessionId,
-            "steamid": User.steamId,
+            "sessionid": this.context.user.sessionId,
+            "steamid": this.context.user.steamId,
             "ajax": "1",
             "action": "leave_group",
             "steamids[]": id

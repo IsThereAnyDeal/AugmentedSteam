@@ -2,7 +2,6 @@ import {__addNickname, __postHistory} from "@Strings/_strings";
 import {L} from "@Core/Localization/Localization";
 import type CProfileHome from "@Content/Features/Community/ProfileHome/CProfileHome";
 import Feature from "@Content/Modules/Context/Feature";
-import User from "@Content/Modules/User";
 import HTML from "@Core/Html/Html";
 import DOMHelper from "@Content/Modules/DOMHelper";
 
@@ -18,7 +17,7 @@ export default class FProfileDropdownOptions extends Feature<CProfileHome> {
     override apply(): void {
 
         // add nickname option for non-friends
-        if (User.isSignedIn) {
+        if (this.context.user.isSignedIn) {
 
             // Selects the "Add Friend" button (ID selector for unblocked, class selector for blocked users)
             if (document.querySelector("#btn_add_friend, .profile_header_actions > .btn_profile_action_disabled")) {

@@ -15,11 +15,11 @@
     } from "@Strings/_strings";
     import Config from "config";
     import SteamStoreApiFacade from "@Content/Modules/Facades/SteamStoreApiFacade";
-    import User from "@Content/Modules/User";
+    import LegacyUser from "@Core/User/LegacyUser";
     import DynamicStore from "@Content/Modules/Data/DynamicStore";
     import external from "@Content/externalLink";
 
-    const isSignedIn = User.isSignedIn;
+    const isSignedIn = LegacyUser.isSignedIn;
 
     function showMenu() {
         SteamFacade.showMenu("es_pulldown", "es_popup", "right", "bottom", true);

@@ -1,6 +1,6 @@
 import HTMLParser from "@Core/Html/HtmlParser";
-import TimeUtils from "@Core/Utils/TimeUtils";
 import type {IResettableTimer} from "@Core/Utils/TimeUtils";
+import TimeUtils from "@Core/Utils/TimeUtils";
 import FAlternativeLinuxIcon from "../Common/FAlternativeLinuxIcon";
 import FWishlistHighlights from "./FWishlistHighlights";
 import FWishlistITADPrices from "./FWishlistITADPrices";
@@ -13,7 +13,7 @@ import FOneClickRemoveFromWishlist from "./FOneClickRemoveFromWishlist";
 import FWishlistProfileLink from "./FWishlistProfileLink";
 import CStoreBase from "@Content/Features/Store/Common/CStoreBase";
 import ContextType from "@Content/Modules/Context/ContextType";
-import User from "@Content/Modules/User";
+import LegacyUser from "@Core/User/LegacyUser";
 import ASEventHandler from "@Content/Modules/ASEventHandler";
 
 interface WishlistEntry {
@@ -59,10 +59,10 @@ export default class CWishlist extends CStoreBase {
         this.wishlistData = wishlistData;
         this.myWishlist = false;
 
-        if (User.isSignedIn) {
-            const myWishlistUrl = User.profileUrl.replace("steamcommunity.com/", "store.steampowered.com/wishlist/").replace(/\/$/, "");
+        if (this.user.isSignedIn) {
+            const myWishlistUrl = this.user.profileUrl.replace("steamcommunity.com/", "store.steampowered.com/wishlist/").replace(/\/$/, "");
             const myWishlistUrlRegex = new RegExp(`^${myWishlistUrl}([/#]|$)`);
-            this.myWishlist = myWishlistUrlRegex.test(window.location.href) || window.location.href.includes(`/profiles/${User.steamId}`);
+            this.myWishlist = myWishlistUrlRegex.test(window.location.href) || window.location.href.includes(`/profiles/${this.user.steamId}`);
         }
 
         // Maintain the order of the buttons

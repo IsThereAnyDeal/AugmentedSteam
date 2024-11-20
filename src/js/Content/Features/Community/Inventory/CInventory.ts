@@ -55,7 +55,7 @@ export default class CInventory extends CCommunityBase {
             return;
         }
 
-        this.myInventory = CommunityUtils.currentUserIsOwner();
+        this.myInventory = CommunityUtils.userIsOwner(this.user);
 
         // @ts-ignore
         document.addEventListener("as_marketInfo", (e: CustomEvent<MarketInfo>) => {

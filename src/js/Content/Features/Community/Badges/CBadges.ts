@@ -23,7 +23,7 @@ export default class CBadges extends CCommunityBase {
             FBadgeCalculations,
         ]);
 
-        this.myProfile = CommunityUtils.currentUserIsOwner();
+        this.myProfile = CommunityUtils.userIsOwner(this.user);
         this.hasMultiplePages = document.querySelector(".profile_paging") !== null;
     }
 

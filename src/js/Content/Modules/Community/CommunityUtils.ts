@@ -1,9 +1,9 @@
-import User from "../User";
+import type UserInterface from "@Core/User/UserInterface";
 
 export default class CommunityUtils {
 
-    static currentUserIsOwner(): boolean {
-        if (!User.isSignedIn) {
+    static userIsOwner(user: UserInterface): boolean {
+        if (!user.isSignedIn) {
             return false;
         }
 
@@ -17,6 +17,6 @@ export default class CommunityUtils {
             profileLink += "/";
         }
 
-        return profileLink === User.profileUrl;
+        return profileLink === user.profileUrl;
     }
 }

@@ -49,7 +49,7 @@ export default class FITADPrices extends Feature<CApp|CSub|CBundle> {
     }
 
     override async apply(): Promise<void> {
-        const prices = new Prices();
+        const prices = new Prices(this.context.user);
 
         let subs: number[] = this.context.getAllSubids().map(Number);
         let bundles: number[] = [];

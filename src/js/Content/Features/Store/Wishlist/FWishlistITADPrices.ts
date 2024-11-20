@@ -33,7 +33,7 @@ export default class FWishlistITADPrices extends Feature<CWishlist> {
     }
 
     private callback(nodes: HTMLElement[]): void {
-        const handler = new Prices();
+        const handler = new Prices(this.context.user);
         const cachedPrices = this._cachedPrices;
 
         for (const node of nodes) {

@@ -6,7 +6,6 @@ import Settings from "@Options/Data/Settings";
 import HTML from "@Core/Html/Html";
 import DynamicStore from "@Content/Modules/Data/DynamicStore";
 import RequestData from "@Content/Modules/RequestData";
-import User from "@Content/Modules/User";
 import SteamFacade from "@Content/Modules/Facades/SteamFacade";
 import BlockingWaitDialog from "@Core/Modals/BlockingWaitDialog";
 
@@ -44,7 +43,7 @@ export default class FEmptyWishlist extends Feature<CWishlist> {
                 ++cur;
                 await waitDialog.update();
                 await RequestData.post("https://store.steampowered.com/api/removefromwishlist", {
-                    sessionid: User.sessionId!,
+                    sessionid: this.context.user.sessionId!,
                     appid: String(appid)
                 });
             }
