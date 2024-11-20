@@ -90,7 +90,7 @@ export default class ContextMenu {
 
     static async build(): Promise<void> {
         await SettingsStore.init();
-        await Localization.init();
+        await Localization.init(null);
 
         for (const [id, menuItem] of Object.entries(ContextMenu.queryLinks)) {
             const [locale, query_, enabled] = menuItem;

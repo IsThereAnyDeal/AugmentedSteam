@@ -1,4 +1,4 @@
-import {L} from "@Core/Localization/Localization";
+import Localization, {L} from "@Core/Localization/Localization";
 import {__activate, __cart, __games, __reviews, __viewinclient, __wishlist,} from "@Strings/_strings";
 import Settings from "@Options/Data/Settings";
 import HTML from "@Core/Html/Html";
@@ -108,20 +108,21 @@ export default class AugmentedSteam {
     /**
      * Display warning if browsing using a different language
      */
-    private static addLanguageWarning() {
+    private static async addLanguageWarning(language: string) {
         if (!Settings.showlanguagewarning) { return; }
 
-        const currentLanguage = Language.getCurrentSteamLanguage();
-        if (!currentLanguage) { return; }
-
         if (!Settings.showlanguagewarninglanguage) {
-            Settings.showlanguagewarninglanguage = currentLanguage;
+            Settings.showlanguagewarninglanguage = language;
         }
 
         const warningLanguage = Settings.showlanguagewarninglanguage;
-        if (currentLanguage === warningLanguage) { return; }
+        if (language === warningLanguage) { return; }
 
-        this.getWarningComponent().showLanguageWarning(currentLanguage, warningLanguage);
+        let locale = await Localization.load((new Language(warningLanguage)).code ?? "en");
+        const strings = locale.strings;
+
+        this.getWarningComponent()
+            .showLanguageWarning(strings, language, warningLanguage);
     }
 
     private static async addLoginWarning(type: string) {
@@ -192,7 +193,7 @@ export default class AugmentedSteam {
         return CacheApiFacade.clearCache();
     }
 
-    static init() {
+    static init(language: string) {
         document.addEventListener("asRequestError", e => {
             const {detail} = e as CustomEvent;
             const name = detail.name ?? null;
@@ -206,7 +207,7 @@ export default class AugmentedSteam {
         this.addBackToTop();
         this.focusSearchBox();
         this.addMenu();
-        this.addLanguageWarning();
+        this.addLanguageWarning(language);
         this.handleInstallSteamButton();
         this.cartLink();
 

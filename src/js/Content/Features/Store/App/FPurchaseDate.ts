@@ -3,7 +3,6 @@ import {__purchaseDate} from "@Strings/_strings";
 import type CApp from "@Content/Features/Store/App/CApp";
 import Feature from "@Content/Modules/Context/Feature";
 import User from "@Content/Modules/User";
-import Language from "@Core/Localization/Language";
 import Settings from "@Options/Data/Settings";
 
 export default class FPurchaseDate extends Feature<CApp> {
@@ -18,7 +17,7 @@ export default class FPurchaseDate extends Feature<CApp> {
     }
 
     async apply() {
-        const lang = Language.getCurrentSteamLanguage();
+        const lang = this.context.language?.name;
         if (!lang) {
             console.warn("Unknown language");
             return;

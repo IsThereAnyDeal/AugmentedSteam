@@ -1,14 +1,11 @@
 <script lang="ts">
-    import Language from "@Core/Localization/Language";
     import Settings from "@Options/Data/Settings";
     import ProfileLink from "@Content/Modules/Community/ProfileLink.svelte";
     import HTML from "@Core/Html/Html";
 
     export let steamId: string;
     export let clear: boolean;
-
-    // Add SteamRepCN link if language is Chinese
-    const language = Language.getCurrentSteamLanguage();
+    export let language: string|undefined; // Add SteamRepCN link if language is Chinese
 </script>
 
 

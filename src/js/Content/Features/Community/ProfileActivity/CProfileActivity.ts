@@ -33,7 +33,7 @@ export default class CProfileActivity extends CCommunityBase {
                     return;
                 }
                 this.onContent.dispatch(node);
-                EarlyAccessUtils.show(node.querySelectorAll(".blotter_gamepurchase_logo, .gameLogoHolder_default"));
+                EarlyAccessUtils.show(this.language, node.querySelectorAll(".blotter_gamepurchase_logo, .gameLogoHolder_default"));
                 SpamComments.handleAllCommentThreads(node);
             }
         }).observe(

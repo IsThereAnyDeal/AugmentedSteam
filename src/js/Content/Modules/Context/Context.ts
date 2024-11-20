@@ -1,6 +1,7 @@
 import Feature from "@Content/Modules/Context/Feature";
 import type ContextType from "@Content/Modules/Context/ContextType";
 import Errors from "@Core/Errors/Errors";
+import type Language from "@Core/Localization/Language";
 
 export default class Context {
 
@@ -8,6 +9,9 @@ export default class Context {
     private readonly featureMap: Map<Function, Feature<Context>> = new Map();
     private readonly promiseMap: Map<Function, Promise<boolean>> = new Map();
     private readonly dependencies: Map<Function, Map<Function, boolean>> = new Map();
+
+    // TODO move to constructor param to catch issues more easily
+    public language: Language|null = null;
 
     private stats = {
         completed: 0,

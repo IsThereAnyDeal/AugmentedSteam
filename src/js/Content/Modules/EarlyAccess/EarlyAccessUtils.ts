@@ -51,15 +51,15 @@ export default class EarlyAccessUtils {
     private static readonly selector = (window.location.hostname === "store.steampowered.com" ? this.storeSelectors : this.communitySelectors)
         .join(",");
 
-    public static async show(nodes?: NodeListOf<HTMLElement>|Array<HTMLElement>): Promise<void> {
-        if (!Settings.show_early_access) { return; }
+    public static async show(language: Language|null, nodes?: NodeListOf<HTMLElement>|Array<HTMLElement>): Promise<void> {
+        if (!Settings.show_early_access || !language) { return; }
 
         const _nodes: NodeListOf<HTMLElement>|Array<HTMLElement> = nodes ?? document.querySelectorAll(this.selector);
         if (_nodes.length === 0) { return; }
 
         // TODO add missing images for supported locales
         let imageName = "img/overlay/early_access_banner_english.png";
-        if (Language.isCurrentLanguageOneOf(
+        if (language.isOneOf(
             "brazilian",
             "french",
             "italian",
@@ -74,7 +74,7 @@ export default class EarlyAccessUtils {
             "tchinese",
             "thai"
         )) {
-            imageName = `img/overlay/early_access_banner_${Language.getCurrentSteamLanguage()}.png`;
+            imageName = `img/overlay/early_access_banner_${language.name}.png`;
         }
 
         const imageUrl = ExtensionResources.getURL(imageName);

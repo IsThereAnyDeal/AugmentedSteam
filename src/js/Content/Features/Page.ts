@@ -11,6 +11,9 @@ import ChangelogHandler from "@Core/Update/ChangelogHandler";
 import ITAD from "@Content/Modules/ITAD";
 import type Context from "@Content/Modules/Context/Context";
 import Environment, {ContextType} from "@Core/Environment";
+import LanguageFactory from "@Core/Localization/LanguageFactory";
+import ApplicationConfig from "@Core/AppConfig/ApplicationConfig";
+import Language from "@Core/Localization/Language";
 
 Environment.CurrentContext = ContextType.ContentScript;
 
@@ -40,6 +43,8 @@ export default class Page {
     async run(): Promise<void> {
         if (!document.getElementById("global_header")) { return; }
 
+        let language: Language|null;
+
         try {
             // TODO What errors can be "suppressed" here?
             try {
@@ -49,7 +54,15 @@ export default class Page {
                 console.error(err);
             }
 
-            await Promise.all([Localization.init(), User.init(), CurrencyManager.init()]);
+            const appConfig = (new ApplicationConfig()).load();
+
+            language = (new LanguageFactory(appConfig)).createFromLegacy();
+
+            await Promise.all([
+                Localization.init(language),
+                User.init(),
+                CurrencyManager.init()
+            ]);
         } catch (err) {
             console.group("Augmented Steam initialization");
             console.error("Failed to initialize Augmented Steam");
@@ -66,11 +79,12 @@ export default class Page {
         );
 
         ProgressBar();
-        AugmentedSteam.init();
+        AugmentedSteam.init(language?.name ?? "english");
         await ChangelogHandler.checkVersion();
         await ITAD.init();
 
         const context = new (this.contextClass)();
+        context.language = language;
         await context.applyFeatures();
     }
 }

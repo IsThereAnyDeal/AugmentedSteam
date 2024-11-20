@@ -105,6 +105,6 @@ export default class CStoreBase extends CBase {
 
     decorateStoreCapsules(nodes: NodeListOf<HTMLElement>|Array<HTMLElement>): void {
         HighlightsTagsUtils.highlightAndTag(nodes);
-        EarlyAccessUtils.show(nodes);
+        EarlyAccessUtils.show(this.language, nodes);
     }
 }

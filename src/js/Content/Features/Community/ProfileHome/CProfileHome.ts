@@ -59,7 +59,7 @@ export default class CProfileHome extends CCommunityBase {
                 });
         }
 
-        EarlyAccessUtils.show(document.querySelectorAll(".game_info_cap, .showcase_slot:not(.showcase_achievement)"));
+        EarlyAccessUtils.show(this.language, document.querySelectorAll(".game_info_cap, .showcase_slot:not(.showcase_achievement)"));
 
         // Need to wait on custom background and style (LNY2020 may set the background) to be fetched and set
         this.dependency(FPinnedBackground,

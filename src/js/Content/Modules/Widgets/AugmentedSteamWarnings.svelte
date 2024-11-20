@@ -1,11 +1,10 @@
 <script lang="ts">
-    import Localization, {L} from "@Core/Localization/Localization";
+    import {L} from "@Core/Localization/Localization";
     import {__loginWarning, __usingLanguage, __usingLanguageReturn} from "@Strings/_strings";
     import Settings from "@Options/Data/Settings";
     import Warning from "@Content/Modules/Widgets/Components/Warning.svelte";
     import LocalStorage from "@Core/Storage/LocalStorage";
     import SteamFacade from "@Content/Modules/Facades/SteamFacade";
-    import Language from "@Core/Localization/Language";
 
     let showLanguage: boolean = false;
     let showLogin: boolean = false;
@@ -17,11 +16,8 @@
     let page: string;
     let host: string;
 
-    export async function showLanguageWarning(currentLanguage: string, warningLanguage_: string): Promise<void> {
+    export async function showLanguageWarning(strings: Record<string, string>, currentLanguage: string, warningLanguage_: string): Promise<void> {
         warningLanguage = warningLanguage_;
-
-        let locale = await Localization.load(Language.getLanguageCode(warningLanguage));
-        const strings = locale.strings;
 
         usingLanguageLocale = strings[__usingLanguage]!
             .replace("__current__", strings[`options_lang_${currentLanguage}`] ?? currentLanguage);
