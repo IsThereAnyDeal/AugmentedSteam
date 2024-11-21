@@ -3,11 +3,7 @@ import Config from "config";
 import Info from "@Core/Info";
 import Localization from "@Core/Localization/Localization";
 import {SettingsStore} from "@Options/Data/Settings";
-import ProgressBar from "@Content/Modules/Widgets/ProgressBar";
-import AugmentedSteam from "@Content/Modules/AugmentedSteam";
 import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
-import ChangelogHandler from "@Core/Update/ChangelogHandler";
-import ITAD from "@Content/Modules/ITAD";
 import Context, {type ContextParams} from "@Content/Modules/Context/Context";
 import Environment, {ContextType} from "@Core/Environment";
 import Language from "@Core/Localization/Language";
@@ -46,6 +42,7 @@ export default abstract class Page {
      * Run any kind of checks we might need to do, to see if the page is properly loaded
      */
     protected abstract check(): boolean;
+    protected abstract preApply(language: Language|null, user: UserInterface): Promise<void>
 
     protected abstract getAppConfig(factory: AppConfigFactory): Promise<AppConfig>;
     protected abstract getLanguage(factory: LanguageFactory): Promise<Language|null>;
@@ -94,11 +91,7 @@ export default abstract class Page {
             "",
         );
 
-        ProgressBar();
-        AugmentedSteam.init(language?.name ?? "english", user);
-        await ChangelogHandler.checkVersion();
-        await ITAD.init(user);
-
+        await this.preApply(language, user);
         const context = new (this.contextClass)({language, user});
         await context.applyFeatures();
     }

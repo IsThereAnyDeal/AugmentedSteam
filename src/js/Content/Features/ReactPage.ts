@@ -7,9 +7,12 @@ import AppConfigFactory from "@Core/AppConfig/AppConfigFactory";
 import LanguageFactory from "@Core/Localization/LanguageFactory";
 import UserFactory from "@Core/User/UserFactory";
 import type AppConfig from "@Core/AppConfig/AppConfig";
+import ProgressBar from "@Content/Modules/Widgets/ProgressBar";
+import AugmentedSteam from "@Content/Modules/AugmentedSteam";
+import ChangelogHandler from "@Core/Update/ChangelogHandler";
+import ITAD from "@Content/Modules/ITAD";
 
 export default class ReactPage extends Page {
-
     public async hydration(timeout: number=30): Promise<this> {
         const that = this;
         const start = TimeUtils.now();
@@ -44,10 +47,19 @@ export default class ReactPage extends Page {
     protected override getAppConfig(factory: AppConfigFactory): Promise<AppConfig> {
         return factory.createFromReact();
     }
+
     protected override async getLanguage(factory: LanguageFactory): Promise<Language | null> {
         return factory.createFromReact();
     }
+
     protected override getUser(factory: UserFactory): Promise<UserInterface> {
         return factory.createFromReact();
+    }
+
+    protected override async preApply(language: Language | null, user: UserInterface): Promise<void> {
+        ProgressBar.buildReact();
+        // AugmentedSteam.init(language?.name ?? "english", user);
+        // await ChangelogHandler.checkVersion();
+        // await ITAD.init(user);
     }
 }

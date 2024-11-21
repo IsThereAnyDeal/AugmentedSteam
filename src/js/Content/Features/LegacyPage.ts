@@ -5,6 +5,10 @@ import AppConfigFactory from "@Core/AppConfig/AppConfigFactory";
 import type AppConfig from "@Core/AppConfig/AppConfig";
 import type Language from "@Core/Localization/Language";
 import type UserInterface from "@Core/User/UserInterface";
+import ProgressBar from "@Content/Modules/Widgets/ProgressBar";
+import AugmentedSteam from "@Content/Modules/AugmentedSteam";
+import ChangelogHandler from "@Core/Update/ChangelogHandler";
+import ITAD from "@Content/Modules/ITAD";
 
 export default class LegacyPage extends Page {
 
@@ -22,5 +26,12 @@ export default class LegacyPage extends Page {
 
     protected override getUser(factory: UserFactory): Promise<UserInterface> {
         return factory.createFromLegacy();
+    }
+
+    protected override async preApply(language: Language|null, user: UserInterface): Promise<void> {
+        ProgressBar.buildLegacy();
+        AugmentedSteam.init(language?.name ?? "english", user);
+        await ChangelogHandler.checkVersion();
+        await ITAD.init(user);
     }
 }
