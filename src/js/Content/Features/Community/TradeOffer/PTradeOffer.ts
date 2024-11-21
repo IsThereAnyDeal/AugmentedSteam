@@ -6,13 +6,13 @@
 import CTradeOffer from "./CTradeOffer";
 import Localization from "@Core/Localization/Localization";
 import {SettingsStore} from "@Options/Data/Settings";
-import ApplicationConfig from "@Core/AppConfig/ApplicationConfig";
 import LanguageFactory from "@Core/Localization/LanguageFactory";
 import UserFactory from "@Core/User/UserFactory";
+import AppConfigFactory from "@Core/AppConfig/AppConfigFactory";
 
 (async function() {
 
-    const appConfig = (new ApplicationConfig()).load();
+    const appConfig = (new AppConfigFactory()).createFromLegacy();
     const language = (new LanguageFactory(appConfig)).createFromLegacy();
     const user = await (new UserFactory(appConfig)).createFromLegacy();
 

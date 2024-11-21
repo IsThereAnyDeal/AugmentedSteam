@@ -1,11 +1,11 @@
 import Language from "@Core/Localization/Language";
 import CookieReader from "@Core/Storage/CookieReader";
-import type ApplicationConfigInterface from "@Core/AppConfig/ApplicationConfigInterface";
+import type AppConfig from "@Core/AppConfig/AppConfig";
 
 export default class LanguageFactory {
 
     constructor(
-        private readonly config: ApplicationConfigInterface
+        private readonly config: AppConfig
     ) {}
 
     createFromLegacy(): Language|null {
