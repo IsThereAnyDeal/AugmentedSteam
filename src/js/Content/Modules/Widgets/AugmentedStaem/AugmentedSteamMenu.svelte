@@ -1,6 +1,5 @@
 <script lang="ts">
     import SteamFacade from "@Content/Modules/Facades/SteamFacade";
-    import AugmentedSteam from "@Content/Modules/AugmentedSteam";
     import {L} from "@Core/Localization/Localization";
     import ExtensionResources from "@Core/ExtensionResources";
     import {
@@ -18,21 +17,22 @@
     import DynamicStore from "@Content/Modules/Data/DynamicStore";
     import external from "@Content/externalLink";
     import type UserInterface from "@Core/User/UserInterface";
+    import CacheApiFacade from "@Content/Modules/Facades/CacheApiFacade";
 
     export let user: UserInterface;
 
     const isSignedIn = user.isSignedIn;
 
-    function showMenu() {
+    function showMenu(): void {
         SteamFacade.showMenu("es_pulldown", "es_popup", "right", "bottom", true);
     }
 
-    function hideMenu() {
+    function hideMenu(): void {
         SteamFacade.hideMenu("es_pulldown", "es_popup");
     }
 
-    async function clearCache() {
-        await AugmentedSteam.clearCache();
+    async function clearCache(): Promise<void> {
+        await CacheApiFacade.clearCache();
         window.location.reload();
     }
 

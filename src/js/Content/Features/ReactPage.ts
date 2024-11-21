@@ -58,7 +58,8 @@ export default class ReactPage extends Page {
 
     protected override async preApply(language: Language | null, user: UserInterface): Promise<void> {
         ProgressBar.buildReact();
-        // AugmentedSteam.init(language?.name ?? "english", user);
+        (new AugmentedSteam(language, user, true)).build();
+
         // await ChangelogHandler.checkVersion();
         // await ITAD.init(user);
     }

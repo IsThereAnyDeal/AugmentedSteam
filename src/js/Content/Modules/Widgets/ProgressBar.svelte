@@ -3,7 +3,7 @@
     import {__ready_failed, __ready_loading, __ready_ready, __ready_serverOutage} from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
 
-    export let page: "legacy"|"react";
+    export let react: boolean;
 
     let started: number = 0;
     let done: number = 0;
@@ -55,7 +55,7 @@
 </script>
 
 
-<div class="wrapper" class:is-react={page === "react"} class:is-legacy={page === "legacy"}>
+<div class="wrapper" class:is-react={react} class:is-legacy={!react}>
     <div class="progress"
          class:is-complete="{!isLoading}"
          class:is-warning="{hasWarning}"

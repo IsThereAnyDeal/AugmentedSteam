@@ -30,7 +30,10 @@ export default class LegacyPage extends Page {
 
     protected override async preApply(language: Language|null, user: UserInterface): Promise<void> {
         ProgressBar.buildLegacy();
-        AugmentedSteam.init(language?.name ?? "english", user);
+
+        (new AugmentedSteam(language, user, false))
+            .build();
+
         await ChangelogHandler.checkVersion();
         await ITAD.init(user);
     }

@@ -4,7 +4,7 @@ import ReactDOM from "@Content/Steam/ReactDOM";
 
 export default class ProgressBar {
 
-    private static build(page: "legacy"|"react", node: HTMLElement|null): void {
+    private static build(react: boolean, node: HTMLElement|null): void {
         if (!Settings.show_progressbar || !node) {
             return;
         }
@@ -12,15 +12,15 @@ export default class ProgressBar {
         new self_({
             target: node.parentElement!,
             anchor: node.nextElementSibling ?? undefined,
-            props: {page}
+            props: {react}
         });
     }
 
     static buildLegacy(): void {
-        this.build("legacy", document.querySelector("#global_actions"));
+        this.build(false, document.querySelector("#global_actions"));
     }
 
     static buildReact(): void {
-        this.build("legacy", ReactDOM.globalActions());
+        this.build(true, ReactDOM.globalActions());
     }
 }

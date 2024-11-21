@@ -2,55 +2,59 @@ import Localization, {L} from "@Core/Localization/Localization";
 import {__activate, __cart, __games, __reviews, __viewinclient, __wishlist,} from "@Strings/_strings";
 import Settings from "@Options/Data/Settings";
 import HTML from "@Core/Html/Html";
-import AugmentedSteamMenu from "@Content/Modules/Widgets/AugmentedSteamMenu.svelte";
+import AugmentedSteamMenu from "@Content/Modules/Widgets/AugmentedStaem/AugmentedSteamMenu.svelte";
 import CacheApiFacade from "@Content/Modules/Facades/CacheApiFacade";
-import AugmentedSteamWarnings from "@Content/Modules/Widgets/AugmentedSteamWarnings.svelte";
+import AugmentedSteamWarnings from "@Content/Modules/Widgets/AugmentedStaem/AugmentedSteamWarnings.svelte";
 import LocalStorage from "@Core/Storage/LocalStorage";
 import Language from "@Core/Localization/Language";
-import DynamicStore from "@Content/Modules/Data/DynamicStore";
 import type UserInterface from "@Core/User/UserInterface";
+import BackToTop from "@Content/Modules/Widgets/AugmentedStaem/BackToTop.svelte";
 
 export default class AugmentedSteam {
 
-    private static warningComponent: AugmentedSteamWarnings;
+    private warningComponent: AugmentedSteamWarnings|undefined;
 
-    private static addMenu(user: UserInterface) {
+    private readonly language: string;
+    private readonly user: UserInterface;
+    private readonly react: boolean;
+
+    constructor(
+        language: Language|null,
+        user: UserInterface,
+        react: boolean
+    ) {
+        this.language = language?.name ?? "english";
+        this.user = user;
+        this.react = react;
+    }
+
+    private addMenu(): void {
         const target = document.querySelector("#global_action_menu")!;
         (new AugmentedSteamMenu({
             target,
             anchor: target.firstElementChild!,
             props: {
-                user
+                user: this.user
             }
         }));
     }
 
-    private static addBackToTop() {
+    private addBackToTop(): void {
         if (!Settings.show_backtotop) { return; }
 
-        // Remove Steam's back-to-top button
-        document.querySelector("#BackToTop")?.remove();
+        const scrollTarget = this.react
+            ? document.querySelector<HTMLElement>("#StoreTemplate")
+            : null;
 
-        const btn = document.createElement("div");
-        btn.classList.add("es_btt");
-        btn.textContent = "▲";
-
-        document.body.append(btn);
-
-        btn.addEventListener("click", () => {
-            window.scroll({
-                "top": 0,
-                "left": 0,
-                "behavior": "smooth"
-            });
-        });
-
-        window.addEventListener("scroll", () => {
-            btn.classList.toggle("is-visible", window.scrollY >= 400);
-        });
+        (new BackToTop({
+            target: document.body,
+            props: {
+                target: scrollTarget ?? undefined
+            }
+        }))
     }
 
-    private static focusSearchBox() {
+    private focusSearchBox() {
 
         const node = document.querySelector<HTMLElement>([
             "#store_nav_search_term", // Store pages
@@ -85,18 +89,18 @@ export default class AugmentedSteam {
         });
     }
 
-    private static bindLogout() {
+    private bindLogout() {
 
         // TODO there should be a better detection of logout, probably
         const logoutNode = document.querySelector("a[href$='javascript:Logout();']");
         if (!logoutNode) { return; }
 
         logoutNode.addEventListener("click", () => {
-            AugmentedSteam.clearCache();
+            CacheApiFacade.clearCache();
         });
     }
 
-    private static getWarningComponent(): AugmentedSteamWarnings {
+    private getWarningComponent(): AugmentedSteamWarnings {
 
         if (!this.warningComponent) {
             const header = document.querySelector("#global_header")!;
@@ -111,24 +115,24 @@ export default class AugmentedSteam {
     /**
      * Display warning if browsing using a different language
      */
-    private static async addLanguageWarning(language: string) {
+    private async addLanguageWarning() {
         if (!Settings.showlanguagewarning) { return; }
 
         if (!Settings.showlanguagewarninglanguage) {
-            Settings.showlanguagewarninglanguage = language;
+            Settings.showlanguagewarninglanguage = this.language;
         }
 
         const warningLanguage = Settings.showlanguagewarninglanguage;
-        if (language === warningLanguage) { return; }
+        if (this.language === warningLanguage) { return; }
 
         let locale = await Localization.load((new Language(warningLanguage)).code ?? "en");
         const strings = locale.strings;
 
         this.getWarningComponent()
-            .showLanguageWarning(strings, language, warningLanguage);
+            .showLanguageWarning(strings, this.language, warningLanguage);
     }
 
-    private static async addLoginWarning(type: string) {
+    private async addLoginWarning(type: string) {
         if (type !== "store" && type !== "community") {
             return;
         }
@@ -141,7 +145,7 @@ export default class AugmentedSteam {
         console.warn("Are you logged into %s?", type);
     }
 
-    private static handleInstallSteamButton(): void {
+    private handleInstallSteamButton(): void {
         const option = Settings.installsteam;
         if (option === "show") { return; }
 
@@ -160,7 +164,7 @@ export default class AugmentedSteam {
         }
     }
 
-    private static addUsernameSubmenuLinks(): void {
+    private addUsernameSubmenuLinks(): void {
         // There are two menus; one for responsive (mobile) and one for "unresponsive" (desktop) design
         for (const node of document.querySelectorAll(".submenu_username")) {
             HTML.afterEnd(
@@ -178,25 +182,21 @@ export default class AugmentedSteam {
         }
     }
 
-    private static cartLink(): void {
+    private cartLink(): void {
         // There are two menus; one for responsive (mobile) and one for "unresponsive" (desktop) design
         for (const wishlistLink of document.querySelectorAll(".submenu_store > .submenuitem[href='https://steamcommunity.com/my/wishlist/']")) {
             HTML.afterEnd(wishlistLink, `<a class="submenuitem" href="https://store.steampowered.com/cart/">${L(__cart)}</a>`);
         }
     }
 
-    private static addRedeemLink(): void {
+    private addRedeemLink(): void {
         HTML.beforeBegin(
             "#account_language_pulldown",
             `<a class="popup_menu_item" href="https://store.steampowered.com/account/registerkey">${L(__activate)}</a>`
         );
     }
 
-    static clearCache(): Promise<void> {
-        return CacheApiFacade.clearCache();
-    }
-
-    static init(language: string, user: UserInterface) {
+    build(): void {
         document.addEventListener("asRequestError", e => {
             const {detail} = e as CustomEvent;
             const name = detail.name ?? null;
@@ -208,18 +208,20 @@ export default class AugmentedSteam {
         })
 
         this.addBackToTop();
+        /*
         this.focusSearchBox();
-        this.addMenu(user);
-        this.addLanguageWarning(language);
+        this.addMenu();
+        this.addLanguageWarning();
         this.handleInstallSteamButton();
         this.cartLink();
 
-        if (user.isSignedIn) {
+        if (this.user.isSignedIn) {
             this.addUsernameSubmenuLinks();
             this.addRedeemLink();
             this.bindLogout();
 
             DynamicStore.invalidateCacheHandler();
         }
+         */
     }
 }

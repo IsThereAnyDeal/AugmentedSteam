@@ -43,38 +43,6 @@
   white-space: normal;
 }
 
-/* Back To Top button */
-.es_btt {
-  position: fixed;
-  display: flex;
-  width: 50px;
-  height: 50px;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-  opacity: 0;
-  visibility: hidden;
-  box-shadow: 0 0 10px 2px #000000;
-  left: 50%;
-  bottom: 20px;
-  top: auto;
-  margin-left: 500px;
-  font-size: 22px;
-  border-radius: 50%;
-  cursor: pointer;
-  background: linear-gradient( to bottom, rgba(33,101,138,1) 5%, rgba(23,67,92,1) 95%);
-  transition: visibility 0s 200ms, opacity 200ms ease-in-out;
-  color: white;
-}
-.es_btt:hover {
-  background: linear-gradient( to bottom, rgba(47,137,188,1) 5%, rgba(23,67,92,1) 95%);
-}
-.es_btt.is-visible {
-  opacity: 1;
-  visibility: visible;
-  transition: visibility, opacity 200ms ease-in-out;
-}
-
 
 img.astats_icon {
   width: 16px;
