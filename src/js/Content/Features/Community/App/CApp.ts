@@ -5,7 +5,7 @@ import CCommunityBase from "@Content/Features/Community/CCommunityBase";
 import ContextType from "@Content/Modules/Context/ContextType";
 import AppId from "@Core/GameId/AppId";
 import type Feature from "@Content/Modules/Context/Feature";
-import type Context from "@Content/Modules/Context/Context";
+import Context, {type ContextParams} from "@Content/Modules/Context/Context";
 import HighlightsTagsUtils from "@Content/Modules/Highlights/HighlightsTagsUtils";
 
 export default class CApp extends CCommunityBase {
@@ -13,6 +13,7 @@ export default class CApp extends CCommunityBase {
     public appid: number|null;
 
     constructor(
+        params: ContextParams,
         type: ContextType = ContextType.COMMUNITY_APP,
         features: (typeof Feature<Context>)[] = []
     ) {
@@ -23,7 +24,7 @@ export default class CApp extends CCommunityBase {
             FSkipAgecheck,
         );
 
-        super(type, features);
+        super(params, type, features);
 
         /**
          * Get appid from the "All" tab link (some pages don't have the appid in the pathname).

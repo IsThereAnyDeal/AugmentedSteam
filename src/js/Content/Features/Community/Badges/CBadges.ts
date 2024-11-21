@@ -8,6 +8,7 @@ import ContextType from "@Content/Modules/Context/ContextType";
 import CommunityUtils from "@Content/Modules/Community/CommunityUtils";
 import DOMHelper from "@Content/Modules/DOMHelper";
 import RequestData from "@Content/Modules/RequestData";
+import type {ContextParams} from "@Content/Modules/Context/Context";
 
 export default class CBadges extends CCommunityBase {
 
@@ -15,9 +16,9 @@ export default class CBadges extends CCommunityBase {
     public readonly myProfile: boolean;
     public readonly hasMultiplePages: boolean;
 
-    constructor() {
+    constructor(params: ContextParams) {
 
-        super(ContextType.BADGES, [
+        super(params, ContextType.BADGES, [
             FCardExchangeLinks,
             FBadgeSortAndFilter,
             FBadgeCalculations,

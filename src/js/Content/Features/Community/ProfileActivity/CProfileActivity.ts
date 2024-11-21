@@ -10,14 +10,15 @@ import ContextType from "@Content/Modules/Context/ContextType";
 import ASEventHandler from "@Content/Modules/ASEventHandler";
 import EarlyAccessUtils from "@Content/Modules/EarlyAccess/EarlyAccessUtils";
 import SpamComments from "@Content/Modules/Community/SpamComments";
+import type {ContextParams} from "@Content/Modules/Context/Context";
 
 export default class CProfileActivity extends CCommunityBase {
 
     public readonly onContent: ASEventHandler<HTMLElement> = new ASEventHandler<HTMLElement>();
 
-    constructor() {
+    constructor(params: ContextParams) {
 
-        super(ContextType.PROFILE_ACTIVITY, [
+        super(params, ContextType.PROFILE_ACTIVITY, [
             FHighlightFriendsActivity,
             FAchievementLink,
             FReplaceCommunityHubLinks,

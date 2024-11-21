@@ -4,6 +4,7 @@ import FStyleSelection from "./FStyleSelection";
 import ContextType from "@Content/Modules/Context/ContextType";
 import AugmentedSteamApiFacade from "@Content/Modules/Facades/AugmentedSteamApiFacade";
 import type {TProfileData} from "@Background/Modules/AugmentedSteam/_types";
+import type {ContextParams} from "@Content/Modules/Context/Context";
 
 export default class CProfileEdit extends CCommunityBase {
 
@@ -11,9 +12,9 @@ export default class CProfileEdit extends CCommunityBase {
     public readonly steamId: string;
     public readonly data : Promise<TProfileData|null>;
 
-    constructor() {
+    constructor(params: ContextParams) {
 
-        super(ContextType.PROFILE_EDIT, [
+        super(params, ContextType.PROFILE_EDIT, [
             FBackgroundSelection,
             FStyleSelection,
         ]);

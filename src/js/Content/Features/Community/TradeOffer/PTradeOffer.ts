@@ -8,11 +8,13 @@ import Localization from "@Core/Localization/Localization";
 import {SettingsStore} from "@Options/Data/Settings";
 import ApplicationConfig from "@Core/AppConfig/ApplicationConfig";
 import LanguageFactory from "@Core/Localization/LanguageFactory";
+import UserFactory from "@Core/User/UserFactory";
 
 (async function() {
 
     const appConfig = (new ApplicationConfig()).load();
     const language = (new LanguageFactory(appConfig)).createFromLegacy();
+    const user = await (new UserFactory(appConfig)).createFromLegacy();
 
     try {
         await SettingsStore.init();
@@ -25,7 +27,6 @@ import LanguageFactory from "@Core/Localization/LanguageFactory";
         return;
     }
 
-    const context = new CTradeOffer();
-    context.language = language;
+    const context = new CTradeOffer({language, user});
     await context.applyFeatures();
 })();

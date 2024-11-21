@@ -5,11 +5,10 @@ import Localization from "@Core/Localization/Localization";
 import {SettingsStore} from "@Options/Data/Settings";
 import ProgressBar from "@Content/Modules/Widgets/ProgressBar";
 import AugmentedSteam from "@Content/Modules/AugmentedSteam";
-import LegacyUser from "@Core/User/LegacyUser";
 import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
 import ChangelogHandler from "@Core/Update/ChangelogHandler";
 import ITAD from "@Content/Modules/ITAD";
-import type Context from "@Content/Modules/Context/Context";
+import Context, {type ContextParams} from "@Content/Modules/Context/Context";
 import Environment, {ContextType} from "@Core/Environment";
 import LanguageFactory from "@Core/Localization/LanguageFactory";
 import ApplicationConfig from "@Core/AppConfig/ApplicationConfig";
@@ -39,7 +38,7 @@ window.addEventListener("unhandledrejection", unhandledrejection);
 export default class Page {
 
     constructor(
-        private readonly contextClass: new() => Context
+        private readonly contextClass: new(params: ContextParams) => Context
     ) {}
 
     async run(): Promise<void> {
@@ -86,9 +85,7 @@ export default class Page {
         await ChangelogHandler.checkVersion();
         await ITAD.init(user);
 
-        const context = new (this.contextClass)();
-        context.language = language;
-        context.user = user;
+        const context = new (this.contextClass)({language, user});
         await context.applyFeatures();
     }
 }

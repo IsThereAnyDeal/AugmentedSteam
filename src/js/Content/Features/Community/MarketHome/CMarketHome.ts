@@ -6,14 +6,15 @@ import FMarketSort from "./FMarketSort";
 import FPopularRefreshToggle from "./FPopularRefreshToggle";
 import FMarketLowestPrice from "./FMarketLowestPrice";
 import ASEventHandler from "@Content/Modules/ASEventHandler";
+import type {ContextParams} from "@Content/Modules/Context/Context";
 
 export default class CMarketHome extends CCommunityBase {
 
     public onMarketListings: ASEventHandler<void> = new ASEventHandler<void>();
 
-    constructor() {
+    constructor(params: ContextParams) {
 
-        super(ContextType.MARKET_HOME, [
+        super(params, ContextType.MARKET_HOME, [
             FMarketStats,
             FHideActiveListings,
             FMarketSort,
@@ -21,7 +22,7 @@ export default class CMarketHome extends CCommunityBase {
             FMarketLowestPrice,
         ]);
 
-        // If there're page controls, observe the listings because Steam refreshes them after selecting a page size option
+        // If there are page controls, observe the listings because Steam refreshes them after selecting a page size option
         if (document.getElementById("tabContentsMyActiveMarketListings_ctn") !== null) {
             new MutationObserver(() => {
                 this.onMarketListings.dispatch();

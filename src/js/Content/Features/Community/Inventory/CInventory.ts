@@ -11,6 +11,7 @@ import ContextType from "@Content/Modules/Context/ContextType";
 import CommunityUtils from "@Content/Modules/Community/CommunityUtils";
 import DOMHelper from "@Content/Modules/DOMHelper";
 import ASEventHandler from "@Content/Modules/ASEventHandler";
+import type {ContextParams} from "@Content/Modules/Context/Context";
 
 export interface MarketInfo {
     view: number,
@@ -35,12 +36,12 @@ export default class CInventory extends CCommunityBase {
     public readonly myInventory: boolean = false;
     public readonly onMarketInfo: ASEventHandler<MarketInfo> = new ASEventHandler<MarketInfo>();
 
-    constructor() {
+    constructor(params: ContextParams) {
 
         // Don't apply features on empty or private inventories
         const hasFeatures = document.getElementById("no_inventories") === null;
 
-        super(ContextType.INVENTORY, hasFeatures ? [
+        super(params, ContextType.INVENTORY, hasFeatures ? [
                 FAddPriceToGifts,
                 FEquipProfileItems,
                 FBadgeProgressLink,

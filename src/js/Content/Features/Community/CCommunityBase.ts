@@ -1,14 +1,14 @@
 import FConfirmDeleteComment from "./FConfirmDeleteComment";
 import FHideSpamComments from "./FHideSpamComments";
 import type Feature from "@Content/Modules/Context/Feature";
-import type Context from "@Content/Modules/Context/Context";
+import Context, {type ContextParams} from "@Content/Modules/Context/Context";
 import CBase from "@Content/Features/Common/CBase";
 import ContextType from "@Content/Modules/Context/ContextType";
 import FFavoriteEmoticons from "./FFavoriteEmoticons";
 
 export default class CCommunityBase extends CBase {
 
-    constructor(type = ContextType.COMMUNITY_DEFAULT, features: (typeof Feature<Context>[]) = []) {
+    constructor(params: ContextParams, type = ContextType.COMMUNITY_DEFAULT, features: (typeof Feature<Context>[]) = []) {
 
         features.push(
             FConfirmDeleteComment,
@@ -16,6 +16,6 @@ export default class CCommunityBase extends CBase {
             FFavoriteEmoticons,
         );
 
-        super(type, features);
+        super(params, type, features);
     }
 }

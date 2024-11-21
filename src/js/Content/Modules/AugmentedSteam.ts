@@ -14,11 +14,14 @@ export default class AugmentedSteam {
 
     private static warningComponent: AugmentedSteamWarnings;
 
-    private static addMenu() {
+    private static addMenu(user: UserInterface) {
         const target = document.querySelector("#global_action_menu")!;
         (new AugmentedSteamMenu({
             target,
-            anchor: target.firstElementChild!
+            anchor: target.firstElementChild!,
+            props: {
+                user
+            }
         }));
     }
 
@@ -206,7 +209,7 @@ export default class AugmentedSteam {
 
         this.addBackToTop();
         this.focusSearchBox();
-        this.addMenu();
+        this.addMenu(user);
         this.addLanguageWarning(language);
         this.handleInstallSteamButton();
         this.cartLink();

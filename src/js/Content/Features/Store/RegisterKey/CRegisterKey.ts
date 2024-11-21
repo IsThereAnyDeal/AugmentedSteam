@@ -1,13 +1,13 @@
 import FMultiProductKeys from "./FMultiProductKeys";
 import FKeepSSACheckboxState from "@Content/Features/Common/FKeepSSACheckboxState";
-import Context from "@Content/Modules/Context/Context";
+import Context, {type ContextParams} from "@Content/Modules/Context/Context";
 import ContextType from "@Content/Modules/Context/ContextType";
 
 export default class CRegisterKey extends Context {
 
-    constructor() {
+    constructor(params: ContextParams) {
 
-        super(ContextType.REGISTER_KEY, [
+        super(params, ContextType.REGISTER_KEY, [
             FMultiProductKeys,
             FKeepSSACheckboxState,
         ]);

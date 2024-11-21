@@ -1,12 +1,13 @@
 import ContextType from "@Content/Modules/Context/ContextType";
 import CCommunityBase from "../CCommunityBase";
 import FHighlightMarketItems from "./FHighlightMarketItems";
+import type {ContextParams} from "@Content/Modules/Context/Context";
 
 export default class CMarketSearch extends CCommunityBase {
 
-    constructor() {
+    constructor(params: ContextParams) {
 
-        super(ContextType.MARKET_SEARCH, [
+        super(params, ContextType.MARKET_SEARCH, [
             FHighlightMarketItems,
         ]);
     }

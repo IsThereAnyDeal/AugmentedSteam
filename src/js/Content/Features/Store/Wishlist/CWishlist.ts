@@ -15,6 +15,7 @@ import CStoreBase from "@Content/Features/Store/Common/CStoreBase";
 import ContextType from "@Content/Modules/Context/ContextType";
 import LegacyUser from "@Core/User/LegacyUser";
 import ASEventHandler from "@Content/Modules/ASEventHandler";
+import type {ContextParams} from "@Content/Modules/Context/Context";
 
 interface WishlistEntry {
     appid: number,
@@ -30,13 +31,13 @@ export default class CWishlist extends CStoreBase {
     public readonly wishlistData: WishlistEntry[] = [];
     public readonly myWishlist: boolean = false;
 
-    constructor() {
+    constructor(params: ContextParams) {
         // TODO use SteamFacade to get global variable?
         const wishlistData = HTMLParser.getArrayVariable<WishlistEntry>("g_rgWishlistData") ?? [];
 
         const hasWishlistData = wishlistData && wishlistData.length > 0;
 
-        super(ContextType.WISHLIST, hasWishlistData
+        super(params, ContextType.WISHLIST, hasWishlistData
             ? [
                 FAlternativeLinuxIcon,
                 FWishlistHighlights,

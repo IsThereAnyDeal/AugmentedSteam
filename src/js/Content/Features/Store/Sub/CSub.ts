@@ -6,15 +6,16 @@ import FExtraLinksCommon from "../Common/FExtraLinksCommon";
 import FITADPrices from "../Common/FITADPrices";
 import FRegionalPricing from "../Common/FRegionalPricing";
 import FSavingsCheck from "./FSavingsCheck";
+import type {ContextParams} from "@Content/Modules/Context/Context";
 
 export default class CSub extends CStoreBase {
 
     public readonly appid: undefined = undefined;
     public readonly subid: number;
 
-    constructor() {
+    constructor(params: ContextParams) {
 
-        super(ContextType.SUB, [
+        super(params, ContextType.SUB, [
             FExtraLinksCommon,
             FDRMWarnings,
             FITADPrices,

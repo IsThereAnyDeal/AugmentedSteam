@@ -4,16 +4,20 @@ import Errors from "@Core/Errors/Errors";
 import type Language from "@Core/Localization/Language";
 import type UserInterface from "@Core/User/UserInterface";
 
+export interface ContextParams {
+    language: Language|null,
+    user: UserInterface
+}
+
 export default class Context {
 
+    public readonly language: Language|null = null;
+    public readonly user: UserInterface;
     public readonly type: ContextType;
+
     private readonly featureMap: Map<Function, Feature<Context>> = new Map();
     private readonly promiseMap: Map<Function, Promise<boolean>> = new Map();
     private readonly dependencies: Map<Function, Map<Function, boolean>> = new Map();
-
-    // TODO move to constructor param to catch issues more easily
-    public language: Language|null = null;
-    public user: UserInterface;
 
     private stats = {
         completed: 0,
@@ -21,7 +25,13 @@ export default class Context {
         dependency: 0,
     };
 
-    constructor(type: ContextType, features: (typeof Feature<Context>)[]) {
+    constructor(
+        params: ContextParams,
+        type: ContextType,
+        features: (typeof Feature<Context>)[]
+    ) {
+        this.language = params.language;
+        this.user = params.user;
         this.type = type;
 
         for (let ref of features) {
