@@ -56,15 +56,18 @@ export default class AugmentedSteam {
 
     private focusSearchBox() {
 
-        const node = document.querySelector<HTMLElement>([
-            "#store_nav_search_term", // Store pages
-            "input.discussionSearchText", // Community discussions
-            "#wishlist_search", // Wishlist
-            "#workshopSearchText", // Workshop
-            "#findItemsSearchBox", // Market
-            "input#filter_control", // Inventory
-            // TODO support dynamic pages e.g. groups/friends, Games page (React)
-        ].join(","));
+        const node = document.querySelector<HTMLElement>(
+            (this.react
+                ? [
+                    "input.Focusable" // Wishlist
+                ] : [
+                    "#store_nav_search_term", // Store pages
+                    "input.discussionSearchText", // Community discussions
+                    "#workshopSearchText", // Workshop
+                    "#findItemsSearchBox", // Market
+                    "input#filter_control", // Inventory
+                    // TODO support dynamic pages e.g. groups/friends, Games page (React)
+                ]).join(","));
 
         if (!node) { return; }
 
@@ -208,8 +211,8 @@ export default class AugmentedSteam {
         })
 
         this.addBackToTop();
-        /*
         this.focusSearchBox();
+        /*
         this.addMenu();
         this.addLanguageWarning();
         this.handleInstallSteamButton();
