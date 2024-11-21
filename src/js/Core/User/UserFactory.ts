@@ -2,6 +2,7 @@ import HTMLParser from "@Core/Html/HtmlParser";
 import SteamCommunityApiFacade from "@Content/Modules/Facades/SteamCommunityApiFacade";
 import LegacyUser from "@Core/User/LegacyUser";
 import type AppConfig from "@Core/AppConfig/AppConfig";
+import ReactUser from "@Core/User/ReactUser";
 
 export default class UserFactory {
 
@@ -20,7 +21,7 @@ export default class UserFactory {
                 user.profilePath = avatarNode.pathname;
 
                 const login = await SteamCommunityApiFacade.login(user.profilePath);
-                user.signedIn = true;
+                user.isSignedIn = true;
                 user.steamId = login.steamId;
             } else {
                 await SteamCommunityApiFacade.logout();
@@ -62,6 +63,23 @@ export default class UserFactory {
             console.warn("Failed to detect store country from page");
             console.error(e);
             console.groupEnd();
+        }
+
+        return user;
+    }
+
+
+    async createFromReact(): Promise<ReactUser> {
+        const user = new ReactUser();
+
+        if (this.appConfig.steamId && this.appConfig.steamId !== "0") {
+            user.steamId = this.appConfig.steamId;
+        }
+
+        user.storeCountry = this.appConfig.countryCode!;
+
+        if (this.appConfig.webApiToken) {
+            user.webApiToken = this.appConfig.webApiToken;
         }
 
         return user;

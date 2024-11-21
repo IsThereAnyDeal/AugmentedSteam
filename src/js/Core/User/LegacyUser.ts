@@ -15,7 +15,7 @@ export default class LegacyUser implements UserInterface {
     private _sessionId: string|null|undefined;
     private _webApiToken: string|undefined;
 
-    set signedIn(value: boolean) {
+    set isSignedIn(value: boolean) {
         this._signedIn = value;
     }
 

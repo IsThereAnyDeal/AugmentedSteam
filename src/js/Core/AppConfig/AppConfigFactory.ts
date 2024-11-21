@@ -1,34 +1,28 @@
 import SteamFacade from "@Content/Modules/Facades/SteamFacade";
-import AppConfig from "@Core/AppConfig/AppConfig";
+import AppConfig, {type AppConfigData} from "@Core/AppConfig/AppConfig";
 
 export default class AppConfigFactory {
 
     public createFromLegacy(): AppConfig {
         const configNode: HTMLElement|null = document.querySelector("#application_config");
 
-        let language: string|null = null;
-        let countryCode: string|null = null;
-        let webApiToken: string|null = null;
+        const data: AppConfigData = {};
 
         if (configNode?.dataset.config) {
             const config = JSON.parse(configNode.dataset.config);
-            language = config.LANGUAGE;
-            countryCode = config.COUNTRY;
+            data.language = config.LANGUAGE;
+            data.countryCode = config.COUNTRY;
         }
 
         if (configNode?.dataset.store_user_config) {
             const storeUserConfig = JSON.parse(configNode.dataset.store_user_config);
-            webApiToken = storeUserConfig.webapi_token;
+            data.webApiToken = storeUserConfig.webapi_token;
         }
 
-        return new AppConfig(
-            language,
-            countryCode,
-            webApiToken
-        );
+        return new AppConfig(data);
     }
 
-    private static async createFromReact(): Promise<AppConfig> {
+    public async createFromReact(): Promise<AppConfig> {
 
         const [loaderData, Config, UserConfig] = await Promise.all([
             SteamFacade.global("SSR.loaderData"),
@@ -36,21 +30,23 @@ export default class AppConfigFactory {
             SteamFacade.global("UserConfig")
         ]);
 
-        let language: string|null = Config.LANGUAGE;
-        let countryCode: string|null = Config.COUNTRY;
-        let webApiToken: string|null = null;
-
-        if (Array.isArray(loaderData) && loaderData[0]) {
-            const data = JSON.parse(loaderData[0]);
-            if (data.strWebAPIToken) {
-                webApiToken = data.strWebAPIToken;
-            }
+        const data: AppConfigData = {
+            language: Config.LANGUAGE,
+            countryCode: Config.COUNTRY
         }
 
-        return new AppConfig(
-            language,
-            countryCode,
-            webApiToken
-        );
+        if (Array.isArray(loaderData) && loaderData[0]) {
+            for (let item of loaderData) {
+                item = JSON.parse(item);
+                if (item.strWebAPIToken) {
+                    data.webApiToken = item.strWebAPIToken;
+                }
+
+                if (item.storeBrowseContext && item.steamid) { // find correct object
+                    data.steamId = item.steamid;
+                }
+            }
+        }
+        return new AppConfig(data);
     }
 }

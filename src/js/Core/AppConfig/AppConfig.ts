@@ -1,9 +1,21 @@
 
-export default class AppConfig {
+export interface AppConfigData {
+    language?: string,
+    countryCode?: string,
+    webApiToken?: string,
+    steamId?: string
+}
 
-    public constructor(
-        public readonly language: string|null = null,
-        public readonly countryCode: string|null = null,
-        public readonly webApiToken: string|null = null
-    ) {}
+export default class AppConfig {
+    public readonly language: string|undefined;
+    public readonly countryCode: string|undefined;
+    public readonly webApiToken: string|undefined;
+    public readonly steamId: string|undefined;
+
+    public constructor(data: AppConfigData) {
+        this.language = data.language;
+        this.countryCode = data.countryCode;
+        this.webApiToken = data.webApiToken;
+        this.steamId = data.steamId;
+    }
 }

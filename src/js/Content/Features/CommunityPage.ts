@@ -1,3 +1,3 @@
-import Page from "./Page";
+import LegacyPage from "@Content/Features/LegacyPage";
 
-export default class CommunityPage extends Page {}
+export default class CommunityPage extends LegacyPage {}

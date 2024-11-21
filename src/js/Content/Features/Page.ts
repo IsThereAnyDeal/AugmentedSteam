@@ -10,11 +10,12 @@ import ChangelogHandler from "@Core/Update/ChangelogHandler";
 import ITAD from "@Content/Modules/ITAD";
 import Context, {type ContextParams} from "@Content/Modules/Context/Context";
 import Environment, {ContextType} from "@Core/Environment";
-import LanguageFactory from "@Core/Localization/LanguageFactory";
-import ApplicationConfig from "@Core/AppConfig/ApplicationConfig";
 import Language from "@Core/Localization/Language";
-import UserFactory from "@Core/User/UserFactory";
 import type UserInterface from "@Core/User/UserInterface";
+import type AppConfig from "@Core/AppConfig/AppConfig";
+import LanguageFactory from "@Core/Localization/LanguageFactory";
+import UserFactory from "@Core/User/UserFactory";
+import AppConfigFactory from "@Core/AppConfig/AppConfigFactory";
 
 Environment.CurrentContext = ContextType.ContentScript;
 
@@ -35,31 +36,44 @@ function unhandledrejection(e: PromiseRejectionEvent) {
 }
 window.addEventListener("unhandledrejection", unhandledrejection);
 
-export default class Page {
+export default abstract class Page {
 
     constructor(
         private readonly contextClass: new(params: ContextParams) => Context
     ) {}
 
+    /**
+     * Run any kind of checks we might need to do, to see if the page is properly loaded
+     */
+    protected abstract check(): boolean;
+
+    protected abstract getAppConfig(factory: AppConfigFactory): Promise<AppConfig>;
+    protected abstract getLanguage(factory: LanguageFactory): Promise<Language|null>;
+    protected abstract getUser(factory: UserFactory): Promise<UserInterface>;
+
     async run(): Promise<void> {
-        if (!document.getElementById("global_header")) { return; }
+        if (!this.check()) { return; }
 
         let language: Language|null;
         let user: UserInterface;
 
+        // TODO What errors can be "suppressed" here?
         try {
-            // TODO What errors can be "suppressed" here?
-            try {
-                await SettingsStore.init();
-                await bootstrapDomPurify();
-            } catch (err) {
-                console.error(err);
-            }
+            await SettingsStore.init();
+            await bootstrapDomPurify();
+        } catch (err) {
+            console.error(err);
+        }
 
-            const appConfig = (new ApplicationConfig()).load();
+        try {
+            const appFactory = new AppConfigFactory();
+            const appConfig = await this.getAppConfig(appFactory);
 
-            language = (new LanguageFactory(appConfig)).createFromLegacy();
-            user = await (new UserFactory(appConfig)).createFromLegacy();
+            const languageFactory = new LanguageFactory(appConfig);
+            language = await this.getLanguage(languageFactory);
+
+            const userFactory = new UserFactory(appConfig);
+            user = await this.getUser(userFactory);
 
             await Promise.all([
                 Localization.init(language),

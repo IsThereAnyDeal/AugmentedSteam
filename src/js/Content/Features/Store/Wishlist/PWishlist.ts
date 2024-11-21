@@ -3,7 +3,9 @@
  * @match *://*.steampowered.com/wishlist/(id|profiles)/*
  */
 
-import StorePage from "../../StorePage";
 import CWishlist from "./CWishlist";
+import ReactPage from "@Content/Features/ReactPage";
 
-(new StorePage(CWishlist)).run();
+(new ReactPage(CWishlist))
+    .hydration()
+    .then(page => page.run());

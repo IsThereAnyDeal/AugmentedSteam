@@ -10,7 +10,7 @@ export default class LanguageFactory {
 
     createFromLegacy(): Language|null {
 
-        if (this.config.language !== null) {
+        if (this.config.language) {
             return new Language(this.config.language);
         }
 
@@ -25,6 +25,14 @@ export default class LanguageFactory {
         const cookie = CookieReader.get("Steam_Language", null);
         if (cookie) {
             return new Language(cookie);
+        }
+
+        return null;
+    }
+
+    createFromReact(): Language|null {
+        if (this.config.language) {
+            return new Language(this.config.language);
         }
 
         return null;
