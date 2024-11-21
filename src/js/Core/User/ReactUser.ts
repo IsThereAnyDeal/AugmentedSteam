@@ -45,11 +45,6 @@ export default class ReactUser implements UserInterface {
         throw new Error("Not supported");
     }
 
-    getPurchaseDate(lang: string, appName: string): Promise<string|null> {
-        const _appName = StringUtils.clearSpecialSymbols(appName);
-        return SteamStoreApiFacade.getPurchaseDate(_appName, lang);
-    }
-
     set webApiToken(value: string | undefined) {
         this._webApiToken = value;
     }

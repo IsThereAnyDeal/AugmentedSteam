@@ -77,11 +77,6 @@ export default class LegacyUser implements UserInterface {
         return this._sessionId;
     }
 
-    getPurchaseDate(lang: string, appName: string): Promise<string|null> {
-        const _appName = StringUtils.clearSpecialSymbols(appName);
-        return SteamStoreApiFacade.getPurchaseDate(_appName, lang);
-    }
-
     /*
      * Fetch the user's web api token to use in new style WebAPI calls (Services)
      * https://github.com/Revadike/UnofficialSteamWebAPI/wiki/Get-Points-Summary-Config

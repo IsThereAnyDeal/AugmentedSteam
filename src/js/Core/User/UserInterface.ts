@@ -7,7 +7,6 @@ export default interface UserInterface {
     get profilePath(): string;
     get sessionId(): string|null;
 
-    getPurchaseDate(lang: string, appName: string): Promise<string|null>;
     getWebApiToken(): Promise<string>;
 }
 

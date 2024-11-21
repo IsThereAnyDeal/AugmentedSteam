@@ -3,6 +3,8 @@ import {__purchaseDate} from "@Strings/_strings";
 import type CApp from "@Content/Features/Store/App/CApp";
 import Feature from "@Content/Modules/Context/Feature";
 import Settings from "@Options/Data/Settings";
+import StringUtils from "@Core/Utils/StringUtils";
+import SteamStoreApiFacade from "@Content/Modules/Facades/SteamStoreApiFacade";
 
 export default class FPurchaseDate extends Feature<CApp> {
 
@@ -22,8 +24,11 @@ export default class FPurchaseDate extends Feature<CApp> {
             return;
         }
 
-        const appname = this.context.appName.replace(/:/g, "").trim();
-        const date = await this.context.user.getPurchaseDate(lang, appname);
+        const appname = StringUtils.clearSpecialSymbols(
+            this.context.appName.replace(/:/g, "").trim()
+        );
+
+        const date = await SteamStoreApiFacade.getPurchaseDate(appname, lang);
         if (!date) {
             console.warn("Failed to retrieve purchase date");
             return;
