@@ -2,7 +2,7 @@
     import Localization, {type TLocale} from "@Core/Localization/Localization";
     import {__usingLanguage, __usingLanguageReturn} from "@Strings/_strings";
     import {createEventDispatcher, onMount} from "svelte";
-    import Warning from "@Content/Modules/Widgets/AugmentedStaem/Components/Warning.svelte";
+    import Warning from "@Content/Modules/Widgets/AugmentedSteam/Components/Warning.svelte";
     import SteamFacade from "@Content/Modules/Facades/SteamFacade";
     import Settings from "@Options/Data/Settings";
     import Language from "@Core/Localization/Language";

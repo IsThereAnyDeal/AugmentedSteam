@@ -1,9 +1,9 @@
 <script lang="ts">
     import Settings from "@Options/Data/Settings";
     import {onMount} from "svelte";
-    import LoginWarning from "@Content/Modules/Widgets/AugmentedStaem/Components/LoginWarning.svelte";
+    import LoginWarning from "@Content/Modules/Widgets/AugmentedSteam/Components/LoginWarning.svelte";
     import Language from "@Core/Localization/Language";
-    import LanguageWarning from "@Content/Modules/Widgets/AugmentedStaem/Components/LanguageWarning.svelte";
+    import LanguageWarning from "@Content/Modules/Widgets/AugmentedSteam/Components/LanguageWarning.svelte";
 
     export let language: Language;
     export let react: boolean;

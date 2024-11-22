@@ -1,7 +1,7 @@
 <script lang="ts">
     import {L} from "@Core/Localization/Localization";
     import {__loginWarning} from "@Strings/_strings";
-    import Warning from "@Content/Modules/Widgets/AugmentedStaem/Components/Warning.svelte";
+    import Warning from "@Content/Modules/Widgets/AugmentedSteam/Components/Warning.svelte";
     import LocalStorage from "@Core/Storage/LocalStorage";
     import {createEventDispatcher} from "svelte";
 

@@ -2,12 +2,12 @@ import {L} from "@Core/Localization/Localization";
 import {__activate, __cart, __games, __reviews, __viewinclient, __wishlist,} from "@Strings/_strings";
 import Settings from "@Options/Data/Settings";
 import HTML from "@Core/Html/Html";
-import AugmentedSteamMenu from "@Content/Modules/Widgets/AugmentedStaem/AugmentedSteamMenu.svelte";
+import AugmentedSteamMenu from "@Content/Modules/Widgets/AugmentedSteam/AugmentedSteamMenu.svelte";
 import CacheApiFacade from "@Content/Modules/Facades/CacheApiFacade";
-import AugmentedSteamWarnings from "@Content/Modules/Widgets/AugmentedStaem/AugmentedSteamWarnings.svelte";
+import AugmentedSteamWarnings from "@Content/Modules/Widgets/AugmentedSteam/AugmentedSteamWarnings.svelte";
 import Language from "@Core/Localization/Language";
 import type UserInterface from "@Core/User/UserInterface";
-import BackToTop from "@Content/Modules/Widgets/AugmentedStaem/BackToTop.svelte";
+import BackToTop from "@Content/Modules/Widgets/AugmentedSteam/BackToTop.svelte";
 
 export default class AugmentedSteam {
 
