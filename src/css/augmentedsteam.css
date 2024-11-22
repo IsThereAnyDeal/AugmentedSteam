@@ -1367,7 +1367,8 @@ video.highlight_movie:hover + .html5_video_overlay {
 /***************************************
  * Global Steam Client button
  **************************************/
-.es_steamclient_btn .header_installsteam_btn_content {
+.es_steamclient_btn .header_installsteam_btn_content,
+.es_steamclient_btn.is-react {
   background-image: url('https://store.cloudflare.steamstatic.com/public/images/v6/icon_platform_linux.png');
   background-position: 5px;
   padding-left: 28px;
