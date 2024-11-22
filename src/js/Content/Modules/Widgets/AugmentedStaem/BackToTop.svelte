@@ -19,12 +19,9 @@
             : window.scrollY;
 
         visible = scrollTop >= 400;
-
-        console.log(scrollTop);
     }
 
     onMount(() => {
-        console.log(target ?? window);
         (target ?? window).addEventListener("scroll", handleScroll);
     });
 </script>

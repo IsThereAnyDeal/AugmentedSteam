@@ -18,7 +18,7 @@
     export let warningLanguage: Language;
 
     function resetLanguageCode(): void {
-        // FIXME
+        // TODO find a way to change language for user in React pages
         SteamFacade.changeLanguage(warningLanguage.name, true);
     }
 
@@ -48,16 +48,23 @@
         <Warning {react} on:close={handleClose} on:hide={() => dispatch("close")}>
             {str__usingLanguage(locale)}
 
-            <button type="button" on:click|preventDefault={resetLanguageCode}>
-                {str__usingLanguageReturn(locale)}
-            </button>
+            {#if react}
+                <!-- TODO handle language chages via click like in legacy pages -->
+                <a href="https://store.steampowered.com/account/languagepreferences">
+                    {str__usingLanguageReturn(locale)}
+                </a>
+            {:else}
+                <button type="button" on:click|preventDefault={resetLanguageCode}>
+                    {str__usingLanguageReturn(locale)}
+                </button>
+            {/if}
         </Warning>
     {/await}
 {/if}
 
 
 <style>
-    button {
+    a,button {
         background: #ffaaaa;
         padding: 3px 10px;
         color: black;
@@ -69,6 +76,7 @@
         border: 0;
         margin-left: 10px;
     }
+    a:hover,
     button:hover {
         background: #e89a9a;
     }
