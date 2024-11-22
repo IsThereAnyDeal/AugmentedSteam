@@ -171,36 +171,25 @@ export default class AugmentedSteam {
         }
     }
 
-    private addUsernameSubmenuLinks(): void {
-        // There are two menus; one for responsive (mobile) and one for "unresponsive" (desktop) design
-        for (const node of document.querySelectorAll(".submenu_username")) {
-            HTML.afterEnd(
-                node.querySelector("a"),
-                `<a class="submenuitem" href="//steamcommunity.com/my/games/">${L(__games)}</a>`
-            );
-            HTML.afterEnd(
-                node.querySelector("a:nth-child(2)"),
-                `<a class="submenuitem" href="//store.steampowered.com/wishlist/">${L(__wishlist)}</a>`
-            );
-            HTML.beforeEnd(
-                node,
-                `<a class="submenuitem" href="//steamcommunity.com/my/recommended/">${L(__reviews)}</a>`
-            );
-        }
-    }
-
-    private cartLink(): void {
-        // There are two menus; one for responsive (mobile) and one for "unresponsive" (desktop) design
-        for (const wishlistLink of document.querySelectorAll(".submenu_store > .submenuitem[href='https://steamcommunity.com/my/wishlist/']")) {
-            HTML.afterEnd(wishlistLink, `<a class="submenuitem" href="https://store.steampowered.com/cart/">${L(__cart)}</a>`);
-        }
-    }
-
     private addRedeemLink(): void {
-        HTML.beforeBegin(
-            "#account_language_pulldown",
-            `<a class="popup_menu_item" href="https://store.steampowered.com/account/registerkey">${L(__activate)}</a>`
+
+        let node: HTMLAnchorElement|null;
+
+        node = document.querySelector(
+            this.react
+                ? "header a[href*='/addfunds/']"
+                : "#account_dropdown a[href*='/addfunds/']"
         );
+        if (!node) {
+            console.error("Didn't find node to copy for adding redeem link");
+            return;
+        }
+
+        const cloned = node.cloneNode(true) as HTMLAnchorElement;
+        cloned.href = "https://store.steampowered.com/account/registerkey";
+        cloned.textContent = L(__activate);
+
+        node.insertAdjacentElement("beforebegin", cloned);
     }
 
     build(): void {
@@ -209,16 +198,14 @@ export default class AugmentedSteam {
         this.addMenu();
         this.addWarnings();
         this.handleInstallSteamButton();
-        /*
-        this.cartLink();
 
         if (this.user.isSignedIn) {
-            this.addUsernameSubmenuLinks();
             this.addRedeemLink();
+            /*
             this.bindLogout();
 
             DynamicStore.invalidateCacheHandler();
-        }
          */
+        }
     }
 }
