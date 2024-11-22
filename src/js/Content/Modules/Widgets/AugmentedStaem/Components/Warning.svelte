@@ -3,6 +3,8 @@
     import {__hide, __update_dontShow} from "@Strings/_strings";
     import {createEventDispatcher} from "svelte";
 
+    export let react: boolean;
+
     const dispatch = createEventDispatcher<{
         close: void,
         hide: void
@@ -10,7 +12,7 @@
 </script>
 
 
-<div class="es_warn">
+<div class="es_warn" class:is-react={react}>
     <div class="es_warn__cnt">
         <div><slot></slot></div>
         <div class="es_warn__control">
@@ -26,14 +28,22 @@
         font-size: 12px;
         padding: 8px 0;
         text-align: center;
-        background: linear-gradient(#9a2820 0%, #d63525 100%);
+        background: #9a2820;
+        border-top: 1px solid #d63525;
+        border-bottom: 1px solid #d63525;
+        margin-bottom: -1px;
         color: white;
+    }
+    .es_warn.is-react {
+        margin-left: -14px;
+        padding-left: 14px;
     }
 
     .es_warn__cnt {
         max-width: 940px;
         display: flex;
         justify-content: space-between;
+        align-items: center;
         margin: auto;
         line-height: 20px;
     }
@@ -46,7 +56,7 @@
     }
 
     button {
-        background: linear-gradient(135deg, #faa 0%,#d46a6a 100%);
+        background: #ffaaaa;
         padding: 0 10px;
         color: black;
         text-transform: uppercase;
@@ -57,9 +67,9 @@
         line-height: 20px;
         cursor: pointer;
         white-space: nowrap;
+        border: 0;
     }
     button:hover {
-        background: linear-gradient(135deg, #801515 0%,#500 100%);
-        color: white;
+        background: #e89a9a;
     }
 </style>

@@ -3,7 +3,7 @@ import ExtensionResources from "@Core/ExtensionResources";
 import Language from "@Core/Localization/Language";
 import SteamStoreApiFacade from "@Content/Modules/Facades/SteamStoreApiFacade";
 
-interface TLocale {
+export interface TLocale {
     stats: {
         strings: number,
         translated: number,

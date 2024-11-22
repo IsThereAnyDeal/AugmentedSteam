@@ -1,11 +1,10 @@
-import Localization, {L} from "@Core/Localization/Localization";
+import {L} from "@Core/Localization/Localization";
 import {__activate, __cart, __games, __reviews, __viewinclient, __wishlist,} from "@Strings/_strings";
 import Settings from "@Options/Data/Settings";
 import HTML from "@Core/Html/Html";
 import AugmentedSteamMenu from "@Content/Modules/Widgets/AugmentedStaem/AugmentedSteamMenu.svelte";
 import CacheApiFacade from "@Content/Modules/Facades/CacheApiFacade";
 import AugmentedSteamWarnings from "@Content/Modules/Widgets/AugmentedStaem/AugmentedSteamWarnings.svelte";
-import LocalStorage from "@Core/Storage/LocalStorage";
 import Language from "@Core/Localization/Language";
 import type UserInterface from "@Core/User/UserInterface";
 import BackToTop from "@Content/Modules/Widgets/AugmentedStaem/BackToTop.svelte";
@@ -14,7 +13,7 @@ export default class AugmentedSteam {
 
     private warningComponent: AugmentedSteamWarnings|undefined;
 
-    private readonly language: string;
+    private readonly language: Language;
     private readonly user: UserInterface;
     private readonly react: boolean;
 
@@ -23,7 +22,7 @@ export default class AugmentedSteam {
         user: UserInterface,
         react: boolean
     ) {
-        this.language = language?.name ?? "english";
+        this.language = language ?? new Language("english");
         this.user = user;
         this.react = react;
     }
@@ -119,37 +118,27 @@ export default class AugmentedSteam {
         return this.warningComponent;
     }
 
-    /**
-     * Display warning if browsing using a different language
-     */
-    private async addLanguageWarning() {
-        if (!Settings.showlanguagewarning) { return; }
+    private addWarnings(): void {
 
-        if (!Settings.showlanguagewarninglanguage) {
-            Settings.showlanguagewarninglanguage = this.language;
+        let target: Element;
+        let anchor: Element|undefined;
+        if (this.react) {
+            target = document.querySelector("header ~ section")!;
+            anchor = target.firstElementChild!;
+        } else {
+            const header = document.querySelector("#global_header")!
+            target = header.parentElement!;
+            anchor = header.nextElementSibling!;
         }
 
-        const warningLanguage = Settings.showlanguagewarninglanguage;
-        if (this.language === warningLanguage) { return; }
-
-        let locale = await Localization.load((new Language(warningLanguage)).code ?? "en");
-        const strings = locale.strings;
-
-        this.getWarningComponent()
-            .showLanguageWarning(strings, this.language, warningLanguage);
-    }
-
-    private async addLoginWarning(type: string) {
-        if (type !== "store" && type !== "community") {
-            return;
-        }
-
-        if (await LocalStorage.get(`hide_login_warn_${type}`)) {
-            return;
-        }
-
-        this.getWarningComponent().showLoginWarning(type);
-        console.warn("Are you logged into %s?", type);
+        new AugmentedSteamWarnings({
+            target,
+            anchor,
+            props: {
+                react: this.react,
+                language: this.language
+            }
+        });
     }
 
     private handleInstallSteamButton(): void {
@@ -204,21 +193,11 @@ export default class AugmentedSteam {
     }
 
     build(): void {
-        document.addEventListener("asRequestError", e => {
-            const {detail} = e as CustomEvent;
-            const name = detail.name ?? null;
-            const message = detail.message ?? null;
-
-            if (name === "LoginError" && message !== null) {
-                this.addLoginWarning(message);
-            }
-        })
-
         this.addBackToTop();
         this.focusSearchBox();
         this.addMenu();
+        this.addWarnings();
         /*
-        this.addLanguageWarning();
         this.handleInstallSteamButton();
         this.cartLink();
 

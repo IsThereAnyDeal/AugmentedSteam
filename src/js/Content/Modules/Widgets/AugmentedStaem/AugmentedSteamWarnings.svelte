@@ -1,80 +1,52 @@
 <script lang="ts">
-    import {L} from "@Core/Localization/Localization";
-    import {__loginWarning, __usingLanguage, __usingLanguageReturn} from "@Strings/_strings";
     import Settings from "@Options/Data/Settings";
-    import Warning from "@Content/Modules/Widgets/Components/Warning.svelte";
-    import LocalStorage from "@Core/Storage/LocalStorage";
-    import SteamFacade from "@Content/Modules/Facades/SteamFacade";
+    import {onMount} from "svelte";
+    import LoginWarning from "@Content/Modules/Widgets/AugmentedStaem/Components/LoginWarning.svelte";
+    import Language from "@Core/Localization/Language";
+    import LanguageWarning from "@Content/Modules/Widgets/AugmentedStaem/Components/LanguageWarning.svelte";
 
-    let showLanguage: boolean = false;
-    let showLogin: boolean = false;
+    export let language: Language;
+    export let react: boolean;
 
-    let warningLanguage: string;
-    let usingLanguageLocale: string;
-    let usingLanguageReturnLocale: string;
+    let languageWarning: Language|null = null;
+    let loginWarning: "store"|"community"|null = null;
 
-    let page: string;
-    let host: string;
+    onMount(() => {
+        document.addEventListener("asRequestError", async (e) => {
+            const {detail} = e as CustomEvent;
+            const name = detail.name ?? null;
+            const message = detail.message ?? null;
 
-    export async function showLanguageWarning(strings: Record<string, string>, currentLanguage: string, warningLanguage_: string): Promise<void> {
-        warningLanguage = warningLanguage_;
+            if (name === "LoginError" && (message === "store" || message === "community")) {
+                loginWarning = message;
+            }
+        });
 
-        usingLanguageLocale = strings[__usingLanguage]!
-            .replace("__current__", strings[`options_lang_${currentLanguage}`] ?? currentLanguage);
+        if (Settings.showlanguagewarning) {
+            if (!Settings.showlanguagewarninglanguage) {
+                Settings.showlanguagewarninglanguage = language.name;
+            }
 
-        usingLanguageReturnLocale = strings[__usingLanguageReturn]!
-            .replace("__base__", strings[`options_lang_${warningLanguage}`] ?? warningLanguage);
-
-        showLanguage = true;
-    }
-
-    function resetLanguageCode(): void {
-        SteamFacade.changeLanguage(warningLanguage, true);
-    }
-
-    function closeLanguageWarning() {
-        Settings.showlanguagewarning = false;
-        showLanguage = false;
-    }
-
-    export function showLoginWarning(type: "store"|"community") {
-        page = type;
-
-        if (type === "store") {
-            host = "store.steampowered.com";
-        } else if (type === "community") {
-            host = "steamcommunity.com";
-        } else {
-            throw new Error();
+            const warningLanguage = Settings.showlanguagewarninglanguage;
+            if (language.name !== warningLanguage) {
+                languageWarning = new Language(warningLanguage);
+            }
         }
-
-        console.warn("Are you logged into %s?", host);
-        showLogin = true;
-    }
-
-    function closeLoginWarning() {
-        if (page === "store") {
-            LocalStorage.set(`hide_login_warn_store`, true);
-        } else if (page === "community") {
-            LocalStorage.set(`hide_login_warn_community`, true);
-        }
-        showLogin = false;
-    }
+    });
 </script>
 
 
-{#if showLanguage}
-    <Warning on:close={closeLanguageWarning} on:hide={() => showLanguage = false}>
-        {usingLanguageLocale}
-        <button type="button" id="es_reset_language_code" on:click|preventDefault={resetLanguageCode}>
-            {usingLanguageReturnLocale}
-        </button>
-    </Warning>
+{#if languageWarning}
+    <LanguageWarning {react}
+            currentLanguage={language}
+            warningLanguage={languageWarning}
+            on:close={() => languageWarning = null}
+    />
 {/if}
 
-{#if showLogin}
-    <Warning on:close={closeLoginWarning} on:hide={() => showLogin = false}>
-        {@html L(__loginWarning, {"link": `<a href="https://${host}/login/">${host}</a>`})}
-    </Warning>
+{#if loginWarning}
+    <LoginWarning {react}
+            page={loginWarning}
+            on:close={() => loginWarning = null}
+    />
 {/if}
-
