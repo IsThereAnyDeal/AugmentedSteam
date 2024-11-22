@@ -8,6 +8,8 @@ import AugmentedSteamWarnings from "@Content/Modules/Widgets/AugmentedSteam/Augm
 import Language from "@Core/Localization/Language";
 import type UserInterface from "@Core/User/UserInterface";
 import BackToTop from "@Content/Modules/Widgets/AugmentedSteam/BackToTop.svelte";
+import DynamicStore from "@Content/Modules/Data/DynamicStore";
+import LocalStorage from "@Core/Storage/LocalStorage";
 
 export default class AugmentedSteam {
 
@@ -92,17 +94,6 @@ export default class AugmentedSteam {
 
             e.preventDefault();
             node.focus();
-        });
-    }
-
-    private bindLogout() {
-
-        // TODO there should be a better detection of logout, probably
-        const logoutNode = document.querySelector("a[href$='javascript:Logout();']");
-        if (!logoutNode) { return; }
-
-        logoutNode.addEventListener("click", () => {
-            CacheApiFacade.clearCache();
         });
     }
 
@@ -192,7 +183,17 @@ export default class AugmentedSteam {
         node.insertAdjacentElement("beforebegin", cloned);
     }
 
-    build(): void {
+    async build(): Promise<void> {
+
+        const userId = this.user.steamId ?? "0";
+        const cachedUser = await LocalStorage.get("cachedUser");
+
+        if (cachedUser !== userId) {
+            console.log(`Clear cache, old: ${cachedUser}, new: ${userId}`);
+            await CacheApiFacade.clearCache();
+            await LocalStorage.set("cachedUser", userId);
+        }
+
         this.addBackToTop();
         this.focusSearchBox();
         this.addMenu();
@@ -201,11 +202,9 @@ export default class AugmentedSteam {
 
         if (this.user.isSignedIn) {
             this.addRedeemLink();
-            /*
-            this.bindLogout();
 
+            // TODO probably doesn't used on React pages?
             DynamicStore.invalidateCacheHandler();
-         */
         }
     }
 }

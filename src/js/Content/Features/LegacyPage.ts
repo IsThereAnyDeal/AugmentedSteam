@@ -31,7 +31,7 @@ export default class LegacyPage extends Page {
     protected override async preApply(language: Language|null, user: UserInterface): Promise<void> {
         ProgressBar.buildLegacy();
 
-        (new AugmentedSteam(language, user, false))
+        await (new AugmentedSteam(language, user, false))
             .build();
 
         await ChangelogHandler.checkVersion();

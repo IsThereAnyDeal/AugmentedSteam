@@ -51,7 +51,8 @@ export interface LocalStorageSchema extends StorageSchema {
         language?: string,
         minPlaytime?: string,
         maxPlaytime?: string
-    }
+    },
+    cachedUser?: string
 }
 
 class LocalStorage<Schema extends StorageSchema> extends Storage<ns.LocalStorageArea, Schema>{
