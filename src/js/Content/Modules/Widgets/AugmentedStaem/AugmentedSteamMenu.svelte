@@ -18,17 +18,38 @@
     import external from "@Content/externalLink";
     import type UserInterface from "@Core/User/UserInterface";
     import CacheApiFacade from "@Content/Modules/Facades/CacheApiFacade";
+    import {onMount} from "svelte";
+    import {fade} from "svelte/transition";
 
     export let user: UserInterface;
 
-    const isSignedIn = user.isSignedIn;
+    let isOpen: boolean = false;
+    let parentNode: HTMLElement;
 
-    function showMenu(): void {
-        SteamFacade.showMenu("es_pulldown", "es_popup", "right", "bottom", true);
+    function outsideClickHandler(e: MouseEvent) {
+        const target = e.target as HTMLElement;
+        if (parentNode.contains(target)) {
+            return;
+        }
+        closeMenu();
     }
 
-    function hideMenu(): void {
-        SteamFacade.hideMenu("es_pulldown", "es_popup");
+    function toggleMenu(): void {
+        if (isOpen) {
+            closeMenu();
+        } else {
+            openMenu();
+        }
+    }
+
+    function openMenu(): void {
+        isOpen = true;
+        document.addEventListener("click", outsideClickHandler);
+    }
+
+    function closeMenu(): void {
+        isOpen = false;
+        document.removeEventListener("click", outsideClickHandler);
     }
 
     async function clearCache(): Promise<void> {
@@ -37,6 +58,7 @@
     }
 
     async function launchRandom(): Promise<void> {
+        // FIXME
         const appid = await DynamicStore.getRandomApp();
         if (!appid) { return; }
 
@@ -50,7 +72,7 @@
 
         const confirm = await SteamFacade.showConfirmDialog(
             L(__playGame, {gamename}),
-            `<img src="//shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/${gameid}/header.jpg">`,
+            `<img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/${gameid}/header.jpg">`,
             {
                 secondaryActionButton: L(__visitStore)
             }
@@ -61,53 +83,102 @@
             window.location.assign(`//store.steampowered.com/app/${gameid}`)
         }
     }
+
+    onMount(() => {
+        parentNode
+    });
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
-<span id="es_pulldown" class="pulldown global_action_link" on:click={showMenu}>Augmented Steam</span>
+<div class="parent" bind:this={parentNode}>
+    <button class:is-open={isOpen} on:click={toggleMenu}>Augmented Steam</button>
 
-<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
-<div id="es_popup" class="popup_block_new" on:click={hideMenu}>
-    <div class="popup_body popup_menu">
-        <a class="popup_menu_item" target="_blank" href={ExtensionResources.getURL("html/options.html")}>{L(__thewordoptions)}</a>
-        <a class="popup_menu_item" id="es_clear_cache" href="#clear_cache" on:click|preventDefault={clearCache}>{L(__clearCache)}</a>
-        <div class="hr"></div>
-        <a class="popup_menu_item" use:external href="https://github.com/IsThereAnyDeal/AugmentedSteam">{L(__contribute)}</a>
-        <a class="popup_menu_item" use:external href="https://github.com/IsThereAnyDeal/AugmentedSteam/issues">{L(__bugFeature)}</a>
-        <div class="hr"></div>
-        <a class="popup_menu_item" use:external href="{Config.PublicHost}">{L(__website)}</a>
-        <a class="popup_menu_item" use:external href="https://isthereanydeal.com/">IsThereAnyDeal</a>
-        <a class="popup_menu_item" use:external href="{Config.ITADDiscord}">Discord</a>
+    {#if isOpen}
+        <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
+        <div class="body" on:click={closeMenu} transition:fade={{duration: 100}}>
+            <div class="group">
+                <a target="_blank" href={ExtensionResources.getURL("html/options.html")}>{L(__thewordoptions)}</a>
+                <a href="#clear_cache" on:click|preventDefault={clearCache}>{L(__clearCache)}</a>
+            </div>
+            <div class="group">
+                <a use:external href="https://github.com/IsThereAnyDeal/AugmentedSteam">{L(__contribute)}</a>
+                <a use:external href="https://github.com/IsThereAnyDeal/AugmentedSteam/issues">{L(__bugFeature)}</a>
+            </div>
+            <div class="group">
+                <a use:external href="{Config.PublicHost}">{L(__website)}</a>
+                <a use:external href="https://isthereanydeal.com/">IsThereAnyDeal</a>
+                <a use:external href="{Config.ITADDiscord}">Discord</a>
+            </div>
 
-        {#if isSignedIn}
-            <div class="hr">
-            </div><a id="es_random_game" class="popup_menu_item" on:click={launchRandom}>{L(__launchRandom)}</a>
-        {/if}
-    </div>
+            {#if user.isSignedIn}
+                <div class="group">
+                    <a id="es_random_game" class="popup_menu_item" on:click={launchRandom}>{L(__launchRandom)}</a>
+                </div>
+            {/if}
+        </div>
+    {/if}
 </div>
 
 
 <style>
-    #es_pulldown {
+    .parent {
         display: inline-block;
-        padding-left: 4px;
-        line-height: 25px;
+        position: relative;
     }
-    #es_pulldown:global(.focus) {
+
+    button {
+        display: inline-flex;
+        align-items: center;
+        border: none;
+        height: 25px;
+        font: inherit;
+        line-height: 25px;
+        margin-right: 5px;
+        color: #b8b6b4;
+        background-color: transparent;
+        background-image: url("https://cdn.fastly.steamstatic.com/store/ssr/btn_arrow_down_padded-LIJGVCWF.png");
+        background-position: right center;
+        background-repeat: no-repeat;
+        padding-right: 18px;
+        cursor: pointer;
+    }
+    button.is-open,
+    button:hover {
         color: #ffffff;
     }
-    #es_popup {
-        display: none;
-    }
-    #es_popup > .popup_body {
-        width: fit-content;
-        max-width: 250px;
-    }
-    #es_popup > .popup_body.popup_menu .popup_menu_item {
-        padding: 8px 18px;
+
+    .body {
+        position: absolute;
+        right: 0;
+        top: 100%;
+        white-space: nowrap;
         font-size: 13px;
+        color: #b8b6b4;
+        padding: 0;
+        margin: 0;
+        background: #3d4450;
+        box-shadow: 0 0 12px #000000;
+        z-index: 1000;
     }
-    #es_popup > .popup_body.popup_menu .hr {
-        margin: 2px 12px;
+
+    .group + .group {
+        border-top: 1px solid #63717e;
+    }
+
+    a {
+        padding: 8px 18px;
+        display: block;
+        text-decoration: none;
+        color: #dcdedf;
+        white-space: nowrap;
+        cursor: pointer;
+        background: none;
+        border: none;
+        box-sizing: border-box;
+        text-align: start;
+        width: 100%;
+    }
+    a:hover {
+        background: #dcdedf;
+        color: #171a21;
     }
 </style>

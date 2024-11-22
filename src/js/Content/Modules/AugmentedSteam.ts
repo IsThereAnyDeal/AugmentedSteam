@@ -29,7 +29,11 @@ export default class AugmentedSteam {
     }
 
     private addMenu(): void {
-        const target = document.querySelector("#global_action_menu")!;
+        const target = document.querySelector(this.react
+            ? "header nav + div"
+            : "#global_action_menu"
+        )!;
+
         (new AugmentedSteamMenu({
             target,
             anchor: target.firstElementChild!,
@@ -212,8 +216,8 @@ export default class AugmentedSteam {
 
         this.addBackToTop();
         this.focusSearchBox();
-        /*
         this.addMenu();
+        /*
         this.addLanguageWarning();
         this.handleInstallSteamButton();
         this.cartLink();
