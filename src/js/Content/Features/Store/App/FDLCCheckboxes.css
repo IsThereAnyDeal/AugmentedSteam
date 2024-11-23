@@ -47,8 +47,7 @@
     padding: 0;
 }
 .game_area_dlc_row.dlc_highlight > div:first-child:has(.es_dlc_label) {
-    display: flex;
-    margin-left: -12px !important;
+    margin-left: -4px !important;
 }
 
 label.es_dlc_label {
