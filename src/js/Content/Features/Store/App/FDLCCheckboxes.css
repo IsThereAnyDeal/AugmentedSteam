@@ -1,4 +1,9 @@
 
+/* Fix the native add-all-dlc-to-cart button position on expandable dlc lists */
+#gameAreaDLCSection #dlc_purchase_action {
+    float: right;
+}
+
 #es_selected_btn {
     float: left;
     margin-top: 4px;
