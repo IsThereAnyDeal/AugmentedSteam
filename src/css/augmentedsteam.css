@@ -960,37 +960,6 @@ video.highlight_movie:hover + .html5_video_overlay {
 }
 
 /***************************************
- * Version update dialog
- **************************************/
-.es_changelog {
-  height: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  max-width: 800px;
-  font-size: 14px;
-}
-.es_changelog h1 {
-  font-size: 18px;
-  margin: 20px 0 5px 0;
-}
-.es_changelog p {
-  margin-bottom: 0.4em;
-  font-size: 14px !important;
-}
-.es_changelog img {
-  margin-right: 21px;
-}
-.es_changelog ul {
-  list-style-position: outside;
-  padding: 0 10px 10px 10px;
-  margin: 0 0 0 15px;
-}
-.es_changelog li {
-  margin-bottom: 3px;
-}
-
-/***************************************
  * Common
  * FHighlightsTags
  **************************************/

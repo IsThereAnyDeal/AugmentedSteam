@@ -61,7 +61,7 @@ export default class ReactPage extends Page {
         await (new AugmentedSteam(language, user, true))
             .build();
 
-        // await ChangelogHandler.checkVersion();
+        await ChangelogHandler.checkVersion();
         // await ITAD.init(user);
     }
 }

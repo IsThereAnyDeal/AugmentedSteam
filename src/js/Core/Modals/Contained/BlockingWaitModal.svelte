@@ -10,7 +10,7 @@
 </script>
 
 
-<Modal {title} on:close>
+<Modal {title}>
     <div>
         <i></i>
         {#if typeof status === "string"}

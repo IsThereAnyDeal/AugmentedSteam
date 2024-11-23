@@ -18,7 +18,7 @@ export default class ConfirmDialog {
     ) {}
 
     show(): Promise<"OK"|"SECONDARY"|"CANCEL"> {
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             const modal = new Modal({
                 target: document.body,
                 props: {
@@ -31,7 +31,6 @@ export default class ConfirmDialog {
                 resolve(e.detail);
                 modal.$destroy();
             });
-            modal.$on("close", reject);
         });
     }
 }

@@ -4,7 +4,6 @@
     import ModalButton from "@Core/Modals/Contained/ModalButton.svelte";
 
     const dispatch = createEventDispatcher<{
-        close: void,
         button: "OK"|"SECONDARY"|"CANCEL"
     }>();
 
@@ -15,7 +14,7 @@
         primary?: string,
         secondary?: string,
         cancel?: string
-    }|undefined;
+    }|undefined = undefined;
 </script>
 
 <div class="container">
@@ -24,7 +23,7 @@
         <div>
             <div class="header">
                 {#if showClose}
-                    <button type="button" on:click={() => dispatch("close")}></button>
+                    <button type="button" on:click={() => dispatch("button", "CANCEL")}></button>
                 {/if}
                 <div class="title">{title}</div>
             </div>

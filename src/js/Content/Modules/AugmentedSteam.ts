@@ -9,7 +9,6 @@ import type UserInterface from "@Core/User/UserInterface";
 import BackToTop from "@Content/Modules/Widgets/AugmentedSteam/BackToTop.svelte";
 import DynamicStore from "@Content/Modules/Data/DynamicStore";
 import LocalStorage from "@Core/Storage/LocalStorage";
-import SteamFacade from "@Content/Modules/Facades/SteamFacade";
 
 export default class AugmentedSteam {
 
