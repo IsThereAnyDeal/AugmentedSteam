@@ -3,7 +3,7 @@
     import {L} from "@Core/Localization/Localization";
     import ExtensionResources from "@Core/ExtensionResources";
     import {
-        __bugFeature,
+        __bugFeature, __cancel,
         __clearCache,
         __contribute,
         __launchRandom,
@@ -20,6 +20,7 @@
     import CacheApiFacade from "@Content/Modules/Facades/CacheApiFacade";
     import {onMount} from "svelte";
     import {fade} from "svelte/transition";
+    import ConfirmDialog from "@Core/Modals/ConfirmDialog";
 
     export let user: UserInterface;
 
@@ -58,7 +59,6 @@
     }
 
     async function launchRandom(): Promise<void> {
-        // FIXME
         const appid = await DynamicStore.getRandomApp();
         if (!appid) { return; }
 
@@ -70,13 +70,16 @@
         const gameid = appdetails.fullgame?.appid ?? appid;
         const gamename = appdetails.fullgame?.name ?? appdetails.name;
 
-        const confirm = await SteamFacade.showConfirmDialog(
+        const confirm = await (new ConfirmDialog(
             L(__playGame, {gamename}),
             `<img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/${gameid}/header.jpg">`,
             {
-                secondaryActionButton: L(__visitStore)
+                primary: "OK",
+                secondary: L(__visitStore),
+                cancel: L(__cancel)
             }
-        );
+        )).show();
+
         if (confirm === "OK") {
             window.location.assign(`steam://run/${gameid}`)
         } else if (confirm === "SECONDARY") {

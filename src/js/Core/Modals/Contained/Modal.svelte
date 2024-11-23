@@ -1,13 +1,21 @@
 <script lang="ts">
-    import {createEventDispatcher, onMount} from "svelte";
+    import {createEventDispatcher} from "svelte";
     import {fade} from "svelte/transition";
+    import ModalButton from "@Core/Modals/Contained/ModalButton.svelte";
 
     const dispatch = createEventDispatcher<{
-        close: void
+        close: void,
+        button: "OK"|"SECONDARY"|"CANCEL"
     }>();
 
     export let title: string;
+    export let body: string = "";
     export let showClose: boolean = false;
+    export let buttons: {
+        primary?: string,
+        secondary?: string,
+        cancel?: string
+    }|undefined;
 </script>
 
 <div class="container">
@@ -22,7 +30,21 @@
             </div>
         </div>
         <div class="content">
-            <slot></slot>
+            <slot>{@html body}</slot>
+
+            {#if buttons && (buttons?.primary || buttons?.secondary || buttons?.cancel)}
+                <div class="buttons">
+                    {#if buttons?.primary}
+                        <ModalButton type="primary" on:click={() => dispatch("button", "OK")}>{buttons.primary}</ModalButton>
+                    {/if}
+                    {#if buttons?.secondary}
+                        <ModalButton type="secondary" on:click={() => dispatch("button", "SECONDARY")}>{buttons.secondary}</ModalButton>
+                    {/if}
+                    {#if buttons?.cancel}
+                        <ModalButton type="cancel" on:click={() => dispatch("button", "CANCEL")}>{buttons.cancel}</ModalButton>
+                    {/if}
+                </div>
+            {/if}
         </div>
     </div>
 </div>
@@ -100,6 +122,11 @@
         color: #acb2b8;
         position: relative;
         max-height: calc(100vh - 100px);
+        box-sizing: border-box;
+    }
+
+    .buttons {
+        text-align: right;
     }
 
     .bg {
