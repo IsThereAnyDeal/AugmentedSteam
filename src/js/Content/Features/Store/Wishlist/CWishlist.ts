@@ -13,7 +13,6 @@ import FOneClickRemoveFromWishlist from "./FOneClickRemoveFromWishlist";
 import FWishlistProfileLink from "./FWishlistProfileLink";
 import CStoreBase from "@Content/Features/Store/Common/CStoreBase";
 import ContextType from "@Content/Modules/Context/ContextType";
-import LegacyUser from "@Core/User/LegacyUser";
 import ASEventHandler from "@Content/Modules/ASEventHandler";
 import type {ContextParams} from "@Content/Modules/Context/Context";
 

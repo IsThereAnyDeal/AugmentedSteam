@@ -11,6 +11,7 @@ import ProgressBar from "@Content/Modules/Widgets/ProgressBar";
 import AugmentedSteam from "@Content/Modules/AugmentedSteam";
 import ChangelogHandler from "@Core/Update/ChangelogHandler";
 import ITAD from "@Content/Modules/ITAD";
+import ReactDOM from "@Content/Steam/ReactDOM";
 
 export default class ReactPage extends Page {
     public async hydration(timeout: number=30): Promise<this> {
@@ -41,7 +42,7 @@ export default class ReactPage extends Page {
     }
 
     protected override check(): boolean {
-        return true; // FIXME
+        return !!ReactDOM.globalHeader();
     }
 
     protected override getAppConfig(factory: AppConfigFactory): Promise<AppConfig> {
