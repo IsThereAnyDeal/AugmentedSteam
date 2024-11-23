@@ -6,11 +6,7 @@
 
 #es_selected_btn {
     float: left;
-    margin-top: 4px;
     display: none;
-}
-#game_area_dlc_expanded + #es_selected_btn {
-    margin-bottom: 10px;
 }
 
 #es_dlc_option_panel {
