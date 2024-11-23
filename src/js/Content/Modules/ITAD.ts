@@ -13,10 +13,12 @@ export default class ITAD {
             await ITADApiFacade.sync();
         }
 
-        const target = document.querySelector("#global_action_menu");
-        if (target) {
-            const anchor = target.firstElementChild ?? undefined;
-            (new ITADSyncMenu({target, anchor}));
+        const menu = document.querySelector(".as-menu");
+        if (menu) {
+            (new ITADSyncMenu({
+                target: menu.parentElement!,
+                anchor: menu
+            }));
         }
     }
 

@@ -62,6 +62,6 @@ export default class ReactPage extends Page {
             .build();
 
         await ChangelogHandler.checkVersion();
-        // await ITAD.init(user);
+        await ITAD.init(user);
     }
 }

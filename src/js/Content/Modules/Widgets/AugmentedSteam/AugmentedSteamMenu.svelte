@@ -92,7 +92,7 @@
     });
 </script>
 
-<div class="parent" bind:this={parentNode}>
+<div class="as-menu" bind:this={parentNode}>
     <button class:is-open={isOpen} on:click={toggleMenu}>Augmented Steam</button>
 
     {#if isOpen}
@@ -123,7 +123,7 @@
 
 
 <style>
-    .parent {
+    .as-menu {
         display: inline-block;
         position: relative;
     }
