@@ -101,5 +101,9 @@ export default class SettingsMigration {
             await storage.remove("itad_import_wishlist");
             await AccessToken.clear(); // new scopes are required
         }
+
+        if (oldVersion.isSameOrBefore("4.1.2")) {
+            await storage.remove("showdeckcompat");
+        }
     }
 }

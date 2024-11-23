@@ -32,7 +32,6 @@ import FReplaceDevPubLinks from "./FReplaceDevPubLinks";
 import FReviewToggleButton from "./FReviewToggleButton";
 import FSaveReviewFilters from "./FSaveReviewFilters";
 import FShowCoupon from "./FShowCoupon";
-import FSteamDeckCompatibility from "./FSteamDeckCompatibility";
 import FSteamPeek from "./FSteamPeek";
 import FSupportInfo from "./FSupportInfo";
 import FUserNotes from "./FUserNotes";
@@ -113,7 +112,6 @@ export default class CApp extends CStoreBase {
                 FSaveReviewFilters,
                 FHideReportedTags,
                 FPatchHighlightPlayer,
-                FSteamDeckCompatibility,
                 FRemoveDupeScreenshots,
                 FHighlightTitle
             ]);

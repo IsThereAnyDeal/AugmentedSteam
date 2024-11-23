@@ -115,7 +115,6 @@ export const DefaultSettings: Readonly<SettingsSchema> = {
     showlanguagewarninglanguage: "english",
     homepage_tab_selection: "remember",
     send_age_info: true,
-    showdeckcompat: false,
     removebroadcasts: false,
     mp4video: false,
     horizontalscrolling: true,

@@ -21,7 +21,6 @@
         __options_showBadgeProgress,
         __options_showbartervg,
         __options_showCoupon,
-        __options_showdeckcompat,
         __options_showPackageInfo,
         __options_showPlayersInfo,
         __options_showViewInLibrary,
@@ -61,7 +60,6 @@
         <Toggle bind:value={$settings.purchase_dates}>{L(__options_purchaseDates)}</Toggle>
         <Toggle bind:value={$settings.show_badge_progress}>{L(__options_showBadgeProgress)}</Toggle>
         <Toggle bind:value={$settings.show_coupon}>{L(__options_showCoupon)}</Toggle>
-        <Toggle bind:value={$settings.showdeckcompat}>{L(__options_showdeckcompat)}</Toggle>
     </OptionGroup>
 
     <OptionGroup>
