@@ -1,0 +1,3 @@
+[submodule "Protobufs"]
+	path = src/js/Core/Protobufs/Module
+	url = git@github.com:SteamDatabase/Protobufs.git
