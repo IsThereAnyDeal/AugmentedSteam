@@ -86,9 +86,8 @@
     }
 
     .progress {
-        float: right;
         position: relative;
-        margin-top: 55px;
+        top: 55px;
         width: 100px;
         min-width: 16px;
         height: 16px;
