@@ -27,6 +27,17 @@
         dispatch("close");
     }
 
+    async function handleSetLanguage(): Promise<void> {
+        const payload = new FormData();
+        payload.set("language", warningLanguage.name);
+
+        await fetch("https://store.steampowered.com/account/setlanguage/", {
+            method: "POST",
+            body: payload
+        });
+        window.location.href = `?l=${warningLanguage.name}`;
+    }
+
     function str__usingLanguage(loc: TLocale): string {
         return loc.strings[__usingLanguage]!
             .replace("__current__", loc.strings[`options_lang_${currentLanguage.name}`] ?? currentLanguage.name);
@@ -49,10 +60,9 @@
             {str__usingLanguage(locale)}
 
             {#if react}
-                <!-- TODO handle language chages via click like in legacy pages -->
-                <a href="https://store.steampowered.com/account/languagepreferences">
+                <button type="button" on:click={handleSetLanguage}>
                     {str__usingLanguageReturn(locale)}
-                </a>
+                </button>
             {:else}
                 <button type="button" on:click|preventDefault={resetLanguageCode}>
                     {str__usingLanguageReturn(locale)}
@@ -64,7 +74,7 @@
 
 
 <style>
-    a,button {
+    button {
         background: #ffaaaa;
         padding: 3px 10px;
         color: black;
@@ -76,7 +86,6 @@
         border: 0;
         margin-left: 10px;
     }
-    a:hover,
     button:hover {
         background: #e89a9a;
     }
