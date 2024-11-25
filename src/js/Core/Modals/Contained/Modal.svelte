@@ -18,6 +18,7 @@
 </script>
 
 <div class="container">
+    <div class="bg" in:fade={{duration: 200}}></div>
     <div class="modal">
         <div class="top-bar"></div>
         <div>
@@ -47,7 +48,6 @@
         </div>
     </div>
 </div>
-<div class="bg" in:fade={{duration: 200}}></div>
 
 
 <style>
@@ -55,7 +55,7 @@
         position: fixed;
         top: 0;
         left: 0;
-        z-index: 1000;
+        z-index: 900;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -64,6 +64,7 @@
     }
 
     .modal {
+        position: relative;
         min-width: 500px;
         max-width: calc(100vw - 100px);
         margin: auto;
@@ -117,7 +118,7 @@
         word-wrap: break-word;
         padding: 24px 25px 25px 25px;
         font-size: 16px;
-        line-height: 21px;
+        line-height: 1.25;
         color: #acb2b8;
         position: relative;
         max-height: calc(100vh - 100px);
@@ -130,7 +131,6 @@
 
     .bg {
         position: fixed;
-        z-index: 900;
         background: #000000;
         opacity: 0.8;
         top: 0;

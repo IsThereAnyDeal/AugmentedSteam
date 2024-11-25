@@ -159,8 +159,7 @@ export default async function(options) {
                 compilerOptions: {
                     hydratable: false,
                     css: "external",
-                    dev: options.dev,
-                    immutable: true
+                    dev: options.dev
                 }
             }),
             {

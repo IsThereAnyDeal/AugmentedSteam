@@ -129,68 +129,6 @@ img.astats_icon {
   font-size: 14px !important;
 }
 
-/***************************************
- * Wishlist stats
- **************************************/
-#esi-wishlist-stats-content {
-  display: flex;
-  padding: 25px;
-  overflow: hidden;
-  justify-content: space-evenly;
-  align-items: center;
-  font-size: 1.6em;
-  text-align: center;
-}
-.esi-stat {
-  display: flex;
-  flex-direction: column;
-}
-.esi-stat > span {
-  font-size: 1.8em;
-  font-weight: 300;
-}
-#esi-wishlist-stats-content .esi-stat {
-  color: #1a9fff;
-  font-weight: bold;
-}
-/* Apply Steam's margin to the filter button (the old `:first-child`) */
-#esi-wishlist-stats + #tab_filters {
-  margin: 0px 15px 0px 0px;
-}
-#esi-wishlist-stats,
-#esi-wishlist-stats-content .esi-stat > span {
-  color: white;
-}
-
-#esi-stat-hidden-ctn, .as-wl-remove {
-  cursor: pointer;
-}
-.esi-stat-hidden-label > span {
-  color: #66c0f4;
-}
-.as-wl-remove-row {
-  display: flex;
-  align-items: center;
-  column-gap: 30px;
-  margin-bottom: 5px;
-  background-color: rgba(0, 0, 0, 0.2);
-}
-.as-wl-remove-row > a:first-child {
-  display: inline-block;
-  width: 162px;
-  height: 75px;
-}
-.as-wl-remove-row > a:first-child img {
-  width: 162px;
-}
-.as-wl-remove {
-  margin-right: 5px;
-  margin-left: auto;
-  text-decoration: underline;
-}
-.as-wl-remove:hover {
-  color: #d8dde2;
-}
 
 /***************************************
  * Game Cards page
