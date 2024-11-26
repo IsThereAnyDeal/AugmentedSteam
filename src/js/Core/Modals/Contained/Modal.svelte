@@ -2,9 +2,10 @@
     import {createEventDispatcher} from "svelte";
     import {fade} from "svelte/transition";
     import ModalButton from "@Core/Modals/Contained/ModalButton.svelte";
+    import {EModalAction} from "@Core/Modals/Contained/EModalAction";
 
     const dispatch = createEventDispatcher<{
-        button: "OK"|"SECONDARY"|"CANCEL"
+        button: EModalAction
     }>();
 
     export let title: string;
@@ -24,7 +25,7 @@
         <div>
             <div class="header">
                 {#if showClose}
-                    <button type="button" on:click={() => dispatch("button", "CANCEL")}></button>
+                    <button type="button" on:click={() => dispatch("button", EModalAction.Cancel)}></button>
                 {/if}
                 <div class="title">{title}</div>
             </div>
@@ -35,13 +36,13 @@
             {#if buttons && (buttons?.primary || buttons?.secondary || buttons?.cancel)}
                 <div class="buttons">
                     {#if buttons?.primary}
-                        <ModalButton type="primary" on:click={() => dispatch("button", "OK")}>{buttons.primary}</ModalButton>
+                        <ModalButton type="primary" on:click={() => dispatch("button", EModalAction.OK)}>{buttons.primary}</ModalButton>
                     {/if}
                     {#if buttons?.secondary}
-                        <ModalButton type="secondary" on:click={() => dispatch("button", "SECONDARY")}>{buttons.secondary}</ModalButton>
+                        <ModalButton type="secondary" on:click={() => dispatch("button", EModalAction.Secondary)}>{buttons.secondary}</ModalButton>
                     {/if}
                     {#if buttons?.cancel}
-                        <ModalButton type="cancel" on:click={() => dispatch("button", "CANCEL")}>{buttons.cancel}</ModalButton>
+                        <ModalButton type="cancel" on:click={() => dispatch("button", EModalAction.Cancel)}>{buttons.cancel}</ModalButton>
                     {/if}
                 </div>
             {/if}

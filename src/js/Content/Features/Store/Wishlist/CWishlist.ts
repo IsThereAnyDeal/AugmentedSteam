@@ -9,14 +9,14 @@ import FWishlistStats from "./FWishlistStats";
 import FEmptyWishlist from "./FEmptyWishlist";
 import FExportWishlist from "./FExportWishlist";
 import FKeepEditableRanking from "./FKeepEditableRanking";
-import FOneClickRemoveFromWishlist from "./FOneClickRemoveFromWishlist";
 import FWishlistProfileLink from "./FWishlistProfileLink";
 import CStoreBase from "@Content/Features/Store/Common/CStoreBase";
 import ContextType from "@Content/Modules/Context/ContextType";
 import ASEventHandler from "@Content/Modules/ASEventHandler";
 import type {ContextParams} from "@Content/Modules/Context/Context";
+import SteamFacade from "@Content/Modules/Facades/SteamFacade";
 
-interface WishlistEntry {
+export interface WishlistEntry {
     appid: number,
     priority: number,
     added: number
@@ -27,10 +27,26 @@ export default class CWishlist extends CStoreBase {
     public readonly onWishlistUpdate: ASEventHandler<HTMLElement[]> = new ASEventHandler<HTMLElement[]>();
 
     private readonly hasWishlistData: boolean = false;
-    public readonly wishlistData: WishlistEntry[] = [];
-    public readonly myWishlist: boolean = false;
+    public wishlistData: WishlistEntry[]|undefined;
+    public myWishlist: boolean = false;
+    public ownerId: string|undefined;
 
     constructor(params: ContextParams) {
+
+        super(params, ContextType.WISHLIST, [
+                FAlternativeLinuxIcon,
+                // FWishlistHighlights,
+                // FWishlistITADPrices,
+                // FWishlistUserNotes,
+                FWishlistStats,
+                // FEmptyWishlist,
+                FExportWishlist,
+                // FKeepEditableRanking,
+                FWishlistProfileLink,
+            ]
+        );
+        return;
+
         // TODO use SteamFacade to get global variable?
         const wishlistData = HTMLParser.getArrayVariable<WishlistEntry>("g_rgWishlistData") ?? [];
 
@@ -39,14 +55,13 @@ export default class CWishlist extends CStoreBase {
         super(params, ContextType.WISHLIST, hasWishlistData
             ? [
                 FAlternativeLinuxIcon,
-                FWishlistHighlights,
-                FWishlistITADPrices,
-                FWishlistUserNotes,
-                FWishlistStats,
-                FEmptyWishlist,
-                FExportWishlist,
-                FKeepEditableRanking,
-                FOneClickRemoveFromWishlist,
+                // FWishlistHighlights,
+                // FWishlistITADPrices,
+                // FWishlistUserNotes,
+                // FWishlistStats,
+                // FEmptyWishlist,
+                // FExportWishlist,
+                // FKeepEditableRanking,
                 FWishlistProfileLink,
             ] : []
         );
@@ -70,6 +85,28 @@ export default class CWishlist extends CStoreBase {
     }
 
     override async applyFeatures(): Promise<void> {
+
+        const queryData: {
+            queries: Array<{
+                state: Record<string, any>,
+                queryKey: Array<any>
+            }>
+        } = JSON.parse(await SteamFacade.global("SSR.renderContext.queryData"));
+
+        for (let query of queryData.queries) {
+            if (query.queryKey[0] === "WishlistSortedFiltered") {
+                this.ownerId = query.state.data.steamid;
+                this.wishlistData = query.state.data.items;
+            }
+        }
+
+        if (!this.ownerId || !this.wishlistData) {
+            throw new Error();
+        }
+
+        super.applyFeatures();
+        return;
+
         if (!this.hasWishlistData) { return; }
 
         const throbber = document.getElementById("throbber");
