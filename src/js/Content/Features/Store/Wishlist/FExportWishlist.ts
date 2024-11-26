@@ -5,20 +5,14 @@ import type CWishlist from "@Content/Features/Store/Wishlist/CWishlist";
 import ExportWishlistForm from "@Content/Features/Store/Wishlist/Components/ExportWishlistForm.svelte";
 import Language from "@Core/Localization/Language";
 import WishlistButton from "@Content/Features/Store/Wishlist/Components/WishlistButton.svelte";
+import {getMenuNode} from "@Content/Features/Store/Wishlist/Components/WishlistMenu.svelte";
 
 
 export default class FExportWishlist extends Feature<CWishlist> {
 
     override apply(): void {
-        const container = document.querySelector(".wA5EFNQ7hrU-");
-
-        if (!container) {
-            throw new Error("Did not find container for buttons");
-        }
-
         const button = new WishlistButton({
-            target: container,
-            anchor: container.firstElementChild ?? undefined,
+            target: getMenuNode().getTarget(2),
             props: {
                 label: L(__export_wishlist)
             }

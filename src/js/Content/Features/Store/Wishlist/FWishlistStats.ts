@@ -6,6 +6,7 @@ import Language from "@Core/Localization/Language";
 import WishlistButton from "@Content/Features/Store/Wishlist/Components/WishlistButton.svelte";
 import {__wl_label} from "@Strings/_strings";
 import {L} from "@Core/Localization/Localization";
+import {getMenuNode} from "@Content/Features/Store/Wishlist/Components/WishlistMenu.svelte";
 
 export default class FWishlistStats extends Feature<CWishlist> {
 
@@ -26,8 +27,7 @@ export default class FWishlistStats extends Feature<CWishlist> {
         });
 
         const button = new WishlistButton({
-            target: document.querySelector(".wA5EFNQ7hrU-")!,
-            anchor: document.querySelector(".bFz2fxg5qDY-.mMC3clyeve4-")!,
+            target: getMenuNode().getTarget(3),
             props: {
                 label: L(__wl_label)
             }

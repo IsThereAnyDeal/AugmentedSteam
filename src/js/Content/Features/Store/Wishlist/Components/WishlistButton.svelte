@@ -9,7 +9,6 @@
 <style>
     button {
         background-color: #6c94a0;
-        margin-right: 15px;
         text-transform: uppercase;
         text-decoration: none;
         text-align: center;
@@ -19,8 +18,8 @@
         border-radius: 1px;
         color: #fff;
         cursor: pointer;
-        margin-left: 2px;
         font-size: 11px;
+        height: 100%;
     }
     button:hover {
         background-color: #dbdee1;
