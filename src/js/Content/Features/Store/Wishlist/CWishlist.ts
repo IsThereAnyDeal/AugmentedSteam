@@ -32,10 +32,9 @@ export default class CWishlist extends CStoreBase {
     public ownerId: string|undefined;
 
     constructor(params: ContextParams) {
-
         super(params, ContextType.WISHLIST, [
                 FAlternativeLinuxIcon,
-                // FWishlistHighlights,
+                FWishlistHighlights,
                 // FWishlistITADPrices,
                 // FWishlistUserNotes,
                 FWishlistStats,
@@ -103,6 +102,8 @@ export default class CWishlist extends CStoreBase {
         if (!this.ownerId || !this.wishlistData) {
             throw new Error();
         }
+
+        this.myWishlist = this.ownerId === this.user.steamId;
 
         super.applyFeatures();
         return;
