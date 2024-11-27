@@ -28,10 +28,16 @@
     };
 
     export let options: Array<keyof Options>;
+
+    let node: HTMLElement;
+
+    export function isConnected(): boolean {
+        return node.isConnected;
+    }
 </script>
 
 
-<div class="as-tags" class:is-short={short}>
+<div class="as-tags" class:is-short={short} bind:this={node}>
     {#each options as option}
         {@const [locale, color] = setup[option]}
         <span style:background-color={color}>{L(locale)}</span>

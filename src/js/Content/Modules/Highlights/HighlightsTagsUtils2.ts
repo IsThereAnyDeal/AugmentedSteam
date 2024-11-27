@@ -34,6 +34,8 @@ export default class HighlightsTagsUtils2 {
     private readonly settings: Options;
     private readonly cache: Map<string, ItemSetup>;
 
+    private tagsComponents: Tags[] = [];
+
     constructor(options: Partial<Options> = {}) {
         let settings: Options = {
             owned:        Settings.highlight_owned         || Settings.tag_owned,
@@ -251,10 +253,22 @@ export default class HighlightsTagsUtils2 {
             return;
         }
 
-        new Tags({
+        const tags = new Tags({
             target,
             anchor,
             props: {options}
         });
+
+        this.tagsComponents.push(tags);
+    }
+
+    public clearDisconnectedTags(): void {
+        this.tagsComponents = this.tagsComponents.filter(tags => {
+            const connected = tags.isConnected();
+            if (!connected) {
+                tags.$destroy();
+            }
+            return connected;
+        })
     }
 }

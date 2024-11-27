@@ -25,6 +25,7 @@ export default class FWishlistHighlights extends Feature<CWishlist> {
         }
 
         const appids = this.context.wishlistData?.map(entry => new Appid(entry.appid)) ?? [];
+
         if (appids.length === 0) {
             return;
         }
@@ -32,32 +33,20 @@ export default class FWishlistHighlights extends Feature<CWishlist> {
         this.highlighter.insertStyles();
         this.map = await this.highlighter.query(appids);
 
-        const observer = new MutationObserver(() => this.highlight());
-
-        observer.observe(
-            document.querySelector(".oI5QPBYWG8c-")!,
-            {
-                subtree: true,
-                childList: true,
-                characterData: true
-            }
-        )
-
+        this.context.dom.onChange(() => this.highlight());
         this.highlight()
     }
 
     private highlight(): void {
-        const gameNodes = document.querySelectorAll<HTMLElement>(".LSY1zV2DJSM-");
-        for (let node of gameNodes) {
+        const dom = this.context.dom;
 
-            // title node
-            const a = node.querySelector<HTMLAnchorElement>("a.Fuz2JeT4RfI-[href*='/app/']");
+        for (const node of dom.gameNodes()) {
+            const a = dom.titleNode(node);
             if (!a) {
                 continue;
             }
 
-            const m = a.href.match(/app\/(\d+)/)!;
-            const appid = m[0];
+            const appid = this.context.dom.appid(a)!.string;
             const setup = this.map.get(appid);
 
             if (setup?.h) {
@@ -68,5 +57,7 @@ export default class FWishlistHighlights extends Feature<CWishlist> {
                 this.highlighter.tags(setup.t, a);
             }
         }
+
+        this.highlighter.clearDisconnectedTags();
     }
 }
