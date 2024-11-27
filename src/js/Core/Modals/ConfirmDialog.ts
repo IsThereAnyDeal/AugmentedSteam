@@ -1,6 +1,7 @@
 import {__cancel} from "@Strings/_strings";
 import {L} from "@Core/Localization/Localization";
 import Modal from "@Core/Modals/Contained/Modal.svelte";
+import type {EModalAction} from "@Core/Modals/Contained/EModalAction";
 
 export default class ConfirmDialog {
 
@@ -17,7 +18,7 @@ export default class ConfirmDialog {
         }
     ) {}
 
-    show(): Promise<"OK"|"SECONDARY"|"CANCEL"> {
+    show(): Promise<EModalAction> {
         return new Promise(resolve => {
             const modal = new Modal({
                 target: document.body,
@@ -27,7 +28,7 @@ export default class ConfirmDialog {
                     buttons: this.buttons
                 }
             });
-            modal.$on("button", (e: CustomEvent<"OK"|"SECONDARY"|"CANCEL">) => {
+            modal.$on("button", (e: CustomEvent<EModalAction>) => {
                 resolve(e.detail);
                 modal.$destroy();
             });

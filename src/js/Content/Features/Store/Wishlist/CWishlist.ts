@@ -15,6 +15,7 @@ import ContextType from "@Content/Modules/Context/ContextType";
 import ASEventHandler from "@Content/Modules/ASEventHandler";
 import type {ContextParams} from "@Content/Modules/Context/Context";
 import SteamFacade from "@Content/Modules/Facades/SteamFacade";
+import {WishlistDOM} from "@Content/Features/Store/Wishlist/WishlistDOM";
 
 export interface WishlistEntry {
     appid: number,
@@ -31,12 +32,14 @@ export default class CWishlist extends CStoreBase {
     public myWishlist: boolean = false;
     public ownerId: string|undefined;
 
+    public dom: WishlistDOM;
+
     constructor(params: ContextParams) {
         super(params, ContextType.WISHLIST, [
                 FAlternativeLinuxIcon,
                 FWishlistHighlights,
                 // FWishlistITADPrices,
-                // FWishlistUserNotes,
+                FWishlistUserNotes,
                 FWishlistStats,
                 // FEmptyWishlist,
                 FExportWishlist,
@@ -44,6 +47,8 @@ export default class CWishlist extends CStoreBase {
                 FWishlistProfileLink,
             ]
         );
+
+        this.dom = new WishlistDOM();
         return;
 
         // TODO use SteamFacade to get global variable?
@@ -106,6 +111,8 @@ export default class CWishlist extends CStoreBase {
         this.myWishlist = this.ownerId === this.user.steamId;
 
         super.applyFeatures();
+
+        this.dom.observe();
         return;
 
         if (!this.hasWishlistData) { return; }
