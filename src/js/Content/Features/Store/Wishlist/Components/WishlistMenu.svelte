@@ -45,7 +45,6 @@
         }
         itemNodes.push([targetPosition, newItem]);
         itemNodes.sort((a, b) => a[0]-b[0]);
-        console.log(itemNodes);
         return newItem;
     }
 
