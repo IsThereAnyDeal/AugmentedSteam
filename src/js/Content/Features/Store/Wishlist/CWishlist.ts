@@ -38,7 +38,7 @@ export default class CWishlist extends CStoreBase {
         super(params, ContextType.WISHLIST, [
                 FAlternativeLinuxIcon,
                 FWishlistHighlights,
-                // FWishlistITADPrices,
+                FWishlistITADPrices,
                 FWishlistUserNotes,
                 FWishlistStats,
                 // FEmptyWishlist,
