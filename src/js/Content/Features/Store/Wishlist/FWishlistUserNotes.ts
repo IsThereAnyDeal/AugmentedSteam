@@ -43,8 +43,8 @@ export default class FWishlistUserNotes extends Feature<CWishlist> {
                 }
             }
 
-            const platforms = dom.platformsNode(node)!;
-            if (platforms.childElementCount === 0) {
+            const platforms = dom.platformsNode(node);
+            if (!platforms || platforms.childElementCount === 0) {
                 continue;
             }
 
