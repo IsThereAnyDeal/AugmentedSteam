@@ -1,13 +1,15 @@
 import {L} from "@Core/Localization/Localization";
-import {__emptyWishlist_confirm, __emptyWishlist_removing, __emptyWishlist_title} from "@Strings/_strings";
+import {__cancel, __emptyWishlist_confirm, __emptyWishlist_removing, __emptyWishlist_title} from "@Strings/_strings";
 import type CWishlist from "@Content/Features/Store/Wishlist/CWishlist";
 import Feature from "@Content/Modules/Context/Feature";
 import Settings from "@Options/Data/Settings";
-import HTML from "@Core/Html/Html";
 import DynamicStore from "@Content/Modules/Data/DynamicStore";
-import RequestData from "@Content/Modules/RequestData";
-import SteamFacade from "@Content/Modules/Facades/SteamFacade";
 import BlockingWaitDialog from "@Core/Modals/BlockingWaitDialog";
+import WishlistButton from "@Content/Features/Store/Wishlist/Components/WishlistButton.svelte";
+import {getMenuNode} from "@Content/Features/Store/Wishlist/Components/WishlistMenu.svelte";
+import ConfirmDialog from "@Core/Modals/ConfirmDialog";
+import {EModalAction} from "@Core/Modals/Contained/EModalAction";
+import ServiceFactory from "@Protobufs/ServiceFactory";
 
 export default class FEmptyWishlist extends Feature<CWishlist> {
 
@@ -16,40 +18,54 @@ export default class FEmptyWishlist extends Feature<CWishlist> {
     }
 
     override apply(): void {
-        HTML.afterBegin("#cart_status_data", `<div class="es-wbtn" id="es_empty_wishlist">${L(__emptyWishlist_title)}</div>`);
 
-        document.getElementById("es_empty_wishlist")!.addEventListener("click", async() => {
-
-            const result = await SteamFacade.showConfirmDialog(
-                L(__emptyWishlist_title),
-                L(__emptyWishlist_confirm), {
-                    explicitConfirm: true
-                });
-
-            if (result !== "OK") { return; }
-
-            let cur = 0;
-            const wishlistData = this.context.wishlistData;
-
-            const waitDialog = new BlockingWaitDialog(
-                L(__emptyWishlist_title),
-                () => L(__emptyWishlist_removing, {
-                    cur,
-                    total: wishlistData.length
-                })
-            );
-
-            for (const {appid} of wishlistData) {
-                ++cur;
-                await waitDialog.update();
-                await RequestData.post("https://store.steampowered.com/api/removefromwishlist", {
-                    sessionid: this.context.user.sessionId!,
-                    appid: String(appid)
-                });
+        const button = new WishlistButton({
+            target: getMenuNode().getTarget(1),
+            props: {
+                label: L(__emptyWishlist_title),
+                destructive: true
             }
-
-            DynamicStore.clear();
-            location.reload();
         });
+        button.$on("click", () => {
+            this.handleClick()
+        });
+    }
+
+    private async handleClick(): Promise<void> {
+
+        const confirm = new ConfirmDialog(
+            L(__emptyWishlist_title),
+            L(__emptyWishlist_confirm), {
+                primary: "OK",
+                cancel: L(__cancel)
+            }
+        );
+
+        const response = await confirm.show();
+        if (response !== EModalAction.OK) {
+            return;
+        }
+
+        let cur = 0;
+        const wishlistData = this.context.wishlistData ?? [];
+
+        const waitDialog = new BlockingWaitDialog(
+            L(__emptyWishlist_title),
+            () => L(__emptyWishlist_removing, {
+                cur,
+                total: wishlistData.length
+            })
+        );
+
+        const service = ServiceFactory.WishlistService(this.context.user);
+
+        for (const {appid} of wishlistData) {
+            ++cur;
+            await waitDialog.update();
+            await service.removeFromWishlist({appid});
+        }
+
+        DynamicStore.clear();
+        location.reload();
     }
 }

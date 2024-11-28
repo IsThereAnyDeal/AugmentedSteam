@@ -41,7 +41,7 @@ export default class CWishlist extends CStoreBase {
                 FWishlistITADPrices,
                 FWishlistUserNotes,
                 FWishlistStats,
-                // FEmptyWishlist,
+                FEmptyWishlist,
                 FExportWishlist,
                 // FKeepEditableRanking,
                 FWishlistProfileLink,
