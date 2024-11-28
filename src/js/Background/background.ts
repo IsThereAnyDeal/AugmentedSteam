@@ -15,6 +15,7 @@ import SettingsMigration from "@Core/Update/SettingsMigration";
 import Version from "@Core/Version";
 import {EAction} from "@Background/EAction";
 import Storage from "@Core/Storage/Storage";
+import WebRequestHandler from "@Background/Modules/WebRequest/WebRequestHandler";
 
 Environment.CurrentContext = ContextType.Background;
 
@@ -74,11 +75,12 @@ browser.runtime.onMessage.addListener((
                 new ITADApi(),
                 new SteamStoreApi(),
                 new UserNotesApi(),
-                new CacheApi()
+                new CacheApi(),
+                new WebRequestHandler()
             ];
 
             for (const handler of handlers) {
-                response = await handler.handle(message);
+                response = await handler.handle(message, sender.tab);
                 if (response !== Unrecognized) {
                     break;
                 }

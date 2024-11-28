@@ -15,7 +15,8 @@ export default {
     },
     permissions: [
         "storage",
-        "contextMenus"
+        "contextMenus",
+        "webRequest"
     ],
     host_permissions: [
         "*://*.steampowered.com/*",
