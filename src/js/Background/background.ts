@@ -51,6 +51,18 @@ browser.runtime.onInstalled.addListener(async (detail) => {
     console.log("Update done");
 });
 
+
+const messageHandlers: MessageHandlerInterface[] = [
+    new AugmentedSteamApi(),
+    new SteamCommunityApi(),
+    new InventoryApi(),
+    new ITADApi(),
+    new SteamStoreApi(),
+    new UserNotesApi(),
+    new CacheApi(),
+    new WebRequestHandler()
+];
+
 browser.runtime.onMessage.addListener((
     message: Message,
     sender: MessageSender
@@ -68,18 +80,7 @@ browser.runtime.onMessage.addListener((
             await Promise.all([IndexedDB.init(), SettingsStore.init()]);
 
             let response: any = undefined;
-            const handlers: MessageHandlerInterface[] = [
-                new AugmentedSteamApi(),
-                new SteamCommunityApi(),
-                new InventoryApi(),
-                new ITADApi(),
-                new SteamStoreApi(),
-                new UserNotesApi(),
-                new CacheApi(),
-                new WebRequestHandler()
-            ];
-
-            for (const handler of handlers) {
+            for (const handler of messageHandlers) {
                 response = await handler.handle(message, sender.tab);
                 if (response !== Unrecognized) {
                     break;

@@ -3,24 +3,26 @@ import {EAction} from "@Background/EAction";
 import {Unrecognized} from "@Background/background";
 import browser, {type Tabs, type WebRequest, webRequest} from "webextension-polyfill";
 
+type OnCompleteCallback = (request: WebRequest.OnCompletedDetailsType) => Promise<void>;
+
 export default class WebRequestHandler implements MessageHandlerInterface {
 
     /**
-     * Map of listeners by tab id
+     * Map of listeners by tab id => key => callback
      */
-    private listeners: Map<number, any[]> = new Map;
+    private listeners: Map<number, Map<string, OnCompleteCallback>> = new Map;
 
     private unregister(tabid: number) {
         console.log(`Unregister webrequest listeners for tab ${tabid}, tab no longer exists`);
-        const current = this.listeners.get(tabid) ?? [];
-        for (let listener of current) {
+        const current: Map<string, OnCompleteCallback> = this.listeners.get(tabid) ?? new Map;
+        for (const listener of current.values()) {
             webRequest.onCompleted.removeListener(listener);
         }
         this.listeners.delete(tabid);
     }
 
-    private async register(tabid: number, urls: string[]): Promise<void> {
-        const callback = async (request: WebRequest.OnCompletedDetailsType) => {
+    private async register(tabid: number, key: string, urls: string[]): Promise<void> {
+        const callback = async (request: WebRequest.OnCompletedDetailsType): Promise<void> => {
             try {
                 await browser.tabs.get(tabid);
             } catch {
@@ -29,15 +31,18 @@ export default class WebRequestHandler implements MessageHandlerInterface {
             }
 
             browser.tabs.sendMessage(tabid, {
-                action: "webrequest.complete",
+                key,
                 url: request.url
             });
         }
 
-        const current = this.listeners.get(tabid) ?? [];
-        current.push(callback);
+        const current: Map<string, OnCompleteCallback> = this.listeners.get(tabid) ?? new Map();
+        if (!current.has(key)) {
+            current.set(key, callback);
+            this.listeners.set(tabid, current);
 
-        webRequest.onCompleted.addListener(callback, {urls});
+            webRequest.onCompleted.addListener(callback, {urls});
+        }
     }
 
     handle(message: any, tab: Tabs.Tab): typeof Unrecognized|Promise<any> {
@@ -47,7 +52,7 @@ export default class WebRequestHandler implements MessageHandlerInterface {
 
         switch(message.action) {
             case EAction.Listener_Register:
-                return this.register(tab.id, message.params.urls);
+                return this.register(tab.id, message.params.key, message.params.urls);
         }
 
         return Unrecognized;
