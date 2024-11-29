@@ -31,7 +31,6 @@ export default class CWishlist extends CStoreBase {
     public readonly onWishlistUpdate: ASEventHandler<HTMLElement[]> = new ASEventHandler<HTMLElement[]>();
     public readonly onReorder: ASEventHandler<void> = new ASEventHandler<void>();
 
-
     private readonly hasWishlistData: boolean = false;
     public wishlistData: WishlistEntry[]|undefined;
     public myWishlist: boolean = false;
@@ -110,8 +109,8 @@ export default class CWishlist extends CStoreBase {
     override async applyFeatures(): Promise<void> {
 
         WebRequestListener.onComplete("reorder", ["https://store.steampowered.com/wishlist/action/reorder"],
-            (_url: string) => {
-            this.reloadWishlistData();
+            async (_url: string) => {
+            await this.reloadWishlistData();
             this.onReorder.dispatch();
         });
 

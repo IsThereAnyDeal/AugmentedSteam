@@ -62,12 +62,13 @@ export default class FKeepEditableRanking extends Feature<CWishlist> {
         await fetch("https://store.steampowered.com/wishlist/action/reorder", {
             method: "POST",
             headers: {
-                ContentType: "application/json"
+                "Content-Type": "application/json"
             },
             body: JSON.stringify({
                 rgApps: newPositions
             })
         });
+        // TODO check result?
     }
 
     private addInputs(): void {
