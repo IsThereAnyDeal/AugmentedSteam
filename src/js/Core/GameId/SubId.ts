@@ -1,4 +1,7 @@
-export default class SubId {
+import GameId from "@Core/GameId/GameId";
+
+// TODO refactor to return instance
+export default class SubId extends GameId{
 
     static fromUrl(url: string): number|null {
         const m = url.match(/(?:store\.steampowered|steamcommunity)\.com\/sub\/(\d+)\/?/);
@@ -23,5 +26,9 @@ export default class SubId {
         }
 
         return this.fromUrl(href);
+    }
+
+    constructor(id: number) {
+        super("sub", id);
     }
 }

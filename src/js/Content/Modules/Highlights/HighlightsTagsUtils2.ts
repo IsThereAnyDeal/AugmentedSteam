@@ -2,9 +2,9 @@ import Settings from "@Options/Data/Settings";
 import DynamicStore from "@Content/Modules/Data/DynamicStore";
 import ITAD from "@Content/Modules/ITAD";
 import InventoryApiFacade from "@Content/Modules/Facades/InventoryApiFacade";
-import type {StoreId} from "@Content/Modules/Highlights/StoreIds";
 import DOMHelper from "@Content/Modules/DOMHelper";
 import Tags from "@Content/Modules/Highlights/Tags.svelte";
+import type GameId from "@Core/GameId/GameId";
 
 export const enum EHighlightStyle {
     BgGradient,
@@ -97,14 +97,14 @@ export default class HighlightsTagsUtils2 {
         DOMHelper.insertCSS(css.join("\n"));
     }
 
-    public async query(ids: StoreId[]): Promise<Map<string, ItemSetup>> {
+    public async query(ids: GameId[]): Promise<Map<string, ItemSetup>> {
         const result: Map<string, ItemSetup> = new Map();
 
         if (ids.length === 0) {
             return result;
         }
 
-        let query: StoreId[] = [];
+        let query: GameId[] = [];
 
         for(let id of ids) {
             if (this.cache.has(id.string)) {

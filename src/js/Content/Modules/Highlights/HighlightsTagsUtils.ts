@@ -33,6 +33,9 @@ type Options = {
     coupon: boolean,
 }
 
+/**
+ * @deprecated
+ */
 export default class HighlightsTagsUtils {
 
     private static _highlightCssLoaded: boolean = false;

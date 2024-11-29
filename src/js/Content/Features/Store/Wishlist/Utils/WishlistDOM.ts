@@ -1,9 +1,9 @@
-import {Appid} from "@Content/Modules/Highlights/StoreIds";
 import ASEventHandler from "@Content/Modules/ASEventHandler";
+import AppId from "@Core/GameId/AppId";
 
 interface TDOMGame {
     node: HTMLElement,
-    appid?: Appid,
+    appid?: AppId,
     title?: {
         node: HTMLElement,
         value: string|null,
@@ -76,9 +76,9 @@ export class WishlistDOM {
         return parent.querySelector<HTMLAnchorElement>("a.Fuz2JeT4RfI-[href*='/app/']");
     }
 
-    appid(anchorNode: HTMLAnchorElement): Appid|null {
+    appid(anchorNode: HTMLAnchorElement): AppId|null {
         const m = anchorNode.href.match(/app\/(\d+)/)!;
-        return m ? new Appid(Number(m[1])) : null;
+        return m ? new AppId(Number(m[1])) : null;
     }
 
     observe(): void {

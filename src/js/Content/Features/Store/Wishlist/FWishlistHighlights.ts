@@ -1,7 +1,7 @@
 import type CWishlist from "@Content/Features/Store/Wishlist/CWishlist";
 import Feature from "@Content/Modules/Context/Feature";
 import HighlightsTagsUtils2, {EHighlightStyle, type ItemSetup} from "@Content/Modules/Highlights/HighlightsTagsUtils2";
-import {Appid} from "@Content/Modules/Highlights/StoreIds";
+import AppId from "@Core/GameId/AppId";
 
 export default class FWishlistHighlights extends Feature<CWishlist> {
 
@@ -26,7 +26,7 @@ export default class FWishlistHighlights extends Feature<CWishlist> {
             return;
         }
 
-        const appids = this.context.wishlistData?.map(entry => new Appid(entry.appid)) ?? [];
+        const appids = this.context.wishlistData?.map(entry => new AppId(entry.appid)) ?? [];
 
         if (appids.length === 0) {
             return;

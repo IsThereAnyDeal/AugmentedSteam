@@ -1,5 +1,7 @@
+import GameId from "@Core/GameId/GameId";
 
-export default class AppId {
+// TODO refactor to return instance
+export default class AppId extends GameId {
 
     static fromUrl(url: string) {
         const m = url.match(/(?:store\.steampowered|steamcommunity)\.com\/(?:app|games|market\/listings)\/(\d+)\/?/);
@@ -64,5 +66,9 @@ export default class AppId {
             result.push(Number(m[1]));
         }
         return result;
+    }
+
+    constructor(id: number) {
+        super("app", id);
     }
 }

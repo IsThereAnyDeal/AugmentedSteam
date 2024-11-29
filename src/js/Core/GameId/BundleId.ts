@@ -1,5 +1,7 @@
+import GameId from "@Core/GameId/GameId";
 
-export default class BundleId {
+// TODO refactor to return instance
+export default class BundleId extends GameId{
 
     static fromUrl(url: string): number|null {
         const m = url.match(/(?:store\.steampowered|steamcommunity)\.com\/bundle\/(\d+)\/?/);
@@ -24,5 +26,9 @@ export default class BundleId {
         }
 
         return this.fromUrl(href);
+    }
+
+    constructor(id: number) {
+        super("bundle", id);
     }
 }
