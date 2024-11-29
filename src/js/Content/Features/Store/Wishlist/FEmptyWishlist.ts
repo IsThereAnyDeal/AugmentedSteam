@@ -6,7 +6,7 @@ import Settings from "@Options/Data/Settings";
 import DynamicStore from "@Content/Modules/Data/DynamicStore";
 import BlockingWaitDialog from "@Core/Modals/BlockingWaitDialog";
 import WishlistButton from "@Content/Features/Store/Wishlist/Components/WishlistButton.svelte";
-import {getMenuNode} from "@Content/Features/Store/Wishlist/Components/WishlistMenu.svelte";
+import {getMenuNode} from "@Content/Features/Store/Wishlist/Components/WishlistMenu";
 import ConfirmDialog from "@Core/Modals/ConfirmDialog";
 import {EModalAction} from "@Core/Modals/Contained/EModalAction";
 import ServiceFactory from "@Protobufs/ServiceFactory";
