@@ -119,7 +119,6 @@ export interface SettingsSchema {
         | "tab_specials_content_trigger"
         | "tab_trendingfree_content_trigger",
     send_age_info: boolean,
-    showdeckcompat: boolean,
     removebroadcasts: boolean,
     mp4video: boolean,
     horizontalscrolling: boolean,
