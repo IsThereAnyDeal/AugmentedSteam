@@ -1,11 +1,12 @@
 
+/* Fix the native add-all-dlc-to-cart button position on expandable dlc lists */
+#gameAreaDLCSection #dlc_purchase_action {
+    float: right;
+}
+
 #es_selected_btn {
     float: left;
-    margin-top: 4px;
     display: none;
-}
-#game_area_dlc_expanded + #es_selected_btn {
-    margin-bottom: 10px;
 }
 
 #es_dlc_option_panel {
@@ -47,8 +48,7 @@
     padding: 0;
 }
 .game_area_dlc_row.dlc_highlight > div:first-child:has(.es_dlc_label) {
-    display: flex;
-    margin-left: -12px !important;
+    margin-left: -4px !important;
 }
 
 label.es_dlc_label {

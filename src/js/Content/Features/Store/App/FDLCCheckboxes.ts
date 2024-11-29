@@ -63,8 +63,7 @@ export default class FDLCCheckboxes extends Feature<CApp> {
             // TODO remove when min version is increased to FF 121
             if (!CSS.supports("selector(:has(a))")) {
                 if (dlcRow.classList.contains("dlc_highlight")) {
-                    node.style.display = "flex";
-                    node.style.marginLeft = "-12px";
+                    node.style.marginLeft = "-4px";
                 } else {
                     node.style.display = "flex";
                     node.style.marginLeft = "-4px";
