@@ -13,7 +13,7 @@ export default class FKeepEditableRanking extends Feature<CWishlist> {
 
     override apply(): void {
         this.computePositions();
-        this.context.dom.onChange(() => this.addInputs());
+        this.context.dom.onUpdate.subscribe(() => this.addInputs());
         this.context.onReorder.subscribe(() => this.handleUpdate());
         this.addInputs();
     }
@@ -72,16 +72,15 @@ export default class FKeepEditableRanking extends Feature<CWishlist> {
     }
 
     private addInputs(): void {
-        const dom = this.context.dom;
+        const dom = this.context.dom.dom;
 
-        for (const node of dom.gameNodes()) {
-            const titleNode = dom.titleNode(node);
-            if (!titleNode) {
+        for (const game of dom.gameList?.games ?? []) {
+            if (!game.title || !game.appid) {
                 continue;
             }
 
-            const inputNode = node.querySelector<HTMLInputElement>("input[type='text']");
-            const appid = dom.appid(titleNode).number;
+            const appid = game.appid.number;
+            const inputNode = game.node.querySelector<HTMLInputElement>("input[type='text']");
 
             if (inputNode) {
                 if (!inputNode.dataset.appid) {
@@ -97,8 +96,8 @@ export default class FKeepEditableRanking extends Feature<CWishlist> {
             }
 
             const component = new RankInput({
-                target: node,
-                anchor: node.firstElementChild!,
+                target: game.node,
+                anchor: game.node.firstElementChild!,
                 props: {
                     appid,
                     position: this.positions.get(appid)

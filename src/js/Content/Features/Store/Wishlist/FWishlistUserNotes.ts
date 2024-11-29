@@ -16,25 +16,24 @@ export default class FWishlistUserNotes extends Feature<CWishlist> {
     override async apply(): Promise<void> {
         this.notes ??= new UserNotes();
 
-        this.context.dom.onChange(() => {
+        this.context.dom.onUpdate.subscribe(() => {
             this.addNotes();
         });
         this.addNotes();
     }
 
     private addNotes(): void {
-        const dom = this.context.dom;
+        const dom = this.context.dom.dom;
 
-        for (let node of dom.gameNodes()) {
-            const a = dom.titleNode(node);
-            if (!a) {
+        for (let game of dom.gameList?.games ?? []) {
+            if (!game.title) {
                 continue;
             }
 
-            const appName = dom.title(a)!;
-            const appid = dom.appid(a);
+            const appName = game.title.value!;
+            const appid = game.appid!;
 
-            const noteNode = node.querySelector<HTMLElement>(".as-note");
+            const noteNode = game.node.querySelector<HTMLElement>(".as-note");
             if (noteNode) {
                 if (noteNode.dataset.appid == String(appid.number)) {
                     continue;
@@ -43,7 +42,7 @@ export default class FWishlistUserNotes extends Feature<CWishlist> {
                 }
             }
 
-            const platforms = dom.platformsNode(node);
+            const platforms = game.platforms?.node;
             if (!platforms || platforms.childElementCount === 0) {
                 continue;
             }

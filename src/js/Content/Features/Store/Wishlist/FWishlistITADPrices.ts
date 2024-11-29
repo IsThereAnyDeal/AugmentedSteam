@@ -20,9 +20,9 @@ export default class FWishlistITADPrices extends Feature<CWishlist> {
 
     override apply(): void | Promise<void> {
         this.loader = new Prices(this.context.user);
-        const dom = this.context.dom;
 
         document.body.addEventListener("mouseover", e => {
+            const dom = this.context.dom;
             const node = (e.target as HTMLElement).closest<HTMLElement>("[data-index]");
 
             if (this.currentHoverNode === node) {
@@ -36,7 +36,7 @@ export default class FWishlistITADPrices extends Feature<CWishlist> {
                 return;
             }
 
-            const appid = dom.appid(dom.titleNode(node)!).number;
+            const appid = dom.appid(dom.titleNode(node)!)!.number;
             if (appid === this.currentHoverAppid) {
                 return;
             }

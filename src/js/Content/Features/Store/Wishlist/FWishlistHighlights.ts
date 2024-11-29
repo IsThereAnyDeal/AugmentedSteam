@@ -35,28 +35,27 @@ export default class FWishlistHighlights extends Feature<CWishlist> {
         this.highlighter.insertStyles();
         this.map = await this.highlighter.query(appids);
 
-        this.context.dom.onChange(() => this.highlight());
+        this.context.dom.onUpdate.subscribe(() => this.highlight());
         this.highlight()
     }
 
     private highlight(): void {
-        const dom = this.context.dom;
+        const dom = this.context.dom.dom;
 
-        for (const node of dom.gameNodes()) {
-            const a = dom.titleNode(node);
-            if (!a) {
+        for (const game of dom.gameList?.games ?? []) {
+            const appid = game.appid;
+            if (!game.appid) {
                 continue;
             }
 
-            const appid = this.context.dom.appid(a)!.string;
-            const setup = this.map.get(appid);
+            const setup = this.map.get(appid!.string);
 
             if (setup?.h) {
-                this.highlighter.highlight(setup.h, EHighlightStyle.BgGradient, node);
+                this.highlighter.highlight(setup.h, EHighlightStyle.BgGradient, game.node);
             }
 
-            if (setup?.t) {
-                this.highlighter.tags(setup.t, a);
+            if (setup?.t && game.title?.node) {
+                this.highlighter.tags(setup.t, game.title.node);
             }
         }
 
