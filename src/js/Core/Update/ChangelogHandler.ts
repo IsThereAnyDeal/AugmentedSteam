@@ -9,7 +9,7 @@ export default class ChangelogHandler {
         const lastVersion = Version.fromString(Settings.version);
         const currentVersion = Version.fromString(Info.version);
 
-        if (currentVersion.isAfter(lastVersion) && !Settings.version_show) {
+        if (currentVersion.isAfter(lastVersion) && Settings.version_show) {
             const changelog = new Changelog({
                 target: document.body,
                 props: {lastVersion}

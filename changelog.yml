@@ -1,3 +1,20 @@
+4.2.0: |
+  Valve continues to update Steam and fully rebuild it in React. The recent wishlist update they did was just that.
+  Even though it looks the same as the old version, everything has changed and works in a very different way. 
+  That provides some new challenges for us, and we expect them to continue page by page in a similar fashion.
+  
+  That said, this update brings the most of the Wishlist functionality back, hopefully Steam won't break it again too quickly.
+  
+  Some of the site-wide common features were not yet ported over (the removal of trademarks from names, for example),
+  and some of the things may no longer be possible. A known issue is that if you change your rank in any of the sorting
+  other than "Your rank", and then go back to that one, Steam won't update your ranking automatically,
+  becase we can no longer easily attach to Steam's code and tell it that something has changed (the other way works fine).
+
+  Some other non-wishlist changes:
+  - fixed custom links that contained &
+  - fixed store assets, using new CDN
+  - fixed missing FKeepSSACheckboxState in register key context 
+
 4.1.2: |
   Bugfix release
   
