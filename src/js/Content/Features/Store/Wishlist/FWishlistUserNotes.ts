@@ -18,8 +18,7 @@ export default class FWishlistUserNotes extends Feature<CWishlist> {
 
         this.context.dom.onUpdate.subscribe(() => {
             this.addNotes();
-        });
-        this.addNotes();
+        }, true);
     }
 
     private addNotes(): void {

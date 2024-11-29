@@ -1,8 +1,6 @@
 import {Appid} from "@Content/Modules/Highlights/StoreIds";
 import ASEventHandler from "@Content/Modules/ASEventHandler";
 
-let id: number = 0;
-
 interface TDOMGame {
     node: HTMLElement,
     appid?: Appid,

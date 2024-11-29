@@ -13,9 +13,8 @@ export default class FKeepEditableRanking extends Feature<CWishlist> {
 
     override apply(): void {
         this.computePositions();
-        this.context.dom.onUpdate.subscribe(() => this.addInputs());
         this.context.onReorder.subscribe(() => this.handleUpdate());
-        this.addInputs();
+        this.context.dom.onUpdate.subscribe(() => this.addInputs(), true);
     }
 
     private computePositions(): void {

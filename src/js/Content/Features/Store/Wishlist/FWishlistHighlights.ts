@@ -35,8 +35,7 @@ export default class FWishlistHighlights extends Feature<CWishlist> {
         this.highlighter.insertStyles();
         this.map = await this.highlighter.query(appids);
 
-        this.context.dom.onUpdate.subscribe(() => this.highlight());
-        this.highlight()
+        this.context.dom.onUpdate.subscribe(() => this.highlight(), true);
     }
 
     private highlight(): void {
