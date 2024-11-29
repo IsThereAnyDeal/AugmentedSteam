@@ -11,7 +11,7 @@ import ContextType from "@Content/Modules/Context/ContextType";
 import ASEventHandler from "@Content/Modules/ASEventHandler";
 import Context, {type ContextParams} from "@Content/Modules/Context/Context";
 import SteamFacade from "@Content/Modules/Facades/SteamFacade";
-import {WishlistDOM} from "@Content/Features/Store/Wishlist/WishlistDOM";
+import {WishlistDOM} from "@Content/Features/Store/Wishlist/Utils/WishlistDOM";
 import WebRequestListener from "@Content/Modules/WebRequest/WebRequestListener";
 import ServiceFactory from "@Protobufs/ServiceFactory";
 import Long from "long";
