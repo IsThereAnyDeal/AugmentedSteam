@@ -6,4 +6,4 @@
 import CommunityPage from "../../CommunityPage";
 import CBadges from "./CBadges";
 
-(new CommunityPage()).run(() => new CBadges());
+(new CommunityPage(CBadges)).run();

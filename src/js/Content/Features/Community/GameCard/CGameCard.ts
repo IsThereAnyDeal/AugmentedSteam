@@ -4,6 +4,7 @@ import CCommunityBase from "../CCommunityBase";
 import FCardExchangeLinks from "../FCardExchangeLinks";
 import FCardExtraLinks from "./FCardExtraLinks";
 import FCardMarketLinks from "./FCardMarketLinks";
+import type {ContextParams} from "@Content/Modules/Context/Context";
 
 export default class CGameCard extends CCommunityBase {
 
@@ -11,9 +12,9 @@ export default class CGameCard extends CCommunityBase {
     public readonly isFoil: boolean;
     public readonly saleAppids: number[];
 
-    constructor() {
+    constructor(params: ContextParams) {
 
-        super(ContextType.GAME_CARD, [
+        super(params, ContextType.GAME_CARD, [
             FCardExchangeLinks,
             FCardMarketLinks,
             FCardExtraLinks,

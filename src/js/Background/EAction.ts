@@ -67,4 +67,6 @@ export enum EAction {
     Notes_GetAll = "notes.getall",
     Notes_SetAll = "notes.setall",
     Notes_Clear = "notes.clear",
+
+    Listener_Register = "listener.register",
 }

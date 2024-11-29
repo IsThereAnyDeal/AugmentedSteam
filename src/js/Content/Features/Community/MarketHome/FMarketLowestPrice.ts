@@ -5,7 +5,6 @@ import Settings from "@Options/Data/Settings";
 import {__loading, __lowest, __noData, __theworderror, __toomanyrequests} from "@Strings/_strings";
 import type CMarketHome from "@Content/Features/Community/MarketHome/CMarketHome";
 import Feature from "@Content/Modules/Context/Feature";
-import User from "@Content/Modules/User";
 import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
 import RequestData from "@Content/Modules/RequestData";
 import Errors from "@Core/Errors/Errors";
@@ -125,7 +124,7 @@ export default class FMarketLowestPrice extends Feature<CMarketHome> {
 
     async _getPriceOverview(appid: number, marketHashName: string) {
 
-        const country = User.storeCountry;
+        const country = this.context.user.storeCountry;
         const currencyNumber = CurrencyManager.getCurrencyInfo(CurrencyManager.storeCurrency).id;
 
         let data;

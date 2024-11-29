@@ -6,4 +6,4 @@
 import StorePage from "../../StorePage";
 import CPointsShop from "./CPointsShop";
 
-(new StorePage()).run(() => new CPointsShop());
+(new StorePage(CPointsShop)).run();

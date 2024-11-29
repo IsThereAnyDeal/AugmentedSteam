@@ -4,7 +4,6 @@ import Feature from "@Content/Modules/Context/Feature";
 import type CInventory from "@Content/Features/Community/Inventory/CInventory";
 import {type MarketInfo} from "@Content/Features/Community/Inventory/CInventory";
 import HTML from "@Core/Html/Html";
-import User from "@Content/Modules/User";
 import RequestData from "@Content/Modules/RequestData";
 
 export default class FEquipProfileItems extends Feature<CInventory> {
@@ -75,7 +74,7 @@ export default class FEquipProfileItems extends Feature<CInventory> {
             }
 
             try {
-                const token = await User.getWebApiToken();
+                const token = await this.context.user.getWebApiToken();
                 await RequestData.post(`https://api.steampowered.com${apiPath}?access_token=${token}`, data, {"credentials": "omit"});
 
                 btn.classList.add("btn_disabled");

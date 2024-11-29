@@ -2,17 +2,18 @@ import ContextType from "@Content/Modules/Context/ContextType";
 import CCommunityBase from "../CCommunityBase";
 import FFriendsInviteButton from "./FFriendsInviteButton";
 import FGroupLinks from "@Content/Features/Community/GroupHome/FGroupLinks";
+import type {ContextParams} from "@Content/Modules/Context/Context";
 
 export default class CGroupHome extends CCommunityBase {
 
     public readonly groupId: string|null = null;
 
-    constructor() {
+    constructor(params: ContextParams) {
 
         // Don't apply features if there's an error message (e.g. non-existent group)
         const hasFeatures = document.getElementById("message") === null;
 
-        super(ContextType.GROUP_HOME, hasFeatures ? [
+        super(params, ContextType.GROUP_HOME, hasFeatures ? [
             FFriendsInviteButton,
             FGroupLinks,
         ] : []);

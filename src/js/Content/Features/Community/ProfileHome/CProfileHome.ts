@@ -17,6 +17,7 @@ import AugmentedSteamApiFacade from "@Content/Modules/Facades/AugmentedSteamApiF
 import ContextType from "@Content/Modules/Context/ContextType";
 import EarlyAccessUtils from "@Content/Modules/EarlyAccess/EarlyAccessUtils";
 import HTMLParser from "@Core/Html/HtmlParser";
+import type {ContextParams} from "@Content/Modules/Context/Context";
 
 export default class CProfileHome extends CCommunityBase {
 
@@ -24,12 +25,12 @@ export default class CProfileHome extends CCommunityBase {
     public readonly isPrivateProfile: boolean = true;
     public readonly data: Promise<TProfileData|null> = Promise.resolve(null);
 
-    constructor() {
+    constructor(params: ContextParams) {
 
         // Don't apply features if there's an error message (e.g. non-existent profile)
         const hasFeatures = document.getElementById("message") === null;
 
-        super(ContextType.PROFILE_HOME, hasFeatures ? [
+        super(params, ContextType.PROFILE_HOME, hasFeatures ? [
             FCommunityProfileLinks,
             FWishlistProfileLink,
             FSupporterBadges,
@@ -59,7 +60,7 @@ export default class CProfileHome extends CCommunityBase {
                 });
         }
 
-        EarlyAccessUtils.show(document.querySelectorAll(".game_info_cap, .showcase_slot:not(.showcase_achievement)"));
+        EarlyAccessUtils.show(this.language, document.querySelectorAll(".game_info_cap, .showcase_slot:not(.showcase_achievement)"));
 
         // Need to wait on custom background and style (LNY2020 may set the background) to be fetched and set
         this.dependency(FPinnedBackground,

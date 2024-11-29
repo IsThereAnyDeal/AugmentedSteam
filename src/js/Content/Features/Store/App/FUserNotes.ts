@@ -1,5 +1,4 @@
 import {__userNote_add, __userNote_update} from "@Strings/_strings";
-import User from "@Content/Modules/User";
 import Settings from "@Options/Data/Settings";
 import type CApp from "@Content/Features/Store/App/CApp";
 import Feature from "@Content/Modules/Context/Feature";
@@ -10,7 +9,7 @@ import UserNotes from "@Content/Features/Store/Common/UserNotes/UserNotes";
 export default class FUserNotes extends Feature<CApp> {
 
     override checkPrerequisites(): boolean {
-        return User.isSignedIn && Settings.user_notes_app;
+        return this.context.user.isSignedIn && Settings.user_notes_app;
     }
 
     override async apply(): Promise<void> {

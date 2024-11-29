@@ -6,4 +6,4 @@
 import CommunityPage from "../../CommunityPage";
 import CProfileStats from "./CProfileStats";
 
-(new CommunityPage()).run(() => new CProfileStats());
+(new CommunityPage(CProfileStats)).run();

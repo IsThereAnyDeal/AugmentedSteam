@@ -14,7 +14,6 @@ import {L} from "@Core/Localization/Localization";
 import Workshop from "./Workshop";
 import Feature from "@Content/Modules/Context/Feature";
 import type CWorkshopBrowse from "@Content/Features/Community/WorkshopBrowse/CWorkshopBrowse";
-import User from "@Content/Modules/User";
 import HTML from "@Core/Html/Html";
 import RequestData from "@Content/Modules/RequestData";
 import BlockingWaitDialog from "@Core/Modals/BlockingWaitDialog";
@@ -28,7 +27,7 @@ export default class FWorkshopSubscriberButtons extends Feature<CWorkshopBrowse>
     private _statusTitle: string = "";
 
     override checkPrerequisites(): boolean {
-        return User.isSignedIn
+        return this.context.user.isSignedIn
             && document.querySelector(".workshopBrowseItems") !== null
             && document.querySelector(".workshopBrowsePagingInfo") !== null;
     }
@@ -110,8 +109,9 @@ export default class FWorkshopSubscriberButtons extends Feature<CWorkshopBrowse>
         this._total = workshopItems.length;
         await waitDialog.update();
 
+        const workshop = new Workshop(this.context.user);
         const promises = workshopItems.map(
-            id => Workshop.changeSubscription(id, this.context.appid!, this._method)
+            id => workshop.changeSubscription(id, this.context.appid!, this._method)
                 .catch(err => {
                     this._failed++;
                     console.error(err);

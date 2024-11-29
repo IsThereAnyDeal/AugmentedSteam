@@ -2,18 +2,18 @@ import FCustomizer from "../Common/FCustomizer";
 import FHomePageTab from "./FHomePageTab";
 import CStoreBase from "@Content/Features/Store/Common/CStoreBase";
 import ContextType from "@Content/Modules/Context/ContextType";
-import User from "@Content/Modules/User";
+import type {ContextParams} from "@Content/Modules/Context/Context";
 
 export default class CStoreFront extends CStoreBase {
 
-    constructor() {
+    constructor(params: ContextParams) {
 
-        super(ContextType.STORE_FRONT, [
+        super(params, ContextType.STORE_FRONT, [
             FCustomizer,
             FHomePageTab,
         ]);
 
-        if (User.isSignedIn) { // TODO ITAD status
+        if (this.user.isSignedIn) { // TODO ITAD status
             this.monitorStoreFront();
         }
     }

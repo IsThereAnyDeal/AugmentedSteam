@@ -43,38 +43,6 @@
   white-space: normal;
 }
 
-/* Back To Top button */
-.es_btt {
-  position: fixed;
-  display: flex;
-  width: 50px;
-  height: 50px;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-  opacity: 0;
-  visibility: hidden;
-  box-shadow: 0 0 10px 2px #000000;
-  left: 50%;
-  bottom: 20px;
-  top: auto;
-  margin-left: 500px;
-  font-size: 22px;
-  border-radius: 50%;
-  cursor: pointer;
-  background: linear-gradient( to bottom, rgba(33,101,138,1) 5%, rgba(23,67,92,1) 95%);
-  transition: visibility 0s 200ms, opacity 200ms ease-in-out;
-  color: white;
-}
-.es_btt:hover {
-  background: linear-gradient( to bottom, rgba(47,137,188,1) 5%, rgba(23,67,92,1) 95%);
-}
-.es_btt.is-visible {
-  opacity: 1;
-  visibility: visible;
-  transition: visibility, opacity 200ms ease-in-out;
-}
-
 
 img.astats_icon {
   width: 16px;
@@ -161,68 +129,6 @@ img.astats_icon {
   font-size: 14px !important;
 }
 
-/***************************************
- * Wishlist stats
- **************************************/
-#esi-wishlist-stats-content {
-  display: flex;
-  padding: 25px;
-  overflow: hidden;
-  justify-content: space-evenly;
-  align-items: center;
-  font-size: 1.6em;
-  text-align: center;
-}
-.esi-stat {
-  display: flex;
-  flex-direction: column;
-}
-.esi-stat > span {
-  font-size: 1.8em;
-  font-weight: 300;
-}
-#esi-wishlist-stats-content .esi-stat {
-  color: #1a9fff;
-  font-weight: bold;
-}
-/* Apply Steam's margin to the filter button (the old `:first-child`) */
-#esi-wishlist-stats + #tab_filters {
-  margin: 0px 15px 0px 0px;
-}
-#esi-wishlist-stats,
-#esi-wishlist-stats-content .esi-stat > span {
-  color: white;
-}
-
-#esi-stat-hidden-ctn, .as-wl-remove {
-  cursor: pointer;
-}
-.esi-stat-hidden-label > span {
-  color: #66c0f4;
-}
-.as-wl-remove-row {
-  display: flex;
-  align-items: center;
-  column-gap: 30px;
-  margin-bottom: 5px;
-  background-color: rgba(0, 0, 0, 0.2);
-}
-.as-wl-remove-row > a:first-child {
-  display: inline-block;
-  width: 162px;
-  height: 75px;
-}
-.as-wl-remove-row > a:first-child img {
-  width: 162px;
-}
-.as-wl-remove {
-  margin-right: 5px;
-  margin-left: auto;
-  text-decoration: underline;
-}
-.as-wl-remove:hover {
-  color: #d8dde2;
-}
 
 /***************************************
  * Game Cards page
@@ -836,15 +742,6 @@ video.highlight_movie:hover + .html5_video_overlay {
 
 /***************************************
  * Wishlist
- * FWishlistProfileLink
- **************************************/
-.as_wl_profile_link {
-  display: flex;
-  align-items: center;
-}
-
-/***************************************
- * Wishlist
  * FKeepEditableRanking
  **************************************/
 #wishlist_ctn:not(.sort_order).as_show_order_input .capsule {
@@ -866,32 +763,6 @@ video.highlight_movie:hover + .html5_video_overlay {
 #cart_status_data {
   display: flex;
   align-items: center;
-}
-
-.es-wbtn {
-  color: #fff;
-  float: right;
-  cursor: pointer;
-  font-size: 11px;
-  text-transform: uppercase;
-  padding: 0 25px;
-  line-height: 20px;
-}
-#es_empty_wishlist {
-  margin-right: 3px;
-  background-color: #bf5a5a;
-}
-#es_empty_wishlist:hover {
-  background-color: #ffd1d1;
-  color: black;
-}
-#es_export_wishlist {
-  background-color: #6c94a0;
-  margin-right: 15px;
-}
-#es_export_wishlist:hover {
-  background-color: #dbdee1;
-  color: black;
 }
 
 /***************************************
@@ -960,37 +831,6 @@ video.highlight_movie:hover + .html5_video_overlay {
 .es_apphub_OtherSiteInfo {
   position: relative;
   float: right;
-}
-
-/***************************************
- * Version update dialog
- **************************************/
-.es_changelog {
-  height: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  max-width: 800px;
-  font-size: 14px;
-}
-.es_changelog h1 {
-  font-size: 18px;
-  margin: 20px 0 5px 0;
-}
-.es_changelog p {
-  margin-bottom: 0.4em;
-  font-size: 14px !important;
-}
-.es_changelog img {
-  margin-right: 21px;
-}
-.es_changelog ul {
-  list-style-position: outside;
-  padding: 0 10px 10px 10px;
-  margin: 0 0 0 15px;
-}
-.es_changelog li {
-  margin-bottom: 3px;
 }
 
 /***************************************
@@ -1370,7 +1210,8 @@ video.highlight_movie:hover + .html5_video_overlay {
 /***************************************
  * Global Steam Client button
  **************************************/
-.es_steamclient_btn .header_installsteam_btn_content {
+.es_steamclient_btn .header_installsteam_btn_content,
+.es_steamclient_btn.is-react {
   background-image: url('https://store.cloudflare.steamstatic.com/public/images/v6/icon_platform_linux.png');
   background-position: 5px;
   padding-left: 28px;

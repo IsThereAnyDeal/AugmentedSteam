@@ -3,7 +3,6 @@ import {L} from "@Core/Localization/Localization";
 import Feature from "@Content/Modules/Context/Feature";
 import type CProfileHome from "@Content/Features/Community/ProfileHome/CProfileHome";
 import Settings from "@Options/Data/Settings";
-import User from "@Content/Modules/User";
 import HTML from "@Core/Html/Html";
 import AugmentedSteamApiFacade from "@Content/Modules/Facades/AugmentedSteamApiFacade";
 
@@ -15,9 +14,9 @@ export default class FTwitchShowcase extends Feature<CProfileHome> {
         }
 
         // Don't show our Twitch.tv showcase on our own profile
-        return !User.isSignedIn
+        return !this.context.user.isSignedIn
             || Settings.profile_showcase_own_twitch
-            || window.location.pathname !== User.profilePath;
+            || window.location.pathname !== this.context.user.profilePath;
     }
 
     override async apply(): Promise<void> {

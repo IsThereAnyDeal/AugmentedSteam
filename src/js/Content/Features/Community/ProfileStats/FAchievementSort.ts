@@ -87,7 +87,7 @@ export default class FAchievementSort extends Feature<CProfileStats> {
         this.bookmark = document.createElement("div");
         achieveRow.insertAdjacentElement("beforebegin", this.bookmark);
 
-        let dateSetup = this.getDateFormat(Language.getCurrentSteamLanguage() ?? "");
+        let dateSetup = this.getDateFormat(this.context.language?.name ?? "");
 
         const nodes = this.container!.querySelectorAll(".achieveUnlockTime");
         for (const node of nodes) {

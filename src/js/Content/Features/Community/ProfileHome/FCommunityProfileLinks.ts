@@ -17,7 +17,8 @@ export default class FCommunityProfileLinks extends Feature<CProfileHome> {
                 target: linksNode,
                 props: {
                     steamId: this.context.steamId!,
-                    clear: true
+                    clear: true,
+                    language: this.context.language?.name
                 }
             }));
         } else {
@@ -29,7 +30,8 @@ export default class FCommunityProfileLinks extends Feature<CProfileHome> {
                 target: document.querySelector(".profile_item_links")!,
                 props: {
                     steamId: this.context.steamId!,
-                    clear: false
+                    clear: false,
+                    language: this.context.language?.name
                 }
             }));
         }

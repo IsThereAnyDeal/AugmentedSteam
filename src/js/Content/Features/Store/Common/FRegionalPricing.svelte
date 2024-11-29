@@ -2,12 +2,13 @@
     import Settings from "@Options/Data/Settings";
     import Price from "@Content/Modules/Currency/Price";
     import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
-    import User from "@Content/Modules/User";
     import {L} from "@Core/Localization/Localization";
     import {__regionUnavailable} from "@Strings/_strings";
     import type {PackageDetailsPrice} from "./FRegionalPricing";
     import FlagIcon from "@Icons/FlagIcon.svelte";
+    import type UserInterface from "@Core/User/UserInterface";
 
+    export let user: UserInterface;
     export let countries: string[];
     export let prices: Record<string, PackageDetailsPrice>;
     export let errors: Set<string>;
@@ -15,7 +16,7 @@
 
     let priceLocal: Price|null = null;
     try {
-        const apiPrice: PackageDetailsPrice = prices[User.storeCountry.toLowerCase()]!;
+        const apiPrice: PackageDetailsPrice = prices[user.storeCountry.toLowerCase()]!;
         priceLocal = (new Price(apiPrice.final / 100, apiPrice.currency))
             .inCurrency(CurrencyManager.customCurrency);
     } catch (err) {

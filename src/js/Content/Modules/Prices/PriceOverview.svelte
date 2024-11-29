@@ -2,7 +2,6 @@
 
 <script lang="ts">
     import PriceWithAlt from "./PriceWithAlt.svelte";
-    import {afterUpdate} from "svelte";
     import type {TPriceOverview} from "@Background/Modules/AugmentedSteam/_types";
     import {
         __pricing_bundleCount,
@@ -17,8 +16,8 @@
     import external from "@Content/externalLink";
 
     export let data: TPriceOverview;
-    export let setBottom: boolean = false;
-    export let height: number|undefined = undefined;
+    export let marginTop: string|undefined = undefined;
+    export let marginBottom: string|undefined = undefined;
 
     let node: HTMLElement;
     let currentDrms: string[];
@@ -28,18 +27,10 @@
             .filter(d => d.id !== 61) // 61 = Steam
             .map(d => d.name);
     }
-
-    afterUpdate(() => {
-        if (!setBottom) {
-            return;
-        }
-        height = Math.ceil(node.getBoundingClientRect().height);
-        node.style.bottom = `${-height}px`;
-    });
 </script>
 
 
-<div class="itad-pricing" bind:this={node}>
+<div class="itad-pricing" bind:this={node} style:margin-top={marginTop} style:margin-bottom={marginBottom}>
     {#if data.current}
         <a href={data.urls.info} use:external>{L(__pricing_lowestPrice)}</a>
 
@@ -87,6 +78,14 @@
 
 
 <style>
+    a {
+        color: white;
+        text-decoration: none;
+    }
+    a:hover {
+        color: #66c0f4;
+    }
+
     /* Fix space between prices and the purchase container when an "ADVANCED ACCESS" banner is present */
     .itad-pricing + :global(.game_area_purchase_game_wrapper .advanced_access_header_wrapper) {
         margin-top: -7px;

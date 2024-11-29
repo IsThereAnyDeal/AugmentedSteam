@@ -9,6 +9,10 @@ export default class SteamFacade {
         return Messenger.get(MessageHandler.SteamFacade, "global", [name]);
     }
 
+    static globalExists(name: string): Promise<boolean> {
+        return Messenger.get(MessageHandler.SteamFacade, "globalExists", [name]);
+    }
+
     static globalSet(name: string, value: any): void {
         Messenger.call(MessageHandler.SteamFacade, "globalSet", [name, value]);
     }

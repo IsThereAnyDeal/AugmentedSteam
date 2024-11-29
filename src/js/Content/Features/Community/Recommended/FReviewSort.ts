@@ -16,10 +16,8 @@ import Feature from "@Content/Modules/Context/Feature";
 import type CRecommended from "@Content/Features/Community/Recommended/CRecommended";
 import SortBox from "@Content/Modules/Widgets/SortBox.svelte";
 import SyncedStorage from "@Core/Storage/SyncedStorage";
-import SteamFacade from "@Content/Modules/Facades/SteamFacade";
 import SteamCommunityApiFacade from "@Content/Modules/Facades/SteamCommunityApiFacade";
 import type {TReview} from "@Background/Modules/Community/_types";
-import User from "@Content/Modules/User";
 import HTML from "@Core/Html/Html";
 import BlockingWaitDialog from "@Core/Modals/BlockingWaitDialog";
 
@@ -126,7 +124,7 @@ export default class FReviewSort extends Feature<CRecommended> {
         }
 
         // Add back sanitized event handlers
-        const loggedIn = User.isSignedIn ? 1 : 0;
+        const loggedIn = this.context.user.isSignedIn ? 1 : 0;
         const loginURL = encodeURIComponent(`https://steamcommunity.com/login/home/?goto=${this._path}/recommended/?insideModal=0`);
         const ids = displayedReviews.map(review => review.id);
         document.querySelectorAll(".review_box").forEach((node, i) => {

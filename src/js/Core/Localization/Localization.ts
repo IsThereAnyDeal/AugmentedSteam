@@ -3,7 +3,7 @@ import ExtensionResources from "@Core/ExtensionResources";
 import Language from "@Core/Localization/Language";
 import SteamStoreApiFacade from "@Content/Modules/Facades/SteamStoreApiFacade";
 
-interface TLocale {
+export interface TLocale {
     stats: {
         strings: number,
         translated: number,
@@ -13,37 +13,29 @@ interface TLocale {
 
 export default class Localization {
 
-    private static promise: Promise<void>;
     public static locale: TLocale;
 
     static load(code: string): Promise<TLocale> {
         return ExtensionResources.getJSON(`/localization/compiled/${code}.json`);
     }
 
-    static init(): Promise<void> {
-        if (!this.promise) {
-            this.promise = (async () => {
-                const stored = Settings.language;
-                let current = Language.getCurrentSteamLanguage();
-                if (current === null) {
-                    current = stored;
-                } else if (current !== stored) {
-                    Settings.language = current;
-                    SteamStoreApiFacade.clearPurchases();
-                }
-
-                const lang = Language.getLanguageCode(current);
-
-                try {
-                    this.locale = await this.load(lang);
-                } catch(e) {
-                    console.error(`Failed to load ${lang}`);
-                    this.locale = await this.load("en");
-                }
-            })();
+    static async init(current: Language|null): Promise<void> {
+        const stored: string = Settings.language;
+        if (current === null) {
+            current = new Language(stored);
+        } else if (current.name !== stored) {
+            Settings.language = current.name;
+            SteamStoreApiFacade.clearPurchases(); // TODO this is a nasty side effect, get rid of it
         }
 
-        return this.promise;
+        const lang = current.code ?? "en";
+
+        try {
+            this.locale = await this.load(lang);
+        } catch(e) {
+            console.error(`Failed to load ${lang}`);
+            this.locale = await this.load("en");
+        }
     }
 }
 

@@ -6,4 +6,4 @@
 import CApp from "@Content/Features/Store/App/CApp";
 import StorePage from "@Content/Features/StorePage";
 
-(new StorePage()).run(() => new CApp());
+(new StorePage(CApp)).run();

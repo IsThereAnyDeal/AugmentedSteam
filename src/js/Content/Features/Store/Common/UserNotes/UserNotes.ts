@@ -21,17 +21,40 @@ import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";
 import SteamFacade from "@Content/Modules/Facades/SteamFacade";
 import NotesForm from "./NotesForm.svelte";
 import CustomModal from "@Core/Modals/CustomModal";
+import NoteEditModal from "@Content/Modules/UserNotes/Modals/NoteEditModal.svelte";
+import ConfirmDialog from "@Core/Modals/ConfirmDialog";
+import {EModalAction} from "@Core/Modals/Contained/EModalAction";
 
 export default class UserNotes {
 
     private adapter: AdapterInterface;
+    private cache: Map<number, string|null> = new Map();
 
     constructor() {
         this.adapter = UserNotesAdapter.getAdapter();
     }
 
-    get(...appids: number[]): Promise<Map<number, string|null>> {
-        return this.adapter.get(...appids);
+    async get(...appids: number[]): Promise<Map<number, string|null>> {
+        const result: Map<number, string|null> = new Map();
+        let query: number[] = [];
+
+        for (const appid of appids) {
+            if (this.cache.has(appid)) {
+                result.set(appid, this.cache.get(appid)!);
+            } else {
+                query.push(appid);
+            }
+        }
+
+        if (query.length > 0) {
+            const queried = await this.adapter.get(...query);
+            for (let [appid, note] of queried) {
+                result.set(appid, note);
+                this.cache.set(appid, note);
+            }
+        }
+
+        return result;
     }
 
     export(): Promise<Record<number, string>> {
@@ -43,6 +66,7 @@ export default class UserNotes {
 
         try {
             capInfo = await this.adapter.set(appid, note);
+            this.cache.set(appid, note);
 
             if (Settings.itad_sync_notes && await ITADApiFacade.isConnected()) {
                 const status = await ITADApiFacade.pushNote(appid, note);
@@ -73,12 +97,16 @@ export default class UserNotes {
 
     private async delete(appid: number): Promise<void> {
         await this.adapter.delete(appid);
+        this.cache.delete(appid);
 
         if (Settings.itad_sync_notes && await ITADApiFacade.isConnected()) {
             await ITADApiFacade.deleteNote(appid);
         }
     }
 
+    /**
+     * @deprecated
+     */
     async showModalDialog(
         appName: string,
         appid: number,
@@ -131,6 +159,42 @@ export default class UserNotes {
         onNoteUpdate(noteEl, note !== "");
     }
 
+    public async showModalDialog2(
+        appName: string,
+        appid: number
+    ): Promise<string|null> {
+        const savedNote: string = (await this.get(appid))?.get(appid) ?? "";
+
+        return new Promise(resolve => {
+            const modal = new NoteEditModal({
+                target: document.body,
+                props: {
+                    appName,
+                    note: savedNote
+                }
+            });
+            modal.$on("save", (e) => {
+                let note: string|null = e.detail.trim().replace(/\s\s+/g, " ");
+                if (note === "") {
+                    note = null;
+                }
+
+                if (!note) {
+                    this.delete(appid);
+                } else {
+                    this.set(appid, note);
+                }
+
+                resolve(note);
+                modal.$destroy();
+            });
+            modal.$on("cancel", () => {
+                resolve(savedNote);
+                modal.$destroy();
+            });
+        });
+    }
+
     private async showOutOfCapacityDialog(exceeded: boolean, ratio: number): Promise<boolean> {
 
         const desc
@@ -138,18 +202,17 @@ export default class UserNotes {
             <br>
             ${L(__userNote_storageWarningDesc)}`;
 
-        const response = await SteamFacade.showConfirmDialog(
+        const confirm = new ConfirmDialog(
             L(exceeded ? __userNote_notEnoughSpace : __userNote_closeOnStorage),
             desc,
             {
-                okButton: L(__userNote_saveLocal),
-                cancelButton: L(__userNote_saveSyncedStorage),
-                explicitConfirm: true,
-                explicitDismissal: true
+                primary: L(__userNote_saveLocal),
+                cancel: L(__userNote_saveSyncedStorage)
             }
-        );
+        )
+        const response = await confirm.show();
 
-        if (response === "OK") {
+        if (response === EModalAction.OK) {
             this.adapter = await UserNotesAdapter.changeAdapter("idb");
             return true;
         }

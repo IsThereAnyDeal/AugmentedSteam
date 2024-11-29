@@ -18,7 +18,10 @@ export default class FAchievementBar extends Feature<CApp> {
     }
 
     override async apply(): Promise<void> {
-        const {unlocked, total, percentage} = await SteamApi.getAchievementsProgress(this.context.communityAppid);
+        const {unlocked, total, percentage} = await SteamApi.getAchievementsProgress(
+            this.context.user,
+            this.context.communityAppid
+        );
 
         const target = document.querySelector("#my_activity")!;
 

@@ -3,15 +3,15 @@ import Config from "config";
 import Info from "@Core/Info";
 import Localization from "@Core/Localization/Localization";
 import {SettingsStore} from "@Options/Data/Settings";
-import ProgressBar from "@Content/Modules/Widgets/ProgressBar";
-import DOMHelper from "@Content/Modules/DOMHelper";
-import AugmentedSteam from "@Content/Modules/AugmentedSteam";
-import User from "@Content/Modules/User";
 import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
-import ChangelogHandler from "@Core/Update/ChangelogHandler";
-import ITAD from "@Content/Modules/ITAD";
-import type Context from "@Content/Modules/Context/Context";
+import Context, {type ContextParams} from "@Content/Modules/Context/Context";
 import Environment, {ContextType} from "@Core/Environment";
+import Language from "@Core/Localization/Language";
+import type UserInterface from "@Core/User/UserInterface";
+import type AppConfig from "@Core/AppConfig/AppConfig";
+import LanguageFactory from "@Core/Localization/LanguageFactory";
+import UserFactory from "@Core/User/UserFactory";
+import AppConfigFactory from "@Core/AppConfig/AppConfigFactory";
 
 Environment.CurrentContext = ContextType.ContentScript;
 
@@ -32,27 +32,55 @@ function unhandledrejection(e: PromiseRejectionEvent) {
 }
 window.addEventListener("unhandledrejection", unhandledrejection);
 
-/**
- *  Inject the SteamFacade class into the DOM, providing the same interface for the page context side
- *  TODO insert directly via manifest with "world": "MAIN"?
- */
-DOMHelper.insertScript("scriptlets/SteamScriptlet.js");
+interface ContextClass {
+    create: (params: ContextParams) => Promise<InstanceType<typeof Context>|null>,
+    new(params: ContextParams, ...rest: any[]): InstanceType<typeof Context>
+}
 
-export default class Page {
+export default abstract class Page {
 
-    async run(context: () => Context): Promise<void> {
-        if (!document.getElementById("global_header")) { return; }
+    constructor(
+        private readonly contextClass: ContextClass
+    ) {}
+
+    /**
+     * Run any kind of checks we might need to do, to see if the page is properly loaded
+     */
+    protected abstract check(): boolean;
+    protected abstract preApply(language: Language|null, user: UserInterface): Promise<void>
+
+    protected abstract getAppConfig(factory: AppConfigFactory): Promise<AppConfig>;
+    protected abstract getLanguage(factory: LanguageFactory): Promise<Language|null>;
+    protected abstract getUser(factory: UserFactory): Promise<UserInterface>;
+
+    async run(): Promise<void> {
+        if (!this.check()) { return; }
+
+        let language: Language|null;
+        let user: UserInterface;
+
+        // TODO What errors can be "suppressed" here?
+        try {
+            await SettingsStore.init();
+            await bootstrapDomPurify();
+        } catch (err) {
+            console.error(err);
+        }
 
         try {
-            // TODO What errors can be "suppressed" here?
-            try {
-                await SettingsStore.init();
-                await bootstrapDomPurify();
-            } catch (err) {
-                console.error(err);
-            }
+            const appFactory = new AppConfigFactory();
+            const appConfig = await this.getAppConfig(appFactory);
 
-            await Promise.all([Localization.init(), User.init(), CurrencyManager.init()]);
+            const languageFactory = new LanguageFactory(appConfig);
+            language = await this.getLanguage(languageFactory);
+
+            const userFactory = new UserFactory(appConfig);
+            user = await this.getUser(userFactory);
+
+            await Promise.all([
+                Localization.init(language),
+                CurrencyManager.init()
+            ]);
         } catch (err) {
             console.group("Augmented Steam initialization");
             console.error("Failed to initialize Augmented Steam");
@@ -68,10 +96,11 @@ export default class Page {
             "",
         );
 
-        ProgressBar();
-        AugmentedSteam.init();
-        await ChangelogHandler.checkVersion();
-        await ITAD.init();
-        await context().applyFeatures();
+        await this.preApply(language, user);
+
+        const params = {language, user};
+        const context: Context = await this.contextClass.create(params)
+            ?? new (this.contextClass)(params);
+        await context.applyFeatures();
     }
 }

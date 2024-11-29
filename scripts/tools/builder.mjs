@@ -143,6 +143,14 @@ export default async function(options) {
         conditions: ["svelte", "browser"],
         metafile: true,
         logLevel: "warning",
+        alias: { // https://github.com/protobufjs/protobuf.js/pull/1548#issuecomment-1175477976
+            /**
+             * https://github.com/protobufjs/protobuf.js/issues/997 The original inquire module contains
+             * usage of eval, which triggers a CSP violation. Currently we always generates static code
+             * for protos, so there is no need for any reflection, thus we don't need inquire to work.
+             */
+            "@protobufjs/inquire": path.join(__dirname, "../patches/inquire.js"),
+        },
         plugins: [
             pluginSvelte({
                 preprocess: sveltePreprocess({
@@ -151,8 +159,7 @@ export default async function(options) {
                 compilerOptions: {
                     hydratable: false,
                     css: "external",
-                    dev: options.dev,
-                    immutable: true
+                    dev: options.dev
                 }
             }),
             {

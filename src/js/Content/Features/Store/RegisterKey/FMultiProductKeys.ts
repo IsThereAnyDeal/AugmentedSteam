@@ -21,7 +21,6 @@ import {
 } from "@Strings/_strings";
 import type CRegisterKey from "@Content/Features/Store/RegisterKey/CRegisterKey";
 import ExtensionResources from "@Core/ExtensionResources";
-import User from "@Content/Modules/User";
 import RequestData from "@Content/Modules/RequestData";
 import SteamFacade from "@Content/Modules/Facades/SteamFacade";
 
@@ -114,7 +113,7 @@ export default class FMultiProductKeys extends Feature<CRegisterKey> {
                 const currentKey = keys[i]!;
 
                 const data = {
-                    sessionid: User.sessionId!,
+                    sessionid: this.context.user.sessionId!,
                     product_key: currentKey
                 };
 

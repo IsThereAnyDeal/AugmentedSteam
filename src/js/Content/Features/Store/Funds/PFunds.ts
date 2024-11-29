@@ -7,4 +7,4 @@
 import StorePage from "../../StorePage";
 import CFunds from "./CFunds";
 
-(new StorePage()).run(() => new CFunds());
+(new StorePage(CFunds)).run();

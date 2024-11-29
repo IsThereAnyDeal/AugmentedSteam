@@ -6,4 +6,4 @@
 import CommunityPage from "../../CommunityPage";
 import CMarketSearch from "./CMarketSearch";
 
-(new CommunityPage()).run(() => new CMarketSearch());
+(new CommunityPage(CMarketSearch)).run();

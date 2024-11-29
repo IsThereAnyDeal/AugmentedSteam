@@ -15,6 +15,7 @@ import SettingsMigration from "@Core/Update/SettingsMigration";
 import Version from "@Core/Version";
 import {EAction} from "@Background/EAction";
 import Storage from "@Core/Storage/Storage";
+import WebRequestHandler from "@Background/Modules/WebRequest/WebRequestHandler";
 
 Environment.CurrentContext = ContextType.Background;
 
@@ -50,6 +51,18 @@ browser.runtime.onInstalled.addListener(async (detail) => {
     console.log("Update done");
 });
 
+
+const messageHandlers: MessageHandlerInterface[] = [
+    new AugmentedSteamApi(),
+    new SteamCommunityApi(),
+    new InventoryApi(),
+    new ITADApi(),
+    new SteamStoreApi(),
+    new UserNotesApi(),
+    new CacheApi(),
+    new WebRequestHandler()
+];
+
 browser.runtime.onMessage.addListener((
     message: Message,
     sender: MessageSender
@@ -67,18 +80,8 @@ browser.runtime.onMessage.addListener((
             await Promise.all([IndexedDB.init(), SettingsStore.init()]);
 
             let response: any = undefined;
-            const handlers: MessageHandlerInterface[] = [
-                new AugmentedSteamApi(),
-                new SteamCommunityApi(),
-                new InventoryApi(),
-                new ITADApi(),
-                new SteamStoreApi(),
-                new UserNotesApi(),
-                new CacheApi()
-            ];
-
-            for (const handler of handlers) {
-                response = await handler.handle(message);
+            for (const handler of messageHandlers) {
+                response = await handler.handle(message, sender.tab);
                 if (response !== Unrecognized) {
                     break;
                 }

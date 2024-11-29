@@ -2,7 +2,7 @@ import AugmentedSteamApiFacade from "../Facades/AugmentedSteamApiFacade";
 import type {TBundle, TPriceOverview} from "@Background/Modules/AugmentedSteam/_types";
 import ITADApiFacade from "../Facades/ITADApiFacade";
 import Settings from "@Options/Data/Settings";
-import User from "@Content/Modules/User";
+import type UserInterface from "@Core/User/UserInterface";
 
 type TIdType = "app"|"sub"|"bundle";
 
@@ -16,6 +16,10 @@ interface TResponse {
 }
 
 export default class Prices {
+
+    constructor(
+        private readonly user: UserInterface
+    ) {}
 
     async _getShops(): Promise<number[]> {
         const excludedStores: number[] = Settings.excluded_stores;
@@ -32,7 +36,7 @@ export default class Prices {
 
     async load(params: {apps?: number[], subs?: number[], bundles?: number[]}) {
         const response = await AugmentedSteamApiFacade.fetchPrices(
-            User.storeCountry ?? "US",
+            this.user.storeCountry ?? "US",
             params.apps ?? [],
             params.subs ?? [],
             params.bundles ?? [],

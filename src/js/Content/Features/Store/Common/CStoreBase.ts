@@ -7,12 +7,15 @@ import ContextType from "@Content/Modules/Context/ContextType";
 import HighlightsTagsUtils from "@Content/Modules/Highlights/HighlightsTagsUtils";
 import EarlyAccessUtils from "@Content/Modules/EarlyAccess/EarlyAccessUtils";
 import type Feature from "@Content/Modules/Context/Feature";
-import type Context from "@Content/Modules/Context/Context";
+import Context, {type ContextParams} from "@Content/Modules/Context/Context";
 
 export default class CStoreBase extends CBase {
 
-    constructor(type = ContextType.STORE_DEFAULT, features: (typeof Feature<Context>)[]  = []) {
-
+    constructor(
+        params: ContextParams,
+        type = ContextType.STORE_DEFAULT,
+        features: (typeof Feature<Context>)[] = []
+    ) {
         features.push(
             FHighlightsTags,
             FAlternativeLinuxIcon,
@@ -20,7 +23,7 @@ export default class CStoreBase extends CBase {
             FHorizontalScrolling,
         );
 
-        super(type, features);
+        super(params, type, features);
 
         this._observeChanges();
     }
@@ -105,6 +108,6 @@ export default class CStoreBase extends CBase {
 
     decorateStoreCapsules(nodes: NodeListOf<HTMLElement>|Array<HTMLElement>): void {
         HighlightsTagsUtils.highlightAndTag(nodes);
-        EarlyAccessUtils.show(nodes);
+        EarlyAccessUtils.show(this.language, nodes);
     }
 }

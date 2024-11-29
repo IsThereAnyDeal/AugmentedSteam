@@ -7,4 +7,4 @@
 import CommunityPage from "../../CommunityPage";
 import CWorkshopBrowse from "./CWorkshopBrowse";
 
-(new CommunityPage()).run(() => new CWorkshopBrowse());
+(new CommunityPage(CWorkshopBrowse)).run();

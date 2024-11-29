@@ -6,4 +6,4 @@
 import StorePage from "../../StorePage";
 import CSearch from "./CSearch";
 
-(new StorePage()).run(() => new CSearch());
+(new StorePage(CSearch)).run();

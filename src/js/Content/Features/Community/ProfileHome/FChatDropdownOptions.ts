@@ -1,12 +1,11 @@
 import self_ from "./FChatDropdownOptions.svelte";
 import Feature from "@Content/Modules/Context/Feature";
 import type CProfileHome from "@Content/Features/Community/ProfileHome/CProfileHome";
-import User from "@Content/Modules/User";
 
 export default class FChatDropdownOptions extends Feature<CProfileHome> {
 
     override checkPrerequisites(): boolean {
-        return User.isSignedIn;
+        return this.context.user.isSignedIn;
     }
 
     override apply(): void {

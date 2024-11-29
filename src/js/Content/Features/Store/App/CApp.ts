@@ -44,6 +44,7 @@ import AugmentedSteamApiFacade from "@Content/Modules/Facades/AugmentedSteamApiF
 import type {TStorePageData} from "@Background/Modules/AugmentedSteam/_types";
 import FWaitlistDropdown from "@Content/Features/Store/App/FWaitlistDropdown";
 import FHighlightTitle from "@Content/Features/Store/App/FHighlightTitle";
+import type {ContextParams} from "@Content/Modules/Context/Context";
 
 export default class CApp extends CStoreBase {
 
@@ -65,12 +66,12 @@ export default class CApp extends CStoreBase {
 
     public readonly data: Promise<TStorePageData|null> = Promise.resolve(null);
 
-    constructor() {
+    constructor(params: ContextParams) {
 
         // Check if there's an error message (e.g. region-locked, age-gated)
         const isErrorPage = document.getElementById("error_box") !== null;
 
-        super(ContextType.APP, isErrorPage
+        super(params, ContextType.APP, isErrorPage
             ? [
                 FExtraLinksAppError
             ] : [

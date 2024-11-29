@@ -1,12 +1,7 @@
-import ApplicationConfig from "../../Content/Modules/ApplicationConfig";
-import Environment from "@Core/Environment";
-import CookieReader from "@Core/Storage/CookieReader";
 
 export default class Language {
 
-    private static _currentSteamLanguage: string|null = null;
-
-    public static map: Record<string, string> ={
+    public static readonly map: Record<string, string> ={
         "english": "en",
         "bulgarian": "bg",
         "czech": "cs",
@@ -37,42 +32,25 @@ export default class Language {
         "vietnamese": "vi",
     };
 
-    static getCurrentSteamLanguage() {
-        if (!Environment.isContentScript()) {
-            return null;
-        }
+    private readonly _name: string;
+    private readonly _code: string|null;
 
-        if (this._currentSteamLanguage !== null) {
-            return this._currentSteamLanguage;
-        }
-
-        try {
-            this._currentSteamLanguage = ApplicationConfig.language();
-            return this._currentSteamLanguage;
-        } catch(e) {
-            // no handling
-        }
-
-        for (const script of document.querySelectorAll<HTMLScriptElement>("script[src]")) {
-            const language = new URL(script.src).searchParams.get("l");
-            if (language) {
-                this._currentSteamLanguage = language;
-                return this._currentSteamLanguage;
-            }
-        }
-
-        // In a Content Context, we can check for a cookie
-        this._currentSteamLanguage = CookieReader.get("Steam_Language", null);
-
-        return this._currentSteamLanguage;
+    constructor(language: string) {
+        this._name = language;
+        this._code = Language.map[language] ?? null;
+        // TODO should we throw when there is unsupported language?
     }
 
-    static getLanguageCode(language: string): string {
-        return this.map[language] ?? "en";
+    get name(): string {
+        return this._name;
     }
 
-    static isCurrentLanguageOneOf(...languages: string[]) {
-        return languages.includes(this.getCurrentSteamLanguage() ?? "");
+    get code(): string|null {
+        return this._code;
+    }
+
+    isOneOf(...languages: string[]) {
+        return languages.includes(this._name);
     }
 }
 

@@ -1,21 +1,24 @@
-import User from "@Content/Modules/User";
 import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";
 import ITADSyncMenu from "@Content/Modules/Widgets/ITADSync/ITADSyncMenu.svelte";
+import type UserInterface from "@Core/User/UserInterface";
 
 export default class ITAD {
-    static async init() {
+
+    static async init(user: UserInterface) {
         if (!await ITADApiFacade.isConnected()) {
             return;
         }
 
-        if (User.isSignedIn) {
+        if (user.isSignedIn) {
             await ITADApiFacade.sync();
         }
 
-        const target = document.querySelector("#global_action_menu");
-        if (target) {
-            const anchor = target.firstElementChild ?? undefined;
-            (new ITADSyncMenu({target, anchor}));
+        const menu = document.querySelector(".as-menu");
+        if (menu) {
+            (new ITADSyncMenu({
+                target: menu.parentElement!,
+                anchor: menu
+            }));
         }
     }
 

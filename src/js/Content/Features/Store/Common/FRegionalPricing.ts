@@ -1,7 +1,6 @@
 import self_ from "./FRegionalPricing.svelte";
 import type CSub from "@Content/Features/Store/Sub/CSub";
 import Feature from "@Content/Modules/Context/Feature";
-import User from "@Content/Modules/User";
 import RequestData from "@Content/Modules/RequestData";
 import Settings from "@Options/Data/Settings";
 
@@ -32,7 +31,7 @@ export default class FRegionalPricing extends Feature<CSub> {
     override async apply(): Promise<void> {
 
         const countries = Settings.regional_countries;
-        const localCountry = User.storeCountry.toLowerCase();
+        const localCountry = this.context.user.storeCountry.toLowerCase();
 
         if (!countries.includes(localCountry)) {
             countries.push(localCountry);
@@ -74,6 +73,7 @@ export default class FRegionalPricing extends Feature<CSub> {
                     target: node.parentElement!,
                     anchor: node,
                     props: {
+                        user: this.context.user,
                         countries,
                         prices,
                         errors
@@ -85,6 +85,7 @@ export default class FRegionalPricing extends Feature<CSub> {
                 (new self_({
                     target: document.body,
                     props: {
+                        user: this.context.user,
                         countries,
                         prices,
                         errors,

@@ -2,14 +2,13 @@ import Feature from "@Content/Modules/Context/Feature";
 import type CFriendsAndGroups from "@Content/Features/Community/FriendsAndGroups/CFriendsAndGroups";
 import Settings from "@Options/Data/Settings";
 import RequestData from "@Content/Modules/RequestData";
-import User from "@Content/Modules/User";
 import "./FFriendsAppendNickname.css";
 
 export default class FFriendsAppendNickname extends Feature<CFriendsAndGroups> {
 
     // Apply this feature on all profiles to support common friends
     override checkPrerequisites(): boolean {
-        return User.isSignedIn && Settings.friends_append_nickname;
+        return this.context.user.isSignedIn && Settings.friends_append_nickname;
     }
 
     apply(): void | Promise<void> {
@@ -33,7 +32,7 @@ export default class FFriendsAppendNickname extends Feature<CFriendsAndGroups> {
         }
 
         const chunkSize = 99; // Max 100
-        const token = await User.getWebApiToken();
+        const token = await this.context.user.getWebApiToken();
 
         const steamids: string[] = [...steamidMap.keys()];
         while (steamids.length > 0) {

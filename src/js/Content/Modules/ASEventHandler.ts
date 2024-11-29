@@ -8,10 +8,10 @@ export default class ASEventHandler<T = void> {
     private wasDispatched: boolean = false;
     private data: T|undefined;
 
-    public subscribe(listener: ASEventListener<T>): void {
+    public subscribe(listener: ASEventListener<T>, forceDispatch: boolean=false): void {
         this.listeners.push(listener);
 
-        if (this.wasDispatched) {
+        if (this.wasDispatched || forceDispatch) {
             this.invoke(listener);
         }
     }

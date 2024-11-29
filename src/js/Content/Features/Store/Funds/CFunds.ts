@@ -1,12 +1,12 @@
 import FCustomGiftcardAndWallet from "./FCustomGiftcardAndWallet";
-import Context from "@Content/Modules/Context/Context";
+import Context, {type ContextParams} from "@Content/Modules/Context/Context";
 import ContextType from "@Content/Modules/Context/ContextType";
 
 export default class CFunds extends Context {
 
-    constructor() {
+    constructor(params: ContextParams) {
 
-        super(ContextType.FUNDS, [
+        super(params, ContextType.FUNDS, [
             FCustomGiftcardAndWallet,
         ]);
     }

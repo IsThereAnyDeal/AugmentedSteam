@@ -1,6 +1,5 @@
 import {L} from "@Core/Localization/Localization";
 import {__previewBackground} from "@Strings/_strings";
-import User from "@Content/Modules/User";
 import type CPointsShop from "@Content/Features/Store/PointsShop/CPointsShop";
 import Feature from "@Content/Modules/Context/Feature";
 import HTML from "@Core/Html/Html";
@@ -8,7 +7,7 @@ import HTML from "@Core/Html/Html";
 export default class FBackgroundPreviewLink extends Feature<CPointsShop> {
 
     override checkPrerequisites(): boolean {
-        return User.isSignedIn;
+        return this.context.user.isSignedIn;
     }
 
     override async apply(): Promise<void> {
@@ -64,7 +63,7 @@ export default class FBackgroundPreviewLink extends Feature<CPointsShop> {
 
             HTML.beforeBegin(previewEl.parentNode as Element|null,
                 `<div class="as_preview_background_ctn">
-                    <a class="as_preview_background" target="_blank" href="${User.profileUrl}#previewBackground/${bgLink[1]}/${bgLink[2]}">
+                    <a class="as_preview_background" target="_blank" href="${this.context.user.profileUrl}#previewBackground/${bgLink[1]}/${bgLink[2]}">
                         ${L(__previewBackground)}
                     </a>
                 </div>`);

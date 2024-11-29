@@ -1,12 +1,12 @@
-import Context from "@Content/Modules/Context/Context";
+import Context, {type ContextParams} from "@Content/Modules/Context/Context";
 import FUsefulLinks from "./FUsefulLinks";
 import ContextType from "@Content/Modules/Context/ContextType";
 
 export default class CAccount extends Context {
 
-    constructor() {
+    constructor(params: ContextParams) {
 
-        super(ContextType.ACCOUNT, [
+        super(params, ContextType.ACCOUNT, [
             FUsefulLinks,
         ]);
     }

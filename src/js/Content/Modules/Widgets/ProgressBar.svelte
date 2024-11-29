@@ -3,6 +3,8 @@
     import {__ready_failed, __ready_loading, __ready_ready, __ready_serverOutage} from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
 
+    export let react: boolean;
+
     let started: number = 0;
     let done: number = 0;
     let failed: number = 0;
@@ -53,7 +55,7 @@
 </script>
 
 
-<div class="wrapper">
+<div class="wrapper" class:is-react={react} class:is-legacy={!react}>
     <div class="progress"
          class:is-complete="{!isLoading}"
          class:is-warning="{hasWarning}"
@@ -73,10 +75,19 @@
 
 
 <style>
-    .progress {
-        float: right;
+    .wrapper.is-legacy {
         position: relative;
-        margin-top: 55px;
+        float: right;
+    }
+    .wrapper.is-react {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
+    .progress {
+        position: relative;
+        top: 55px;
         width: 100px;
         min-width: 16px;
         height: 16px;
@@ -174,10 +185,7 @@
             box-shadow: 0 0 8px 1px #51771d;
         }
     }
-    .wrapper {
-        position: relative;
-        float: right;
-    }
+
     .error, .warning {
         display: none;
         color: #ccc;

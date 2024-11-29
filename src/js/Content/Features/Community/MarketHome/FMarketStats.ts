@@ -14,7 +14,6 @@ import {
 } from "@Strings/_strings";
 import Feature from "@Content/Modules/Context/Feature";
 import type CMarketHome from "@Content/Features/Community/MarketHome/CMarketHome";
-import User from "@Content/Modules/User";
 import LocalStorage from "@Core/Storage/LocalStorage";
 import RequestData from "@Content/Modules/RequestData";
 import Price from "@Content/Modules/Currency/Price";
@@ -22,7 +21,7 @@ import Price from "@Content/Modules/Currency/Price";
 export default class FMarketStats extends Feature<CMarketHome> {
 
     override checkPrerequisites(): boolean {
-        return User.isSignedIn;
+        return this.context.user.isSignedIn;
     }
 
     override apply(): void {

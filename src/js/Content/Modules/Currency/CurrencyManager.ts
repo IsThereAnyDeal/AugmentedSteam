@@ -47,7 +47,7 @@ export default class CurrencyManager {
         throw new Error("Unknown currency");
     }
 
-    static _getCurrencyCodeFromDom(): string|null {
+    private static _getCurrencyCodeFromDom(): string|null {
         const currencyNode = document.querySelector("meta[itemprop=priceCurrency][content]");
         if (currencyNode) {
             return currencyNode.getAttribute("content");
@@ -55,7 +55,7 @@ export default class CurrencyManager {
         return null
     }
 
-    static _getCurrencyCodeFromWallet(): string|null {
+    private static _getCurrencyCodeFromWallet(): string|null {
         const walletInfo = HTMLParser.getObjectVariable("g_rgWalletInfo");
         if (walletInfo && walletInfo.wallet_currency) {
             return this.currencyIdToCode(walletInfo.wallet_currency);
@@ -63,7 +63,7 @@ export default class CurrencyManager {
         return null;
     }
 
-    static async _getStoreCurrency(): Promise<string> {
+    private static async _getStoreCurrency(): Promise<string> {
         let currency = this._getCurrencyCodeFromDom() ?? this._getCurrencyCodeFromWallet();
         if (currency) {
             return currency;
@@ -77,7 +77,7 @@ export default class CurrencyManager {
         return "USD"; // fallback
     }
 
-    static async _loadCurrency(): Promise<void> {
+    private static async _loadCurrency(): Promise<void> {
         const currencySetting = Settings.override_price;
         this.storeCurrencyCode = await this._getStoreCurrency();
         this.customCurrencyCode = (currencySetting === "auto")
@@ -85,7 +85,7 @@ export default class CurrencyManager {
             : currencySetting;
     }
 
-    static async _loadRates(): Promise<void> {
+    private static async _loadRates(): Promise<void> {
         const toCurrencies = [this.storeCurrencyCode];
         if (this.customCurrencyCode !== this.storeCurrencyCode) {
             toCurrencies.push(this.customCurrencyCode);

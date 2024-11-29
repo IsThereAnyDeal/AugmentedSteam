@@ -1,6 +1,3 @@
-import HTMLParser from "@Core/Html/HtmlParser";
-import TimeUtils from "@Core/Utils/TimeUtils";
-import type {IResettableTimer} from "@Core/Utils/TimeUtils";
 import FAlternativeLinuxIcon from "../Common/FAlternativeLinuxIcon";
 import FWishlistHighlights from "./FWishlistHighlights";
 import FWishlistITADPrices from "./FWishlistITADPrices";
@@ -9,125 +6,97 @@ import FWishlistStats from "./FWishlistStats";
 import FEmptyWishlist from "./FEmptyWishlist";
 import FExportWishlist from "./FExportWishlist";
 import FKeepEditableRanking from "./FKeepEditableRanking";
-import FOneClickRemoveFromWishlist from "./FOneClickRemoveFromWishlist";
 import FWishlistProfileLink from "./FWishlistProfileLink";
-import CStoreBase from "@Content/Features/Store/Common/CStoreBase";
 import ContextType from "@Content/Modules/Context/ContextType";
-import User from "@Content/Modules/User";
 import ASEventHandler from "@Content/Modules/ASEventHandler";
+import Context, {type ContextParams} from "@Content/Modules/Context/Context";
+import SteamFacade from "@Content/Modules/Facades/SteamFacade";
+import {WishlistDOM} from "@Content/Features/Store/Wishlist/Utils/WishlistDOM";
+import WebRequestListener from "@Content/Modules/WebRequest/WebRequestListener";
+import ServiceFactory from "@Protobufs/ServiceFactory";
+import Long from "long";
 
-interface WishlistEntry {
+export interface WishlistEntry {
     appid: number,
     priority: number,
     added: number
 }
 
-export default class CWishlist extends CStoreBase {
+export default class CWishlist extends Context {
 
-    public readonly onWishlistUpdate: ASEventHandler<HTMLElement[]> = new ASEventHandler<HTMLElement[]>();
+    public readonly onReorder: ASEventHandler<void> = new ASEventHandler<void>();
 
-    private readonly hasWishlistData: boolean = false;
-    public readonly wishlistData: WishlistEntry[] = [];
-    public readonly myWishlist: boolean = false;
+    public readonly dom: WishlistDOM;
+    public readonly ownerId: string;
 
-    constructor() {
-        // TODO use SteamFacade to get global variable?
-        const wishlistData = HTMLParser.getArrayVariable<WishlistEntry>("g_rgWishlistData") ?? [];
+    public wishlistData: WishlistEntry[];
 
-        const hasWishlistData = wishlistData && wishlistData.length > 0;
+    static override async create(params: ContextParams): Promise<CWishlist> {
 
-        super(ContextType.WISHLIST, hasWishlistData
-            ? [
-                FAlternativeLinuxIcon,
-                FWishlistHighlights,
-                FWishlistITADPrices,
-                FWishlistUserNotes,
-                FWishlistStats,
-                FEmptyWishlist,
-                FExportWishlist,
-                FKeepEditableRanking,
-                FOneClickRemoveFromWishlist,
-                FWishlistProfileLink,
-            ] : []
-        );
+        const queryData: {
+            queries: Array<{
+                state: Record<string, any>,
+                queryKey: Array<any>
+            }>
+        } = JSON.parse(await SteamFacade.global("SSR.renderContext.queryData"));
 
-        this.hasWishlistData = hasWishlistData;
-        if (!this.hasWishlistData) {
-            return;
+        let ownerId: string|null = null;
+        let wishlistData: WishlistEntry[]|null = null;
+
+        for (let query of queryData.queries) {
+            if (query.queryKey[0] === "WishlistSortedFiltered") {
+                ownerId = query.state.data.steamid;
+                wishlistData = query.state.data.items;
+            }
         }
 
+        if (!ownerId || !wishlistData) {
+            throw new Error("Couldn't initialize wishlist, didn't find owner");
+        }
+
+        return new CWishlist(params, ownerId, wishlistData);
+    }
+
+    /* TODO private */ constructor(params: ContextParams, ownerId: string, wishlistData: WishlistEntry[]) {
+        super(params, ContextType.WISHLIST, [
+            FAlternativeLinuxIcon,
+            FWishlistHighlights,
+            FWishlistITADPrices,
+            FWishlistUserNotes,
+            FWishlistStats,
+            FEmptyWishlist,
+            FExportWishlist,
+            FKeepEditableRanking,
+            FWishlistProfileLink,
+        ]);
+
+        this.ownerId = ownerId;
         this.wishlistData = wishlistData;
-        this.myWishlist = false;
+        this.dom = new WishlistDOM();
 
-        if (User.isSignedIn) {
-            const myWishlistUrl = User.profileUrl.replace("steamcommunity.com/", "store.steampowered.com/wishlist/").replace(/\/$/, "");
-            const myWishlistUrlRegex = new RegExp(`^${myWishlistUrl}([/#]|$)`);
-            this.myWishlist = myWishlistUrlRegex.test(window.location.href) || window.location.href.includes(`/profiles/${User.steamId}`);
-        }
-
-        // Maintain the order of the buttons
-        this.dependency(FEmptyWishlist, [FExportWishlist, true]);
-    }
-
-    override async applyFeatures(): Promise<void> {
-        if (!this.hasWishlistData) { return; }
-
-        const throbber = document.getElementById("throbber");
-        if (throbber && throbber.style.display !== "none") {
-            await new Promise<void>(resolve => {
-                new MutationObserver((_, observer) => {
-                    observer.disconnect();
-                    resolve();
-                }).observe(throbber, {"attributes": true});
+        WebRequestListener.onComplete("reorder", ["https://store.steampowered.com/wishlist/action/reorder"],
+            async (_url: string) => {
+                await this.reloadWishlistData();
+                this.onReorder.dispatch();
             });
-        }
 
-        await super.applyFeatures();
-
-        // Internal property to track which nodes have already been processed
-        const done = Symbol("done");
-
-        const alreadyLoaded = Array.from(document.querySelectorAll<HTMLElement>(".wishlist_row"));
-        if (alreadyLoaded.length !== 0) {
-            await this.triggerCallbacks(alreadyLoaded, done);
-        }
-
-        let timer: IResettableTimer|null = null;
-        const delayedWork: Set<HTMLElement> = new Set();
-
-        new MutationObserver(mutations => {
-
-            for (const {addedNodes} of mutations) {
-                const node = addedNodes[0] as HTMLElement;
-                // @ts-expect-error
-                if (node && !node[done]) {
-                    delayedWork.add(node);
-                }
-            }
-
-            if (timer === null) {
-
-                timer = TimeUtils.resettableTimer(() => {
-
-                    // Valve detaches wishlist entries that aren't visible
-                    const visibleRows: HTMLElement[] = Array.from(delayedWork).filter(node => node.isConnected);
-                    delayedWork.clear();
-
-                    if (visibleRows.length !== 0) {
-                        this.triggerCallbacks(visibleRows, done);
-                    }
-                }, 50);
-            } else {
-                timer.reset();
-            }
-        }).observe(document.getElementById("wishlist_ctn")!, {"childList": true});
+        this.dom.observe();
     }
 
-    triggerCallbacks(nodes: HTMLElement[], done: Symbol) {
-        nodes.forEach(node => {
-            // @ts-expect-error
-            node[done] = true;
+    public get isMyWishlist(): boolean {
+        return this.ownerId === this.user.steamId;
+    }
+
+    private async reloadWishlistData(): Promise<void> {
+        const wishlist = await ServiceFactory.WishlistService(this.user).getWishlist({
+            steamid: Long.fromString(this.ownerId!)
         });
-        this.onWishlistUpdate.dispatch(nodes);
+        this.wishlistData = wishlist.items.map(item => {
+            return {
+                appid: item.appid!,
+                priority: item.priority!,
+                added: item.dateAdded!
+            }
+        });
     }
 }

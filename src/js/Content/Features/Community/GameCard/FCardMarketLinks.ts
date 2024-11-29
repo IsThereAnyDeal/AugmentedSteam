@@ -56,7 +56,7 @@ export default class FCardMarketLinks extends Feature<CGameCard> {
             }
         }
 
-        if (cost > 0 && CommunityUtils.currentUserIsOwner()) {
+        if (cost > 0 && CommunityUtils.userIsOwner(this.context.user)) {
             const badgeRow = document.querySelector<HTMLElement>(".badge_row");
             if (badgeRow) {
                 HTML.afterEnd(

@@ -8,14 +8,15 @@ import ContextType from "@Content/Modules/Context/ContextType";
 import CommunityUtils from "@Content/Modules/Community/CommunityUtils";
 import HTML from "@Core/Html/Html";
 import DOMHelper from "@Content/Modules/DOMHelper";
+import type {ContextParams} from "@Content/Modules/Context/Context";
 
 export default class CFriendsAndGroups extends CCommunityBase {
 
     public readonly myProfile: boolean;
 
-    constructor() {
+    constructor(params: ContextParams) {
 
-        super(ContextType.FRIENDS_AND_GROUPS, [
+        super(params, ContextType.FRIENDS_AND_GROUPS, [
             FFriendsSort,
             FInviteFriendsToGroup,
             FGroupsManageButton,
@@ -23,7 +24,7 @@ export default class CFriendsAndGroups extends CCommunityBase {
             FFriendsAppendNickname,
         ]);
 
-        this.myProfile = CommunityUtils.currentUserIsOwner();
+        this.myProfile = CommunityUtils.userIsOwner(this.user);
         this._moveSearchBar();
 
         document.addEventListener("as_subpageNav", () => {

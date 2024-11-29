@@ -1,18 +1,26 @@
 import self_ from "./ProgressBar.svelte";
 import Settings from "@Options/Data/Settings";
+import ReactDOM from "@Content/Steam/ReactDOM";
 
-export default function ProgressBar(): void {
-    if (!Settings.show_progressbar) {
-        return;
+export default class ProgressBar {
+
+    private static build(react: boolean, node: HTMLElement|null): void {
+        if (!Settings.show_progressbar || !node) {
+            return;
+        }
+
+        new self_({
+            target: node.parentElement!,
+            anchor: node.nextElementSibling ?? undefined,
+            props: {react}
+        });
     }
 
-    const globalActions = document.querySelector("#global_actions");
-    if (!globalActions) {
-        return;
+    static buildLegacy(): void {
+        this.build(false, document.querySelector("#global_actions"));
     }
 
-    new self_({
-        target: globalActions.parentElement!,
-        anchor: globalActions.nextElementSibling ?? undefined
-    });
+    static buildReact(): void {
+        this.build(true, ReactDOM.globalActions());
+    }
 }

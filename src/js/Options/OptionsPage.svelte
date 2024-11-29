@@ -21,7 +21,7 @@
     onMount(() => {
         initialLoad = (async () => {
             await SettingsStore.init();
-            await Localization.init();
+            await Localization.init(null);
         })();
     });
 

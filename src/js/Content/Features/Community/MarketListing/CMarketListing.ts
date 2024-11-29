@@ -4,14 +4,15 @@ import FSoldAmountLastDay from "./FSoldAmountLastDay";
 import FBackgroundPreviewLink from "./FBackgroundPreviewLink";
 import FBadgePageLink from "./FBadgePageLink";
 import FPriceHistoryZoomYear from "../FPriceHistoryZoomYear";
+import type {ContextParams} from "@Content/Modules/Context/Context";
 
 export default class CMarketListing extends CCommunityBase {
 
     public readonly appid: number;
     public readonly marketHashName: string;
 
-    constructor() {
-        super(ContextType.MARKET_LISTING, [
+    constructor(params: ContextParams) {
+        super(params, ContextType.MARKET_LISTING, [
             FSoldAmountLastDay,
             FBackgroundPreviewLink,
             FBadgePageLink,
