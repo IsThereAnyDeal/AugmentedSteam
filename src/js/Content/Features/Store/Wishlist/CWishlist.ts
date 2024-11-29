@@ -16,6 +16,9 @@ import ASEventHandler from "@Content/Modules/ASEventHandler";
 import type {ContextParams} from "@Content/Modules/Context/Context";
 import SteamFacade from "@Content/Modules/Facades/SteamFacade";
 import {WishlistDOM} from "@Content/Features/Store/Wishlist/WishlistDOM";
+import WebRequestListener from "@Content/Modules/WebRequest/WebRequestListener";
+import ServiceFactory from "@Protobufs/ServiceFactory";
+import Long from "long";
 
 export interface WishlistEntry {
     appid: number,
@@ -26,6 +29,8 @@ export interface WishlistEntry {
 export default class CWishlist extends CStoreBase {
 
     public readonly onWishlistUpdate: ASEventHandler<HTMLElement[]> = new ASEventHandler<HTMLElement[]>();
+    public readonly onReorder: ASEventHandler<void> = new ASEventHandler<void>();
+
 
     private readonly hasWishlistData: boolean = false;
     public wishlistData: WishlistEntry[]|undefined;
@@ -43,10 +48,11 @@ export default class CWishlist extends CStoreBase {
                 FWishlistStats,
                 FEmptyWishlist,
                 FExportWishlist,
-                // FKeepEditableRanking,
+                FKeepEditableRanking,
                 FWishlistProfileLink,
             ]
         );
+
 
         this.dom = new WishlistDOM();
         return;
@@ -88,7 +94,26 @@ export default class CWishlist extends CStoreBase {
         this.dependency(FEmptyWishlist, [FExportWishlist, true]);
     }
 
+    private async reloadWishlistData(): Promise<void> {
+        const wishlist = await ServiceFactory.WishlistService(this.user).getWishlist({
+            steamid: Long.fromString(this.ownerId!)
+        });
+        this.wishlistData = wishlist.items.map(item => {
+            return {
+                appid: item.appid!,
+                priority: item.priority!,
+                added: item.dateAdded!
+            }
+        });
+    }
+
     override async applyFeatures(): Promise<void> {
+
+        WebRequestListener.onComplete("reorder", ["https://store.steampowered.com/wishlist/action/reorder"],
+            (_url: string) => {
+            this.reloadWishlistData();
+            this.onReorder.dispatch();
+        });
 
         const queryData: {
             queries: Array<{
@@ -100,7 +125,7 @@ export default class CWishlist extends CStoreBase {
         for (let query of queryData.queries) {
             if (query.queryKey[0] === "WishlistSortedFiltered") {
                 this.ownerId = query.state.data.steamid;
-                this.wishlistData = query.state.data.items;
+                this.wishlistData = query.state.data.items as WishlistEntry[];
             }
         }
 
