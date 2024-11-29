@@ -393,8 +393,7 @@
         "replacecommunityhublinks": "Замінити посилання на центр спільноти посиланням на сторінку крамниці",
         "hideannouncementcomments": "Приховати коментарі під усіма оголошеннями в группах за замовчуванням",
         "friend_activity": "Діяльність друзів",
-        "confirmdeletecomment": "Пропонувати підтвердити видалення коментарів",
-        "showdeckcompat": "Показувати рейтинги сумісності зі Steam Deck серед особливостей (та пфдтягувати дані, як відсутні)"
+        "confirmdeletecomment": "Пропонувати підтвердити видалення коментарів"
     },
     "ready": {
         "loading": "Augmented Steam завантажує дані...",
@@ -555,12 +554,6 @@
     "hide_comments": "Приховати коментарі",
     "fav_emoticons_no_access": "Цей смайлик вам не доступний",
     "delete_comment_prompt": "Ви точно хочете видалити цей коментар?",
-    "deck_compat": {
-        "header": "Сумісність зі Steam Deck",
-        "unknown": "Невідомо",
-        "playable": "Іграбельно",
-        "verified": "Підтверджено"
-    },
     "theworderror": "Помилка",
     "no_data": "Нема даних",
     "quick_sell_verify": "Необхідне підтвердження Steam Guard",

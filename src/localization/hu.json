@@ -556,13 +556,6 @@
     "hide_comments": "Kommentek elrejtése",
     "fav_emoticons_no_access": "Nincs hozzáférésed a hangulatjelhez",
     "delete_comment_prompt": "Biztosan törlöd a kommentet?",
-    "deck_compat": {
-        "header": "Steam Deck Kompatibilitás",
-        "unknown": "Ismeretlen",
-        "unsupported": "Nem támogatott",
-        "playable": "Játszható",
-        "verified": "Ellenőrzött"
-    },
     "theworderror": "Hiba",
     "no_data": "Nincs adat",
     "show_all": "Mind",

@@ -331,6 +331,7 @@
         "homepage_default_tab": "Раздел по подразбиране за начална страница",
         "homepage_default_tab_remember": "Запомняне на предходното",
         "homepage_default_tab_newreleases": "Нови и тенденциозни",
+        "homepage_default_tab_topsellers": "Най-продавани",
         "homepage_default_tab_upcoming": "Популярни предстоящи",
         "homepage_default_tab_specials": "Намаления",
         "wishlist": "Артикули в списъка Ви с желания",
@@ -407,7 +408,6 @@
         "hideannouncementcomments": "Скриване на коментарите под всички групови анонси по подразбиране",
         "friend_activity": "Емисия с приятелска активност",
         "confirmdeletecomment": "Показване на потвърждение, когато се трият коментари",
-        "showdeckcompat": "Показване на оценки за съвместимост със Steam Deck в списъка с характеристики (и извличане на данните, когато липсват)",
         "about_desc": "Augmented Steam е разклонение на добавката Enhanced Steam.",
         "about_desc_links": "Посетете __website__ на добавката или нашия __discord__ за още информация.",
         "footer_fork": "разклонение от IsThereAnyDeal",
@@ -415,7 +415,8 @@
         "show_players_info": "Показване на информация за броя на играчите",
         "friends_and_groups": "Приятели и групи",
         "friends_append_nickname": "Притурване на псевдоними към имената на приятели",
-        "collection_banner_not_owned": "Показване на банера „В колекция“ само когато не притежавам играта в Steam"
+        "collection_banner_not_owned": "Показване на банера „В колекция“ само когато не притежавам играта в Steam",
+        "homepage_default_tab_free": "Тенденциозни безплатни"
     },
     "ready": {
         "loading": "Зареждане на данните за Augmented Steam…",
@@ -467,7 +468,8 @@
             "steam-itad": "Нещо повече, позволява Ви да внасяте игри от своята Steam библиотека и/или списъка с желания в IsThereAnyDeal, за подобрена точност (напр. сваляемо съдържание или невписани заглавия). Понастоящем тази характеристика може само да добавя заглавия, но не и да ги премахва. Ето защо не може да замести вградената синхронизация на IsThereAnyDeal, а по-скоро е допълнение към нея."
         },
         "enable_sync_library": "Вкл. на синхр. за библиотеката",
-        "enable_sync_wishlist": "Вкл. на синхр. за списъка с желания"
+        "enable_sync_wishlist": "Вкл. на синхр. за списъка с желания",
+        "sync_events": "Синх. на събития"
     },
     "tradeoffer": {
         "num_item": "__num__ артикул",
@@ -529,7 +531,9 @@
         "sync_pushed": "Изтласкана(и) __n__ бележка(и) към IsThereAnyDeal",
         "sync_failed": "Неуспешно синхр. на __n__ бележка(и)",
         "sync_error": "Неуспешно синхронизиране на бележката Ви",
-        "sync_error_empty": "Бележката е празна"
+        "sync_error_empty": "Бележката е празна",
+        "sync_error_unknown": "ITAD не познава тази игра",
+        "sync_error_length": "Бележката е прекалено дълга (__length__, max: __max__)"
     },
     "queue": {
         "new": "Нова опашка",
@@ -607,13 +611,6 @@
     "hide_comments": "Скриване на коментари",
     "fav_emoticons_no_access": "Нямате достъп до тази емотикона",
     "delete_comment_prompt": "Сигурни ли сте, че искате да изтриете този коментар?",
-    "deck_compat": {
-        "header": "Steam Deck съвместимост",
-        "unknown": "Неизвестно",
-        "unsupported": "Неподдържано",
-        "playable": "Годно за пускане",
-        "verified": "Потвърдено"
-    },
     "theworderror": "Грешка",
     "no_data": "Няма данни",
     "quick_sell_verify": "Нужно е Steam Guard потвърждение",
@@ -881,5 +878,9 @@
     "thewordunknown": "Неизвестно",
     "badge_level": "Ниво __level__",
     "ignored_owned": "Игри, които сте игнорирали като пускани на различна платформа",
-    "owned_collection": "__gametitle__ вече е в IsThereAnyDeal колекцията Ви"
+    "owned_collection": "__gametitle__ вече е в IsThereAnyDeal колекцията Ви",
+    "add_fullgame_to_wishlist": "Добавяне на пълната игра към списъка Ви с желания",
+    "add_fullgame_to_waitlist": "Добавяне на пълната игра към списъка Ви за изчакване",
+    "remove_fullgame_from_waitlist_tooltip": "Премахване на пълната игра от списъка Ви за изчакване",
+    "remove_fullgame_from_wishlist_and_waitlist_tooltip": "Премахване на пълната игра както от списъка Ви с желания, така и от този за изчакване"
 }

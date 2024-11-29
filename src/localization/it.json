@@ -401,7 +401,6 @@
         "hideannouncementcomments": "Nascondi i commenti sotto tutti gli annunci di gruppo per impostazione predefinita",
         "friend_activity": "Attività degli amici",
         "confirmdeletecomment": "Mostra conferma durante l'eliminazione dei commenti",
-        "showdeckcompat": "Mostra la compatibilità con Steam Deck nell'elenco delle funzionalità (e recupera i dati quando mancano)",
         "about_desc": "Augmented Steam è un fork dell'estensione Enhanced Steam.",
         "about_desc_links": "Per maggiori informazioni visita il sito web dell'estensione __website__ o il nostro __discord__.",
         "footer_fork": "un fork di IsThereAnyDeal",
@@ -578,13 +577,6 @@
     "hide_comments": "Nascondi commenti",
     "fav_emoticons_no_access": "Non hai accesso a questa emoticon",
     "delete_comment_prompt": "Eliminare questo commento?",
-    "deck_compat": {
-        "header": "Compatibilità Steam Deck",
-        "unknown": "Sconosciuta",
-        "unsupported": "Non supportato",
-        "playable": "Giocabile",
-        "verified": "Verificato"
-    },
     "theworderror": "Errore",
     "no_data": "Nessun dato",
     "quick_sell_verify": "È necessaria la conferma di Steam Guard",

@@ -406,7 +406,6 @@
         "hideannouncementcomments": "Varsayılan olarak tüm grup duyurularının altındaki yorumları gizle",
         "friend_activity": "Arkadaş Etkinliği Akışı",
         "confirmdeletecomment": "Yorumları silerken onayı göster",
-        "showdeckcompat": "Özellikler listesinde Steam Deck uyumluluk derecelendirmelerini gösterin (ve eksik olduğunda verileri alın)",
         "about_desc": "Augmented Steam, Enhanced Steam uzantısının çatalıdır.",
         "about_desc_links": "Daha fazlası için __website__ ya da __discord__ adreslerimizi ziyaret edin.",
         "footer_fork": "IsThereAnyDeal'ın bir çatalı",
@@ -585,13 +584,6 @@
     "hide_comments": "Yorumları Gizle",
     "fav_emoticons_no_access": "Bu ifadeye erişiminiz yok",
     "delete_comment_prompt": "Bu yorumu silmek istediğinizden emin misiniz?",
-    "deck_compat": {
-        "header": "Steam Deck Uyumluluğu",
-        "unknown": "Bilinmeyen",
-        "unsupported": "Desteklenmiyor",
-        "playable": "Oynanabilir",
-        "verified": "Onaylı"
-    },
     "theworderror": "Hata",
     "no_data": "Veri yok",
     "quick_sell_verify": "Steam Guard onayı gerekli",

@@ -192,10 +192,10 @@
     "pricing": {
         "lowest_price": "Aktueller Tiefstpreis:",
         "historical_low": "Historischer Tiefstpreis:",
-        "bundled": "In Bundle:",
+        "bundled": "Teil eines Bundles:",
         "with_voucher": "mit Gutschein __voucher__",
         "store": "bei&nbsp;__store__",
-        "bundle_count": "Anzahl Bundles, in denen dieses Spiel angeboten wurde: __count__"
+        "bundle_count": "__count__ Mal"
     },
     "web_browser_chat": "Web-Browser-Chat",
     "steam_client_chat": "Steam-Client-Chat",
@@ -330,7 +330,8 @@
         "homepage": "Startseite",
         "homepage_default_tab": "Standard-Startseiten-Tab",
         "homepage_default_tab_remember": "Vorheriges merken",
-        "homepage_default_tab_newreleases": "Beliebte Neuheiten",
+        "homepage_default_tab_newreleases": "Neu & beliebt",
+        "homepage_default_tab_topsellers": "Topseller",
         "homepage_default_tab_upcoming": "Beliebt und bald verfügbar",
         "homepage_default_tab_specials": "Sonderangebote",
         "wishlist": "Artikel auf Ihrer Wunschliste",
@@ -407,7 +408,6 @@
         "hideannouncementcomments": "Kommentare unter allen Gruppenankündigungen standardmäßig ausblenden",
         "friend_activity": "Aktivitätsverlauf von Freunden",
         "confirmdeletecomment": "Bestätigung beim Löschen von Kommentaren anzeigen",
-        "showdeckcompat": "Steam-Deck-Kompatibilitätsbewertungen in der Feature-Liste anzeigen (und die Daten abrufen, wenn diese fehlen)",
         "about_desc": "Augmented Steam ist ein Fork der Erweiterung Enhanced Steam.",
         "about_desc_links": "Besuchen Sie für weitere Informationen die __Website__ der Erweiterung oder unseren __Discord__.",
         "footer_fork": "ein Fork von IsThereAnyDeal",
@@ -415,7 +415,8 @@
         "show_players_info": "Informationen zur Spielerzahl anzeigen",
         "friends_and_groups": "Freunde und Gruppen",
         "friends_append_nickname": "Spitznamen an Namen von Freunden anhängen",
-        "collection_banner_not_owned": "Das Banner „In Sammlung“ nur anzeigen, wenn ich das Spiel nicht auf Steam besitze"
+        "collection_banner_not_owned": "Das Banner „In Sammlung“ nur anzeigen, wenn ich das Spiel nicht auf Steam besitze",
+        "homepage_default_tab_free": "Kostenlos & beliebt"
     },
     "ready": {
         "loading": "Augmented Steam lädt Daten ...",
@@ -458,13 +459,17 @@
     },
     "itad": {
         "import": "Regelmäßig importieren:",
+        "last_import": "Letzter Import",
+        "from": "von ITAD",
+        "to": "zu ITAD",
         "sync_now": "Jetzt synchronisieren",
         "info": {
             "itad-steam": "Wenn Sie Augmented Steam mit IsThereAnyDeal verbinden, können Sie Hervorhebungen und das Tagging von Augmented Steam auf Spiele in Ihrer Warteliste und Sammlung anwenden, auch wenn Sie diese nicht auf Steam besitzen.",
             "steam-itad": "Außerdem ist es möglich, Spiele aus Ihrer Steam-Bibliothek und/oder Wunschliste in IsThereAnyDeal zu importieren, um die Genauigkeit zu verbessern (z. B. DLCs oder nicht gelistete Spiele). Derzeit kann diese Funktion nur Titel hinzufügen, nicht entfernen, sodass es kein Ersatz für die integrierte Synchronisation von IsThereAnyDeal ist, sondern eine Ergänzung dazu."
         },
         "enable_sync_library": "Synchronisation der Bibliothek aktivieren",
-        "enable_sync_wishlist": "Synchronisation der Wunschliste aktivieren"
+        "enable_sync_wishlist": "Synchronisation der Wunschliste aktivieren",
+        "sync_events": "Ereignisse synchronisieren"
     },
     "tradeoffer": {
         "num_item": "__num__ Gegenstand",
@@ -606,13 +611,6 @@
     "hide_comments": "Kommentare ausblenden",
     "fav_emoticons_no_access": "Sie haben keinen Zugriff auf dieses Emoticon",
     "delete_comment_prompt": "Möchten Sie diesen Kommentar wirklich löschen?",
-    "deck_compat": {
-        "header": "Steam-Deck-Kompatibilität",
-        "unknown": "Unbekannt",
-        "unsupported": "Nicht unterstützt",
-        "playable": "Spielbar",
-        "verified": "Verifiziert"
-    },
     "theworderror": "Fehler",
     "no_data": "Keine Daten",
     "quick_sell_verify": "Steam-Guard-Bestätigung erforderlich",

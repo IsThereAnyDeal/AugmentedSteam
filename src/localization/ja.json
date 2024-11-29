@@ -403,7 +403,6 @@
         "hideannouncementcomments": "全てのグループアナウンスのコメントをデフォルトで非表示にする",
         "friend_activity": "フレンドアクティビティフィード",
         "confirmdeletecomment": "コメントを削除する際に確認を表示する",
-        "showdeckcompat": "機能リストに Steam Deck の互換性評価を表示する (データが欠落している場合は取得)",
         "about_desc": "Augmented Steam は Enhanced Steam 拡張機能のフォークです。",
         "about_desc_links": "詳細については、拡張機能の __website__ または __discord__ をご覧ください。",
         "footer_fork": "フォーク: IsThereAnyDeal",
@@ -582,13 +581,6 @@
     "hide_comments": "コメントを非表示にする",
     "fav_emoticons_no_access": "この絵文字にアクセスできません",
     "delete_comment_prompt": "このコメントを削除してもよろしいですか？",
-    "deck_compat": {
-        "header": "Steam Deckの互換性",
-        "unknown": "不明",
-        "unsupported": "未サポート",
-        "playable": "プレイ可能",
-        "verified": "確認済み"
-    },
     "theworderror": "エラー",
     "no_data": "データ無し",
     "quick_sell_verify": "Steam Guardの確認が必要です",

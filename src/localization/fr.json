@@ -330,8 +330,9 @@
         "homepage": "Page d'accueil",
         "homepage_default_tab": "Onglet par défaut de la page d'accueil",
         "homepage_default_tab_remember": "Dernier choix",
-        "homepage_default_tab_newreleases": "Sorties populaires",
-        "homepage_default_tab_upcoming": "Bientôt",
+        "homepage_default_tab_newreleases": "Nouveautés et tendances",
+        "homepage_default_tab_topsellers": "Meilleures ventes",
+        "homepage_default_tab_upcoming": "Sorties attendues",
         "homepage_default_tab_specials": "Offres",
         "wishlist": "Articles souhaités",
         "add_another_region": "Ajouter",
@@ -407,7 +408,6 @@
         "hideannouncementcomments": "Cacher les commentaires sous toutes les annonces de groupe par défaut",
         "friend_activity": "Flux d'activité des contacts",
         "confirmdeletecomment": "Afficher une confirmation lors de la suppression des commentaires",
-        "showdeckcompat": "Afficher les évaluations de compatibilité Steam Deck dans la liste des fonctionnalités (et récupérer les données lorsqu'elles sont manquantes)",
         "about_desc": "Augmented Steam est un fork de l'extension Enhanced Steam.",
         "about_desc_links": "Visitez le __website__ de l'extension ou notre __discord__ pour plus d'informations.",
         "footer_fork": "un fork par IsThereAnyDeal",
@@ -415,7 +415,8 @@
         "show_players_info": "Afficher les informations sur le nombre de joueurs",
         "friends_and_groups": "Amis et groupes",
         "friends_append_nickname": "Ajouter des surnoms aux noms des amis",
-        "collection_banner_not_owned": "Afficher la bannière de collection uniquement lorsque je ne possède pas le jeu sur Steam"
+        "collection_banner_not_owned": "Afficher la bannière de collection uniquement lorsque je ne possède pas le jeu sur Steam",
+        "homepage_default_tab_free": "Gratuits tendance"
     },
     "ready": {
         "loading": "Chargement des données d'Augmented Steam...",
@@ -467,7 +468,8 @@
             "steam-itad": "De plus, cela vous permet d'importer des jeux depuis votre bibliothèque Steam et / ou votre liste de souhaits vers IsThereAnyDeal, pour une précision améliorée (par exemple, des DLC ou des jeux non répertoriés). Actuellement, cette fonctionnalité ne peut ajouter que des titres, pas les retirer, donc ce n'est pas un remplacement mais un ajout à la synchronisation intégrée d'IsThereAnyDeal."
         },
         "enable_sync_library": "Activer la synchronisation de la bibliothèque",
-        "enable_sync_wishlist": "Activer la synchronisation de la liste de souhaits"
+        "enable_sync_wishlist": "Activer la synchronisation de la liste de souhaits",
+        "sync_events": "Synchroniser les événements"
     },
     "tradeoffer": {
         "num_item": "__num__ objet",
@@ -609,13 +611,6 @@
     "hide_comments": "Cacher les commentaires",
     "fav_emoticons_no_access": "Vous n'avez pas accès à cet émoticône",
     "delete_comment_prompt": "Voulez-vous vraiment supprimer ce commentaire ?",
-    "deck_compat": {
-        "header": "Compatibilité Steam Deck",
-        "unknown": "Inconnue",
-        "unsupported": "Non pris en charge",
-        "playable": "Jouable",
-        "verified": "Vérifiée"
-    },
     "theworderror": "Erreur",
     "no_data": "Pas de données",
     "quick_sell_verify": "Confirmation Steam Guard nécessaire",

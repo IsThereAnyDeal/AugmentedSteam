@@ -404,7 +404,6 @@
         "hideannouncementcomments": "Ocultar comentarios de todos los anuncios de grupos de forma predeterminada",
         "friend_activity": "Feed de actividad de tus amigos",
         "confirmdeletecomment": "Mostrar confirmación al eliminar comentarios",
-        "showdeckcompat": "Muestra los ratings de compatibilidad con Steam Deck en la lista de características (y busca la información cuando falta)",
         "about_desc": "Augmented Steam es una bifurcación de la extensión Enhanced Steam.",
         "about_desc_links": "Visitá la __página__ o el __discord__ de la extensión para más información.",
         "footer_fork": "una bifurcación por IsThereAnyDeal",
@@ -577,13 +576,6 @@
     "hide_comments": "Ocultar comentarios",
     "fav_emoticons_no_access": "No tienes acceso a este emoticón.",
     "delete_comment_prompt": "¿Seguro que quieres eliminar este comentario?",
-    "deck_compat": {
-        "header": "Compatibilidad con Steam Deck",
-        "unknown": "Desconocida",
-        "unsupported": "No soportado",
-        "playable": "Jugable",
-        "verified": "Verificado"
-    },
     "theworderror": "Error",
     "no_data": "Sin información",
     "quick_sell_verify": "Se necesita confirmación de Steam Guard",

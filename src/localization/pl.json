@@ -331,6 +331,7 @@
         "homepage_default_tab": "Domyślna zakładka na stronie głównej:",
         "homepage_default_tab_remember": "Pamiętaj poprzednią",
         "homepage_default_tab_newreleases": "Popularne nowości",
+        "homepage_default_tab_topsellers": "Bestsellery",
         "homepage_default_tab_upcoming": "Popularne nadchodzące",
         "homepage_default_tab_specials": "Oferty specjalne",
         "wishlist": "Tytuły na twojej liście życzeń",
@@ -409,7 +410,11 @@
         "confirmdeletecomment": "Wyświetlaj potwierdzenia przy usuwaniu komentarzy",
         "about_desc": "Augmented Steam to rozwidlenie dodatku Enhanced Steam.",
         "about_desc_links": "Odwiedź __website__ dodatku lub nasz serwer __discord__, aby uzyskać więcej informacji.",
-        "show_players_info": "Wyświetlaj informacje o liczbie graczy"
+        "show_players_info": "Wyświetlaj informacje o liczbie graczy",
+        "friends_and_groups": "Znajomi i grupy",
+        "friends_append_nickname": "Wyświetlaj pseudonimy znajomych obok ich nazw",
+        "collection_banner_not_owned": "Wyświetlaj baner „W kolekcji” tylko wtedy, gdy nie posiadam danej gry w bibliotece Steam",
+        "homepage_default_tab_free": "Wschodzące darmowe"
     },
     "ready": {
         "loading": "Wczytywanie danych Augmented Steam...",
@@ -452,11 +457,17 @@
     },
     "itad": {
         "import": "Okresowe importowanie:",
+        "last_import": "Ostatni import",
+        "from": "z ITAD",
+        "to": "na ITAD",
         "sync_now": "Synchronizuj teraz",
         "info": {
             "itad-steam": "Połączenie Augmented Steam z IsThereAnyDeal pozwoli ci użyć podświetlania i oznaczania gier na twojej liście życzeń i w kolekcji, nawet jeżeli nie masz ich dodanych na platformie Steam.",
             "steam-itad": "Co więcej, umożliwia importowanie gier z biblioteki Steam i/lub listy życzeń do IsThereAnyDeal, aby zwiększyć dokładność (np. DLC lub gry niepubliczne). Obecnie ta funkcja może tylko dodawać tytuły, a nie je usuwać, więc nie zastępuje zintegrowanej synchronizacji IsThereAnyDeal, ale jest dodatkiem do niej."
-        }
+        },
+        "enable_sync_library": "Włącz synchronizację biblioteki",
+        "enable_sync_wishlist": "Włącz synchronizację listy życzeń",
+        "sync_events": "Historia synchronizacji"
     },
     "tradeoffer": {
         "num_item": "__num__ przedmiot",
@@ -493,7 +504,7 @@
     },
     "coll": {
         "total_time": "całkowity czas",
-        "in_collection": "w bibliotece",
+        "in_collection": "w kolekcji",
         "played": "uruchamiane",
         "never_played": "nieuruchamiane"
     },
@@ -507,7 +518,17 @@
         "close_on_storage_desc": "Augmented Steam jest bliski braku możliwości zapisywania kolejnych notatek użytkownika (~__perc__% wykorzystania pamięci) przy używaniu obecnej lokalizacji przechowywania.",
         "storage_warning_desc": "Możesz wybrać przechowywanie notatek użytkownika w lokalnej bazie danych (bez synchronizacji) lub kontynuować korzystanie z metody przechowywania udostępnionej w przeglądarce (gdzie nowe notatki można dodawać tylko po usunięciu niektórych starszych).",
         "save_synced_storage": "Kontynuuj korzystanie z pamięci zsynchronizowanej",
-        "save_local": "Przechowuj notatki lokalnie"
+        "save_local": "Przechowuj notatki lokalnie",
+        "sync_option": "Synchronizuj notatki automatycznie",
+        "sync_button_push": "Prześlij notatki\nna IsThereAnyDeal",
+        "sync_button_pull": "Pobierz notatki\nz IsThereAnyDeal",
+        "sync_pulled": "Pobrane notatki z IsThereAnyDeal: __n__",
+        "sync_pushed": "Przesłane notatki na IsThereAnyDeal: __n__",
+        "sync_failed": "Notatki, których nie udało się zsynchronizować: __n__",
+        "sync_error": "Nie udało się zsynchronizować notatki",
+        "sync_error_empty": "Notatka jest pusta",
+        "sync_error_unknown": "ITAD nie rozpoznaje tej gry",
+        "sync_error_length": "Notatka jest za długa (__length__, maks.: __max__)"
     },
     "queue": {
         "new": "Nowa kolejka",
@@ -585,13 +606,6 @@
     "hide_comments": "Ukryj komentarze",
     "fav_emoticons_no_access": "Nie masz dostępu do tej emotikony",
     "delete_comment_prompt": "Czy na pewno chcesz usunąć ten komentarz?",
-    "deck_compat": {
-        "header": "Zgodność ze Steam Deckiem",
-        "unknown": "Nieznana",
-        "unsupported": "Nieobsługiwana",
-        "playable": "Grywalna",
-        "verified": "Zweryfikowana"
-    },
     "theworderror": "Błąd",
     "no_data": "Brak danych",
     "quick_sell_verify": "Wymagane potwierdzenie Steam Guard",
@@ -858,5 +872,10 @@
     "using_language": "Aktualnie przeglądasz Steam w języku __current__m.",
     "thewordunknown": "Nieznane",
     "badge_level": "Poziom __level__",
-    "ignored_owned": "Tytuły ignorowane oznaczone jako grane na innej platformie"
+    "ignored_owned": "Tytuły ignorowane oznaczone jako grane na innej platformie",
+    "owned_collection": "__gametitle__ znajduje się już w twojej kolekcji IsThereAnyDeal",
+    "add_fullgame_to_wishlist": "Dodaj pełną grę do listy życzeń",
+    "add_fullgame_to_waitlist": "Dodaj pełną grę do listy oczekujących",
+    "remove_fullgame_from_waitlist_tooltip": "Usuń pełną grę ze swojej listy oczekujących",
+    "remove_fullgame_from_wishlist_and_waitlist_tooltip": "Usuń pełną grę ze swojej listy życzeń i oczekujących"
 }

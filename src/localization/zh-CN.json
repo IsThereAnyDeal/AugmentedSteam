@@ -406,7 +406,6 @@
         "hideannouncementcomments": "默认隐藏所有组公告下的评论",
         "friend_activity": "好友动态",
         "confirmdeletecomment": "删除留言时要求确认",
-        "showdeckcompat": "在功能列表中显示 Steam Deck 兼容性评分（缺少数据时更新）",
         "about_desc": "Augmented Steam 是 Enhanced Steam 插件的衍生版。",
         "about_desc_links": "访问此扩展程序的__website__或 __discord__ 了解更多。",
         "footer_fork": "来自 IsThereAnyDeal 的衍生版本",
@@ -414,7 +413,8 @@
         "show_players_info": "显示玩家数信息",
         "friends_and_groups": "好友和群组",
         "friends_append_nickname": "给朋友的名字加上昵称",
-        "collection_banner_not_owned": "只有当我在Steam上不拥有游戏时才会显示In Collection横幅"
+        "collection_banner_not_owned": "只有当我在 Steam 上不拥有游戏时才会显示 In Collection 横幅",
+        "homepage_default_tab_free": "免费趋势"
     },
     "ready": {
         "loading": "Augmented Steam 加载数据中...",
@@ -466,7 +466,8 @@
             "steam-itad": "并且，您还可以将 Steam 库和/或愿望单中的游戏导入至 IsThereAnyDeal, 而且更准确（例如，准确处理 DLC 或缺失的游戏）。目前此功能只能添加项目，不能删除，所以无法完全替代 IsThereAnyDeal 内置的同步功能，仅仅是个补充。"
         },
         "enable_sync_library": "启用库同步",
-        "enable_sync_wishlist": "启用愿望单同步"
+        "enable_sync_wishlist": "启用愿望单同步",
+        "sync_events": "同步事件"
     },
     "tradeoffer": {
         "num_item": "__num__ 个物品",
@@ -519,17 +520,17 @@
         "save_synced_storage": "继续使用同步存储",
         "save_local": "在本地存储备注",
         "sync_option": "自动同步备注",
-        "sync_info_1": "你可以在Augmented Steam和IsThereAnyDeal之间同步你的备注。如果启用自动同步，将定期从ITAD获取备注。通过Augmented Steam的编辑将立即镜像到ITAD。",
-        "sync_info_2": "你也可以在Augmented Steam和IsThereAnyDeal之间手动推拉备注。我们建议您在启用自动同步之前这样做，以确保使用正确版本的备注，以防您为同一游戏存储不同的备注。",
-        "sync_info_3": "您可以在IsThereAnyDeal的备注和标签部分中看到存储的所有备注。",
-        "sync_button_push": "将备注推送到IsThereAnyDeal",
-        "sync_button_pull": "从IsThereAnyDeal中获取备注",
-        "sync_pulled": "__n__ 条备注是从IsThereAnyDeal中获取的",
-        "sync_pushed": "__n__ 条备注被推送到IsThereAnyDeal",
+        "sync_info_1": "您可以在 Augmented Steam 和 IsThereAnyDeal 之间同步备注。如果启用自动同步，将定期从 ITAD 获取备注。通过 Augmented Steam 的编辑将立即镜像到 ITAD。",
+        "sync_info_2": "您也可以在 Augmented Steam 和 IsThereAnyDeal 之间手动推拉备注。我们建议您在启用自动同步之前这样做，以确保使用正确版本的备注，以防您为同一游戏存储不同的备注。",
+        "sync_info_3": "您可以在 IsThereAnyDeal 的备注和标签部分中看到存储的所有备注。",
+        "sync_button_push": "将备注推送到\nIsThereAnyDeal",
+        "sync_button_pull": "从 IsThereAnyDeal \n获取备注",
+        "sync_pulled": "从 IsThereAnyDeal 中获取了 __n__ 条备注",
+        "sync_pushed": "向 IsThereAnyDeal 推送了 __n__ 条备注",
         "sync_failed": "__n__ 条备注同步失败",
-        "sync_error": "你的备注无法同步",
+        "sync_error": "无法同步您的备注",
         "sync_error_empty": "备注为空",
-        "sync_error_unknown": "ITAD无法识别这款游戏",
+        "sync_error_unknown": "ITAD 无法识别这款游戏",
         "sync_error_length": "备注太长（__length__，最长： __max__）"
     },
     "queue": {
@@ -608,13 +609,6 @@
     "hide_comments": "隐藏留言",
     "fav_emoticons_no_access": "您没有使用此表情的权限",
     "delete_comment_prompt": "您确定要删除这条留言吗？",
-    "deck_compat": {
-        "header": "Steam Deck 兼容性",
-        "unknown": "未知",
-        "unsupported": "不支持",
-        "playable": "可游玩",
-        "verified": "已验证"
-    },
     "theworderror": "错误",
     "no_data": "无数据",
     "quick_sell_verify": "需要 Steam 令牌确认",
@@ -672,9 +666,9 @@
         "by": "白俄罗斯",
         "bz": "伯利兹",
         "ca": "加拿大",
-        "cd": "刚果-金",
+        "cd": "刚果（金）",
         "cf": "中非共和国",
-        "cg": "刚果-布",
+        "cg": "刚果（布）",
         "ch": "瑞士",
         "ci": "科特迪瓦",
         "ck": "库克群岛",
@@ -877,12 +871,12 @@
         "zm": "赞比亚",
         "zw": "津巴布韦"
     },
-    "using_language_return": "点击这里以__base__浏览 Steam。",
-    "using_language": "您正在以__current__浏览 Steam。",
+    "using_language_return": "点击这里以 __base__ 浏览 Steam。",
+    "using_language": "您正在以 __current__ 浏览 Steam。",
     "thewordunknown": "未知",
     "badge_level": "等级 __level__",
     "ignored_owned": "您忽略的在其他平台上玩过的游戏",
-    "owned_collection": "__gametitle__已经在你的IsThereAnyDeal集合中",
+    "owned_collection": "__gametitle__ 已经在您的 IsThereAnyDeal 集合中",
     "add_fullgame_to_wishlist": "将完整的游戏添加到您的愿望单中",
     "add_fullgame_to_waitlist": "将完整的游戏添加到您的观察列表中",
     "remove_fullgame_from_waitlist_tooltip": "从观察列表中删除完整的游戏",

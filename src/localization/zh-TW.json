@@ -407,7 +407,6 @@
         "hideannouncementcomments": "預設隱藏所有群組公告下的留言",
         "friend_activity": "好友動態",
         "confirmdeletecomment": "刪除留言前顯示確認訊息",
-        "showdeckcompat": "顯示 Steam Deck 相容性分級於功能清單中（且在無此資料時向 Steam 發送額外的請求）",
         "about_desc": "Augmented Steam 是 Enhanced Steam 的分支版本。",
         "about_desc_links": "歡迎造訪我們的__website__或 __discord__ 了解更多。",
         "footer_fork": "IsThereAnyDeal 開發的分支版本",
@@ -588,13 +587,6 @@
     "hide_comments": "隱藏留言",
     "fav_emoticons_no_access": "你無法存取這個表情符號",
     "delete_comment_prompt": "你確定要刪除此留言？",
-    "deck_compat": {
-        "header": "Steam Deck 相容性分級",
-        "unknown": "不明",
-        "unsupported": "不支援",
-        "playable": "可遊玩",
-        "verified": "已驗證"
-    },
     "theworderror": "錯誤",
     "no_data": "無資料",
     "quick_sell_verify": "需要 Steam Guard 確認",

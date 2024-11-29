@@ -402,7 +402,6 @@
         "hideannouncementcomments": "ซ่อนความเห็นภายใต้กลุ่มประกาศทั้งหมดตามค่าเริ่มต้น",
         "friend_activity": "ฟีดกิจกรรมของเพื่อน",
         "confirmdeletecomment": "แสดงการยืนยันเมื่อกำลังลบความเห็น",
-        "showdeckcompat": "แสดงระดับความเข้ากันได้ของ Steam Deck ในรายการนำเสนอ (และเรียกข้อมูลเมื่อไม่มีข้อมูลแสดง)",
         "about_desc": "Augmented Steam เป็นเวอร์ชันแยกของส่วนเสริม Enhanced Steam",
         "about_desc_links": "เยี่ยมชม__website__ของส่วนเสริมหรือ __discord__ ของเราสำหรับข้อมูลเพิ่มเติม",
         "footer_fork": "เวอร์ชันแยกสร้างโดย IsThereAnyDeal",
@@ -581,13 +580,6 @@
     "hide_comments": "ซ่อนความเห็น",
     "fav_emoticons_no_access": "คุณไม่มีสิทธิ์เข้าถึงอิโมติคอนนี้",
     "delete_comment_prompt": "คุณแน่ใจหรือไม่ว่าคุณต้องการลบความเห็นนี้?",
-    "deck_compat": {
-        "header": "ความเข้ากันได้กับ Steam Deck",
-        "unknown": "ไม่ระบุ",
-        "unsupported": "ไม่รองรับ",
-        "playable": "เล่นได้",
-        "verified": "เล่นได้ดี"
-    },
     "theworderror": "มีข้อผิดพลาด",
     "no_data": "ไม่มีข้อความ",
     "quick_sell_verify": "จำเป็นต้องยืนยัน Steam Guard",

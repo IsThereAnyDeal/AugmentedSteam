@@ -404,8 +404,7 @@
         "replacecommunityhublinks": "Links naar communityhubs vervangen door winkelpagina's",
         "hideannouncementcomments": "Opmerkingen onder alle groepsaankondigingen standaard verbergen",
         "friend_activity": "Vriendenactiviteitsfeed",
-        "confirmdeletecomment": "Bevestiging tonen bij het verwijderen van opmerkingen",
-        "showdeckcompat": "Beoordelingen voor compatibiliteit met Steam Deck tonen in de functielijst (en ontbrekende gegevens ophalen)"
+        "confirmdeletecomment": "Bevestiging tonen bij het verwijderen van opmerkingen"
     },
     "ready": {
         "loading": "Augmented Steam is gegevens aan het laden...",
@@ -567,13 +566,6 @@
     "hide_comments": "Opmerkingen verbergen",
     "fav_emoticons_no_access": "Je hebt geen toegang tot deze emoticon",
     "delete_comment_prompt": "Weet je zeker dat je deze opmerking wilt verwijderen?",
-    "deck_compat": {
-        "header": "Compatibiliteit met Steam Deck",
-        "unknown": "Onbekend",
-        "unsupported": "Niet-ondersteund",
-        "playable": "Speelbaar",
-        "verified": "Geverifieerd"
-    },
     "theworderror": "Fout",
     "no_data": "Geen gegevens",
     "quick_sell_verify": "Bevestiging van Steam Guard nodig",

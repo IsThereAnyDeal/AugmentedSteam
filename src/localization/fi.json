@@ -406,7 +406,6 @@
         "hideannouncementcomments": "Piilota kommentit kaikkien ryhmä tiedotteiden alta vakiona",
         "friend_activity": "Kavereiden aktiivisuus syöte",
         "confirmdeletecomment": "Näytä vahvistus poistaessa kommentteja",
-        "showdeckcompat": "Näytä Steam Deck yhteensopivuus arvio tuote tiedoissa (hae data jos puuttuu)",
         "about_desc": "Augmented Steam on Enhanced Steam -laajennuksen forkki.",
         "about_desc_links": "Lisätietoa saat laajennuksen verkkosivuilta tai discord -serveriltä.",
         "footer_fork": "IsThereAnyDealin forkki",
@@ -584,13 +583,6 @@
     "hide_comments": "Piilota kommentit",
     "fav_emoticons_no_access": "Sinulla ei ole oikeuksia käyttää tätä emojia",
     "delete_comment_prompt": "Haluatko varmasti poistaa tämän kommentin?",
-    "deck_compat": {
-        "header": "Steam Deck yhteensopivuus",
-        "unknown": "Tuntematon",
-        "unsupported": "Ei tuettu",
-        "playable": "Pelattavissa",
-        "verified": "Vahvistettu"
-    },
     "theworderror": "Virhe",
     "no_data": "Ei dataa",
     "quick_sell_verify": "Steam Gruad vahvistus vaaditaan",
