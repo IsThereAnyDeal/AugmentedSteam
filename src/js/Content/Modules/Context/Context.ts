@@ -25,6 +25,12 @@ export default class Context {
         dependency: 0,
     };
 
+    public static async create(_params: ContextParams): Promise<Context|null> {
+        // left for overrides, when init requires async things to finish because we can't await constructor
+        // TODO we should move all instantiation to init, make constructor private, probably?
+        return null;
+    }
+
     constructor(
         params: ContextParams,
         type: ContextType,

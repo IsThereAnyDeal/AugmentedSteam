@@ -42,7 +42,7 @@ class ResettableTimer implements IResettableTimer {
             clearTimeout(this.id);
         }
 
-        this.id = setTimeout(async() => {
+        this.id = window.setTimeout(async() => {
             await this.onDone();
             this._running = false;
         }, this.duration);

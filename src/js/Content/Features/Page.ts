@@ -32,10 +32,15 @@ function unhandledrejection(e: PromiseRejectionEvent) {
 }
 window.addEventListener("unhandledrejection", unhandledrejection);
 
+interface ContextClass {
+    create: (params: ContextParams) => Promise<InstanceType<typeof Context>|null>,
+    new(params: ContextParams, ...rest: any[]): InstanceType<typeof Context>
+}
+
 export default abstract class Page {
 
     constructor(
-        private readonly contextClass: new(params: ContextParams) => Context
+        private readonly contextClass: ContextClass
     ) {}
 
     /**
@@ -92,7 +97,10 @@ export default abstract class Page {
         );
 
         await this.preApply(language, user);
-        const context = new (this.contextClass)({language, user});
+
+        const params = {language, user};
+        const context: Context = await this.contextClass.create(params)
+            ?? new (this.contextClass)(params);
         await context.applyFeatures();
     }
 }

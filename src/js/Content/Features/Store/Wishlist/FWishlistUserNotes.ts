@@ -10,7 +10,7 @@ export default class FWishlistUserNotes extends Feature<CWishlist> {
     private components: UserNote[] = [];
 
     override checkPrerequisites(): boolean {
-        return this.context.myWishlist && Settings.user_notes_wishlist;
+        return this.context.isMyWishlist && Settings.user_notes_wishlist;
     }
 
     override async apply(): Promise<void> {

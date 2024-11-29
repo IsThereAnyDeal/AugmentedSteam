@@ -15,10 +15,12 @@ export default class FWishlistHighlights extends Feature<CWishlist> {
         return this.context.user.isSignedIn; // TODO ITAD status
     }
 
-    override async apply() {
+    override async apply(): Promise<void> {
+        const isMyWishlist = this.context.isMyWishlist;
+
         this.highlighter = new HighlightsTagsUtils2({
-            wishlisted: !this.context.myWishlist,
-            waitlisted: !this.context.myWishlist
+            wishlisted: !isMyWishlist,
+            waitlisted: !isMyWishlist
         });
         if (!this.highlighter.isEnabled()) {
             return;

@@ -14,7 +14,7 @@ import ServiceFactory from "@Protobufs/ServiceFactory";
 export default class FEmptyWishlist extends Feature<CWishlist> {
 
     override checkPrerequisites(): boolean {
-        return this.context.myWishlist && Settings.showemptywishlist;
+        return this.context.isMyWishlist && Settings.showemptywishlist;
     }
 
     override apply(): void {

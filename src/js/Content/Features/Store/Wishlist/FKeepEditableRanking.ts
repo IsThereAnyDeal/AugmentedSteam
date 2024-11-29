@@ -8,7 +8,7 @@ export default class FKeepEditableRanking extends Feature<CWishlist> {
     private positions: Map<number, number> = new Map;
 
     override checkPrerequisites(): boolean {
-        return this.context.myWishlist;
+        return this.context.isMyWishlist;
     }
 
     override apply(): void {
