@@ -16,8 +16,8 @@
     import external from "@Content/externalLink";
 
     export let data: TPriceOverview;
-    export let marginTop: string|undefined;
-    export let marginBottom: string|undefined;
+    export let marginTop: string|undefined = undefined;
+    export let marginBottom: string|undefined = undefined;
 
     let node: HTMLElement;
     let currentDrms: string[];
