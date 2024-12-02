@@ -1,5 +1,6 @@
 /**
  * @contentScripts
+ * @match *://*.steampowered.com/wishlist/
  * @match *://*.steampowered.com/wishlist/(id|profiles)/*
  */
 
