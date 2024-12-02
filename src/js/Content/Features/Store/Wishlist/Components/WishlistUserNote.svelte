@@ -8,11 +8,15 @@
     export let appName: string;
     export let appid: number;
 
-    let note: string|null|undefined = undefined;
+    let note: string|null = null;
     let el: HTMLElement;
 
     async function handleEdit(): Promise<void> {
-        note = await notes.showModalDialog2(appName, appid,);
+        let newNote: string|null = await notes.showModalDialog2(appName, appid,);
+        if (newNote === "") {
+            newNote = null;
+        }
+        note = newNote;
     }
 
     export function isConnected(): boolean {
