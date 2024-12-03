@@ -11,7 +11,6 @@
         __options_lang_czech,
         __options_lang_danish,
         __options_lang_dutch,
-        __options_lang_english,
         __options_lang_finnish,
         __options_lang_french,
         __options_lang_german,
@@ -38,54 +37,54 @@
         __options_maintainers,
         __options_withHelpOf,
         __originalAuthors,
-        __thewordunknown,
         __translation,
         __viewAll,
         __website,
     } from "@Strings/_strings";
-    import Language from "@Core/Localization/Language";
-    import LocaleCredits from "./LocaleCredits";
+    import LocaleLegacyCredits from "./LocaleLegacyCredits";
     import Localization, {L} from "@Core/Localization/Localization";
     import DOMPurify from "dompurify";
     import Config from "config";
+    import untypedContributors from "@Strings/../_contributors.json";
 
-    const localeMap: Record<string, string> = {
-        "english": __options_lang_english,
-        "bulgarian": __options_lang_bulgarian,
-        "czech": __options_lang_czech,
-        "danish": __options_lang_danish,
-        "dutch": __options_lang_dutch,
-        "finnish": __options_lang_finnish,
-        "french": __options_lang_french,
-        "greek": __options_lang_greek,
-        "german": __options_lang_german,
-        "hungarian": __options_lang_hungarian,
-        "indonesian": __options_lang_indonesian,
-        "italian": __options_lang_italian,
-        "japanese": __options_lang_japanese,
-        "koreana": __options_lang_koreana,
-        "norwegian": __options_lang_norwegian,
-        "polish": __options_lang_polish,
-        "portuguese": __options_lang_portuguese,
-        "brazilian": __options_lang_brazilian,
-        "russian": __options_lang_russian,
-        "romanian": __options_lang_romanian,
-        "schinese": __options_lang_schinese,
-        "tchinese": __options_lang_tchinese,
-        "spanish": __options_lang_spanish,
-        "latam": __options_lang_latam,
-        "swedish": __options_lang_swedish,
-        "thai": __options_lang_thai,
-        "turkish": __options_lang_turkish,
-        "ukrainian": __options_lang_ukrainian,
-        "vietnamese": __options_lang_vietnamese,
-    };
+    const Contributors: Record<string, string[]> = untypedContributors;
 
-    async function getCoverage(lang: string): Promise<number> {
-        if (lang === "english") {
+    let localeMap: Array<[string, string]> = [
+        ["bg", __options_lang_bulgarian],
+        ["cs", __options_lang_czech],
+        ["da", __options_lang_danish],
+        ["de", __options_lang_german],
+        ["el", __options_lang_greek],
+        ["es-419", __options_lang_latam],
+        ["es-ES", __options_lang_spanish],
+        ["fi", __options_lang_finnish],
+        ["fr", __options_lang_french],
+        ["hu", __options_lang_hungarian],
+        ["id", __options_lang_indonesian],
+        ["it", __options_lang_italian],
+        ["ja", __options_lang_japanese],
+        ["ko", __options_lang_koreana],
+        ["nl", __options_lang_dutch],
+        ["no", __options_lang_norwegian],
+        ["pl", __options_lang_polish],
+        ["pt-BR", __options_lang_brazilian],
+        ["pt-PT", __options_lang_portuguese],
+        ["ro", __options_lang_romanian],
+        ["ru", __options_lang_russian],
+        ["sv-se", __options_lang_swedish],
+        ["th", __options_lang_thai],
+        ["tr", __options_lang_turkish],
+        ["ua", __options_lang_ukrainian],
+        ["vi", __options_lang_vietnamese],
+        ["zh-CN", __options_lang_schinese],
+        ["zh-TW", __options_lang_tchinese],
+    ];
+    localeMap = localeMap.sort((a, b) => L(a[1]).localeCompare(L(b[1])));
+
+    async function getCoverage(code: string): Promise<number> {
+        if (code === "en") {
             return 100;
         }
-        const code = Language.map[lang]!;
         const locale = await Localization.load(code);
         return 100 * locale.stats.translated / locale.stats.strings;
     }
@@ -118,15 +117,19 @@
         <h1 class="translation">{L(__translation)}</h1>
         <a target="blank" href="https://poeditor.com/join/project/yGk0CFH2Uu">{L(__helpTranslate)}</a>
 
-        {#each Object.entries(LocaleCredits) as [lang, credits]}
+        {#each localeMap as [lang, locale]}
             <div class="lang">
-                <h3 class="lang__name">{L(localeMap[lang] ?? __thewordunknown)}</h3>
+                <h3 class="lang__name">{L(locale)}</h3>
                 <div class="lang__perc">
                     {#await getCoverage(lang) then coverage}
                         {coverage.toFixed(1)}%
                     {/await}
                 </div>
-                <div class="lang__credits">{credits}</div>
+                <div class="lang__credits">{Contributors[lang]?.join(", ") ?? ""}</div>
+
+                {#if LocaleLegacyCredits[lang]}
+                    <div class="lang__credits">{LocaleLegacyCredits[lang] ?? ""}</div>
+                {/if}
             </div>
         {/each}
     </div>
@@ -195,5 +198,6 @@
     .lang__credits {
         font-size: 0.9em;
         line-height: 1.25;
+        margin-top: 5px;
     }
 </style>

@@ -4,7 +4,7 @@ import chalk from "chalk";
 import axios from "axios";
 import FormData from "form-data";
 import {JSDOM} from "jsdom";
-import {POEDITOR_APIKEY} from ".keys.mjs";
+import {POEDITOR_APIKEY} from "./.keys.mjs";
 
 const window = new JSDOM().window;
 const DOMPurify = createDOMPurify(window);
@@ -13,7 +13,7 @@ const DOMPurify = createDOMPurify(window);
 DOMPurify.setConfig({"ALLOWED_TAGS": []});
 
 const Config = {
-    "exportUrl": "https://api.poeditor.com/v2/projects/export",
+    "apiHost": "https://api.poeditor.com",
     "apiToken": POEDITOR_APIKEY,
     "projectId": 319277
 };
@@ -80,7 +80,7 @@ export default class Downloader {
         data.append("type", "key_value_json");
         data.append("filters", JSON.stringify(["translated", "not_fuzzy"]));
 
-        let result = await axios.post(Config.exportUrl, data, {"headers": data.getHeaders()});
+        let result = await axios.post(Config.apiHost + "/v2/projects/export", data, {"headers": data.getHeaders()});
         const response = result.data;
 
         if (response.response.code !== "200") {
@@ -111,6 +111,31 @@ export default class Downloader {
         return filepath;
     }
 
+    async _loadContributors() {
+        const data = new FormData();
+        data.append("api_token", Config.apiToken);
+        data.append("id", Config.projectId);
+
+        const {response, result} = (await axios.post(Config.apiHost + "/v2/contributors/list", data)).data;
+        if (response.code !== "200") {
+            throw Error;
+        }
+
+        const map = {};
+        for (const user of result.contributors) {
+            for (const perm of user.permissions) {
+                for (const poeLang of perm.languages ?? []) {
+                    const lang = LANGUAGE_MAP[poeLang];
+                    map[lang] ??= [];
+                    map[lang].push(user.name);
+                }
+            }
+        }
+
+        const filepath = `${this.targetPath}/_contributors.json`;
+        await fs.writeFile(filepath, JSON.stringify(map, null, 2));
+    }
+
     async download() {
 
         for (const languageCode of Object.keys(LANGUAGE_MAP)) {
@@ -121,6 +146,14 @@ export default class Downloader {
                 console.error(`${chalk.red("ERROR")} ${languageCode}: ${e}`);
                 process.exitCode = 1;
             }
+        }
+
+        try {
+            await this._loadContributors();
+            console.log(`${chalk.green("OK")} Contributors`);
+        } catch (e) {
+            console.error(`${chalk.red("ERROR")} Contributors: ${e}`);
+            process.exitCode = 1;
         }
     }
 }

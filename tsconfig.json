@@ -2,6 +2,7 @@
     "include": ["src/**/*", "config/**/*"],
     "compilerOptions": {
         "target": "ES2021",
+        "resolveJsonModule": true,
 
         // Type Checking
         "allowUnreachableCode": false,
@@ -47,7 +48,7 @@
             "@Strings/*": ["./src/localization/compiled/*"],
             "@Icons/*": ["./src/js/Icons/*"],
             "@Protobufs/*": ["./src/js/Core/Protobufs/*"],
-            "config": ["./src/js/config"],
+            "config": ["./src/js/config"]
         }
     }
 }
