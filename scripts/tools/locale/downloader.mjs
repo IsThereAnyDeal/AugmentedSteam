@@ -4,6 +4,7 @@ import chalk from "chalk";
 import axios from "axios";
 import FormData from "form-data";
 import {JSDOM} from "jsdom";
+import {POEDITOR_APIKEY} from ".keys.mjs";
 
 const window = new JSDOM().window;
 const DOMPurify = createDOMPurify(window);
@@ -13,7 +14,7 @@ DOMPurify.setConfig({"ALLOWED_TAGS": []});
 
 const Config = {
     "exportUrl": "https://api.poeditor.com/v2/projects/export",
-    "apiToken": "8991d8f3eb8072b32b0e664d3a196384",
+    "apiToken": POEDITOR_APIKEY,
     "projectId": 319277
 };
 

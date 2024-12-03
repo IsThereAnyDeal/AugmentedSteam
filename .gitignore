@@ -3,3 +3,6 @@
 /dist/
 
 /node_modules/
+
+# API keys
+scripts/tools/locale/.keys.mjs
