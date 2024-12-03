@@ -33,6 +33,8 @@ export default <Record<string, string>>{
     "hungarian":
         "DonRoland, Mohariczozo_HUN, Noarpe, Sirpi, [T-A!] Underyx x 6, atomcsikk, french_salad, nArrow, ๖VaHooK, Haewen",
 
+    "indonesian": "",
+
     "italian":
         "Copons, Drake Fazuku, Rasin, Star1s3, Øktøber, Andrea Brandi, GiorgioBrux, Manfre",
 

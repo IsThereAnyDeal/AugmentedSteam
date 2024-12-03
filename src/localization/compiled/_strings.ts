@@ -437,6 +437,7 @@ export const __options_lang_french = "options_lang_french";
 export const __options_lang_greek = "options_lang_greek";
 export const __options_lang_german = "options_lang_german";
 export const __options_lang_hungarian = "options_lang_hungarian";
+export const __options_lang_indonesian = "options_lang_indonesian";
 export const __options_lang_italian = "options_lang_italian";
 export const __options_lang_japanese = "options_lang_japanese";
 export const __options_lang_koreana = "options_lang_koreana";
