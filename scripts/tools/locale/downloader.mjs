@@ -29,6 +29,7 @@ const LANGUAGE_MAP = {
     "fi": "fi",
     "fr": "fr",
     "hu": "hu",
+    "id": "id",
     "it": "it",
     "ja": "ja",
     "ko": "ko",
