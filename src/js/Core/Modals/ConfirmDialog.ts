@@ -1,4 +1,4 @@
-import {__cancel} from "@Strings/_strings";
+import {__cancel, __ok} from "@Strings/_strings";
 import {L} from "@Core/Localization/Localization";
 import Modal from "@Core/Modals/Contained/Modal.svelte";
 import type {EModalAction} from "@Core/Modals/Contained/EModalAction";
@@ -13,7 +13,7 @@ export default class ConfirmDialog {
             secondary?: string,
             cancel?: string
         } = {
-            primary: "OK",
+            primary: L(__ok),
             cancel: L(__cancel)
         }
     ) {}

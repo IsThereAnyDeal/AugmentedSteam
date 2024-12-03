@@ -236,6 +236,7 @@ export const __wishlist = "wishlist";
 export const __onWishlist = "onWishlist";
 export const __onWaitlist = "onWaitlist";
 export const __onWishlistAndWaitlist = "onWishlistAndWaitlist";
+export const __ok = "ok";
 export const __cancel = "cancel";
 export const __wikiArticle = "wikiArticle";
 export const __viewAll = "viewAll";

@@ -1,5 +1,11 @@
 import {L} from "@Core/Localization/Localization";
-import {__cancel, __emptyWishlist_confirm, __emptyWishlist_removing, __emptyWishlist_title} from "@Strings/_strings";
+import {
+    __cancel,
+    __emptyWishlist_confirm,
+    __emptyWishlist_removing,
+    __emptyWishlist_title,
+    __ok
+} from "@Strings/_strings";
 import type CWishlist from "@Content/Features/Store/Wishlist/CWishlist";
 import Feature from "@Content/Modules/Context/Feature";
 import Settings from "@Options/Data/Settings";
@@ -36,7 +42,7 @@ export default class FEmptyWishlist extends Feature<CWishlist> {
         const confirm = new ConfirmDialog(
             L(__emptyWishlist_title),
             L(__emptyWishlist_confirm), {
-                primary: "OK",
+                primary: L(__ok),
                 cancel: L(__cancel)
             }
         );

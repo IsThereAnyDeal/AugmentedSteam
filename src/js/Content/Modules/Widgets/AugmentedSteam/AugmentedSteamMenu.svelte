@@ -1,12 +1,13 @@
 <script lang="ts">
-    import SteamFacade from "@Content/Modules/Facades/SteamFacade";
     import {L} from "@Core/Localization/Localization";
     import ExtensionResources from "@Core/ExtensionResources";
     import {
-        __bugFeature, __cancel,
+        __bugFeature,
+        __cancel,
         __clearCache,
         __contribute,
         __launchRandom,
+        __ok,
         __playGame,
         __thewordoptions,
         __visitStore,
@@ -21,6 +22,7 @@
     import {onMount} from "svelte";
     import {fade} from "svelte/transition";
     import ConfirmDialog from "@Core/Modals/ConfirmDialog";
+    import {EModalAction} from "@Core/Modals/Contained/EModalAction";
 
     export let user: UserInterface;
 
@@ -74,15 +76,15 @@
             L(__playGame, {gamename}),
             `<img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/${gameid}/header.jpg">`,
             {
-                primary: "OK",
+                primary: L(__ok),
                 secondary: L(__visitStore),
                 cancel: L(__cancel)
             }
         )).show();
 
-        if (confirm === "OK") {
+        if (confirm === EModalAction.OK) {
             window.location.assign(`steam://run/${gameid}`)
-        } else if (confirm === "SECONDARY") {
+        } else if (confirm === EModalAction.Secondary) {
             window.location.assign(`//store.steampowered.com/app/${gameid}`)
         }
     }
