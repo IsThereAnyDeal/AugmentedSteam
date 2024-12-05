@@ -2,6 +2,7 @@
     import Settings from "@Options/Data/Settings";
     import ProfileLink from "@Content/Modules/Community/ProfileLink.svelte";
     import HTML from "@Core/Html/Html";
+    import UrlUtils from "@Core/Utils/UrlUtils";
 
     export let steamId: string;
     export let clear: boolean;
@@ -55,7 +56,7 @@
     {#if customLink.enabled}
         <ProfileLink
                 id="custom"
-                href={HTML.formatUrl(customLink.url.replace("[ID]", steamId))}
+                href={UrlUtils.escapeUserUrl(customLink.url, {"ID": steamId})}
                 iconUrl={customLink.icon ? HTML.formatUrl(customLink.icon) : undefined}>
             {customLink.name}
         </ProfileLink>

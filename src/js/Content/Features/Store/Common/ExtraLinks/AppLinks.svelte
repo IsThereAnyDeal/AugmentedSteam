@@ -5,6 +5,7 @@
     import Settings from "@Options/Data/Settings";
     import ExtraLink from "@Content/Features/Store/Common/ExtraLinks/ExtraLink.svelte";
     import CommonExtraLinks from "@Content/Features/Common/CommonExtraLinks.svelte";
+    import UrlUtils from "@Core/Utils/UrlUtils";
 
     export let appid: number;
     export let communityAppid: number;
@@ -66,9 +67,7 @@
 
 {#each Settings.app_custom_link as link}
     {#if link.enabled}
-        <ExtraLink href={HTML.formatUrl(link.url
-                             .replace("[NAME]", appName ? encodeURIComponent(appName) : "")
-                             .replace("[ID]", String(appid)))}
+        <ExtraLink href={UrlUtils.escapeUserUrl(link.url, {"NAME": appName, "ID": String(appid)})}
                    iconUrl={link.icon ? HTML.formatUrl(link.icon) : null}>
             {L(__viewOnWebsite, {"website": link.name})}
         </ExtraLink>
