@@ -374,7 +374,8 @@
             "thai": "ไทย",
             "turkish": "Türkçe",
             "ukrainian": "Українська",
-            "vietnamese": "Tiếng Việt"
+            "vietnamese": "Tiếng Việt",
+            "indonesian": "Индонезийски"
         },
         "add_custom_link": "Добавяне на персонализирана връзка",
         "auto_detect": "Авт. засичане",
@@ -882,5 +883,6 @@
     "add_fullgame_to_wishlist": "Добавяне на пълната игра към списъка Ви с желания",
     "add_fullgame_to_waitlist": "Добавяне на пълната игра към списъка Ви за изчакване",
     "remove_fullgame_from_waitlist_tooltip": "Премахване на пълната игра от списъка Ви за изчакване",
-    "remove_fullgame_from_wishlist_and_waitlist_tooltip": "Премахване на пълната игра както от списъка Ви с желания, така и от този за изчакване"
+    "remove_fullgame_from_wishlist_and_waitlist_tooltip": "Премахване на пълната игра както от списъка Ви с желания, така и от този за изчакване",
+    "ok": "Добре"
 }

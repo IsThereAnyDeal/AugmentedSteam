@@ -373,7 +373,8 @@
             "thai": "Тайский",
             "turkish": "Турецкий",
             "ukrainian": "Украинский",
-            "vietnamese": "Вьетнамский"
+            "vietnamese": "Вьетнамский",
+            "indonesian": "Индонезийский"
         },
         "add_custom_link": "Добавить свою ссылку",
         "auto_detect": "Автоопределение",
@@ -878,5 +879,6 @@
     "add_fullgame_to_wishlist": "Добавить полную версию игры в список желаемого",
     "add_fullgame_to_waitlist": "Добавить полную версию игры в список ожидаемого",
     "remove_fullgame_from_waitlist_tooltip": "Удалить полную версию игры из списка ожидаемого",
-    "remove_fullgame_from_wishlist_and_waitlist_tooltip": "Удалить полную версию игры из списка желаемого и ожидаемых"
+    "remove_fullgame_from_wishlist_and_waitlist_tooltip": "Удалить полную версию игры из списка желаемого и ожидаемых",
+    "ok": "OK"
 }
