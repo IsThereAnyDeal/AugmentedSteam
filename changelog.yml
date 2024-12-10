@@ -1,3 +1,8 @@
+4.2.1: |
+  Hotfix release
+  
+  - fixed custom urls not working properly, when the replacement was in the path part of the URL
+
 4.2.0: |
   Valve continues to update Steam and fully rebuild it in React. The recent wishlist update they did was just that.
   Even though it looks the same as the old version, everything has changed and works in a very different way. 
