@@ -26,7 +26,7 @@
     let promise: Promise<void>;
 
     let statusComponent: ITADSyncStatus;
-    let status: ESyncStatus;
+    let status: ESyncStatus|undefined = undefined;
 
     function handleAuthorize(): void {
         promise = (async () => {

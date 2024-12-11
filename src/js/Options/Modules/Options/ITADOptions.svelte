@@ -27,7 +27,7 @@
     import type {TSyncEvent} from "@Background/Modules/IsThereAnyDeal/_types";
 
     let settings: Writable<SettingsSchema> = writable(Settings);
-    let isConnected: boolean;
+    let isConnected: boolean = false;
 
     let events: TSyncEvent[];
 

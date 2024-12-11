@@ -8,7 +8,7 @@
     const itadLogo = ExtensionResources.getURL("img/itad.png");
 
     let statusComponent: ITADSyncStatus;
-    let status: ESyncStatus;
+    let status: ESyncStatus|undefined = undefined;
 </script>
 
 
