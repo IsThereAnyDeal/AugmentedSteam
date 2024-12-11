@@ -67,9 +67,12 @@
 
 {#each Settings.app_custom_link as link}
     {#if link.enabled}
-        <ExtraLink href={UrlUtils.escapeUserUrl(link.url, {"NAME": appName, "ID": String(appid)})}
-                   iconUrl={link.icon ? HTML.formatUrl(link.icon) : null}>
-            {L(__viewOnWebsite, {"website": link.name})}
-        </ExtraLink>
+        {@const href = UrlUtils.escapeUserUrl(link.url, {"NAME": appName, "ID": String(appid)})}
+        {#if href}
+            <ExtraLink {href}
+                       iconUrl={link.icon ? HTML.formatUrl(link.icon) : null}>
+                {L(__viewOnWebsite, {"website": link.name})}
+            </ExtraLink>
+        {/if}
     {/if}
 {/each}

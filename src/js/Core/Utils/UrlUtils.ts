@@ -1,7 +1,7 @@
 
 export default class UrlUtils {
 
-    public static escapeUserUrl(url: string, replacements: Record<string, string>): string {
+    public static escapeUserUrl(url: string, replacements: Record<string, string>): string|null {
         if (!/^[^/]+\/\//.test(url)) {
             url = `https://${url}`;
         }
@@ -9,6 +9,7 @@ export default class UrlUtils {
         for (const [pattern, replacement] of Object.entries(replacements)) {
             url = url.replace(`[${pattern}]`, encodeURIComponent(replacement));
         }
-        return (new URL(url)).toString();
+
+        return URL.parse(url)?.toString() ?? null;
     }
 }

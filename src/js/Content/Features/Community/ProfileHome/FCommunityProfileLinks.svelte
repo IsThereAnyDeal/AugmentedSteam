@@ -54,12 +54,15 @@
 
 {#each Settings.profile_custom_link as customLink}
     {#if customLink.enabled}
-        <ProfileLink
-                id="custom"
-                href={UrlUtils.escapeUserUrl(customLink.url, {"ID": steamId})}
-                iconUrl={customLink.icon ? HTML.formatUrl(customLink.icon) : undefined}>
-            {customLink.name}
-        </ProfileLink>
+        {@const href = UrlUtils.escapeUserUrl(customLink.url, {"ID": steamId})}
+        {#if href}
+            <ProfileLink
+                    id="custom"
+                    {href}
+                    iconUrl={customLink.icon ? HTML.formatUrl(customLink.icon) : undefined}>
+                {customLink.name}
+            </ProfileLink>
+        {/if}
     {/if}
 {/each}
 
