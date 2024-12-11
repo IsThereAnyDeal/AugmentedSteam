@@ -145,7 +145,7 @@
         "action_groups": "İşlem yapmak istediğin grupları aşağıdan seç.",
         "select": "Seç:",
         "leave": "Ayrıl",
-        "selected": "__n__ seçili",
+        "selected": "__n__ seçili.",
         "leave_admin_confirm": {
             "currently_admin": "Şu anda __name__ üstünde yöneticisisiniz.",
             "want_to_leave": "Bu gruptan ayrılmak istediğinizden emin misiniz?"
@@ -259,12 +259,12 @@
         "name": "İsim",
         "show_alternative_linux_icon": "Alternatif Linux simgesini göster",
         "metacritic": "Metacritic kullanıcı puanlarını göster",
-        "opencritic": "Opencritic.com bilgisini göster",
+        "opencritic": "Opencritic derecelendirmelerini ve incelemelerini göster",
         "hideactivelistings": "Pazar anasayfasındaki tüm aktif listelemeleri gizle",
         "showlowestmarketprice": "Listelemelerde en düşük pazar miktarını görüntüle",
         "clear": "Bütün seçenekleri sıfırlamak istediğinizden emin misiniz? Tekrar geri alamazsınız.",
         "coupon": "Kuponlu öğeler",
-        "show_package_info": "Tüm uygulamalar için paket bilgisini göster",
+        "show_package_info": "Tüm paketler için \"Paket bilgisi\" düğmesini göster",
         "wlbuttoncommunityapp": "Kullanıcı topluluk uygulamasında \"İstek Listesine Ekle\" düğmesini göster",
         "removeguideslanguagefilter": "Kullanıcı diline göre kılavuzları otomatik filtreleme",
         "disablelinkfilter": "Dış sitelerine erişirken onayı devre dışı bırak",
@@ -273,7 +273,7 @@
         "supportinfo": "Mağaza sayfalarında destek bilgisini göster",
         "drm": "Üçüncü parti DRM uyarılarını göster",
         "profile_link_images": "Profil ve Grup bağlantıları görüntü biçimi",
-        "show1clickgoo": "Uygulanabilir envanter eşyalarında \"Tek Tıkla Cevher'e Dönüştür\" düğmesini göster",
+        "show1clickgoo": "Envanter öğelerini mücevherlere dönüştürürken onayı atla",
         "hltb": "HowLongToBeat.com bilgisini göster",
         "hidespamcomments": "Atölye ve profillerde gereksiz yorumları sakla",
         "gift": "Hediye olarak depolanan öğeler",
@@ -372,7 +372,8 @@
             "thai": "Tayca",
             "turkish": "Türkçe",
             "ukrainian": "Ukraynaca",
-            "vietnamese": "Vietnamca"
+            "vietnamese": "Vietnamca",
+            "indonesian": "Endonezyaca"
         },
         "add_custom_link": "Özel bağlantı ekle",
         "auto_detect": "Otomatik bul",
@@ -409,7 +410,12 @@
         "about_desc": "Augmented Steam, Enhanced Steam uzantısının çatalıdır.",
         "about_desc_links": "Daha fazlası için __website__ ya da __discord__ adreslerimizi ziyaret edin.",
         "footer_fork": "IsThereAnyDeal'ın bir çatalı",
-        "footer_author": "özgün yaratıcı jshackles"
+        "footer_author": "özgün yaratıcı jshackles",
+        "show_players_info": "Oyuncu sayısı bilgilerini göster",
+        "friends_and_groups": "Arkadaşlar ve Gruplar",
+        "friends_append_nickname": "Arkadaşlarınızın isimlerine takma adlar ekleyin",
+        "collection_banner_not_owned": "Sadece Steam'de oyuna sahip olmadığımda Koleksiyonda başlığını göster",
+        "homepage_default_tab_free": "Trend Ücretsiz"
     },
     "ready": {
         "loading": "Augmented Steam verileri yüklüyor...",
@@ -434,7 +440,8 @@
         "owned": "Sahipsiniz",
         "notinterested": "İlgilenmiyorum",
         "collection": "Toplanan",
-        "waitlist": "Bekleme Listesinde"
+        "waitlist": "Bekleme Listesinde",
+        "ignored_owned": "Yok sayıldı (sahip olundu)"
     },
     "wallet": {
         "custom_amount": "Farklı bir miktar ekle",
@@ -455,7 +462,10 @@
         "info": {
             "itad-steam": "Augmented Steam'i IsThereAnyDeal ile bağlamak, Augmented Steam'in vurgulamasını ve etiketlemesini, Steam'de olmasan bile Bekleme Listesi ve Koleksiyondaki oyunlara uygulamanı sağlar.",
             "steam-itad": "Ayrıca, daha yüksek doğruluk için (örneğin DLC'ler veya liste dışı oyunlar) Steam Kütüphanenizden ve/veya İstek Listeniz'den IsThereAnyDeal'a oyun aktarmanıza izin verir. Şu anda bu özellik yalnızca oyunları ekleyebilir, kaldıramaz, bu nedenle IsThereAnyDeal'ın entegre eşitlemesinin yerini almaz, buna ek olarak kullanılır."
-        }
+        },
+        "enable_sync_library": "Kütüphane senkronizasyonunu etkinleştir",
+        "enable_sync_wishlist": "İstek listesi senkronizasyonunu etkinleştir",
+        "sync_events": "Senkronizasyon Olayları"
     },
     "tradeoffer": {
         "num_item": "__num__ öğe",
@@ -506,7 +516,20 @@
         "close_on_storage_desc": "Augmented Steam, mevcut depolama konumuna daha fazla kullanıcı notu (~__perc__% depolama kullanımı) kaydedemeyecek.",
         "storage_warning_desc": "Kullanıcı notlarınızı yerel bir veritabanında (eşitleme olmadan) depolamayı seçebilir veya tarayıcınız tarafından sağlanan depolama yöntemini kullanmaya devam edebilirsiniz (burada yeni notlar yalnızca bazı eskileri silerseniz eklenebilir).",
         "save_synced_storage": "Eşitlenmiş depolama alanını kullanmaya devam et",
-        "save_local": "Notları yerel olarak depola"
+        "save_local": "Notları yerel olarak depola",
+        "sync_option": "Notları otomatik olarak senkronize et",
+        "sync_info_1": "Notlarınızı Augmented Steam ve IsThereAnyDeal arasında senkronize edebilirsiniz. Otomatik senkronizasyonu etkinleştirirseniz, notlar düzenli olarak ITAD'dan alınacaktır. Augmented Steam üzerinden yapılan düzenlemeler hemen ITAD'a yansıtılacaktır. (ITAD = IsThereAnyDeal)",
+        "sync_info_2": "Ayrıca Augmented Steam ve IsThereAnyDeal arasında notları manuel olarak itebilir veya çekebilirsiniz. Aynı oyun için farklı notlarınız varsa, notun doğru sürümünün kullanıldığından emin olmak için otomatik senkronizasyonu etkinleştirmeden önce bunu yapmanızı öneririz.",
+        "sync_info_3": "IsThereAnyDeal'daki Notlar ve Etiketler bölümünde depolanan tüm notlarınızı görebilirsiniz",
+        "sync_button_push": "Notları\nIsThereAnyDeal'a gönder",
+        "sync_button_pull": "Notları şuradan çek\nIsThereAnyDeal",
+        "sync_pulled": "__n__ not IsThereAnyDeal'dan çekildi",
+        "sync_pushed": "__n__ not IsThereAnyDeal'a gönderildi",
+        "sync_failed": "__n__ not senkronize edilemedi",
+        "sync_error": "Notunuz senkronize edilemedi",
+        "sync_error_empty": "Not boş",
+        "sync_error_unknown": "ITAD bu oyunu bilmiyor",
+        "sync_error_length": "Not çok uzun (__length__, max: __max__)"
     },
     "queue": {
         "new": "Yeni Kuyruk",
@@ -847,5 +870,14 @@
         "zw": "Zimbabve"
     },
     "using_language_return": "Steam'i __base__ dilinde görüntülemek için tıklayın.",
-    "using_language": "Steam'i __current__ dilinde görüntülüyorsunuz."
+    "using_language": "Steam'i __current__ dilinde görüntülüyorsunuz.",
+    "thewordunknown": "Bilinmeyen",
+    "badge_level": "Seviye __level__",
+    "ignored_owned": "Farklı platformda oynandığı için göz ardı ettiğiniz oyunlar",
+    "owned_collection": "__gametitle__ zaten IsThereAnyDeal Koleksiyonunuzda",
+    "add_fullgame_to_wishlist": "Tam oyunu istek listenize ekleyin",
+    "add_fullgame_to_waitlist": "Tam oyunu Bekleme Listenize ekleyin",
+    "remove_fullgame_from_waitlist_tooltip": "Bekleme listenizden tam oyunu kaldırın",
+    "remove_fullgame_from_wishlist_and_waitlist_tooltip": "Tam oyunu hem istek listenizden hem de bekleme listenizden kaldırın",
+    "ok": "Tamam"
 }

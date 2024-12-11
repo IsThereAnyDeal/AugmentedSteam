@@ -374,7 +374,8 @@
             "thai": "Thai",
             "turkish": "Turc",
             "ukrainian": "Ukrainien",
-            "vietnamese": "Vietnamien"
+            "vietnamese": "Vietnamien",
+            "indonesian": "Indonésien"
         },
         "add_custom_link": "Ajouter un lien personnalisé",
         "auto_detect": "Détection automatique",
@@ -882,5 +883,6 @@
     "add_fullgame_to_wishlist": "Ajouter le jeu complet à votre liste de souhaits",
     "add_fullgame_to_waitlist": "Ajouter le jeu complet à votre liste d'attente",
     "remove_fullgame_from_waitlist_tooltip": "Retirer le jeu complet de votre liste d'attente",
-    "remove_fullgame_from_wishlist_and_waitlist_tooltip": "Retirer le jeu complet de votre liste de souhaits et de votre liste d'attente"
+    "remove_fullgame_from_wishlist_and_waitlist_tooltip": "Retirer le jeu complet de votre liste de souhaits et de votre liste d'attente",
+    "ok": "OK"
 }

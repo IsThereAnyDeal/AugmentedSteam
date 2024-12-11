@@ -374,7 +374,8 @@
             "thai": "Ταϊλανδικά",
             "turkish": "Τουρκικά",
             "ukrainian": "Ουκρανικά",
-            "vietnamese": "Βιετναμέζικα"
+            "vietnamese": "Βιετναμέζικα",
+            "indonesian": "Ινδονησιακά"
         },
         "add_custom_link": "Προσθέστε προσαρμοσμένο σύνδεσμο",
         "auto_detect": "Αυτόματη αναγνώριση",
@@ -882,5 +883,6 @@
     "add_fullgame_to_wishlist": "Προσθέστε πλήρες παιχνίδι στη λίστα επιθυμιών σας",
     "add_fullgame_to_waitlist": "Προσθέστε πλήρες παιχνίδι στη λίστα αναμονής σας",
     "remove_fullgame_from_waitlist_tooltip": "Καταργήστε το πλήρες παιχνίδι από τη λίστα αναμονής σας",
-    "remove_fullgame_from_wishlist_and_waitlist_tooltip": "Καταργήστε το πλήρες παιχνίδι τόσο από τη λίστα επιθυμιών όσο και από τη λίστα αναμονής"
+    "remove_fullgame_from_wishlist_and_waitlist_tooltip": "Καταργήστε το πλήρες παιχνίδι τόσο από τη λίστα επιθυμιών όσο και από τη λίστα αναμονής",
+    "ok": "ΟΚ"
 }

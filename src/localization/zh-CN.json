@@ -372,7 +372,8 @@
             "thai": "泰语",
             "turkish": "土耳其语",
             "ukrainian": "乌克兰语",
-            "vietnamese": "越南语"
+            "vietnamese": "越南语",
+            "indonesian": "印度尼西亚语"
         },
         "add_custom_link": "添加自定义链接",
         "auto_detect": "自动检测",
@@ -880,5 +881,6 @@
     "add_fullgame_to_wishlist": "将完整的游戏添加到您的愿望单中",
     "add_fullgame_to_waitlist": "将完整的游戏添加到您的观察列表中",
     "remove_fullgame_from_waitlist_tooltip": "从观察列表中删除完整的游戏",
-    "remove_fullgame_from_wishlist_and_waitlist_tooltip": "从你的愿望单和观察列表中删除完整的游戏"
+    "remove_fullgame_from_wishlist_and_waitlist_tooltip": "从你的愿望单和观察列表中删除完整的游戏",
+    "ok": "好的"
 }
