@@ -185,6 +185,8 @@ export default class FMultiProductKeys extends Feature<CRegisterKey> {
                 "__alreadyentered__",
                 document.querySelector<HTMLInputElement>("#product_key")!.value.replace(/,/g, "\n")
             ),
+          // avoid losing user inputted keys by making dialog dismissal an explicit interaction
+          { bExplicitDismissalOnly: true }
         );
     }
 }
