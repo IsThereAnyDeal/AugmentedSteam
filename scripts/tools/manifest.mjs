@@ -15,6 +15,7 @@ export default {
     },
     permissions: [
         "storage",
+        "unlimitedStorage",
         "contextMenus",
         "webRequest"
     ],
