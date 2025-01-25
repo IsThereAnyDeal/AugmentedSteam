@@ -14,6 +14,15 @@
 
     export let data: TBundle[];
 
+    /**
+     * Filters out tiers that contain no games to prevent displaying empty tier sections
+     * @param bundle The bundle containing tiers to filter
+     * @returns Array of tiers that have at least one game
+     */
+    function getNonEmptyTiers(bundle: TBundle) {
+        return bundle.tiers.filter(tier => tier.games.length > 0);
+    }
+
     function getPrice(price: TPrice): Price {
         let tierPrice = new Price(price.amount, price.currency);
         try {
@@ -57,7 +66,7 @@
                 {/if}
 
                 <p class="package_contents">
-                    {#each bundle.tiers as tier, num}
+                    {#each getNonEmptyTiers(bundle) as tier, num}
                         <b class="as_bundle_tier_title"> <!-- class added for compatibility with Steam Currency Converter -->
                             {#if bundle.tiers.length > 1}
                                 {L(__bundle_tierIncludes, {
