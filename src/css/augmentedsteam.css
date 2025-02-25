@@ -224,7 +224,7 @@ img.astats_icon {
   height: 24px !important;
 }
 .es_binder_view .badge_row_inner {
-  height: 195px !important;
+  height: 210px !important;
 }
 .es_binder_view .badge_current {
   width: 100% !important;
@@ -243,7 +243,7 @@ img.astats_icon {
 }
 .es_binder_view .badge_row {
   width: 160px !important;
-  height: 195px !important;
+  height: 210px !important;
   float: left;
   margin-right: 15px !important;
   margin-bottom: 15px !important;
