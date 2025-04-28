@@ -4,6 +4,7 @@
     import LoginWarning from "@Content/Modules/Widgets/AugmentedSteam/Components/LoginWarning.svelte";
     import Language from "@Core/Localization/Language";
     import LanguageWarning from "@Content/Modules/Widgets/AugmentedSteam/Components/LanguageWarning.svelte";
+    import LocalStorage from "@Core/Storage/LocalStorage";
 
     export let language: Language;
     export let react: boolean;
@@ -17,7 +18,12 @@
             const name = detail.name ?? null;
             const message = detail.message ?? null;
 
-            if (name === "LoginError" && (message === "store" || message === "community")) {
+            if (name === "LoginError" &&
+                (
+                    (message === "store" && await LocalStorage.get("hide_login_warn_store") !== true)
+                    || (message === "community" && await LocalStorage.get("hide_login_warn_community") !== true)
+                ))
+            {
                 loginWarning = message;
             }
         });
