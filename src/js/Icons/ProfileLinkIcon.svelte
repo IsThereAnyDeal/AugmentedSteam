@@ -46,13 +46,7 @@
     .asi-bartervg {
         background-image: url("extension://img/ico/bartervg.png");
     }
-    .asi-astats {
-        background-image: url("extension://img/ico/achievementstats.png");
-    }
     .asi-backpacktf {
         background-image: url("extension://img/ico/backpacktf.png");
-    }
-    .asi-astatsnl {
-        background-image: url("extension://img/ico/astatsnl.png");
     }
 </style>

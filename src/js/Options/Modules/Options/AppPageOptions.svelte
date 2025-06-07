@@ -74,7 +74,6 @@
     <Toggle bind:value={$settings.showhltb}>{L(__options_hltb)}</Toggle>
     <Toggle bind:value={$settings.showwsgf}>{L(__options_wsgf)}</Toggle>
     <Toggle bind:value={$settings.show_players_info}>{L(__options_showPlayersInfo)}</Toggle>
-    <Toggle bind:value={$settings.showastatslink}>{L(__options_showAstatslink)}</Toggle>
     <Toggle bind:value={$settings.showitadlinks}>{L(__options_itadlinks)}</Toggle>
     <Toggle bind:value={$settings.showsteamdb}>{L(__options_steamdb)}</Toggle>
     <Toggle bind:value={$settings.showbartervg}>{L(__options_showbartervg)}</Toggle>

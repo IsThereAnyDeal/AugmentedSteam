@@ -36,20 +36,8 @@
     <ProfileLink id="bartervg" href="https://barter.vg/steam/{steamId}">Barter.vg</ProfileLink>
 {/if}
 
-{#if Settings.profile_astats}
-    <ProfileLink id="astats" href="https://www.achievementstats.com/index.php?action=profile&playerId={steamId}">
-        Achievement Stats
-    </ProfileLink>
-{/if}
-
 {#if Settings.profile_backpacktf}
     <ProfileLink id="backpacktf" href="https://backpack.tf/profiles/{steamId}">Backpack.tf</ProfileLink>
-{/if}
-
-{#if Settings.profile_astats}
-    <ProfileLink id="astatsnl" href="https://astats.astats.nl/astats/User_Info.php?steamID64={steamId}">
-        Astats.nl
-    </ProfileLink>
 {/if}
 
 {#each Settings.profile_custom_link as customLink}

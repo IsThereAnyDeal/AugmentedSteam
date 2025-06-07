@@ -173,14 +173,8 @@
         <Toggle bind:value={$settings.profile_bartervg}>
             <ProfileLink id="bartervg" type={$settings.show_profile_link_images}>Barter.vg</ProfileLink>
         </Toggle>
-        <Toggle bind:value={$settings.profile_astats}>
-            <ProfileLink id="astats" type={$settings.show_profile_link_images}>Achievement Stats</ProfileLink>
-        </Toggle>
         <Toggle bind:value={$settings.profile_backpacktf}>
             <ProfileLink id="backpacktf" type={$settings.show_profile_link_images}>Backpack.tf</ProfileLink>
-        </Toggle>
-        <Toggle bind:value={$settings.profile_astatsnl}>
-            <ProfileLink id="astatsnl" type={$settings.show_profile_link_images}>Astats.nl</ProfileLink>
         </Toggle>
     </OptionGroup>
 

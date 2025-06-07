@@ -5,7 +5,6 @@ import FDRMWarnings from "../Common/FDRMWarnings";
 import FITADPrices from "../Common/FITADPrices";
 import FRegionalPricing from "../Common/FRegionalPricing";
 import FAchievementBar from "./FAchievementBar";
-import FAStatsLink from "./FAStatsLink";
 import FBadgeProgress from "./FBadgeProgress";
 import FDemoAbovePurchase from "./FDemoAbovePurchase";
 import FDLCCheckboxes from "./FDLCCheckboxes";
@@ -101,7 +100,6 @@ export default class CApp extends CStoreBase {
                 FCustomizer,
                 FDLCCheckboxes,
                 FBadgeProgress,
-                FAStatsLink,
                 FAchievementBar,
                 FRegionalPricing,
                 FReviewToggleButton,

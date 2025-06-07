@@ -78,7 +78,6 @@ export const DefaultSettings: Readonly<SettingsSchema> = {
     showitadlinks: true,
     showsteamdb: true,
     showbartervg: false,
-    showastatslink: true,
     showyoutubegameplay: true,
     showyoutubereviews: true,
     showwsgf: true,
@@ -148,9 +147,7 @@ export const DefaultSettings: Readonly<SettingsSchema> = {
     profile_bartervg: true,
     profile_steamrep: true,
     profile_steamdbcalc: true,
-    profile_astats: true,
     profile_backpacktf: true,
-    profile_astatsnl: true,
     profile_steamid: true,
     profile_custom_link: [
         {
