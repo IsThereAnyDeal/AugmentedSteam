@@ -33,6 +33,10 @@
         border-bottom: 1px solid #d63525;
         margin-bottom: -1px;
         color: white;
+
+        & :global(a) {
+            color: white;
+        }
     }
     .es_warn.is-react {
         margin-left: -14px;
