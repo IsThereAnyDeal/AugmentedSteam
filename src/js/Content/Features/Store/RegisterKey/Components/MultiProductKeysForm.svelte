@@ -57,8 +57,6 @@
     }
 
     async function activate(): Promise<void> {
-        buttons = {};
-
         const lines = value.trim().split("\n");
         for (const line of lines) {
             // remove all whitespace and non-key characters
@@ -70,6 +68,11 @@
             keys.push([line.trim(), activateKey(key)]);
         }
         keys = keys;
+        if (keys.length === 0) {
+            return;
+        }
+
+        buttons = {};
 
         await Promise.all(keys.map(([_, promise]) => promise));
 
