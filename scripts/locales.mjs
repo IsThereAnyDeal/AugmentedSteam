@@ -36,7 +36,7 @@ program
 
         const files = await readdir(LocalizationsPath, {recursive: false});
         for (const file of files) {
-            if (path.extname(file) !== ".json") {
+            if (/^_/.test(file) || path.extname(file) !== ".json") {
                 continue;
             }
 
