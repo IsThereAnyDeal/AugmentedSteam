@@ -254,6 +254,7 @@
     "never": "Never",
     "coupon_available": "You have a coupon available!",
     "launch_random": "Launch Random Game",
+    "launch_random_game_error": "Failed to find playable game",
     "play_game": "Play __gamename__?",
     "drops_value": "Highest Drop Value",
     "cards_remain": "Least cards remaining to complete set",

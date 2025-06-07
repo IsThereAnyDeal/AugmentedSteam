@@ -229,6 +229,7 @@ export const __about = "about";
 export const __never = "never";
 export const __couponAvailable = "couponAvailable";
 export const __launchRandom = "launchRandom";
+export const __launchRandomGameError = "launchRandomGameError";
 export const __playGame = "playGame";
 export const __dropsValue = "dropsValue";
 export const __cardsRemain = "cardsRemain";

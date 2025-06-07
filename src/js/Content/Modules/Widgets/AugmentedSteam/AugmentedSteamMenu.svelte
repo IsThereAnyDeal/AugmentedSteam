@@ -6,7 +6,7 @@
         __cancel,
         __clearCache,
         __contribute,
-        __launchRandom,
+        __launchRandom, __launchRandomGameError,
         __ok,
         __playGame,
         __thewordoptions,
@@ -23,6 +23,7 @@
     import {fade} from "svelte/transition";
     import ConfirmDialog from "@Core/Modals/ConfirmDialog";
     import {EModalAction} from "@Core/Modals/Contained/EModalAction";
+    import AlertDialog from "@Core/Modals/AlertDialog";
 
     export let user: UserInterface;
 
@@ -67,7 +68,7 @@
          */
         for (let i=0; i < 10; i++) {
             const appid = await DynamicStore.getRandomApp();
-            if (!appid) { return; }
+            if (!appid) { break; }
 
             const appdetails = await SteamStoreApiFacade.fetchAppDetails(appid);
             if (appdetails) {
@@ -89,9 +90,11 @@
                 } else if (confirm === EModalAction.Secondary) {
                     window.location.assign(`//store.steampowered.com/app/${gameid}`)
                 }
-                break;
+                return;
             }
         }
+
+        await (new AlertDialog(L(__launchRandomGameError))).show();
     }
 
     onMount(() => {
