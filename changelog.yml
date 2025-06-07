@@ -1,3 +1,13 @@
+4.2.2: |
+  Long overdue bugfix release
+  
+  - fix login warning not respecting "Don't show again" button (thx RyanHx)
+  - stop showing empty bundle tiers on app pages (thx Trsnaqe)
+  - updated badge binder view height (thx yomisimie)
+  - refactor multi key activation dialog to prevent accidental closing
+  - fix "Launch random game" feature sometimes failing silently (#2146)
+  - remove AStats app feature and profile link, and AchievementStats.com profile link (#2144)
+
 4.2.1: |
   Hotfix release
   
