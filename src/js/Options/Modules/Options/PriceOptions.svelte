@@ -3,9 +3,9 @@
 <script lang="ts">
     import {L} from "@Core/Localization/Localization";
     import {
+        __options_headers_itadPriceInfo,
         __options_lowestprice,
         __options_lowestpriceCoupon,
-        __options_lowestpriceHeader,
         __options_lowestpriceOnwishlist,
         __options_regionalPrice,
     } from "@Strings/_strings";
@@ -23,7 +23,7 @@
 </script>
 
 
-<Section title={L(__options_lowestpriceHeader)}>
+<Section title={L(__options_headers_itadPriceInfo)}>
     <OptionGroup>
         <Toggle bind:value={$settings.showlowestprice}>{L(__options_lowestprice)}</Toggle>
         <Toggle bind:value={$settings.showlowestprice_onwishlist}>{L(__options_lowestpriceOnwishlist)}</Toggle>

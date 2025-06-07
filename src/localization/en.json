@@ -383,7 +383,6 @@
         "hidespamcomments": "Hide spam comments on Workshop items and profiles",
         "gift": "Items you have a gift copy for",
         "regional_price_mouse": "On Price Mouseover",
-        "lowestprice_header": "Price History Information",
         "stores_all": "Compare all stores",
         "view_in_currency": "View in:",
         "show_early_access": "Show Early Access image banners",
@@ -508,7 +507,10 @@
         "about_desc": "Augmented Steam is a fork of the Enhanced Steam extension.",
         "about_desc_links": "Visit the extension's __website__ or our __discord__ for more info.",
         "footer_fork": "a fork by IsThereAnyDeal",
-        "footer_author": "original author jshackles"
+        "footer_author": "original author jshackles",
+        "headers": {
+            "itad_price_info": "Price Information from IsThereAnyDeal"
+        }
     },
     "ready": {
         "loading": "Augmented Steam loading data...",
