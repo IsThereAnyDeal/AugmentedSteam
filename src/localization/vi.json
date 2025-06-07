@@ -16,7 +16,7 @@
     "disconnect": "Ngắt kết nối",
     "disconnected": "Đã ngắt kết nối",
     "oneclickgoo": "Nhấn chuột chuyển ngay thành Ngọc...",
-    "view_in_library": "Xem ở Thư viện",
+    "view_in_library": "Xem trong Thư viện",
     "support": "Hỗ trợ",
     "email": "E-mail",
     "contact": "Liên hệ",
@@ -62,8 +62,8 @@
     "starting_at": "Bắt đầu từ: __price__",
     "homepage_tabs": "Tab trang chủ",
     "store": "Cửa hàng",
-    "view_in_store": "Xem ở Cửa hàng",
-    "view_on_website": "Xem ở __website__",
+    "view_in_store": "Xem trong Cửa hàng",
+    "view_on_website": "Xem trên __website__",
     "drm_third_party": "Cảnh báo: Sản phẩm này sử dụng DRM bên thứ 3 __drmlist__.",
     "hours_short": "__hours__ giờ",
     "spam_comment_show": "__num__ bình luận spam được ẩn.  Nhấp vào đây để hiển thị.",
@@ -374,10 +374,11 @@
             "thai": "Tiếng Thái",
             "turkish": "Tiếng Thổ Nhĩ Kỳ",
             "ukrainian": "Tiếng Ukraina",
-            "vietnamese": "Tiếng Việt"
+            "vietnamese": "Tiếng Việt",
+            "indonesian": "Tiếng Indonesia"
         },
         "add_custom_link": "Thêm liên kết tự đặt",
-        "auto_detect": "Tự động nhân diện",
+        "auto_detect": "Tự động nhận diện",
         "add_to_waitlist": "Hiển thị menu thả xuống \"Thêm vào Danh sách chờ\" trên trang ứng dụng",
         "profile_steamid": "Hiển thị liên kết để xem SteamID trên hồ sơ",
         "settings_mngmt": {
@@ -882,5 +883,6 @@
     "add_fullgame_to_wishlist": "Thêm bản trò chơi đầy đủ vào Danh sách ước của bạn",
     "add_fullgame_to_waitlist": "Thêm bản trò chơi đầy đủ vào Danh sách Chờ của bạn",
     "remove_fullgame_from_waitlist_tooltip": "Loại bỏ bản trò chơi đầy đủ khỏi Danh sách Chờ của bạn",
-    "remove_fullgame_from_wishlist_and_waitlist_tooltip": "Loại bỏ bản trò chơi đầy đủ khỏi cả Danh sách ước và Danh sách chờ"
+    "remove_fullgame_from_wishlist_and_waitlist_tooltip": "Loại bỏ bản trò chơi đầy đủ khỏi cả Danh sách ước và Danh sách chờ",
+    "ok": "OK"
 }

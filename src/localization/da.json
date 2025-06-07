@@ -1,5 +1,22 @@
 {
-    "post_history": "Se indlæg historie",
+    "steamid_of_user": "__bruger__s SteamID",
+    "copied": "Kopieret til din udklipsholder!",
+    "view_steamid": "Se SteamID",
+    "more_on_steampeek": "Se mere på SteamPeek",
+    "invite_friends": "Inviter venner",
+    "invite_to_group": "Inviter til gruppe",
+    "inverse": "Omvendt",
+    "add_tag": "Tilføj tag",
+    "status": "Status:",
+    "connect": "Forbind",
+    "connected": "Forbundet",
+    "disconnect": "Afkobl",
+    "disconnected": "Afkoblet",
+    "view_in_library": "Se i bibliotek",
+    "support": "Kundeservice",
+    "email": "E-mail",
+    "contact": "Kontakt",
+    "post_history": "Se indlægs historie",
     "add_nickname": "Tilføj Brugernavn",
     "total_size": "Samlede størrelse",
     "dlc_details": "Hentbare indholdsdetaljer",
@@ -43,6 +60,7 @@
     "hours_short": "__hours__ timer",
     "spam_comment_show": "__num__ spam kommentarer skjult på denne side. Klik her for at vise dem.",
     "add_to_wishlist": "Tilføj til ønskeliste",
+    "add_to_waitlist": "Tilføj til din venteliste",
     "language": "Sprog",
     "theworddefault": "Standard",
     "show": "Vis",
@@ -61,6 +79,8 @@
     "badge_completion_avg": "Gennemsnitlige udgifter til færdiggørelse: __cost__",
     "volume_sold_last_24": "Volume: __sold__ solgt de sidste 24 timer",
     "sold_last_24": "Volume: __sold__ solgt de sidste 24 timer",
+    "homepage_curators": "Steam Kurator anbefalinger",
+    "homepage_topnewreleases": "Top Steam udgivelser",
     "homepage_sidebar": "Sidebar",
     "drop_calc": "Klik her for at udregne manglende drops",
     "price": "Pris",
@@ -100,6 +120,16 @@
     "more_information": "Mere Information",
     "region_unavailable": "Ikke tilgængelig i denne region",
     "avg_price_3cards": "Gennemsnitspris af tre samlekort: __price__",
+    "groups": {
+        "select": "Vælg:",
+        "leave": "Forlad grupper"
+    },
+    "export": {
+        "wishlist": "Exporter ønskeliste",
+        "text": "Tekst",
+        "copy_clipboard": "Kopier til udklipsholder"
+    },
+    "none": "Ingen",
     "empty_wishlist": {
         "title": "Tøm ønskeliste"
     },
@@ -110,17 +140,26 @@
     "play_game": "Spil __gamename__?",
     "drops_value": "Højeste drop pris",
     "wishlist": "Ønskeliste",
+    "on_waitlist": "I venteliste",
     "cancel": "Fortryd",
     "wiki_article": "Se __pcgw__ artikel",
     "view_all": "SE ALLE",
     "games_with_booster": "__boostergames__ spil som er brugbare overfor booster packs",
     "sort_by": "Sorter efter:",
+    "playtime": "Spilletid",
+    "year": "År",
     "lastonline": "Sidst Online",
+    "members": "Medlemmer",
+    "name": "Navn",
     "drm_third_party_sub": "Advarsel: Et eller flere titler i denne pakke bruger tredjeparts DRM __drmlist__.",
     "customize": "Tilpasse",
     "bundle_saving_text": "Her er hvad du sparer ved at købe dette bundte",
     "thewordoptions": "Indstillinger",
     "discussions": "Diskussioner",
+    "pricing": {
+        "lowest_price": "Nuværende bedste:",
+        "historical_low": "Historisk lav:"
+    },
     "web_browser_chat": "Webbrowser chat",
     "steam_client_chat": "Steam klient chat",
     "preview_background": "Preview baggrund",
@@ -176,6 +215,7 @@
         "removeguideslanguagefilter": "Lad vær med at automatisk filtrer guides efter dit sprog",
         "disablelinkfilter": "Slå bekræftelse af når du går på andre sider",
         "regional_price_on": "Vis regional prissammenligning",
+        "supportinfo": "Vis kundeservice information",
         "drm": "Vis tredjeparts DRM advarsler",
         "show1clickgoo": "Vis \"1-Klick gør til ædelstener...\" knappen på gældende lagervarer",
         "hltb": "Vis HowLongToBeat.com oplysninger",
@@ -184,11 +224,13 @@
         "regional_price_mouse": "på Pris Mouseover",
         "lowestprice_header": "Pris historik",
         "stores_all": "Sammenlign alle butikker",
+        "view_in_currency": "Vis i:",
         "show_early_access": "Vis Tidlig Adgang billede-bannere",
         "profile_link_images_gray": "Gråskala",
         "quickinv": "Vis quick salg knapper på Steam-Fællesskabet vare i inventory",
         "quickinv_diff": "Quick sælg modifier:",
         "send_age_info": "Automatisk send verifikation af alder når anmodet.",
+        "mp4video": "Tving videoer til at være MP4 format",
         "pcgw": "Vis PCGamingWiki links",
         "store_steamcards": "Vis SteamCardExchange links på butik sider",
         "spamcommentregex": "Regulære udtryk streng:",
@@ -201,6 +243,8 @@
         "owned": "Genstande du ejer",
         "steamdb": "Vis SteamDB links",
         "profile_link_images_color": "Farvet",
+        "install_steam_button": "\"Installer Steam\" knap",
+        "replace_view_client": "Udskift med \"Se i klient\"",
         "show_empty_wishlist": "Vis \"Tøm ønskeseddel\" knappen",
         "inventory_nav_text": "Vis Avanceret navigation på rygsæk side",
         "market_total": "Vis transaktion resumé på Market",
@@ -209,6 +253,7 @@
         "market": "Marked",
         "inventory": "Inventar",
         "profile": "Profil",
+        "group": "Gruppe",
         "show_languagewarning": "Vis advarsel, hvis du søger i et andet sprog end",
         "homepage": "Hjemmeside",
         "homepage_default_tab": "Standard hjemmside fane",
@@ -224,6 +269,8 @@
         "show_badge_progress": "Vis apps badge fremskridt på butikssider",
         "show_wishlist_link": "Vis en ønskeliste link på profiler",
         "show_wishlist_count": "Vis antallet af varer på ønskeliste",
+        "profile_showcase_own_twitch": "... Inklusiv din egen profil",
+        "profile_showcase_twitch_profileonly": "... kun hvis linket er i profilopsamlingen",
         "lang": {
             "english": "Engelsk",
             "brazilian": "Portugisisk-Brasilien",
@@ -250,7 +297,12 @@
             "tchinese": "Traditionelt kinesisk",
             "thai": "Thailandsk",
             "turkish": "Tyrkisk",
-            "ukrainian": "Ukrainsk"
+            "ukrainian": "Ukrainsk",
+            "vietnamese": "Vietnamesisk"
+        },
+        "user_notes": {
+            "wishlist": "På min ønskeliste",
+            "local": "Lokal database"
         }
     },
     "ready": {
@@ -303,5 +355,34 @@
         "wallet": "Den indtastede kode er fra et Steam-gavekort eller en Steam-tegnebogskode",
         "toomany": "Der har været for mange nylige aktiveringsforsøg fra denne konto eller internetadresse.  Vent venligst og prøv din produktkode igen senere.",
         "default": "Der opstod en uventet fejl.  Din produktkode er ikke blevet indløst.  Vent venligst 30 minutter og prøv at indløse koden igen."
-    }
+    },
+    "wl": {
+        "in_wishlist": "på ønskeliste",
+        "on_sale": "på tilbud",
+        "no_price": "uden pris"
+    },
+    "coll": {
+        "total_time": "samlet tid",
+        "in_collection": "i samling",
+        "played": "spillet",
+        "never_played": "aldrig spillet"
+    },
+    "user_note": {
+        "add": "Tilføj en note",
+        "update": "Opdater note",
+        "not_enough_space": "Ikke nok plads til at gemme note",
+        "close_on_storage": "Du er ved at løbe tør for plads"
+    },
+    "queue": {
+        "new": "Ny kø",
+        "new_tooltip": "Fjern dette produkt fra kø og start en ny kø."
+    },
+    "date": "Dato",
+    "rating": "Bedømelse",
+    "helpful": "Hjælpsom",
+    "funny": "Sjov",
+    "length": "Længde",
+    "visibility": "Synlighed",
+    "processing": "Behandler...",
+    "wait": "Vent venligst"
 }

@@ -880,7 +880,7 @@
     "owned_collection": "__gametitle__ 已经在您的 IsThereAnyDeal 集合中",
     "add_fullgame_to_wishlist": "将完整的游戏添加到您的愿望单中",
     "add_fullgame_to_waitlist": "将完整的游戏添加到您的观察列表中",
-    "remove_fullgame_from_waitlist_tooltip": "从观察列表中删除完整的游戏",
-    "remove_fullgame_from_wishlist_and_waitlist_tooltip": "从你的愿望单和观察列表中删除完整的游戏",
+    "remove_fullgame_from_waitlist_tooltip": "从您的观察列表中删除完整的游戏",
+    "remove_fullgame_from_wishlist_and_waitlist_tooltip": "从您的愿望单和观察列表中删除完整的游戏",
     "ok": "好的"
 }
