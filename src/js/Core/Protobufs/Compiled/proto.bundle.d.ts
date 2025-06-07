@@ -135,6 +135,165 @@ export class CHardwarePackageDetails implements ICHardwarePackageDetails {
     public static getTypeUrl(typeUrlPrefix?: string): string;
 }
 
+/** Properties of a CStoreBrowse_GetContentHubConfig_Request. */
+export interface ICStoreBrowse_GetContentHubConfig_Request {
+
+    /** CStoreBrowse_GetContentHubConfig_Request context */
+    context?: (IStoreBrowseContext|null);
+}
+
+/** Represents a CStoreBrowse_GetContentHubConfig_Request. */
+export class CStoreBrowse_GetContentHubConfig_Request implements ICStoreBrowse_GetContentHubConfig_Request {
+
+    /**
+     * Constructs a new CStoreBrowse_GetContentHubConfig_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICStoreBrowse_GetContentHubConfig_Request);
+
+    /** CStoreBrowse_GetContentHubConfig_Request context. */
+    public context?: (IStoreBrowseContext|null);
+
+    /**
+     * Encodes the specified CStoreBrowse_GetContentHubConfig_Request message. Does not implicitly {@link CStoreBrowse_GetContentHubConfig_Request.verify|verify} messages.
+     * @param message CStoreBrowse_GetContentHubConfig_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICStoreBrowse_GetContentHubConfig_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CStoreBrowse_GetContentHubConfig_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CStoreBrowse_GetContentHubConfig_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CStoreBrowse_GetContentHubConfig_Request;
+
+    /**
+     * Gets the default type url for CStoreBrowse_GetContentHubConfig_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CStoreBrowse_GetContentHubConfig_Response. */
+export interface ICStoreBrowse_GetContentHubConfig_Response {
+
+    /** CStoreBrowse_GetContentHubConfig_Response hubconfigs */
+    hubconfigs?: (ICStoreBrowse_GetContentHubConfig_Response_ContentHubConfig[]|null);
+}
+
+/** Represents a CStoreBrowse_GetContentHubConfig_Response. */
+export class CStoreBrowse_GetContentHubConfig_Response implements ICStoreBrowse_GetContentHubConfig_Response {
+
+    /**
+     * Constructs a new CStoreBrowse_GetContentHubConfig_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICStoreBrowse_GetContentHubConfig_Response);
+
+    /** CStoreBrowse_GetContentHubConfig_Response hubconfigs. */
+    public hubconfigs: ICStoreBrowse_GetContentHubConfig_Response_ContentHubConfig[];
+
+    /**
+     * Encodes the specified CStoreBrowse_GetContentHubConfig_Response message. Does not implicitly {@link CStoreBrowse_GetContentHubConfig_Response.verify|verify} messages.
+     * @param message CStoreBrowse_GetContentHubConfig_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICStoreBrowse_GetContentHubConfig_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CStoreBrowse_GetContentHubConfig_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CStoreBrowse_GetContentHubConfig_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CStoreBrowse_GetContentHubConfig_Response;
+
+    /**
+     * Gets the default type url for CStoreBrowse_GetContentHubConfig_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CStoreBrowse_GetContentHubConfig_Response_ContentHubConfig. */
+export interface ICStoreBrowse_GetContentHubConfig_Response_ContentHubConfig {
+
+    /** CStoreBrowse_GetContentHubConfig_Response_ContentHubConfig hubcategoryid */
+    hubcategoryid?: (number|null);
+
+    /** CStoreBrowse_GetContentHubConfig_Response_ContentHubConfig type */
+    type?: (string|null);
+
+    /** CStoreBrowse_GetContentHubConfig_Response_ContentHubConfig handle */
+    handle?: (string|null);
+
+    /** CStoreBrowse_GetContentHubConfig_Response_ContentHubConfig displayName */
+    displayName?: (string|null);
+
+    /** CStoreBrowse_GetContentHubConfig_Response_ContentHubConfig urlPath */
+    urlPath?: (string|null);
+}
+
+/** Represents a CStoreBrowse_GetContentHubConfig_Response_ContentHubConfig. */
+export class CStoreBrowse_GetContentHubConfig_Response_ContentHubConfig implements ICStoreBrowse_GetContentHubConfig_Response_ContentHubConfig {
+
+    /**
+     * Constructs a new CStoreBrowse_GetContentHubConfig_Response_ContentHubConfig.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICStoreBrowse_GetContentHubConfig_Response_ContentHubConfig);
+
+    /** CStoreBrowse_GetContentHubConfig_Response_ContentHubConfig hubcategoryid. */
+    public hubcategoryid: number;
+
+    /** CStoreBrowse_GetContentHubConfig_Response_ContentHubConfig type. */
+    public type: string;
+
+    /** CStoreBrowse_GetContentHubConfig_Response_ContentHubConfig handle. */
+    public handle: string;
+
+    /** CStoreBrowse_GetContentHubConfig_Response_ContentHubConfig displayName. */
+    public displayName: string;
+
+    /** CStoreBrowse_GetContentHubConfig_Response_ContentHubConfig urlPath. */
+    public urlPath: string;
+
+    /**
+     * Encodes the specified CStoreBrowse_GetContentHubConfig_Response_ContentHubConfig message. Does not implicitly {@link CStoreBrowse_GetContentHubConfig_Response_ContentHubConfig.verify|verify} messages.
+     * @param message CStoreBrowse_GetContentHubConfig_Response_ContentHubConfig message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICStoreBrowse_GetContentHubConfig_Response_ContentHubConfig, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CStoreBrowse_GetContentHubConfig_Response_ContentHubConfig message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CStoreBrowse_GetContentHubConfig_Response_ContentHubConfig
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CStoreBrowse_GetContentHubConfig_Response_ContentHubConfig;
+
+    /**
+     * Gets the default type url for CStoreBrowse_GetContentHubConfig_Response_ContentHubConfig
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
 /** Properties of a CStoreBrowse_GetDLCForApps_Request. */
 export interface ICStoreBrowse_GetDLCForApps_Request {
 
@@ -1002,6 +1161,20 @@ export class StoreBrowse extends $protobuf.rpc.Service {
     constructor(rpcImpl: $protobuf.RPCImpl, requestDelimited?: boolean, responseDelimited?: boolean);
 
     /**
+     * Calls GetContentHubConfig.
+     * @param request CStoreBrowse_GetContentHubConfig_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CStoreBrowse_GetContentHubConfig_Response
+     */
+    public getContentHubConfig(request: ICStoreBrowse_GetContentHubConfig_Request, callback: StoreBrowse.GetContentHubConfigCallback): void;
+
+    /**
+     * Calls GetContentHubConfig.
+     * @param request CStoreBrowse_GetContentHubConfig_Request message or plain object
+     * @returns Promise
+     */
+    public getContentHubConfig(request: ICStoreBrowse_GetContentHubConfig_Request): Promise<CStoreBrowse_GetContentHubConfig_Response>;
+
+    /**
      * Calls GetDLCForApps.
      * @param request CStoreBrowse_GetDLCForApps_Request message or plain object
      * @param callback Node-style callback called with the error, if any, and CStoreBrowse_GetDLCForApps_Response
@@ -1087,6 +1260,13 @@ export class StoreBrowse extends $protobuf.rpc.Service {
 }
 
 export namespace StoreBrowse {
+
+    /**
+     * Callback as used by {@link StoreBrowse#getContentHubConfig}.
+     * @param error Error, if any
+     * @param [response] CStoreBrowse_GetContentHubConfig_Response
+     */
+    type GetContentHubConfigCallback = (error: (Error|null), response?: CStoreBrowse_GetContentHubConfig_Response) => void;
 
     /**
      * Callback as used by {@link StoreBrowse#getDLCForApps}.
@@ -1352,6 +1532,9 @@ export interface ICAppOverview {
 
     /** CAppOverview steamHwCompatCategoryPacked */
     steamHwCompatCategoryPacked?: (number|null);
+
+    /** CAppOverview albumCoverHash */
+    albumCoverHash?: (string|null);
 }
 
 /** Represents a CAppOverview. */
@@ -1524,6 +1707,9 @@ export class CAppOverview implements ICAppOverview {
 
     /** CAppOverview steamHwCompatCategoryPacked. */
     public steamHwCompatCategoryPacked: number;
+
+    /** CAppOverview albumCoverHash. */
+    public albumCoverHash: string;
 
     /**
      * Encodes the specified CAppOverview message. Does not implicitly {@link CAppOverview.verify|verify} messages.
@@ -2034,126 +2220,6 @@ export class CartGiftMessage implements ICartGiftMessage {
     public static getTypeUrl(typeUrlPrefix?: string): string;
 }
 
-/** Properties of a CAuthentication_NotifyRiskQuizResults_Notification. */
-export interface ICAuthentication_NotifyRiskQuizResults_Notification {
-
-    /** CAuthentication_NotifyRiskQuizResults_Notification clientId */
-    clientId?: (number|Long|null);
-
-    /** CAuthentication_NotifyRiskQuizResults_Notification results */
-    results?: (ICAuthentication_NotifyRiskQuizResults_Notification_RiskQuizResults|null);
-
-    /** CAuthentication_NotifyRiskQuizResults_Notification selectedAction */
-    selectedAction?: (string|null);
-
-    /** CAuthentication_NotifyRiskQuizResults_Notification didConfirmLogin */
-    didConfirmLogin?: (boolean|null);
-}
-
-/** Represents a CAuthentication_NotifyRiskQuizResults_Notification. */
-export class CAuthentication_NotifyRiskQuizResults_Notification implements ICAuthentication_NotifyRiskQuizResults_Notification {
-
-    /**
-     * Constructs a new CAuthentication_NotifyRiskQuizResults_Notification.
-     * @param [properties] Properties to set
-     */
-    constructor(properties?: ICAuthentication_NotifyRiskQuizResults_Notification);
-
-    /** CAuthentication_NotifyRiskQuizResults_Notification clientId. */
-    public clientId: (number|Long);
-
-    /** CAuthentication_NotifyRiskQuizResults_Notification results. */
-    public results?: (ICAuthentication_NotifyRiskQuizResults_Notification_RiskQuizResults|null);
-
-    /** CAuthentication_NotifyRiskQuizResults_Notification selectedAction. */
-    public selectedAction: string;
-
-    /** CAuthentication_NotifyRiskQuizResults_Notification didConfirmLogin. */
-    public didConfirmLogin: boolean;
-
-    /**
-     * Encodes the specified CAuthentication_NotifyRiskQuizResults_Notification message. Does not implicitly {@link CAuthentication_NotifyRiskQuizResults_Notification.verify|verify} messages.
-     * @param message CAuthentication_NotifyRiskQuizResults_Notification message or plain object to encode
-     * @param [writer] Writer to encode to
-     * @returns Writer
-     */
-    public static encode(message: ICAuthentication_NotifyRiskQuizResults_Notification, writer?: $protobuf.Writer): $protobuf.Writer;
-
-    /**
-     * Decodes a CAuthentication_NotifyRiskQuizResults_Notification message from the specified reader or buffer.
-     * @param reader Reader or buffer to decode from
-     * @param [length] Message length if known beforehand
-     * @returns CAuthentication_NotifyRiskQuizResults_Notification
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CAuthentication_NotifyRiskQuizResults_Notification;
-
-    /**
-     * Gets the default type url for CAuthentication_NotifyRiskQuizResults_Notification
-     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-     * @returns The default type url
-     */
-    public static getTypeUrl(typeUrlPrefix?: string): string;
-}
-
-/** Properties of a CAuthentication_NotifyRiskQuizResults_Notification_RiskQuizResults. */
-export interface ICAuthentication_NotifyRiskQuizResults_Notification_RiskQuizResults {
-
-    /** CAuthentication_NotifyRiskQuizResults_Notification_RiskQuizResults platform */
-    platform?: (boolean|null);
-
-    /** CAuthentication_NotifyRiskQuizResults_Notification_RiskQuizResults location */
-    location?: (boolean|null);
-
-    /** CAuthentication_NotifyRiskQuizResults_Notification_RiskQuizResults action */
-    action?: (boolean|null);
-}
-
-/** Represents a CAuthentication_NotifyRiskQuizResults_Notification_RiskQuizResults. */
-export class CAuthentication_NotifyRiskQuizResults_Notification_RiskQuizResults implements ICAuthentication_NotifyRiskQuizResults_Notification_RiskQuizResults {
-
-    /**
-     * Constructs a new CAuthentication_NotifyRiskQuizResults_Notification_RiskQuizResults.
-     * @param [properties] Properties to set
-     */
-    constructor(properties?: ICAuthentication_NotifyRiskQuizResults_Notification_RiskQuizResults);
-
-    /** CAuthentication_NotifyRiskQuizResults_Notification_RiskQuizResults platform. */
-    public platform: boolean;
-
-    /** CAuthentication_NotifyRiskQuizResults_Notification_RiskQuizResults location. */
-    public location: boolean;
-
-    /** CAuthentication_NotifyRiskQuizResults_Notification_RiskQuizResults action. */
-    public action: boolean;
-
-    /**
-     * Encodes the specified CAuthentication_NotifyRiskQuizResults_Notification_RiskQuizResults message. Does not implicitly {@link CAuthentication_NotifyRiskQuizResults_Notification_RiskQuizResults.verify|verify} messages.
-     * @param message CAuthentication_NotifyRiskQuizResults_Notification_RiskQuizResults message or plain object to encode
-     * @param [writer] Writer to encode to
-     * @returns Writer
-     */
-    public static encode(message: ICAuthentication_NotifyRiskQuizResults_Notification_RiskQuizResults, writer?: $protobuf.Writer): $protobuf.Writer;
-
-    /**
-     * Decodes a CAuthentication_NotifyRiskQuizResults_Notification_RiskQuizResults message from the specified reader or buffer.
-     * @param reader Reader or buffer to decode from
-     * @param [length] Message length if known beforehand
-     * @returns CAuthentication_NotifyRiskQuizResults_Notification_RiskQuizResults
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CAuthentication_NotifyRiskQuizResults_Notification_RiskQuizResults;
-
-    /**
-     * Gets the default type url for CAuthentication_NotifyRiskQuizResults_Notification_RiskQuizResults
-     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-     * @returns The default type url
-     */
-    public static getTypeUrl(typeUrlPrefix?: string): string;
-}
-
 /** Properties of a CBilling_Address. */
 export interface ICBilling_Address {
 
@@ -2247,102 +2313,6 @@ export class CBilling_Address implements ICBilling_Address {
 
     /**
      * Gets the default type url for CBilling_Address
-     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-     * @returns The default type url
-     */
-    public static getTypeUrl(typeUrlPrefix?: string): string;
-}
-
-/** Properties of a CBroadcast_NotifyBroadcastSessionHeartbeat_Notification. */
-export interface ICBroadcast_NotifyBroadcastSessionHeartbeat_Notification {
-
-    /** CBroadcast_NotifyBroadcastSessionHeartbeat_Notification broadcastId */
-    broadcastId?: (number|Long|null);
-}
-
-/** Represents a CBroadcast_NotifyBroadcastSessionHeartbeat_Notification. */
-export class CBroadcast_NotifyBroadcastSessionHeartbeat_Notification implements ICBroadcast_NotifyBroadcastSessionHeartbeat_Notification {
-
-    /**
-     * Constructs a new CBroadcast_NotifyBroadcastSessionHeartbeat_Notification.
-     * @param [properties] Properties to set
-     */
-    constructor(properties?: ICBroadcast_NotifyBroadcastSessionHeartbeat_Notification);
-
-    /** CBroadcast_NotifyBroadcastSessionHeartbeat_Notification broadcastId. */
-    public broadcastId: (number|Long);
-
-    /**
-     * Encodes the specified CBroadcast_NotifyBroadcastSessionHeartbeat_Notification message. Does not implicitly {@link CBroadcast_NotifyBroadcastSessionHeartbeat_Notification.verify|verify} messages.
-     * @param message CBroadcast_NotifyBroadcastSessionHeartbeat_Notification message or plain object to encode
-     * @param [writer] Writer to encode to
-     * @returns Writer
-     */
-    public static encode(message: ICBroadcast_NotifyBroadcastSessionHeartbeat_Notification, writer?: $protobuf.Writer): $protobuf.Writer;
-
-    /**
-     * Decodes a CBroadcast_NotifyBroadcastSessionHeartbeat_Notification message from the specified reader or buffer.
-     * @param reader Reader or buffer to decode from
-     * @param [length] Message length if known beforehand
-     * @returns CBroadcast_NotifyBroadcastSessionHeartbeat_Notification
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CBroadcast_NotifyBroadcastSessionHeartbeat_Notification;
-
-    /**
-     * Gets the default type url for CBroadcast_NotifyBroadcastSessionHeartbeat_Notification
-     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-     * @returns The default type url
-     */
-    public static getTypeUrl(typeUrlPrefix?: string): string;
-}
-
-/** Properties of a CBroadcast_NotifyBroadcastUploadStop_Notification. */
-export interface ICBroadcast_NotifyBroadcastUploadStop_Notification {
-
-    /** CBroadcast_NotifyBroadcastUploadStop_Notification broadcastUploadId */
-    broadcastUploadId?: (number|Long|null);
-
-    /** CBroadcast_NotifyBroadcastUploadStop_Notification uploadResult */
-    uploadResult?: (number|null);
-}
-
-/** Represents a CBroadcast_NotifyBroadcastUploadStop_Notification. */
-export class CBroadcast_NotifyBroadcastUploadStop_Notification implements ICBroadcast_NotifyBroadcastUploadStop_Notification {
-
-    /**
-     * Constructs a new CBroadcast_NotifyBroadcastUploadStop_Notification.
-     * @param [properties] Properties to set
-     */
-    constructor(properties?: ICBroadcast_NotifyBroadcastUploadStop_Notification);
-
-    /** CBroadcast_NotifyBroadcastUploadStop_Notification broadcastUploadId. */
-    public broadcastUploadId: (number|Long);
-
-    /** CBroadcast_NotifyBroadcastUploadStop_Notification uploadResult. */
-    public uploadResult: number;
-
-    /**
-     * Encodes the specified CBroadcast_NotifyBroadcastUploadStop_Notification message. Does not implicitly {@link CBroadcast_NotifyBroadcastUploadStop_Notification.verify|verify} messages.
-     * @param message CBroadcast_NotifyBroadcastUploadStop_Notification message or plain object to encode
-     * @param [writer] Writer to encode to
-     * @returns Writer
-     */
-    public static encode(message: ICBroadcast_NotifyBroadcastUploadStop_Notification, writer?: $protobuf.Writer): $protobuf.Writer;
-
-    /**
-     * Decodes a CBroadcast_NotifyBroadcastUploadStop_Notification message from the specified reader or buffer.
-     * @param reader Reader or buffer to decode from
-     * @param [length] Message length if known beforehand
-     * @returns CBroadcast_NotifyBroadcastUploadStop_Notification
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CBroadcast_NotifyBroadcastUploadStop_Notification;
-
-    /**
-     * Gets the default type url for CBroadcast_NotifyBroadcastUploadStop_Notification
      * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
      * @returns The default type url
      */
@@ -4326,6 +4296,150 @@ export class CClientMetrics_EndGameRecording_Notification implements ICClientMet
     public static getTypeUrl(typeUrlPrefix?: string): string;
 }
 
+/** Properties of a CClientMetrics_GamePerformance_Notification. */
+export interface ICClientMetrics_GamePerformance_Notification {
+
+    /** CClientMetrics_GamePerformance_Notification reports */
+    reports?: (ICClientMetrics_GamePerformance_Notification_FrameRateReport[]|null);
+}
+
+/** Represents a CClientMetrics_GamePerformance_Notification. */
+export class CClientMetrics_GamePerformance_Notification implements ICClientMetrics_GamePerformance_Notification {
+
+    /**
+     * Constructs a new CClientMetrics_GamePerformance_Notification.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICClientMetrics_GamePerformance_Notification);
+
+    /** CClientMetrics_GamePerformance_Notification reports. */
+    public reports: ICClientMetrics_GamePerformance_Notification_FrameRateReport[];
+
+    /**
+     * Encodes the specified CClientMetrics_GamePerformance_Notification message. Does not implicitly {@link CClientMetrics_GamePerformance_Notification.verify|verify} messages.
+     * @param message CClientMetrics_GamePerformance_Notification message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICClientMetrics_GamePerformance_Notification, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CClientMetrics_GamePerformance_Notification message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CClientMetrics_GamePerformance_Notification
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CClientMetrics_GamePerformance_Notification;
+
+    /**
+     * Gets the default type url for CClientMetrics_GamePerformance_Notification
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CClientMetrics_GamePerformance_Notification_FrameRateReport. */
+export interface ICClientMetrics_GamePerformance_Notification_FrameRateReport {
+
+    /** CClientMetrics_GamePerformance_Notification_FrameRateReport gameid */
+    gameid?: (number|Long|null);
+
+    /** CClientMetrics_GamePerformance_Notification_FrameRateReport frameRate */
+    frameRate?: (number|null);
+
+    /** CClientMetrics_GamePerformance_Notification_FrameRateReport manufacturer */
+    manufacturer?: (string|null);
+
+    /** CClientMetrics_GamePerformance_Notification_FrameRateReport model */
+    model?: (string|null);
+
+    /** CClientMetrics_GamePerformance_Notification_FrameRateReport dxVideoCard */
+    dxVideoCard?: (string|null);
+
+    /** CClientMetrics_GamePerformance_Notification_FrameRateReport dxVendorid */
+    dxVendorid?: (number|null);
+
+    /** CClientMetrics_GamePerformance_Notification_FrameRateReport dxDeviceid */
+    dxDeviceid?: (number|null);
+
+    /** CClientMetrics_GamePerformance_Notification_FrameRateReport numGpu */
+    numGpu?: (number|null);
+
+    /** CClientMetrics_GamePerformance_Notification_FrameRateReport systemRam */
+    systemRam?: (number|Long|null);
+
+    /** CClientMetrics_GamePerformance_Notification_FrameRateReport sessionSeconds */
+    sessionSeconds?: (number|null);
+}
+
+/** Represents a CClientMetrics_GamePerformance_Notification_FrameRateReport. */
+export class CClientMetrics_GamePerformance_Notification_FrameRateReport implements ICClientMetrics_GamePerformance_Notification_FrameRateReport {
+
+    /**
+     * Constructs a new CClientMetrics_GamePerformance_Notification_FrameRateReport.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICClientMetrics_GamePerformance_Notification_FrameRateReport);
+
+    /** CClientMetrics_GamePerformance_Notification_FrameRateReport gameid. */
+    public gameid: (number|Long);
+
+    /** CClientMetrics_GamePerformance_Notification_FrameRateReport frameRate. */
+    public frameRate: number;
+
+    /** CClientMetrics_GamePerformance_Notification_FrameRateReport manufacturer. */
+    public manufacturer: string;
+
+    /** CClientMetrics_GamePerformance_Notification_FrameRateReport model. */
+    public model: string;
+
+    /** CClientMetrics_GamePerformance_Notification_FrameRateReport dxVideoCard. */
+    public dxVideoCard: string;
+
+    /** CClientMetrics_GamePerformance_Notification_FrameRateReport dxVendorid. */
+    public dxVendorid: number;
+
+    /** CClientMetrics_GamePerformance_Notification_FrameRateReport dxDeviceid. */
+    public dxDeviceid: number;
+
+    /** CClientMetrics_GamePerformance_Notification_FrameRateReport numGpu. */
+    public numGpu: number;
+
+    /** CClientMetrics_GamePerformance_Notification_FrameRateReport systemRam. */
+    public systemRam: (number|Long);
+
+    /** CClientMetrics_GamePerformance_Notification_FrameRateReport sessionSeconds. */
+    public sessionSeconds: number;
+
+    /**
+     * Encodes the specified CClientMetrics_GamePerformance_Notification_FrameRateReport message. Does not implicitly {@link CClientMetrics_GamePerformance_Notification_FrameRateReport.verify|verify} messages.
+     * @param message CClientMetrics_GamePerformance_Notification_FrameRateReport message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICClientMetrics_GamePerformance_Notification_FrameRateReport, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CClientMetrics_GamePerformance_Notification_FrameRateReport message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CClientMetrics_GamePerformance_Notification_FrameRateReport
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CClientMetrics_GamePerformance_Notification_FrameRateReport;
+
+    /**
+     * Gets the default type url for CClientMetrics_GamePerformance_Notification_FrameRateReport
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
 /** Properties of a CClientMetrics_IPv6Connectivity_Notification. */
 export interface ICClientMetrics_IPv6Connectivity_Notification {
 
@@ -4428,327 +4542,6 @@ export class CClientMetrics_IPv6Connectivity_Result implements ICClientMetrics_I
 
     /**
      * Gets the default type url for CClientMetrics_IPv6Connectivity_Result
-     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-     * @returns The default type url
-     */
-    public static getTypeUrl(typeUrlPrefix?: string): string;
-}
-
-/** Properties of a CClientMetrics_ReportClientArgs_Notification. */
-export interface ICClientMetrics_ReportClientArgs_Notification {
-
-    /** CClientMetrics_ReportClientArgs_Notification clientArgs */
-    clientArgs?: (string[]|null);
-
-    /** CClientMetrics_ReportClientArgs_Notification gpuWebviewRegkeyDisabled */
-    gpuWebviewRegkeyDisabled?: (boolean|null);
-
-    /** CClientMetrics_ReportClientArgs_Notification suppressGpuChrome */
-    suppressGpuChrome?: (boolean|null);
-
-    /** CClientMetrics_ReportClientArgs_Notification browserNotSupported */
-    browserNotSupported?: (boolean|null);
-
-    /** CClientMetrics_ReportClientArgs_Notification hwAccelVideoRegkeyDisabled */
-    hwAccelVideoRegkeyDisabled?: (boolean|null);
-
-    /** CClientMetrics_ReportClientArgs_Notification miniModeEnabled */
-    miniModeEnabled?: (boolean|null);
-
-    /** CClientMetrics_ReportClientArgs_Notification fpsCounterEnabled */
-    fpsCounterEnabled?: (boolean|null);
-
-    /** CClientMetrics_ReportClientArgs_Notification libraryLowBandwidthModeEnabled */
-    libraryLowBandwidthModeEnabled?: (boolean|null);
-
-    /** CClientMetrics_ReportClientArgs_Notification libraryLowPerfModeEnabled */
-    libraryLowPerfModeEnabled?: (boolean|null);
-
-    /** CClientMetrics_ReportClientArgs_Notification grMode */
-    grMode?: (number|null);
-}
-
-/** Represents a CClientMetrics_ReportClientArgs_Notification. */
-export class CClientMetrics_ReportClientArgs_Notification implements ICClientMetrics_ReportClientArgs_Notification {
-
-    /**
-     * Constructs a new CClientMetrics_ReportClientArgs_Notification.
-     * @param [properties] Properties to set
-     */
-    constructor(properties?: ICClientMetrics_ReportClientArgs_Notification);
-
-    /** CClientMetrics_ReportClientArgs_Notification clientArgs. */
-    public clientArgs: string[];
-
-    /** CClientMetrics_ReportClientArgs_Notification gpuWebviewRegkeyDisabled. */
-    public gpuWebviewRegkeyDisabled: boolean;
-
-    /** CClientMetrics_ReportClientArgs_Notification suppressGpuChrome. */
-    public suppressGpuChrome: boolean;
-
-    /** CClientMetrics_ReportClientArgs_Notification browserNotSupported. */
-    public browserNotSupported: boolean;
-
-    /** CClientMetrics_ReportClientArgs_Notification hwAccelVideoRegkeyDisabled. */
-    public hwAccelVideoRegkeyDisabled: boolean;
-
-    /** CClientMetrics_ReportClientArgs_Notification miniModeEnabled. */
-    public miniModeEnabled: boolean;
-
-    /** CClientMetrics_ReportClientArgs_Notification fpsCounterEnabled. */
-    public fpsCounterEnabled: boolean;
-
-    /** CClientMetrics_ReportClientArgs_Notification libraryLowBandwidthModeEnabled. */
-    public libraryLowBandwidthModeEnabled: boolean;
-
-    /** CClientMetrics_ReportClientArgs_Notification libraryLowPerfModeEnabled. */
-    public libraryLowPerfModeEnabled: boolean;
-
-    /** CClientMetrics_ReportClientArgs_Notification grMode. */
-    public grMode: number;
-
-    /**
-     * Encodes the specified CClientMetrics_ReportClientArgs_Notification message. Does not implicitly {@link CClientMetrics_ReportClientArgs_Notification.verify|verify} messages.
-     * @param message CClientMetrics_ReportClientArgs_Notification message or plain object to encode
-     * @param [writer] Writer to encode to
-     * @returns Writer
-     */
-    public static encode(message: ICClientMetrics_ReportClientArgs_Notification, writer?: $protobuf.Writer): $protobuf.Writer;
-
-    /**
-     * Decodes a CClientMetrics_ReportClientArgs_Notification message from the specified reader or buffer.
-     * @param reader Reader or buffer to decode from
-     * @param [length] Message length if known beforehand
-     * @returns CClientMetrics_ReportClientArgs_Notification
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CClientMetrics_ReportClientArgs_Notification;
-
-    /**
-     * Gets the default type url for CClientMetrics_ReportClientArgs_Notification
-     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-     * @returns The default type url
-     */
-    public static getTypeUrl(typeUrlPrefix?: string): string;
-}
-
-/** Properties of a CClientMetrics_ReportReactUsage_Notification. */
-export interface ICClientMetrics_ReportReactUsage_Notification {
-
-    /** CClientMetrics_ReportReactUsage_Notification product */
-    product?: (string|null);
-
-    /** CClientMetrics_ReportReactUsage_Notification version */
-    version?: (string|null);
-
-    /** CClientMetrics_ReportReactUsage_Notification routes */
-    routes?: (ICClientMetrics_ReportReactUsage_Notification_RouteData[]|null);
-
-    /** CClientMetrics_ReportReactUsage_Notification components */
-    components?: (ICClientMetrics_ReportReactUsage_Notification_ComponentData[]|null);
-
-    /** CClientMetrics_ReportReactUsage_Notification actions */
-    actions?: (ICClientMetrics_ReportReactUsage_Notification_ActionData[]|null);
-}
-
-/** Represents a CClientMetrics_ReportReactUsage_Notification. */
-export class CClientMetrics_ReportReactUsage_Notification implements ICClientMetrics_ReportReactUsage_Notification {
-
-    /**
-     * Constructs a new CClientMetrics_ReportReactUsage_Notification.
-     * @param [properties] Properties to set
-     */
-    constructor(properties?: ICClientMetrics_ReportReactUsage_Notification);
-
-    /** CClientMetrics_ReportReactUsage_Notification product. */
-    public product: string;
-
-    /** CClientMetrics_ReportReactUsage_Notification version. */
-    public version: string;
-
-    /** CClientMetrics_ReportReactUsage_Notification routes. */
-    public routes: ICClientMetrics_ReportReactUsage_Notification_RouteData[];
-
-    /** CClientMetrics_ReportReactUsage_Notification components. */
-    public components: ICClientMetrics_ReportReactUsage_Notification_ComponentData[];
-
-    /** CClientMetrics_ReportReactUsage_Notification actions. */
-    public actions: ICClientMetrics_ReportReactUsage_Notification_ActionData[];
-
-    /**
-     * Encodes the specified CClientMetrics_ReportReactUsage_Notification message. Does not implicitly {@link CClientMetrics_ReportReactUsage_Notification.verify|verify} messages.
-     * @param message CClientMetrics_ReportReactUsage_Notification message or plain object to encode
-     * @param [writer] Writer to encode to
-     * @returns Writer
-     */
-    public static encode(message: ICClientMetrics_ReportReactUsage_Notification, writer?: $protobuf.Writer): $protobuf.Writer;
-
-    /**
-     * Decodes a CClientMetrics_ReportReactUsage_Notification message from the specified reader or buffer.
-     * @param reader Reader or buffer to decode from
-     * @param [length] Message length if known beforehand
-     * @returns CClientMetrics_ReportReactUsage_Notification
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CClientMetrics_ReportReactUsage_Notification;
-
-    /**
-     * Gets the default type url for CClientMetrics_ReportReactUsage_Notification
-     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-     * @returns The default type url
-     */
-    public static getTypeUrl(typeUrlPrefix?: string): string;
-}
-
-/** Properties of a CClientMetrics_ReportReactUsage_Notification_ActionData. */
-export interface ICClientMetrics_ReportReactUsage_Notification_ActionData {
-
-    /** CClientMetrics_ReportReactUsage_Notification_ActionData action */
-    action?: (string|null);
-
-    /** CClientMetrics_ReportReactUsage_Notification_ActionData count */
-    count?: (number|null);
-}
-
-/** Represents a CClientMetrics_ReportReactUsage_Notification_ActionData. */
-export class CClientMetrics_ReportReactUsage_Notification_ActionData implements ICClientMetrics_ReportReactUsage_Notification_ActionData {
-
-    /**
-     * Constructs a new CClientMetrics_ReportReactUsage_Notification_ActionData.
-     * @param [properties] Properties to set
-     */
-    constructor(properties?: ICClientMetrics_ReportReactUsage_Notification_ActionData);
-
-    /** CClientMetrics_ReportReactUsage_Notification_ActionData action. */
-    public action: string;
-
-    /** CClientMetrics_ReportReactUsage_Notification_ActionData count. */
-    public count: number;
-
-    /**
-     * Encodes the specified CClientMetrics_ReportReactUsage_Notification_ActionData message. Does not implicitly {@link CClientMetrics_ReportReactUsage_Notification_ActionData.verify|verify} messages.
-     * @param message CClientMetrics_ReportReactUsage_Notification_ActionData message or plain object to encode
-     * @param [writer] Writer to encode to
-     * @returns Writer
-     */
-    public static encode(message: ICClientMetrics_ReportReactUsage_Notification_ActionData, writer?: $protobuf.Writer): $protobuf.Writer;
-
-    /**
-     * Decodes a CClientMetrics_ReportReactUsage_Notification_ActionData message from the specified reader or buffer.
-     * @param reader Reader or buffer to decode from
-     * @param [length] Message length if known beforehand
-     * @returns CClientMetrics_ReportReactUsage_Notification_ActionData
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CClientMetrics_ReportReactUsage_Notification_ActionData;
-
-    /**
-     * Gets the default type url for CClientMetrics_ReportReactUsage_Notification_ActionData
-     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-     * @returns The default type url
-     */
-    public static getTypeUrl(typeUrlPrefix?: string): string;
-}
-
-/** Properties of a CClientMetrics_ReportReactUsage_Notification_ComponentData. */
-export interface ICClientMetrics_ReportReactUsage_Notification_ComponentData {
-
-    /** CClientMetrics_ReportReactUsage_Notification_ComponentData component */
-    component?: (string|null);
-
-    /** CClientMetrics_ReportReactUsage_Notification_ComponentData count */
-    count?: (number|null);
-}
-
-/** Represents a CClientMetrics_ReportReactUsage_Notification_ComponentData. */
-export class CClientMetrics_ReportReactUsage_Notification_ComponentData implements ICClientMetrics_ReportReactUsage_Notification_ComponentData {
-
-    /**
-     * Constructs a new CClientMetrics_ReportReactUsage_Notification_ComponentData.
-     * @param [properties] Properties to set
-     */
-    constructor(properties?: ICClientMetrics_ReportReactUsage_Notification_ComponentData);
-
-    /** CClientMetrics_ReportReactUsage_Notification_ComponentData component. */
-    public component: string;
-
-    /** CClientMetrics_ReportReactUsage_Notification_ComponentData count. */
-    public count: number;
-
-    /**
-     * Encodes the specified CClientMetrics_ReportReactUsage_Notification_ComponentData message. Does not implicitly {@link CClientMetrics_ReportReactUsage_Notification_ComponentData.verify|verify} messages.
-     * @param message CClientMetrics_ReportReactUsage_Notification_ComponentData message or plain object to encode
-     * @param [writer] Writer to encode to
-     * @returns Writer
-     */
-    public static encode(message: ICClientMetrics_ReportReactUsage_Notification_ComponentData, writer?: $protobuf.Writer): $protobuf.Writer;
-
-    /**
-     * Decodes a CClientMetrics_ReportReactUsage_Notification_ComponentData message from the specified reader or buffer.
-     * @param reader Reader or buffer to decode from
-     * @param [length] Message length if known beforehand
-     * @returns CClientMetrics_ReportReactUsage_Notification_ComponentData
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CClientMetrics_ReportReactUsage_Notification_ComponentData;
-
-    /**
-     * Gets the default type url for CClientMetrics_ReportReactUsage_Notification_ComponentData
-     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-     * @returns The default type url
-     */
-    public static getTypeUrl(typeUrlPrefix?: string): string;
-}
-
-/** Properties of a CClientMetrics_ReportReactUsage_Notification_RouteData. */
-export interface ICClientMetrics_ReportReactUsage_Notification_RouteData {
-
-    /** CClientMetrics_ReportReactUsage_Notification_RouteData route */
-    route?: (string|null);
-
-    /** CClientMetrics_ReportReactUsage_Notification_RouteData count */
-    count?: (number|null);
-}
-
-/** Represents a CClientMetrics_ReportReactUsage_Notification_RouteData. */
-export class CClientMetrics_ReportReactUsage_Notification_RouteData implements ICClientMetrics_ReportReactUsage_Notification_RouteData {
-
-    /**
-     * Constructs a new CClientMetrics_ReportReactUsage_Notification_RouteData.
-     * @param [properties] Properties to set
-     */
-    constructor(properties?: ICClientMetrics_ReportReactUsage_Notification_RouteData);
-
-    /** CClientMetrics_ReportReactUsage_Notification_RouteData route. */
-    public route: string;
-
-    /** CClientMetrics_ReportReactUsage_Notification_RouteData count. */
-    public count: number;
-
-    /**
-     * Encodes the specified CClientMetrics_ReportReactUsage_Notification_RouteData message. Does not implicitly {@link CClientMetrics_ReportReactUsage_Notification_RouteData.verify|verify} messages.
-     * @param message CClientMetrics_ReportReactUsage_Notification_RouteData message or plain object to encode
-     * @param [writer] Writer to encode to
-     * @returns Writer
-     */
-    public static encode(message: ICClientMetrics_ReportReactUsage_Notification_RouteData, writer?: $protobuf.Writer): $protobuf.Writer;
-
-    /**
-     * Decodes a CClientMetrics_ReportReactUsage_Notification_RouteData message from the specified reader or buffer.
-     * @param reader Reader or buffer to decode from
-     * @param [length] Message length if known beforehand
-     * @returns CClientMetrics_ReportReactUsage_Notification_RouteData
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CClientMetrics_ReportReactUsage_Notification_RouteData;
-
-    /**
-     * Gets the default type url for CClientMetrics_ReportReactUsage_Notification_RouteData
      * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
      * @returns The default type url
      */
@@ -5364,102 +5157,6 @@ export class CClientNotificationDownloadCompleted implements ICClientNotificatio
 
     /**
      * Gets the default type url for CClientNotificationDownloadCompleted
-     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-     * @returns The default type url
-     */
-    public static getTypeUrl(typeUrlPrefix?: string): string;
-}
-
-/** Properties of a CClientNotificationFamilySharingDeviceAuthorizationChanged. */
-export interface ICClientNotificationFamilySharingDeviceAuthorizationChanged {
-
-    /** CClientNotificationFamilySharingDeviceAuthorizationChanged accountidOwner */
-    accountidOwner?: (number|null);
-
-    /** CClientNotificationFamilySharingDeviceAuthorizationChanged authorized */
-    authorized?: (boolean|null);
-}
-
-/** Represents a CClientNotificationFamilySharingDeviceAuthorizationChanged. */
-export class CClientNotificationFamilySharingDeviceAuthorizationChanged implements ICClientNotificationFamilySharingDeviceAuthorizationChanged {
-
-    /**
-     * Constructs a new CClientNotificationFamilySharingDeviceAuthorizationChanged.
-     * @param [properties] Properties to set
-     */
-    constructor(properties?: ICClientNotificationFamilySharingDeviceAuthorizationChanged);
-
-    /** CClientNotificationFamilySharingDeviceAuthorizationChanged accountidOwner. */
-    public accountidOwner: number;
-
-    /** CClientNotificationFamilySharingDeviceAuthorizationChanged authorized. */
-    public authorized: boolean;
-
-    /**
-     * Encodes the specified CClientNotificationFamilySharingDeviceAuthorizationChanged message. Does not implicitly {@link CClientNotificationFamilySharingDeviceAuthorizationChanged.verify|verify} messages.
-     * @param message CClientNotificationFamilySharingDeviceAuthorizationChanged message or plain object to encode
-     * @param [writer] Writer to encode to
-     * @returns Writer
-     */
-    public static encode(message: ICClientNotificationFamilySharingDeviceAuthorizationChanged, writer?: $protobuf.Writer): $protobuf.Writer;
-
-    /**
-     * Decodes a CClientNotificationFamilySharingDeviceAuthorizationChanged message from the specified reader or buffer.
-     * @param reader Reader or buffer to decode from
-     * @param [length] Message length if known beforehand
-     * @returns CClientNotificationFamilySharingDeviceAuthorizationChanged
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CClientNotificationFamilySharingDeviceAuthorizationChanged;
-
-    /**
-     * Gets the default type url for CClientNotificationFamilySharingDeviceAuthorizationChanged
-     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-     * @returns The default type url
-     */
-    public static getTypeUrl(typeUrlPrefix?: string): string;
-}
-
-/** Properties of a CClientNotificationFamilySharingLibraryAvailable. */
-export interface ICClientNotificationFamilySharingLibraryAvailable {
-
-    /** CClientNotificationFamilySharingLibraryAvailable accountidOwner */
-    accountidOwner?: (number|null);
-}
-
-/** Represents a CClientNotificationFamilySharingLibraryAvailable. */
-export class CClientNotificationFamilySharingLibraryAvailable implements ICClientNotificationFamilySharingLibraryAvailable {
-
-    /**
-     * Constructs a new CClientNotificationFamilySharingLibraryAvailable.
-     * @param [properties] Properties to set
-     */
-    constructor(properties?: ICClientNotificationFamilySharingLibraryAvailable);
-
-    /** CClientNotificationFamilySharingLibraryAvailable accountidOwner. */
-    public accountidOwner: number;
-
-    /**
-     * Encodes the specified CClientNotificationFamilySharingLibraryAvailable message. Does not implicitly {@link CClientNotificationFamilySharingLibraryAvailable.verify|verify} messages.
-     * @param message CClientNotificationFamilySharingLibraryAvailable message or plain object to encode
-     * @param [writer] Writer to encode to
-     * @returns Writer
-     */
-    public static encode(message: ICClientNotificationFamilySharingLibraryAvailable, writer?: $protobuf.Writer): $protobuf.Writer;
-
-    /**
-     * Decodes a CClientNotificationFamilySharingLibraryAvailable message from the specified reader or buffer.
-     * @param reader Reader or buffer to decode from
-     * @param [length] Message length if known beforehand
-     * @returns CClientNotificationFamilySharingLibraryAvailable
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CClientNotificationFamilySharingLibraryAvailable;
-
-    /**
-     * Gets the default type url for CClientNotificationFamilySharingLibraryAvailable
      * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
      * @returns The default type url
      */
@@ -6867,6 +6564,69 @@ export class CClientNotificationTimerExpired implements ICClientNotificationTime
     public static getTypeUrl(typeUrlPrefix?: string): string;
 }
 
+/** Properties of a CCloud_AppExitSyncDone_Notification. */
+export interface ICCloud_AppExitSyncDone_Notification {
+
+    /** CCloud_AppExitSyncDone_Notification appid */
+    appid?: (number|null);
+
+    /** CCloud_AppExitSyncDone_Notification clientId */
+    clientId?: (number|Long|null);
+
+    /** CCloud_AppExitSyncDone_Notification uploadsCompleted */
+    uploadsCompleted?: (boolean|null);
+
+    /** CCloud_AppExitSyncDone_Notification uploadsRequired */
+    uploadsRequired?: (boolean|null);
+}
+
+/** Represents a CCloud_AppExitSyncDone_Notification. */
+export class CCloud_AppExitSyncDone_Notification implements ICCloud_AppExitSyncDone_Notification {
+
+    /**
+     * Constructs a new CCloud_AppExitSyncDone_Notification.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICCloud_AppExitSyncDone_Notification);
+
+    /** CCloud_AppExitSyncDone_Notification appid. */
+    public appid: number;
+
+    /** CCloud_AppExitSyncDone_Notification clientId. */
+    public clientId: (number|Long);
+
+    /** CCloud_AppExitSyncDone_Notification uploadsCompleted. */
+    public uploadsCompleted: boolean;
+
+    /** CCloud_AppExitSyncDone_Notification uploadsRequired. */
+    public uploadsRequired: boolean;
+
+    /**
+     * Encodes the specified CCloud_AppExitSyncDone_Notification message. Does not implicitly {@link CCloud_AppExitSyncDone_Notification.verify|verify} messages.
+     * @param message CCloud_AppExitSyncDone_Notification message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICCloud_AppExitSyncDone_Notification, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CCloud_AppExitSyncDone_Notification message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CCloud_AppExitSyncDone_Notification
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CCloud_AppExitSyncDone_Notification;
+
+    /**
+     * Gets the default type url for CCloud_AppExitSyncDone_Notification
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
 /** Properties of a CCloud_PendingRemoteOperation. */
 export interface ICCloud_PendingRemoteOperation {
 
@@ -7785,63 +7545,6 @@ export class CLocalizationToken implements ICLocalizationToken {
 
     /**
      * Gets the default type url for CLocalizationToken
-     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-     * @returns The default type url
-     */
-    public static getTypeUrl(typeUrlPrefix?: string): string;
-}
-
-/** Properties of a CMarketingMessages_MarkMessageSeen_Notification. */
-export interface ICMarketingMessages_MarkMessageSeen_Notification {
-
-    /** CMarketingMessages_MarkMessageSeen_Notification gid */
-    gid?: (number|Long|null);
-
-    /** CMarketingMessages_MarkMessageSeen_Notification displayIndex */
-    displayIndex?: (number|null);
-
-    /** CMarketingMessages_MarkMessageSeen_Notification templateType */
-    templateType?: (number|null);
-}
-
-/** Represents a CMarketingMessages_MarkMessageSeen_Notification. */
-export class CMarketingMessages_MarkMessageSeen_Notification implements ICMarketingMessages_MarkMessageSeen_Notification {
-
-    /**
-     * Constructs a new CMarketingMessages_MarkMessageSeen_Notification.
-     * @param [properties] Properties to set
-     */
-    constructor(properties?: ICMarketingMessages_MarkMessageSeen_Notification);
-
-    /** CMarketingMessages_MarkMessageSeen_Notification gid. */
-    public gid: (number|Long);
-
-    /** CMarketingMessages_MarkMessageSeen_Notification displayIndex. */
-    public displayIndex: number;
-
-    /** CMarketingMessages_MarkMessageSeen_Notification templateType. */
-    public templateType: number;
-
-    /**
-     * Encodes the specified CMarketingMessages_MarkMessageSeen_Notification message. Does not implicitly {@link CMarketingMessages_MarkMessageSeen_Notification.verify|verify} messages.
-     * @param message CMarketingMessages_MarkMessageSeen_Notification message or plain object to encode
-     * @param [writer] Writer to encode to
-     * @returns Writer
-     */
-    public static encode(message: ICMarketingMessages_MarkMessageSeen_Notification, writer?: $protobuf.Writer): $protobuf.Writer;
-
-    /**
-     * Decodes a CMarketingMessages_MarkMessageSeen_Notification message from the specified reader or buffer.
-     * @param reader Reader or buffer to decode from
-     * @param [length] Message length if known beforehand
-     * @returns CMarketingMessages_MarkMessageSeen_Notification
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CMarketingMessages_MarkMessageSeen_Notification;
-
-    /**
-     * Gets the default type url for CMarketingMessages_MarkMessageSeen_Notification
      * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
      * @returns The default type url
      */
@@ -19541,6 +19244,9 @@ export interface ICMsgClientPersonaState_Friend {
 
     /** CMsgClientPersonaState_Friend onSteamDeck */
     onSteamDeck?: (boolean|null);
+
+    /** CMsgClientPersonaState_Friend otherGameData */
+    otherGameData?: (ICMsgClientPersonaState_Friend_OtherGameData[]|null);
 }
 
 /** Represents a CMsgClientPersonaState_Friend. */
@@ -19647,6 +19353,9 @@ export class CMsgClientPersonaState_Friend implements ICMsgClientPersonaState_Fr
 
     /** CMsgClientPersonaState_Friend onSteamDeck. */
     public onSteamDeck: boolean;
+
+    /** CMsgClientPersonaState_Friend otherGameData. */
+    public otherGameData: ICMsgClientPersonaState_Friend_OtherGameData[];
 
     /**
      * Encodes the specified CMsgClientPersonaState_Friend message. Does not implicitly {@link CMsgClientPersonaState_Friend.verify|verify} messages.
@@ -19770,6 +19479,57 @@ export class CMsgClientPersonaState_Friend_KV implements ICMsgClientPersonaState
 
     /**
      * Gets the default type url for CMsgClientPersonaState_Friend_KV
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CMsgClientPersonaState_Friend_OtherGameData. */
+export interface ICMsgClientPersonaState_Friend_OtherGameData {
+
+    /** CMsgClientPersonaState_Friend_OtherGameData gameid */
+    gameid?: (number|Long|null);
+
+    /** CMsgClientPersonaState_Friend_OtherGameData richPresence */
+    richPresence?: (ICMsgClientPersonaState_Friend_KV[]|null);
+}
+
+/** Represents a CMsgClientPersonaState_Friend_OtherGameData. */
+export class CMsgClientPersonaState_Friend_OtherGameData implements ICMsgClientPersonaState_Friend_OtherGameData {
+
+    /**
+     * Constructs a new CMsgClientPersonaState_Friend_OtherGameData.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICMsgClientPersonaState_Friend_OtherGameData);
+
+    /** CMsgClientPersonaState_Friend_OtherGameData gameid. */
+    public gameid: (number|Long);
+
+    /** CMsgClientPersonaState_Friend_OtherGameData richPresence. */
+    public richPresence: ICMsgClientPersonaState_Friend_KV[];
+
+    /**
+     * Encodes the specified CMsgClientPersonaState_Friend_OtherGameData message. Does not implicitly {@link CMsgClientPersonaState_Friend_OtherGameData.verify|verify} messages.
+     * @param message CMsgClientPersonaState_Friend_OtherGameData message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICMsgClientPersonaState_Friend_OtherGameData, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CMsgClientPersonaState_Friend_OtherGameData message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CMsgClientPersonaState_Friend_OtherGameData
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CMsgClientPersonaState_Friend_OtherGameData;
+
+    /**
+     * Gets the default type url for CMsgClientPersonaState_Friend_OtherGameData
      * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
      * @returns The default type url
      */
@@ -23976,6 +23736,9 @@ export interface ICMsgClientSettings {
     /** CMsgClientSettings downloadThrottleRate */
     downloadThrottleRate?: (number|null);
 
+    /** CMsgClientSettings defaultAppUpdateBehavior */
+    defaultAppUpdateBehavior?: (number|null);
+
     /** CMsgClientSettings cloudEnabled */
     cloudEnabled?: (boolean|null);
 
@@ -24219,6 +23982,18 @@ export interface ICMsgClientSettings {
     /** CMsgClientSettings gamescopeGameResolutionGlobal */
     gamescopeGameResolutionGlobal?: (string|null);
 
+    /** CMsgClientSettings gamescopeGuideHotkey */
+    gamescopeGuideHotkey?: (ICMsgHotkey|null);
+
+    /** CMsgClientSettings gamescopeQamHotkey */
+    gamescopeQamHotkey?: (ICMsgHotkey|null);
+
+    /** CMsgClientSettings gamescopeHdrEnabled */
+    gamescopeHdrEnabled?: (boolean|null);
+
+    /** CMsgClientSettings gamescopeNativeExternalResInSteam */
+    gamescopeNativeExternalResInSteam?: (boolean|null);
+
     /** CMsgClientSettings steamosStatusLedBrightness */
     steamosStatusLedBrightness?: (number|null);
 
@@ -24243,6 +24018,24 @@ export interface ICMsgClientSettings {
     /** CMsgClientSettings steamosMagnifierScale */
     steamosMagnifierScale?: (number|null);
 
+    /** CMsgClientSettings steamosManualGpuClockEnabled */
+    steamosManualGpuClockEnabled?: (boolean|null);
+
+    /** CMsgClientSettings steamosManualGpuClockHz */
+    steamosManualGpuClockHz?: (number|null);
+
+    /** CMsgClientSettings steamosPlatformPerformanceProfile */
+    steamosPlatformPerformanceProfile?: (string|null);
+
+    /** CMsgClientSettings steamosChargeLimitEnabled */
+    steamosChargeLimitEnabled?: (boolean|null);
+
+    /** CMsgClientSettings steamosChargeLimit */
+    steamosChargeLimit?: (number|null);
+
+    /** CMsgClientSettings steamosChargeLimitDevmode */
+    steamosChargeLimitDevmode?: (boolean|null);
+
     /** CMsgClientSettings settingValidationBool */
     settingValidationBool?: (boolean|null);
 
@@ -24264,8 +24057,20 @@ export interface ICMsgClientSettings {
     /** CMsgClientSettings settingValidationString */
     settingValidationString?: (string|null);
 
+    /** CMsgClientSettings settingValidationHotkey */
+    settingValidationHotkey?: (ICMsgHotkey|null);
+
     /** CMsgClientSettings systemBluetoothEnabled */
     systemBluetoothEnabled?: (boolean|null);
+
+    /** CMsgClientSettings hardwareUpdaterEnabled */
+    hardwareUpdaterEnabled?: (boolean|null);
+
+    /** CMsgClientSettings vrShowPerfGraphInHmd */
+    vrShowPerfGraphInHmd?: (boolean|null);
+
+    /** CMsgClientSettings accessibilityDebugVisualizer */
+    accessibilityDebugVisualizer?: (boolean|null);
 
     /** CMsgClientSettings controllerEnableChord */
     controllerEnableChord?: (boolean|null);
@@ -24520,6 +24325,9 @@ export class CMsgClientSettings implements ICMsgClientSettings {
     /** CMsgClientSettings downloadThrottleRate. */
     public downloadThrottleRate: number;
 
+    /** CMsgClientSettings defaultAppUpdateBehavior. */
+    public defaultAppUpdateBehavior: number;
+
     /** CMsgClientSettings cloudEnabled. */
     public cloudEnabled: boolean;
 
@@ -24763,6 +24571,18 @@ export class CMsgClientSettings implements ICMsgClientSettings {
     /** CMsgClientSettings gamescopeGameResolutionGlobal. */
     public gamescopeGameResolutionGlobal: string;
 
+    /** CMsgClientSettings gamescopeGuideHotkey. */
+    public gamescopeGuideHotkey?: (ICMsgHotkey|null);
+
+    /** CMsgClientSettings gamescopeQamHotkey. */
+    public gamescopeQamHotkey?: (ICMsgHotkey|null);
+
+    /** CMsgClientSettings gamescopeHdrEnabled. */
+    public gamescopeHdrEnabled: boolean;
+
+    /** CMsgClientSettings gamescopeNativeExternalResInSteam. */
+    public gamescopeNativeExternalResInSteam: boolean;
+
     /** CMsgClientSettings steamosStatusLedBrightness. */
     public steamosStatusLedBrightness: number;
 
@@ -24787,6 +24607,24 @@ export class CMsgClientSettings implements ICMsgClientSettings {
     /** CMsgClientSettings steamosMagnifierScale. */
     public steamosMagnifierScale: number;
 
+    /** CMsgClientSettings steamosManualGpuClockEnabled. */
+    public steamosManualGpuClockEnabled: boolean;
+
+    /** CMsgClientSettings steamosManualGpuClockHz. */
+    public steamosManualGpuClockHz: number;
+
+    /** CMsgClientSettings steamosPlatformPerformanceProfile. */
+    public steamosPlatformPerformanceProfile: string;
+
+    /** CMsgClientSettings steamosChargeLimitEnabled. */
+    public steamosChargeLimitEnabled: boolean;
+
+    /** CMsgClientSettings steamosChargeLimit. */
+    public steamosChargeLimit: number;
+
+    /** CMsgClientSettings steamosChargeLimitDevmode. */
+    public steamosChargeLimitDevmode: boolean;
+
     /** CMsgClientSettings settingValidationBool. */
     public settingValidationBool: boolean;
 
@@ -24808,8 +24646,20 @@ export class CMsgClientSettings implements ICMsgClientSettings {
     /** CMsgClientSettings settingValidationString. */
     public settingValidationString: string;
 
+    /** CMsgClientSettings settingValidationHotkey. */
+    public settingValidationHotkey?: (ICMsgHotkey|null);
+
     /** CMsgClientSettings systemBluetoothEnabled. */
     public systemBluetoothEnabled: boolean;
+
+    /** CMsgClientSettings hardwareUpdaterEnabled. */
+    public hardwareUpdaterEnabled: boolean;
+
+    /** CMsgClientSettings vrShowPerfGraphInHmd. */
+    public vrShowPerfGraphInHmd: boolean;
+
+    /** CMsgClientSettings accessibilityDebugVisualizer. */
+    public accessibilityDebugVisualizer: boolean;
 
     /** CMsgClientSettings controllerEnableChord. */
     public controllerEnableChord: boolean;
@@ -31242,6 +31092,12 @@ export interface ICMsgControllerConfiguration {
     /** CMsgControllerConfiguration controllerType */
     controllerType?: (number|null);
 
+    /** CMsgControllerConfiguration capabilityBits */
+    capabilityBits?: (number|null);
+
+    /** CMsgControllerConfiguration controllerStyle */
+    controllerStyle?: (number|null);
+
     /** CMsgControllerConfiguration sets */
     sets?: (ICMsgGameActionSet[]|null);
 
@@ -31284,6 +31140,12 @@ export class CMsgControllerConfiguration implements ICMsgControllerConfiguration
 
     /** CMsgControllerConfiguration controllerType. */
     public controllerType: number;
+
+    /** CMsgControllerConfiguration capabilityBits. */
+    public capabilityBits: number;
+
+    /** CMsgControllerConfiguration controllerStyle. */
+    public controllerStyle: number;
 
     /** CMsgControllerConfiguration sets. */
     public sets: ICMsgGameActionSet[];
@@ -32459,6 +32321,12 @@ export interface ICMsgControllerMode {
 
     /** CMsgControllerMode modeShift */
     modeShift?: (boolean|null);
+
+    /** CMsgControllerMode referenceModeid */
+    referenceModeid?: (number|null);
+
+    /** CMsgControllerMode modeShiftButtons */
+    modeShiftButtons?: (number[]|null);
 }
 
 /** Represents a CMsgControllerMode. */
@@ -32496,6 +32364,12 @@ export class CMsgControllerMode implements ICMsgControllerMode {
 
     /** CMsgControllerMode modeShift. */
     public modeShift: boolean;
+
+    /** CMsgControllerMode referenceModeid. */
+    public referenceModeid: number;
+
+    /** CMsgControllerMode modeShiftButtons. */
+    public modeShiftButtons: number[];
 
     /**
      * Encodes the specified CMsgControllerMode message. Does not implicitly {@link CMsgControllerMode.verify|verify} messages.
@@ -37175,6 +37049,15 @@ export interface ICMsgProtoBufHeader {
 
     /** CMsgProtoBufHeader excludeClientSessionids */
     excludeClientSessionids?: (number[]|null);
+
+    /** CMsgProtoBufHeader adminRequestSpoofingSteamid */
+    adminRequestSpoofingSteamid?: (number|Long|null);
+
+    /** CMsgProtoBufHeader isValveds */
+    isValveds?: (boolean|null);
+
+    /** CMsgProtoBufHeader traceTag_Field_45 */
+    traceTag_Field_45?: (number|Long|null);
 }
 
 /** Represents a CMsgProtoBufHeader. */
@@ -37290,6 +37173,15 @@ export class CMsgProtoBufHeader implements ICMsgProtoBufHeader {
 
     /** CMsgProtoBufHeader excludeClientSessionids. */
     public excludeClientSessionids: number[];
+
+    /** CMsgProtoBufHeader adminRequestSpoofingSteamid. */
+    public adminRequestSpoofingSteamid: (number|Long);
+
+    /** CMsgProtoBufHeader isValveds. */
+    public isValveds: boolean;
+
+    /** CMsgProtoBufHeader traceTag_Field_45. */
+    public traceTag_Field_45: (number|Long);
 
     /**
      * Encodes the specified CMsgProtoBufHeader message. Does not implicitly {@link CMsgProtoBufHeader.verify|verify} messages.
@@ -37881,8 +37773,8 @@ export interface ICMsgSetModeShiftButton {
     /** CMsgSetModeShiftButton source */
     source?: (number|null);
 
-    /** CMsgSetModeShiftButton digitalIo */
-    digitalIo?: (number|null);
+    /** CMsgSetModeShiftButton modeShiftButtonsDigitalIo */
+    modeShiftButtonsDigitalIo?: (number[]|null);
 }
 
 /** Represents a CMsgSetModeShiftButton. */
@@ -37906,8 +37798,8 @@ export class CMsgSetModeShiftButton implements ICMsgSetModeShiftButton {
     /** CMsgSetModeShiftButton source. */
     public source: number;
 
-    /** CMsgSetModeShiftButton digitalIo. */
-    public digitalIo: number;
+    /** CMsgSetModeShiftButton modeShiftButtonsDigitalIo. */
+    public modeShiftButtonsDigitalIo: number[];
 
     /**
      * Encodes the specified CMsgSetModeShiftButton message. Does not implicitly {@link CMsgSetModeShiftButton.verify|verify} messages.
@@ -39585,14 +39477,14 @@ export interface ICMsgSystemDisplay {
     /** CMsgSystemDisplay isVrrCapable */
     isVrrCapable?: (boolean|null);
 
-    /** CMsgSystemDisplay isVrrEnabled */
-    isVrrEnabled?: (boolean|null);
+    /** CMsgSystemDisplay isVrrOutputActive */
+    isVrrOutputActive?: (boolean|null);
 
     /** CMsgSystemDisplay isHdrCapable */
     isHdrCapable?: (boolean|null);
 
-    /** CMsgSystemDisplay isHdrEnabled */
-    isHdrEnabled?: (boolean|null);
+    /** CMsgSystemDisplay isHdrOutputActive */
+    isHdrOutputActive?: (boolean|null);
 
     /** CMsgSystemDisplay supportedRefreshRates */
     supportedRefreshRates?: (number[]|null);
@@ -39649,14 +39541,14 @@ export class CMsgSystemDisplay implements ICMsgSystemDisplay {
     /** CMsgSystemDisplay isVrrCapable. */
     public isVrrCapable: boolean;
 
-    /** CMsgSystemDisplay isVrrEnabled. */
-    public isVrrEnabled: boolean;
+    /** CMsgSystemDisplay isVrrOutputActive. */
+    public isVrrOutputActive: boolean;
 
     /** CMsgSystemDisplay isHdrCapable. */
     public isHdrCapable: boolean;
 
-    /** CMsgSystemDisplay isHdrEnabled. */
-    public isHdrEnabled: boolean;
+    /** CMsgSystemDisplay isHdrOutputActive. */
+    public isHdrOutputActive: boolean;
 
     /** CMsgSystemDisplay supportedRefreshRates. */
     public supportedRefreshRates: number[];
@@ -40440,15 +40332,6 @@ export interface ICMsgSystemPerfLimits {
     /** CMsgSystemPerfLimits tdpLimitMax */
     tdpLimitMax?: (number|null);
 
-    /** CMsgSystemPerfLimits isNisSupported */
-    isNisSupported?: (boolean|null);
-
-    /** CMsgSystemPerfLimits nisSharpnessMin */
-    nisSharpnessMin?: (number|null);
-
-    /** CMsgSystemPerfLimits nisSharpnessMax */
-    nisSharpnessMax?: (number|null);
-
     /** CMsgSystemPerfLimits displayExternalRefreshManualHzMin */
     displayExternalRefreshManualHzMin?: (number|null);
 
@@ -40464,20 +40347,11 @@ export interface ICMsgSystemPerfLimits {
     /** CMsgSystemPerfLimits isDynamicRefreshRateInSteamSupported */
     isDynamicRefreshRateInSteamSupported?: (boolean|null);
 
-    /** CMsgSystemPerfLimits isSplitScalingAndFilteringSupported */
-    isSplitScalingAndFilteringSupported?: (boolean|null);
-
     /** CMsgSystemPerfLimits splitScalingFiltersAvailable */
     splitScalingFiltersAvailable?: (number[]|null);
 
     /** CMsgSystemPerfLimits splitScalingScalersAvailable */
     splitScalingScalersAvailable?: (number[]|null);
-
-    /** CMsgSystemPerfLimits isHdrSupported */
-    isHdrSupported?: (boolean|null);
-
-    /** CMsgSystemPerfLimits displayRefreshManualHzOcMax */
-    displayRefreshManualHzOcMax?: (number|null);
 
     /** CMsgSystemPerfLimits disableRefreshRateManagement */
     disableRefreshRateManagement?: (boolean|null);
@@ -40537,15 +40411,6 @@ export class CMsgSystemPerfLimits implements ICMsgSystemPerfLimits {
     /** CMsgSystemPerfLimits tdpLimitMax. */
     public tdpLimitMax: number;
 
-    /** CMsgSystemPerfLimits isNisSupported. */
-    public isNisSupported: boolean;
-
-    /** CMsgSystemPerfLimits nisSharpnessMin. */
-    public nisSharpnessMin: number;
-
-    /** CMsgSystemPerfLimits nisSharpnessMax. */
-    public nisSharpnessMax: number;
-
     /** CMsgSystemPerfLimits displayExternalRefreshManualHzMin. */
     public displayExternalRefreshManualHzMin: number;
 
@@ -40561,20 +40426,11 @@ export class CMsgSystemPerfLimits implements ICMsgSystemPerfLimits {
     /** CMsgSystemPerfLimits isDynamicRefreshRateInSteamSupported. */
     public isDynamicRefreshRateInSteamSupported: boolean;
 
-    /** CMsgSystemPerfLimits isSplitScalingAndFilteringSupported. */
-    public isSplitScalingAndFilteringSupported: boolean;
-
     /** CMsgSystemPerfLimits splitScalingFiltersAvailable. */
     public splitScalingFiltersAvailable: number[];
 
     /** CMsgSystemPerfLimits splitScalingScalersAvailable. */
     public splitScalingScalersAvailable: number[];
-
-    /** CMsgSystemPerfLimits isHdrSupported. */
-    public isHdrSupported: boolean;
-
-    /** CMsgSystemPerfLimits displayRefreshManualHzOcMax. */
-    public displayRefreshManualHzOcMax: number;
 
     /** CMsgSystemPerfLimits disableRefreshRateManagement. */
     public disableRefreshRateManagement: boolean;
@@ -40758,9 +40614,6 @@ export interface ICMsgSystemPerfSettingsGlobal {
     /** CMsgSystemPerfSettingsGlobal allowExternalDisplayRefreshControl */
     allowExternalDisplayRefreshControl?: (boolean|null);
 
-    /** CMsgSystemPerfSettingsGlobal isHdrEnabled */
-    isHdrEnabled?: (boolean|null);
-
     /** CMsgSystemPerfSettingsGlobal hdrOnSdrTonemapOperator */
     hdrOnSdrTonemapOperator?: (number|null);
 
@@ -40769,18 +40622,6 @@ export interface ICMsgSystemPerfSettingsGlobal {
 
     /** CMsgSystemPerfSettingsGlobal forceHdrWideGammutForSdr */
     forceHdrWideGammutForSdr?: (boolean|null);
-
-    /** CMsgSystemPerfSettingsGlobal allowExperimentalHdr */
-    allowExperimentalHdr?: (boolean|null);
-
-    /** CMsgSystemPerfSettingsGlobal debugForceHdrSupport */
-    debugForceHdrSupport?: (boolean|null);
-
-    /** CMsgSystemPerfSettingsGlobal forceHdr_10pqOutputDebug */
-    forceHdr_10pqOutputDebug?: (boolean|null);
-
-    /** CMsgSystemPerfSettingsGlobal isDisplayOcEnabled */
-    isDisplayOcEnabled?: (boolean|null);
 
     /** CMsgSystemPerfSettingsGlobal isColorManagementEnabled */
     isColorManagementEnabled?: (boolean|null);
@@ -40822,9 +40663,6 @@ export class CMsgSystemPerfSettingsGlobal implements ICMsgSystemPerfSettingsGlob
     /** CMsgSystemPerfSettingsGlobal allowExternalDisplayRefreshControl. */
     public allowExternalDisplayRefreshControl: boolean;
 
-    /** CMsgSystemPerfSettingsGlobal isHdrEnabled. */
-    public isHdrEnabled: boolean;
-
     /** CMsgSystemPerfSettingsGlobal hdrOnSdrTonemapOperator. */
     public hdrOnSdrTonemapOperator: number;
 
@@ -40833,18 +40671,6 @@ export class CMsgSystemPerfSettingsGlobal implements ICMsgSystemPerfSettingsGlob
 
     /** CMsgSystemPerfSettingsGlobal forceHdrWideGammutForSdr. */
     public forceHdrWideGammutForSdr: boolean;
-
-    /** CMsgSystemPerfSettingsGlobal allowExperimentalHdr. */
-    public allowExperimentalHdr: boolean;
-
-    /** CMsgSystemPerfSettingsGlobal debugForceHdrSupport. */
-    public debugForceHdrSupport: boolean;
-
-    /** CMsgSystemPerfSettingsGlobal forceHdr_10pqOutputDebug. */
-    public forceHdr_10pqOutputDebug: boolean;
-
-    /** CMsgSystemPerfSettingsGlobal isDisplayOcEnabled. */
-    public isDisplayOcEnabled: boolean;
 
     /** CMsgSystemPerfSettingsGlobal isColorManagementEnabled. */
     public isColorManagementEnabled: boolean;
@@ -40926,9 +40752,6 @@ export interface ICMsgSystemPerfSettingsPerApp {
     /** CMsgSystemPerfSettingsPerApp gpuPerformanceLevel */
     gpuPerformanceLevel?: (number|null);
 
-    /** CMsgSystemPerfSettingsPerApp nisSharpness */
-    nisSharpness?: (number|null);
-
     /** CMsgSystemPerfSettingsPerApp displayExternalRefreshManualHz */
     displayExternalRefreshManualHz?: (number|null);
 
@@ -41004,9 +40827,6 @@ export class CMsgSystemPerfSettingsPerApp implements ICMsgSystemPerfSettingsPerA
 
     /** CMsgSystemPerfSettingsPerApp gpuPerformanceLevel. */
     public gpuPerformanceLevel: number;
-
-    /** CMsgSystemPerfSettingsPerApp nisSharpness. */
-    public nisSharpness: number;
 
     /** CMsgSystemPerfSettingsPerApp displayExternalRefreshManualHz. */
     public displayExternalRefreshManualHz: number;
@@ -41781,57 +41601,6 @@ export class CMsgWebUITransportFailure implements ICMsgWebUITransportFailure {
     public static getTypeUrl(typeUrlPrefix?: string): string;
 }
 
-/** Properties of a CPartnerStoreBrowse_GetItems_Request. */
-export interface ICPartnerStoreBrowse_GetItems_Request {
-
-    /** CPartnerStoreBrowse_GetItems_Request request */
-    request?: (ICStoreBrowse_GetItems_Request|null);
-
-    /** CPartnerStoreBrowse_GetItems_Request includeUnpublished */
-    includeUnpublished?: (boolean|null);
-}
-
-/** Represents a CPartnerStoreBrowse_GetItems_Request. */
-export class CPartnerStoreBrowse_GetItems_Request implements ICPartnerStoreBrowse_GetItems_Request {
-
-    /**
-     * Constructs a new CPartnerStoreBrowse_GetItems_Request.
-     * @param [properties] Properties to set
-     */
-    constructor(properties?: ICPartnerStoreBrowse_GetItems_Request);
-
-    /** CPartnerStoreBrowse_GetItems_Request request. */
-    public request?: (ICStoreBrowse_GetItems_Request|null);
-
-    /** CPartnerStoreBrowse_GetItems_Request includeUnpublished. */
-    public includeUnpublished: boolean;
-
-    /**
-     * Encodes the specified CPartnerStoreBrowse_GetItems_Request message. Does not implicitly {@link CPartnerStoreBrowse_GetItems_Request.verify|verify} messages.
-     * @param message CPartnerStoreBrowse_GetItems_Request message or plain object to encode
-     * @param [writer] Writer to encode to
-     * @returns Writer
-     */
-    public static encode(message: ICPartnerStoreBrowse_GetItems_Request, writer?: $protobuf.Writer): $protobuf.Writer;
-
-    /**
-     * Decodes a CPartnerStoreBrowse_GetItems_Request message from the specified reader or buffer.
-     * @param reader Reader or buffer to decode from
-     * @param [length] Message length if known beforehand
-     * @returns CPartnerStoreBrowse_GetItems_Request
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPartnerStoreBrowse_GetItems_Request;
-
-    /**
-     * Gets the default type url for CPartnerStoreBrowse_GetItems_Request
-     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-     * @returns The default type url
-     */
-    public static getTypeUrl(typeUrlPrefix?: string): string;
-}
-
 /** Properties of a CProductImpressionsFromClient_Notification. */
 export interface ICProductImpressionsFromClient_Notification {
 
@@ -41934,171 +41703,6 @@ export class CProductImpressionsFromClient_Notification_Impression implements IC
     public static getTypeUrl(typeUrlPrefix?: string): string;
 }
 
-/** Properties of a CRemoteClient_DeviceDetails. */
-export interface ICRemoteClient_DeviceDetails {
-
-    /** CRemoteClient_DeviceDetails deviceFriendlyName */
-    deviceFriendlyName?: (string|null);
-
-    /** CRemoteClient_DeviceDetails osType */
-    osType?: (number|null);
-
-    /** CRemoteClient_DeviceDetails gamingDeviceType */
-    gamingDeviceType?: (number|null);
-}
-
-/** Represents a CRemoteClient_DeviceDetails. */
-export class CRemoteClient_DeviceDetails implements ICRemoteClient_DeviceDetails {
-
-    /**
-     * Constructs a new CRemoteClient_DeviceDetails.
-     * @param [properties] Properties to set
-     */
-    constructor(properties?: ICRemoteClient_DeviceDetails);
-
-    /** CRemoteClient_DeviceDetails deviceFriendlyName. */
-    public deviceFriendlyName: string;
-
-    /** CRemoteClient_DeviceDetails osType. */
-    public osType: number;
-
-    /** CRemoteClient_DeviceDetails gamingDeviceType. */
-    public gamingDeviceType: number;
-
-    /**
-     * Encodes the specified CRemoteClient_DeviceDetails message. Does not implicitly {@link CRemoteClient_DeviceDetails.verify|verify} messages.
-     * @param message CRemoteClient_DeviceDetails message or plain object to encode
-     * @param [writer] Writer to encode to
-     * @returns Writer
-     */
-    public static encode(message: ICRemoteClient_DeviceDetails, writer?: $protobuf.Writer): $protobuf.Writer;
-
-    /**
-     * Decodes a CRemoteClient_DeviceDetails message from the specified reader or buffer.
-     * @param reader Reader or buffer to decode from
-     * @param [length] Message length if known beforehand
-     * @returns CRemoteClient_DeviceDetails
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CRemoteClient_DeviceDetails;
-
-    /**
-     * Gets the default type url for CRemoteClient_DeviceDetails
-     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-     * @returns The default type url
-     */
-    public static getTypeUrl(typeUrlPrefix?: string): string;
-}
-
-/** Properties of a CRemoteClient_Online_Notification. */
-export interface ICRemoteClient_Online_Notification {
-
-    /** CRemoteClient_Online_Notification steamid */
-    steamid?: (number|Long|null);
-
-    /** CRemoteClient_Online_Notification remoteClientId */
-    remoteClientId?: (number|Long|null);
-
-    /** CRemoteClient_Online_Notification deviceDetails */
-    deviceDetails?: (ICRemoteClient_DeviceDetails|null);
-}
-
-/** Represents a CRemoteClient_Online_Notification. */
-export class CRemoteClient_Online_Notification implements ICRemoteClient_Online_Notification {
-
-    /**
-     * Constructs a new CRemoteClient_Online_Notification.
-     * @param [properties] Properties to set
-     */
-    constructor(properties?: ICRemoteClient_Online_Notification);
-
-    /** CRemoteClient_Online_Notification steamid. */
-    public steamid: (number|Long);
-
-    /** CRemoteClient_Online_Notification remoteClientId. */
-    public remoteClientId: (number|Long);
-
-    /** CRemoteClient_Online_Notification deviceDetails. */
-    public deviceDetails?: (ICRemoteClient_DeviceDetails|null);
-
-    /**
-     * Encodes the specified CRemoteClient_Online_Notification message. Does not implicitly {@link CRemoteClient_Online_Notification.verify|verify} messages.
-     * @param message CRemoteClient_Online_Notification message or plain object to encode
-     * @param [writer] Writer to encode to
-     * @returns Writer
-     */
-    public static encode(message: ICRemoteClient_Online_Notification, writer?: $protobuf.Writer): $protobuf.Writer;
-
-    /**
-     * Decodes a CRemoteClient_Online_Notification message from the specified reader or buffer.
-     * @param reader Reader or buffer to decode from
-     * @param [length] Message length if known beforehand
-     * @returns CRemoteClient_Online_Notification
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CRemoteClient_Online_Notification;
-
-    /**
-     * Gets the default type url for CRemoteClient_Online_Notification
-     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-     * @returns The default type url
-     */
-    public static getTypeUrl(typeUrlPrefix?: string): string;
-}
-
-/** Properties of a CRemoteClient_ReplyPacket_Notification. */
-export interface ICRemoteClient_ReplyPacket_Notification {
-
-    /** CRemoteClient_ReplyPacket_Notification sessionId */
-    sessionId?: (number|Long|null);
-
-    /** CRemoteClient_ReplyPacket_Notification payload */
-    payload?: (Uint8Array|null);
-}
-
-/** Represents a CRemoteClient_ReplyPacket_Notification. */
-export class CRemoteClient_ReplyPacket_Notification implements ICRemoteClient_ReplyPacket_Notification {
-
-    /**
-     * Constructs a new CRemoteClient_ReplyPacket_Notification.
-     * @param [properties] Properties to set
-     */
-    constructor(properties?: ICRemoteClient_ReplyPacket_Notification);
-
-    /** CRemoteClient_ReplyPacket_Notification sessionId. */
-    public sessionId: (number|Long);
-
-    /** CRemoteClient_ReplyPacket_Notification payload. */
-    public payload: Uint8Array;
-
-    /**
-     * Encodes the specified CRemoteClient_ReplyPacket_Notification message. Does not implicitly {@link CRemoteClient_ReplyPacket_Notification.verify|verify} messages.
-     * @param message CRemoteClient_ReplyPacket_Notification message or plain object to encode
-     * @param [writer] Writer to encode to
-     * @returns Writer
-     */
-    public static encode(message: ICRemoteClient_ReplyPacket_Notification, writer?: $protobuf.Writer): $protobuf.Writer;
-
-    /**
-     * Decodes a CRemoteClient_ReplyPacket_Notification message from the specified reader or buffer.
-     * @param reader Reader or buffer to decode from
-     * @param [length] Message length if known beforehand
-     * @returns CRemoteClient_ReplyPacket_Notification
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CRemoteClient_ReplyPacket_Notification;
-
-    /**
-     * Gets the default type url for CRemoteClient_ReplyPacket_Notification
-     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-     * @returns The default type url
-     */
-    public static getTypeUrl(typeUrlPrefix?: string): string;
-}
-
 /** Properties of a CRemotePlay_SessionStopped_Notification. */
 export interface ICRemotePlay_SessionStopped_Notification {
 
@@ -42156,165 +41760,6 @@ export class CRemotePlay_SessionStopped_Notification implements ICRemotePlay_Ses
 
     /**
      * Gets the default type url for CRemotePlay_SessionStopped_Notification
-     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-     * @returns The default type url
-     */
-    public static getTypeUrl(typeUrlPrefix?: string): string;
-}
-
-/** Properties of a CSteamNotification_HideNotification_Notification. */
-export interface ICSteamNotification_HideNotification_Notification {
-
-    /** CSteamNotification_HideNotification_Notification notificationIds */
-    notificationIds?: ((number|Long)[]|null);
-}
-
-/** Represents a CSteamNotification_HideNotification_Notification. */
-export class CSteamNotification_HideNotification_Notification implements ICSteamNotification_HideNotification_Notification {
-
-    /**
-     * Constructs a new CSteamNotification_HideNotification_Notification.
-     * @param [properties] Properties to set
-     */
-    constructor(properties?: ICSteamNotification_HideNotification_Notification);
-
-    /** CSteamNotification_HideNotification_Notification notificationIds. */
-    public notificationIds: (number|Long)[];
-
-    /**
-     * Encodes the specified CSteamNotification_HideNotification_Notification message. Does not implicitly {@link CSteamNotification_HideNotification_Notification.verify|verify} messages.
-     * @param message CSteamNotification_HideNotification_Notification message or plain object to encode
-     * @param [writer] Writer to encode to
-     * @returns Writer
-     */
-    public static encode(message: ICSteamNotification_HideNotification_Notification, writer?: $protobuf.Writer): $protobuf.Writer;
-
-    /**
-     * Decodes a CSteamNotification_HideNotification_Notification message from the specified reader or buffer.
-     * @param reader Reader or buffer to decode from
-     * @param [length] Message length if known beforehand
-     * @returns CSteamNotification_HideNotification_Notification
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CSteamNotification_HideNotification_Notification;
-
-    /**
-     * Gets the default type url for CSteamNotification_HideNotification_Notification
-     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-     * @returns The default type url
-     */
-    public static getTypeUrl(typeUrlPrefix?: string): string;
-}
-
-/** Properties of a CSteamNotification_MarkNotificationsRead_Notification. */
-export interface ICSteamNotification_MarkNotificationsRead_Notification {
-
-    /** CSteamNotification_MarkNotificationsRead_Notification timestamp */
-    timestamp?: (number|null);
-
-    /** CSteamNotification_MarkNotificationsRead_Notification notificationType */
-    notificationType?: (number|null);
-
-    /** CSteamNotification_MarkNotificationsRead_Notification notificationIds */
-    notificationIds?: ((number|Long)[]|null);
-
-    /** CSteamNotification_MarkNotificationsRead_Notification markAllRead */
-    markAllRead?: (boolean|null);
-}
-
-/** Represents a CSteamNotification_MarkNotificationsRead_Notification. */
-export class CSteamNotification_MarkNotificationsRead_Notification implements ICSteamNotification_MarkNotificationsRead_Notification {
-
-    /**
-     * Constructs a new CSteamNotification_MarkNotificationsRead_Notification.
-     * @param [properties] Properties to set
-     */
-    constructor(properties?: ICSteamNotification_MarkNotificationsRead_Notification);
-
-    /** CSteamNotification_MarkNotificationsRead_Notification timestamp. */
-    public timestamp: number;
-
-    /** CSteamNotification_MarkNotificationsRead_Notification notificationType. */
-    public notificationType: number;
-
-    /** CSteamNotification_MarkNotificationsRead_Notification notificationIds. */
-    public notificationIds: (number|Long)[];
-
-    /** CSteamNotification_MarkNotificationsRead_Notification markAllRead. */
-    public markAllRead: boolean;
-
-    /**
-     * Encodes the specified CSteamNotification_MarkNotificationsRead_Notification message. Does not implicitly {@link CSteamNotification_MarkNotificationsRead_Notification.verify|verify} messages.
-     * @param message CSteamNotification_MarkNotificationsRead_Notification message or plain object to encode
-     * @param [writer] Writer to encode to
-     * @returns Writer
-     */
-    public static encode(message: ICSteamNotification_MarkNotificationsRead_Notification, writer?: $protobuf.Writer): $protobuf.Writer;
-
-    /**
-     * Decodes a CSteamNotification_MarkNotificationsRead_Notification message from the specified reader or buffer.
-     * @param reader Reader or buffer to decode from
-     * @param [length] Message length if known beforehand
-     * @returns CSteamNotification_MarkNotificationsRead_Notification
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CSteamNotification_MarkNotificationsRead_Notification;
-
-    /**
-     * Gets the default type url for CSteamNotification_MarkNotificationsRead_Notification
-     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-     * @returns The default type url
-     */
-    public static getTypeUrl(typeUrlPrefix?: string): string;
-}
-
-/** Properties of a CSteamNotification_MarkNotificationsViewed_Notification. */
-export interface ICSteamNotification_MarkNotificationsViewed_Notification {
-
-    /** CSteamNotification_MarkNotificationsViewed_Notification remoteClientId */
-    remoteClientId?: (number|Long|null);
-
-    /** CSteamNotification_MarkNotificationsViewed_Notification targetClientType */
-    targetClientType?: (number|null);
-}
-
-/** Represents a CSteamNotification_MarkNotificationsViewed_Notification. */
-export class CSteamNotification_MarkNotificationsViewed_Notification implements ICSteamNotification_MarkNotificationsViewed_Notification {
-
-    /**
-     * Constructs a new CSteamNotification_MarkNotificationsViewed_Notification.
-     * @param [properties] Properties to set
-     */
-    constructor(properties?: ICSteamNotification_MarkNotificationsViewed_Notification);
-
-    /** CSteamNotification_MarkNotificationsViewed_Notification remoteClientId. */
-    public remoteClientId: (number|Long);
-
-    /** CSteamNotification_MarkNotificationsViewed_Notification targetClientType. */
-    public targetClientType: number;
-
-    /**
-     * Encodes the specified CSteamNotification_MarkNotificationsViewed_Notification message. Does not implicitly {@link CSteamNotification_MarkNotificationsViewed_Notification.verify|verify} messages.
-     * @param message CSteamNotification_MarkNotificationsViewed_Notification message or plain object to encode
-     * @param [writer] Writer to encode to
-     * @returns Writer
-     */
-    public static encode(message: ICSteamNotification_MarkNotificationsViewed_Notification, writer?: $protobuf.Writer): $protobuf.Writer;
-
-    /**
-     * Decodes a CSteamNotification_MarkNotificationsViewed_Notification message from the specified reader or buffer.
-     * @param reader Reader or buffer to decode from
-     * @param [length] Message length if known beforehand
-     * @returns CSteamNotification_MarkNotificationsViewed_Notification
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CSteamNotification_MarkNotificationsViewed_Notification;
-
-    /**
-     * Gets the default type url for CSteamNotification_MarkNotificationsViewed_Notification
      * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
      * @returns The default type url
      */
@@ -42609,6 +42054,81 @@ export class CSteamVR_Header implements ICSteamVR_Header {
 
     /**
      * Gets the default type url for CSteamVR_Header
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CSteamVR_Settings_SetValue_Request. */
+export interface ICSteamVR_Settings_SetValue_Request {
+
+    /** CSteamVR_Settings_SetValue_Request section */
+    section?: (string|null);
+
+    /** CSteamVR_Settings_SetValue_Request settingsKey */
+    settingsKey?: (string|null);
+
+    /** CSteamVR_Settings_SetValue_Request bool */
+    bool?: (boolean|null);
+
+    /** CSteamVR_Settings_SetValue_Request int */
+    int?: (number|null);
+
+    /** CSteamVR_Settings_SetValue_Request float */
+    float?: (number|null);
+
+    /** CSteamVR_Settings_SetValue_Request string */
+    string?: (string|null);
+}
+
+/** Represents a CSteamVR_Settings_SetValue_Request. */
+export class CSteamVR_Settings_SetValue_Request implements ICSteamVR_Settings_SetValue_Request {
+
+    /**
+     * Constructs a new CSteamVR_Settings_SetValue_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICSteamVR_Settings_SetValue_Request);
+
+    /** CSteamVR_Settings_SetValue_Request section. */
+    public section: string;
+
+    /** CSteamVR_Settings_SetValue_Request settingsKey. */
+    public settingsKey: string;
+
+    /** CSteamVR_Settings_SetValue_Request bool. */
+    public bool: boolean;
+
+    /** CSteamVR_Settings_SetValue_Request int. */
+    public int: number;
+
+    /** CSteamVR_Settings_SetValue_Request float. */
+    public float: number;
+
+    /** CSteamVR_Settings_SetValue_Request string. */
+    public string: string;
+
+    /**
+     * Encodes the specified CSteamVR_Settings_SetValue_Request message. Does not implicitly {@link CSteamVR_Settings_SetValue_Request.verify|verify} messages.
+     * @param message CSteamVR_Settings_SetValue_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICSteamVR_Settings_SetValue_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CSteamVR_Settings_SetValue_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CSteamVR_Settings_SetValue_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CSteamVR_Settings_SetValue_Request;
+
+    /**
+     * Gets the default type url for CSteamVR_Settings_SetValue_Request
      * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
      * @returns The default type url
      */
@@ -44217,102 +43737,6 @@ export class CSteamVR_WebRTC_OnDataChannel_Notification implements ICSteamVR_Web
     public static getTypeUrl(typeUrlPrefix?: string): string;
 }
 
-/** Properties of a CStore_MigratePartnerLinkTracking_Notification. */
-export interface ICStore_MigratePartnerLinkTracking_Notification {
-
-    /** CStore_MigratePartnerLinkTracking_Notification accountid */
-    accountid?: (number|null);
-
-    /** CStore_MigratePartnerLinkTracking_Notification browserid */
-    browserid?: (number|Long|null);
-
-    /** CStore_MigratePartnerLinkTracking_Notification backfillSource */
-    backfillSource?: (number|null);
-}
-
-/** Represents a CStore_MigratePartnerLinkTracking_Notification. */
-export class CStore_MigratePartnerLinkTracking_Notification implements ICStore_MigratePartnerLinkTracking_Notification {
-
-    /**
-     * Constructs a new CStore_MigratePartnerLinkTracking_Notification.
-     * @param [properties] Properties to set
-     */
-    constructor(properties?: ICStore_MigratePartnerLinkTracking_Notification);
-
-    /** CStore_MigratePartnerLinkTracking_Notification accountid. */
-    public accountid: number;
-
-    /** CStore_MigratePartnerLinkTracking_Notification browserid. */
-    public browserid: (number|Long);
-
-    /** CStore_MigratePartnerLinkTracking_Notification backfillSource. */
-    public backfillSource: number;
-
-    /**
-     * Encodes the specified CStore_MigratePartnerLinkTracking_Notification message. Does not implicitly {@link CStore_MigratePartnerLinkTracking_Notification.verify|verify} messages.
-     * @param message CStore_MigratePartnerLinkTracking_Notification message or plain object to encode
-     * @param [writer] Writer to encode to
-     * @returns Writer
-     */
-    public static encode(message: ICStore_MigratePartnerLinkTracking_Notification, writer?: $protobuf.Writer): $protobuf.Writer;
-
-    /**
-     * Decodes a CStore_MigratePartnerLinkTracking_Notification message from the specified reader or buffer.
-     * @param reader Reader or buffer to decode from
-     * @param [length] Message length if known beforehand
-     * @returns CStore_MigratePartnerLinkTracking_Notification
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CStore_MigratePartnerLinkTracking_Notification;
-
-    /**
-     * Gets the default type url for CStore_MigratePartnerLinkTracking_Notification
-     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-     * @returns The default type url
-     */
-    public static getTypeUrl(typeUrlPrefix?: string): string;
-}
-
-/** Properties of a CStore_ReloadAllReservationPositionMessages_Notification. */
-export interface ICStore_ReloadAllReservationPositionMessages_Notification {
-}
-
-/** Represents a CStore_ReloadAllReservationPositionMessages_Notification. */
-export class CStore_ReloadAllReservationPositionMessages_Notification implements ICStore_ReloadAllReservationPositionMessages_Notification {
-
-    /**
-     * Constructs a new CStore_ReloadAllReservationPositionMessages_Notification.
-     * @param [properties] Properties to set
-     */
-    constructor(properties?: ICStore_ReloadAllReservationPositionMessages_Notification);
-
-    /**
-     * Encodes the specified CStore_ReloadAllReservationPositionMessages_Notification message. Does not implicitly {@link CStore_ReloadAllReservationPositionMessages_Notification.verify|verify} messages.
-     * @param message CStore_ReloadAllReservationPositionMessages_Notification message or plain object to encode
-     * @param [writer] Writer to encode to
-     * @returns Writer
-     */
-    public static encode(message: ICStore_ReloadAllReservationPositionMessages_Notification, writer?: $protobuf.Writer): $protobuf.Writer;
-
-    /**
-     * Decodes a CStore_ReloadAllReservationPositionMessages_Notification message from the specified reader or buffer.
-     * @param reader Reader or buffer to decode from
-     * @param [length] Message length if known beforehand
-     * @returns CStore_ReloadAllReservationPositionMessages_Notification
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CStore_ReloadAllReservationPositionMessages_Notification;
-
-    /**
-     * Gets the default type url for CStore_ReloadAllReservationPositionMessages_Notification
-     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-     * @returns The default type url
-     */
-    public static getTypeUrl(typeUrlPrefix?: string): string;
-}
-
 /** Properties of a CStoreBrowse_GetItems_Request. */
 export interface ICStoreBrowse_GetItems_Request {
 
@@ -45429,6 +44853,252 @@ export class CVideo_GameRecordingSegmentInfo implements ICVideo_GameRecordingSeg
 
     /**
      * Gets the default type url for CVideo_GameRecordingSegmentInfo
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CVirtualMenuCreateDestroy. */
+export interface ICVirtualMenuCreateDestroy {
+
+    /** CVirtualMenuCreateDestroy created */
+    created?: (boolean|null);
+
+    /** CVirtualMenuCreateDestroy controllerIdx */
+    controllerIdx?: (number|null);
+
+    /** CVirtualMenuCreateDestroy menuIdx */
+    menuIdx?: (number|null);
+
+    /** CVirtualMenuCreateDestroy source */
+    source?: (number|null);
+
+    /** CVirtualMenuCreateDestroy xPosition */
+    xPosition?: (number|null);
+
+    /** CVirtualMenuCreateDestroy yPosition */
+    yPosition?: (number|null);
+
+    /** CVirtualMenuCreateDestroy opacity */
+    opacity?: (number|null);
+
+    /** CVirtualMenuCreateDestroy scale */
+    scale?: (number|null);
+
+    /** CVirtualMenuCreateDestroy showLabels */
+    showLabels?: (boolean|null);
+
+    /** CVirtualMenuCreateDestroy forceOn */
+    forceOn?: (boolean|null);
+
+    /** CVirtualMenuCreateDestroy appID */
+    appID?: (number|null);
+
+    /** CVirtualMenuCreateDestroy menuStyle */
+    menuStyle?: (number|null);
+
+    /** CVirtualMenuCreateDestroy popupKeys */
+    popupKeys?: (ICVirtualMenuCreateDestroy_TouchMenuKey[]|null);
+}
+
+/** Represents a CVirtualMenuCreateDestroy. */
+export class CVirtualMenuCreateDestroy implements ICVirtualMenuCreateDestroy {
+
+    /**
+     * Constructs a new CVirtualMenuCreateDestroy.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICVirtualMenuCreateDestroy);
+
+    /** CVirtualMenuCreateDestroy created. */
+    public created: boolean;
+
+    /** CVirtualMenuCreateDestroy controllerIdx. */
+    public controllerIdx: number;
+
+    /** CVirtualMenuCreateDestroy menuIdx. */
+    public menuIdx: number;
+
+    /** CVirtualMenuCreateDestroy source. */
+    public source: number;
+
+    /** CVirtualMenuCreateDestroy xPosition. */
+    public xPosition: number;
+
+    /** CVirtualMenuCreateDestroy yPosition. */
+    public yPosition: number;
+
+    /** CVirtualMenuCreateDestroy opacity. */
+    public opacity: number;
+
+    /** CVirtualMenuCreateDestroy scale. */
+    public scale: number;
+
+    /** CVirtualMenuCreateDestroy showLabels. */
+    public showLabels: boolean;
+
+    /** CVirtualMenuCreateDestroy forceOn. */
+    public forceOn: boolean;
+
+    /** CVirtualMenuCreateDestroy appID. */
+    public appID: number;
+
+    /** CVirtualMenuCreateDestroy menuStyle. */
+    public menuStyle: number;
+
+    /** CVirtualMenuCreateDestroy popupKeys. */
+    public popupKeys: ICVirtualMenuCreateDestroy_TouchMenuKey[];
+
+    /**
+     * Encodes the specified CVirtualMenuCreateDestroy message. Does not implicitly {@link CVirtualMenuCreateDestroy.verify|verify} messages.
+     * @param message CVirtualMenuCreateDestroy message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICVirtualMenuCreateDestroy, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CVirtualMenuCreateDestroy message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CVirtualMenuCreateDestroy
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CVirtualMenuCreateDestroy;
+
+    /**
+     * Gets the default type url for CVirtualMenuCreateDestroy
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CVirtualMenuCreateDestroy_TouchMenuKey. */
+export interface ICVirtualMenuCreateDestroy_TouchMenuKey {
+
+    /** CVirtualMenuCreateDestroy_TouchMenuKey keyIdx */
+    keyIdx?: (number|null);
+
+    /** CVirtualMenuCreateDestroy_TouchMenuKey bound */
+    bound?: (boolean|null);
+
+    /** CVirtualMenuCreateDestroy_TouchMenuKey placeholder */
+    placeholder?: (boolean|null);
+
+    /** CVirtualMenuCreateDestroy_TouchMenuKey bindingType */
+    bindingType?: (number|null);
+
+    /** CVirtualMenuCreateDestroy_TouchMenuKey x */
+    x?: (number|null);
+
+    /** CVirtualMenuCreateDestroy_TouchMenuKey y */
+    y?: (number|null);
+
+    /** CVirtualMenuCreateDestroy_TouchMenuKey width */
+    width?: (number|null);
+
+    /** CVirtualMenuCreateDestroy_TouchMenuKey height */
+    height?: (number|null);
+
+    /** CVirtualMenuCreateDestroy_TouchMenuKey description */
+    description?: (string|null);
+
+    /** CVirtualMenuCreateDestroy_TouchMenuKey label */
+    label?: (string|null);
+
+    /** CVirtualMenuCreateDestroy_TouchMenuKey glyphPath */
+    glyphPath?: (string|null);
+
+    /** CVirtualMenuCreateDestroy_TouchMenuKey iconFilename */
+    iconFilename?: (string|null);
+
+    /** CVirtualMenuCreateDestroy_TouchMenuKey colorForeground */
+    colorForeground?: (string|null);
+
+    /** CVirtualMenuCreateDestroy_TouchMenuKey colorBackground */
+    colorBackground?: (string|null);
+
+    /** CVirtualMenuCreateDestroy_TouchMenuKey quandrants */
+    quandrants?: (number|null);
+}
+
+/** Represents a CVirtualMenuCreateDestroy_TouchMenuKey. */
+export class CVirtualMenuCreateDestroy_TouchMenuKey implements ICVirtualMenuCreateDestroy_TouchMenuKey {
+
+    /**
+     * Constructs a new CVirtualMenuCreateDestroy_TouchMenuKey.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICVirtualMenuCreateDestroy_TouchMenuKey);
+
+    /** CVirtualMenuCreateDestroy_TouchMenuKey keyIdx. */
+    public keyIdx: number;
+
+    /** CVirtualMenuCreateDestroy_TouchMenuKey bound. */
+    public bound: boolean;
+
+    /** CVirtualMenuCreateDestroy_TouchMenuKey placeholder. */
+    public placeholder: boolean;
+
+    /** CVirtualMenuCreateDestroy_TouchMenuKey bindingType. */
+    public bindingType: number;
+
+    /** CVirtualMenuCreateDestroy_TouchMenuKey x. */
+    public x: number;
+
+    /** CVirtualMenuCreateDestroy_TouchMenuKey y. */
+    public y: number;
+
+    /** CVirtualMenuCreateDestroy_TouchMenuKey width. */
+    public width: number;
+
+    /** CVirtualMenuCreateDestroy_TouchMenuKey height. */
+    public height: number;
+
+    /** CVirtualMenuCreateDestroy_TouchMenuKey description. */
+    public description: string;
+
+    /** CVirtualMenuCreateDestroy_TouchMenuKey label. */
+    public label: string;
+
+    /** CVirtualMenuCreateDestroy_TouchMenuKey glyphPath. */
+    public glyphPath: string;
+
+    /** CVirtualMenuCreateDestroy_TouchMenuKey iconFilename. */
+    public iconFilename: string;
+
+    /** CVirtualMenuCreateDestroy_TouchMenuKey colorForeground. */
+    public colorForeground: string;
+
+    /** CVirtualMenuCreateDestroy_TouchMenuKey colorBackground. */
+    public colorBackground: string;
+
+    /** CVirtualMenuCreateDestroy_TouchMenuKey quandrants. */
+    public quandrants: number;
+
+    /**
+     * Encodes the specified CVirtualMenuCreateDestroy_TouchMenuKey message. Does not implicitly {@link CVirtualMenuCreateDestroy_TouchMenuKey.verify|verify} messages.
+     * @param message CVirtualMenuCreateDestroy_TouchMenuKey message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICVirtualMenuCreateDestroy_TouchMenuKey, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CVirtualMenuCreateDestroy_TouchMenuKey message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CVirtualMenuCreateDestroy_TouchMenuKey
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CVirtualMenuCreateDestroy_TouchMenuKey;
+
+    /**
+     * Gets the default type url for CVirtualMenuCreateDestroy_TouchMenuKey
      * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
      * @returns The default type url
      */
@@ -46800,8 +46470,14 @@ export interface ICVRGamepadUIShared_DashboardAction {
     /** CVRGamepadUIShared_DashboardAction specialInvocation */
     specialInvocation?: (number|null);
 
-    /** CVRGamepadUIShared_DashboardAction visibleInDashboardMenu */
-    visibleInDashboardMenu?: (boolean|null);
+    /** CVRGamepadUIShared_DashboardAction visibleInMenu */
+    visibleInMenu?: (boolean|null);
+
+    /** CVRGamepadUIShared_DashboardAction isMenu */
+    isMenu?: (boolean|null);
+
+    /** CVRGamepadUIShared_DashboardAction parentMenuActionId */
+    parentMenuActionId?: (number|null);
 }
 
 /** Represents a CVRGamepadUIShared_DashboardAction. */
@@ -46840,8 +46516,14 @@ export class CVRGamepadUIShared_DashboardAction implements ICVRGamepadUIShared_D
     /** CVRGamepadUIShared_DashboardAction specialInvocation. */
     public specialInvocation: number;
 
-    /** CVRGamepadUIShared_DashboardAction visibleInDashboardMenu. */
-    public visibleInDashboardMenu: boolean;
+    /** CVRGamepadUIShared_DashboardAction visibleInMenu. */
+    public visibleInMenu: boolean;
+
+    /** CVRGamepadUIShared_DashboardAction isMenu. */
+    public isMenu: boolean;
+
+    /** CVRGamepadUIShared_DashboardAction parentMenuActionId. */
+    public parentMenuActionId: number;
 
     /**
      * Encodes the specified CVRGamepadUIShared_DashboardAction message. Does not implicitly {@link CVRGamepadUIShared_DashboardAction.verify|verify} messages.
@@ -47630,6 +47312,9 @@ export interface ILoyaltyRewardDefinition_CommunityItemData {
 
     /** LoyaltyRewardDefinition_CommunityItemData profileThemeId */
     profileThemeId?: (string|null);
+
+    /** LoyaltyRewardDefinition_CommunityItemData tiled */
+    tiled?: (boolean|null);
 }
 
 /** Represents a LoyaltyRewardDefinition_CommunityItemData. */
@@ -47676,6 +47361,9 @@ export class LoyaltyRewardDefinition_CommunityItemData implements ILoyaltyReward
 
     /** LoyaltyRewardDefinition_CommunityItemData profileThemeId. */
     public profileThemeId: string;
+
+    /** LoyaltyRewardDefinition_CommunityItemData tiled. */
+    public tiled: boolean;
 
     /**
      * Encodes the specified LoyaltyRewardDefinition_CommunityItemData message. Does not implicitly {@link LoyaltyRewardDefinition_CommunityItemData.verify|verify} messages.
@@ -48440,6 +48128,12 @@ export interface IStoreItem_Assets {
 
     /** StoreItem_Assets clanAvatar */
     clanAvatar?: (string|null);
+
+    /** StoreItem_Assets pageBackgroundPath */
+    pageBackgroundPath?: (string|null);
+
+    /** StoreItem_Assets rawPageBackground */
+    rawPageBackground?: (string|null);
 }
 
 /** Represents a StoreItem_Assets. */
@@ -48492,6 +48186,12 @@ export class StoreItem_Assets implements IStoreItem_Assets {
 
     /** StoreItem_Assets clanAvatar. */
     public clanAvatar: string;
+
+    /** StoreItem_Assets pageBackgroundPath. */
+    public pageBackgroundPath: string;
+
+    /** StoreItem_Assets rawPageBackground. */
+    public rawPageBackground: string;
 
     /**
      * Encodes the specified StoreItem_Assets message. Does not implicitly {@link StoreItem_Assets.verify|verify} messages.
@@ -48878,6 +48578,9 @@ export interface IStoreItem_Platforms {
 
     /** StoreItem_Platforms steamDeckCompatCategory */
     steamDeckCompatCategory?: (number|null);
+
+    /** StoreItem_Platforms steamOsCompatCategory */
+    steamOsCompatCategory?: (number|null);
 }
 
 /** Represents a StoreItem_Platforms. */
@@ -48903,6 +48606,9 @@ export class StoreItem_Platforms implements IStoreItem_Platforms {
 
     /** StoreItem_Platforms steamDeckCompatCategory. */
     public steamDeckCompatCategory: number;
+
+    /** StoreItem_Platforms steamOsCompatCategory. */
+    public steamOsCompatCategory: number;
 
     /**
      * Encodes the specified StoreItem_Platforms message. Does not implicitly {@link StoreItem_Platforms.verify|verify} messages.
@@ -49085,6 +48791,9 @@ export interface IStoreItem_PurchaseOption {
 
     /** StoreItem_PurchaseOption recurrenceInfo */
     recurrenceInfo?: (IStoreItem_PurchaseOption_RecurrenceInfo|null);
+
+    /** StoreItem_PurchaseOption freeToKeepEnds */
+    freeToKeepEnds?: (number|null);
 }
 
 /** Represents a StoreItem_PurchaseOption. */
@@ -49173,6 +48882,9 @@ export class StoreItem_PurchaseOption implements IStoreItem_PurchaseOption {
 
     /** StoreItem_PurchaseOption recurrenceInfo. */
     public recurrenceInfo?: (IStoreItem_PurchaseOption_RecurrenceInfo|null);
+
+    /** StoreItem_PurchaseOption freeToKeepEnds. */
+    public freeToKeepEnds: number;
 
     /**
      * Encodes the specified StoreItem_PurchaseOption message. Does not implicitly {@link StoreItem_PurchaseOption.verify|verify} messages.
@@ -49424,6 +49136,9 @@ export interface IStoreItem_ReleaseInfo {
 
     /** StoreItem_ReleaseInfo linuxReleaseDate */
     linuxReleaseDate?: (number|null);
+
+    /** StoreItem_ReleaseInfo limitedLaunchActive */
+    limitedLaunchActive?: (boolean|null);
 }
 
 /** Represents a StoreItem_ReleaseInfo. */
@@ -49467,6 +49182,9 @@ export class StoreItem_ReleaseInfo implements IStoreItem_ReleaseInfo {
 
     /** StoreItem_ReleaseInfo linuxReleaseDate. */
     public linuxReleaseDate: number;
+
+    /** StoreItem_ReleaseInfo limitedLaunchActive. */
+    public limitedLaunchActive: boolean;
 
     /**
      * Encodes the specified StoreItem_ReleaseInfo message. Does not implicitly {@link StoreItem_ReleaseInfo.verify|verify} messages.
@@ -49907,6 +49625,12 @@ export interface IStoreItem_Trailers_Trailer {
 
     /** StoreItem_Trailers_Trailer trailerBaseId */
     trailerBaseId?: (number|null);
+
+    /** StoreItem_Trailers_Trailer trailerCategory */
+    trailerCategory?: (number|null);
+
+    /** StoreItem_Trailers_Trailer allAges */
+    allAges?: (boolean|null);
 }
 
 /** Represents a StoreItem_Trailers_Trailer. */
@@ -49941,6 +49665,12 @@ export class StoreItem_Trailers_Trailer implements IStoreItem_Trailers_Trailer {
 
     /** StoreItem_Trailers_Trailer trailerBaseId. */
     public trailerBaseId: number;
+
+    /** StoreItem_Trailers_Trailer trailerCategory. */
+    public trailerCategory: number;
+
+    /** StoreItem_Trailers_Trailer allAges. */
+    public allAges: boolean;
 
     /**
      * Encodes the specified StoreItem_Trailers_Trailer message. Does not implicitly {@link StoreItem_Trailers_Trailer.verify|verify} messages.
@@ -52809,6 +52539,9 @@ export interface ICWishlistFilters {
 
     /** CWishlistFilters steamDeckFilters */
     steamDeckFilters?: (ICWishlistFilters_SteamDeckFilters|null);
+
+    /** CWishlistFilters tagidsMustMatch */
+    tagidsMustMatch?: (number[]|null);
 }
 
 /** Represents a CWishlistFilters. */
@@ -52849,6 +52582,9 @@ export class CWishlistFilters implements ICWishlistFilters {
 
     /** CWishlistFilters steamDeckFilters. */
     public steamDeckFilters?: (ICWishlistFilters_SteamDeckFilters|null);
+
+    /** CWishlistFilters tagidsMustMatch. */
+    public tagidsMustMatch: number[];
 
     /**
      * Encodes the specified CWishlistFilters message. Does not implicitly {@link CWishlistFilters.verify|verify} messages.
