@@ -3,6 +3,7 @@ import {Command} from "commander";
 import {execSync} from "node:child_process";
 import fs from "node:fs";
 import fsAsync from "node:fs/promises";
+import path from "node:path";
 import YAML from "yaml";
 
 const __dirname = import.meta.dirname;
@@ -49,30 +50,37 @@ function copySource() {
         "package-lock.json",
         "README.md"
     ];
+    const excludePaths = [
+        "src/js/Core/Protobufs/Compiled/"
+    ];
 
     for (const f of toCopy) {
         const src = `${root}/${f}`;
         const dest = `${sourceDir}/${f}`;
 
         fs.cpSync(src, dest, {
-            "recursive": true
+            recursive: true,
+            filter: (src, dest) => {
+                for (const excluded of excludePaths) {
+                    const relativePath = path.relative(src,
+                        path.normalize(`${root}/${excludePaths[0]}`)
+                    );
+
+                    if (relativePath === "") {
+                        console.log(`   - excluding ${excluded}`);
+                        return false;
+                    }
+                }
+                return true;
+            }
         });
     }
 }
 
 function run(command) {
-    execSync(command, {
-        "cwd": sourceDir
-    }, (error, stdout, stderr) => {
-        if (error) {
-            console.error(error);
-            process.exit(2);
-        }
-        console.log(stdout);
-        if (stderr) {
-            console.error("Errors:", stderr);
-        }
-    });
+    return execSync(command, {
+        cwd: sourceDir
+    }).toString();
 }
 
 async function zip(dirpath, outname) {
@@ -97,6 +105,17 @@ async function cleanup() {
     });
 }
 
+function dumpInstructions() {
+    const nodeVersion = process.version;
+    const npmVersion = run("npm -v").trim();
+
+    fs.writeFileSync(`${releaseDir}/instructions.txt`,
+        `node ${nodeVersion}\n`
+        +`npm ${npmVersion}\n\n`
+        +`npm run protobufs\n`
+        +`npm run build firefox -- --production\n`
+    );
+}
 
 console.log(`Creating release ${latestVersion}`);
 console.log("1. copy source");
@@ -108,12 +127,18 @@ await zip(sourceDir, "source");
 console.log("3. npm install");
 run("npm install");
 
-console.log("4. build...");
+console.log("4. compile protobufs")
+run(`node scripts/protobufs.mjs compile`);
+
+console.log("5. build...");
 for (const platform of ["firefox", "chrome", "edge"]) {
     console.log(`...${platform}`);
     run(`node scripts/build.mjs ${platform} --production`);
     await zip(`${sourceDir}/dist/prod.${platform}`, platform);
 }
 
-console.log("5. cleanup");
+console.log("6. dump instructions");
+dumpInstructions();
+
+console.log("7. cleanup");
 await cleanup();
