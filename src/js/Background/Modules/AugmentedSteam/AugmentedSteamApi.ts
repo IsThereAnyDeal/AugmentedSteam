@@ -71,11 +71,6 @@ export default class AugmentedSteamApi extends Api implements MessageHandlerInte
         return this.fetchJson<TFetchProfileBackgroundsGamesResponse>(url);
     }
 
-    private fetchMarketCardPrices(currency: string, appid: number): Promise<TFetchMarketCardPricesResponse> {
-        const url = this.getUrl("market/cards/v2", {currency, appid});
-        return this.fetchJson(url);
-    }
-
     private fetchMarketAverageCardPrices(currency: string, appids: number[]): Promise<TFetchMarketCardAveragePricesResponse> {
         const url = this.getUrl("market/cards/average-prices/v2", {
             currency,
@@ -212,9 +207,6 @@ export default class AugmentedSteamApi extends Api implements MessageHandlerInte
 
             case EAction.TwitchStream:
                 return this.fetchTwitch(message.params.channelId);
-
-            case EAction.Market_CardPrices:
-                return this.fetchMarketCardPrices(message.params.currency, message.params.appid);
 
             case EAction.Market_AverageCardPrices:
                 return this.fetchMarketAverageCardPrices(message.params.currency, message.params.appids);

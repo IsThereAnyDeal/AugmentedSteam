@@ -1,5 +1,5 @@
 
-export enum EAction {
+export const enum EAction {
     Prices = "prices",
     DlcInfo = "dlcinfo",
     StorePageData = "storepagedata",
@@ -17,6 +17,9 @@ export enum EAction {
     Profile_Clear = "clearownprofile",
 
     CacheClear = "cache.clear",
+
+    SessionCacheSet = "sess.cache.set",
+    SessionCacheGet = "sess.cache.get",
 
     Login = "community.login",
     Logout = "community.logout",
@@ -68,5 +71,5 @@ export enum EAction {
     Notes_SetAll = "notes.setall",
     Notes_Clear = "notes.clear",
 
-    Listener_Register = "listener.register",
+    Listener_Register = "listener.register"
 }

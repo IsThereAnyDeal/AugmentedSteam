@@ -111,6 +111,7 @@ export const __removeFullgameFromWishlistAndWaitlistTooltip = "removeFullgameFro
 export const __language = "language";
 export const __theworddefault = "theworddefault";
 export const __thewordclear = "thewordclear";
+export const __retry = "retry";
 export const __couponLearnMore_linkText = "couponLearnMore_linkText";
 export const __couponLearnMore_fullText = "couponLearnMore_fullText";
 export const __show = "show";

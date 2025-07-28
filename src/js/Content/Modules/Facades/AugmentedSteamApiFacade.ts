@@ -63,10 +63,6 @@ export default class AugmentedSteamApiFacade {
         return Background.send(EAction.TwitchStream, {channelId});
     }
 
-    static fetchMarketCardPrices(currency: string, appid: number): Promise<TFetchMarketCardPricesResponse> {
-        return Background.send(EAction.Market_CardPrices, {currency, appid});
-    }
-
     static fetchMarketCardAveragePrices(currency: string, appids: number[]): Promise<TFetchMarketCardAveragePricesResponse> {
         return Background.send(EAction.Market_AverageCardPrices, {currency, appids});
     }

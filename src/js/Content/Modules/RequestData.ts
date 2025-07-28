@@ -19,11 +19,12 @@ export default class RequestData {
 
     private static async getHttp(url: URL|string, settings: RequestInit = {}): Promise<Response> {
 
-        const _settings = {
+        const _settings: RequestInit = {
             "method": "GET",
             "credentials": "include",
             "headers": {"origin": window.location.origin},
             "referrer": window.location.origin + window.location.pathname,
+            "cache": "default",
             ...settings
         };
 

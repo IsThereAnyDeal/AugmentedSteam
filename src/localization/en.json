@@ -116,6 +116,7 @@
     "language": "Language",
     "theworddefault": "Default",
     "thewordclear": "Clear",
+    "retry": "Retry",
     "coupon_learn_more": {
         "link_text": "Learn more",
         "full_text": "__linkdesc__ about Steam Coupons"

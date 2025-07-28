@@ -16,6 +16,7 @@ import Version from "@Core/Version";
 import {EAction} from "@Background/EAction";
 import Storage from "@Core/Storage/Storage";
 import WebRequestHandler from "@Background/Modules/WebRequest/WebRequestHandler";
+import SessionCacheApi from "@Background/Modules/Cache/SessionCacheApi";
 
 Environment.CurrentContext = ContextType.Background;
 
@@ -59,8 +60,9 @@ const messageHandlers: MessageHandlerInterface[] = [
     new ITADApi(),
     new SteamStoreApi(),
     new UserNotesApi(),
+    new WebRequestHandler(),
     new CacheApi(),
-    new WebRequestHandler()
+    new SessionCacheApi()
 ];
 
 browser.runtime.onMessage.addListener((
