@@ -13,23 +13,22 @@
         success: boolean,
         lowest_price?: string
     }
+    interface TCacheData extends TMarketPriceOverview {
+        url: string
+    }
     const CachePrefix = "market:card";
 
     export let country: string;
     export let currency: string;
     export let appid: number;
     export let cardName: string;
+    export let foil: boolean;
     export let onprice: (price: Price) => void;
 
+    let uriPath: string = `${appid}-${encodeURIComponent(cardName)}`;
     let promise = new Promise(() => {});
 
-    async function fetchMarketCardPrices(): Promise<string|null> {
-        const marketHashName = `${appid}-${cardName}`;
-        const cached = await SessionCacheApiFacade.get<TMarketPriceOverview>(CachePrefix, marketHashName);
-        if (cached && cached.success) {
-            return cached.lowest_price ?? null;
-        }
-
+    async function fetchCardPrices(marketHashName: string): Promise<TMarketPriceOverview> {
         // try to reduce chance for 429, not sure if this will help in any way shape or form
         const jitter = 100 + Math.floor(Math.random()*5000)
         await TimeUtils.timer(jitter);
@@ -42,21 +41,38 @@
         }));
 
         try {
-            const data = await RequestData.getJson<TMarketPriceOverview>(url);
-
-            if (data.success) {
-                await SessionCacheApiFacade.set(CachePrefix, marketHashName, data);
-                return data.lowest_price ? data.lowest_price : null;
-            }
-            return null;
+            return await RequestData.getJson<TMarketPriceOverview>(url);
         } catch(e) {
             console.error(e);
             throw e;
         }
     }
 
+    async function loadMarketCardPrices(): Promise<string|null> {
+        const marketHashName = `${appid}-${cardName}`;
+        const cacheName = marketHashName + (foil ? "-foil" : "")
+        const cached = await SessionCacheApiFacade.get<TCacheData>(CachePrefix, cacheName);
+        if (cached && cached.success) {
+            uriPath = cached.url;
+            return cached.lowest_price ?? null;
+        }
+
+        let data = await fetchCardPrices(marketHashName);
+        if (data.success && !data.lowest_price) {
+            const suffix = (foil ? " (Foil Trading Card)" : " (Trading Card)");
+            data = await fetchCardPrices(marketHashName + suffix);
+            if (data.success && data.lowest_price) {
+                uriPath += suffix;
+            }
+        }
+        if (data.success) {
+            await SessionCacheApiFacade.set(CachePrefix, marketHashName, Object.assign(data, {url: uriPath}));
+        }
+        return data.lowest_price ?? null;
+    }
+
     async function getMarketCardPrices(): Promise<string|null> {
-        const priceStr = await fetchMarketCardPrices();
+        const priceStr = await loadMarketCardPrices();
         if (priceStr) {
             const price = Price.parseFromString(priceStr, currency);
             if (price) {
@@ -76,7 +92,7 @@
 </script>
 
 
-<a class="es_card_search" href="https://steamcommunity.com/market/listings/{cardName}">
+<a class="es_card_search" href="https://steamcommunity.com/market/listings/753/{uriPath}">
     {L(__lowestPrice)}
 </a>
 

@@ -8,7 +8,6 @@ export default class SessionCacheApi implements MessageHandlerInterface{
 
     private setValue(prefix: string, key: string, value: any): void {
         this.#storage.set(prefix+"/"+key, value);
-        console.log(...this.#storage.entries());
     }
 
     private getValue(prefix: string, key: string): any {

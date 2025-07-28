@@ -37,10 +37,6 @@ export default class FCardMarketLinks extends Feature<CGameCard> {
                 .replace(/\(\d+\)/g, "")
                 .trim();
 
-            if (this.context.isFoil) {
-                cardName += " (Foil)"; // but sometimes (Foil Trading Card)? and (Trading Card) in non foil version?
-            }
-
             const isUnowned = node.classList.contains("unowned");
 
             if (isUnowned) {
@@ -54,6 +50,7 @@ export default class FCardMarketLinks extends Feature<CGameCard> {
                     currency: CurrencyManager.storeCurrency,
                     appid: this.context.appid,
                     cardName,
+                    foil: this.context.isFoil,
                     onprice: (price: Price) => {
                         if (isUnowned) {
                             costMap.set(cardName, price);
