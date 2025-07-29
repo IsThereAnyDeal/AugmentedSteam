@@ -279,7 +279,6 @@
         "hidespamcomments": "Скриване на спам коментарите от артикулите и профилите в работилницата",
         "gift": "Артикули, за които разполагате с подаръчно копие",
         "regional_price_mouse": "при задържане на мишката върху цената",
-        "lowestprice_header": "Информация за историята на цената",
         "stores_all": "Сравняване на всички магазини",
         "view_in_currency": "Преглед в:",
         "show_early_access": "Показване на банери с изображение за „Ранен достъп“",
@@ -417,7 +416,10 @@
         "friends_and_groups": "Приятели и групи",
         "friends_append_nickname": "Притурване на псевдоними към имената на приятели",
         "collection_banner_not_owned": "Показване на банера „В колекция“ само когато не притежавам играта в Steam",
-        "homepage_default_tab_free": "Тенденциозни безплатни"
+        "homepage_default_tab_free": "Тенденциозни безплатни",
+        "headers": {
+            "itad_price_info": "Информацията за цената е от IsThereAnyDeal"
+        }
     },
     "ready": {
         "loading": "Зареждане на данните за Augmented Steam…",
@@ -884,5 +886,6 @@
     "add_fullgame_to_waitlist": "Добавяне на пълната игра към списъка Ви за изчакване",
     "remove_fullgame_from_waitlist_tooltip": "Премахване на пълната игра от списъка Ви за изчакване",
     "remove_fullgame_from_wishlist_and_waitlist_tooltip": "Премахване на пълната игра както от списъка Ви с желания, така и от този за изчакване",
-    "ok": "Добре"
+    "ok": "Добре",
+    "launch_random_game_error": "Неуспешно намиране на годна за пускане игра"
 }

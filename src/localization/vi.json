@@ -279,7 +279,6 @@
         "hidespamcomments": "Ẩn bình luận spam trên các vật phẩm Workshop và trang cá nhân",
         "gift": "Sản phẩm mà bạn đã có một bản quà tặng",
         "regional_price_mouse": "Khi lướt chuột qua giá tiền",
-        "lowestprice_header": "Thông tin Lịch sử Giá",
         "stores_all": "So sánh mọi cửa hàng",
         "view_in_currency": "Xem theo giá:",
         "show_early_access": "Hiển thị ảnh biểu ngữ Truy cập Sớm",
@@ -417,7 +416,10 @@
         "friends_and_groups": "Bạn bè và các Nhóm",
         "friends_append_nickname": "Thêm biệt danh vào tên của bạn bè",
         "collection_banner_not_owned": "Chỉ hiện Trong Bộ sưu tập khi tôi không sở hữu trò chơi trên Steam",
-        "homepage_default_tab_free": "Miễn phí & Đang nổi"
+        "homepage_default_tab_free": "Miễn phí & Đang nổi",
+        "headers": {
+            "itad_price_info": "Thông tin Giá từ IsThereAnyDeal"
+        }
     },
     "ready": {
         "loading": "Augmented Steam đang tải dữ liệu...",
@@ -884,5 +886,6 @@
     "add_fullgame_to_waitlist": "Thêm bản trò chơi đầy đủ vào Danh sách Chờ của bạn",
     "remove_fullgame_from_waitlist_tooltip": "Loại bỏ bản trò chơi đầy đủ khỏi Danh sách Chờ của bạn",
     "remove_fullgame_from_wishlist_and_waitlist_tooltip": "Loại bỏ bản trò chơi đầy đủ khỏi cả Danh sách ước và Danh sách chờ",
-    "ok": "OK"
+    "ok": "OK",
+    "launch_random_game_error": "Tìm trò chơi mở được thất bại"
 }

@@ -279,7 +279,6 @@
         "hidespamcomments": "Cacher les commentaires de spam du Workshop et des profils",
         "gift": "Articles stockés en tant que cadeaux",
         "regional_price_mouse": "Au passage de la souris sur le prix",
-        "lowestprice_header": "Informations sur l'historique des prix",
         "stores_all": "Comparer tous les magasins",
         "view_in_currency": "Voir en :",
         "show_early_access": "Afficher les bannières d'images pour l'accès anticipé",
@@ -417,7 +416,10 @@
         "friends_and_groups": "Amis et groupes",
         "friends_append_nickname": "Ajouter des surnoms aux noms des amis",
         "collection_banner_not_owned": "Afficher la bannière de collection uniquement lorsque je ne possède pas le jeu sur Steam",
-        "homepage_default_tab_free": "Gratuits tendance"
+        "homepage_default_tab_free": "Gratuits tendance",
+        "headers": {
+            "itad_price_info": "Informations sur les prix de IsThereAnyDeal"
+        }
     },
     "ready": {
         "loading": "Chargement des données d'Augmented Steam...",
@@ -884,5 +886,6 @@
     "add_fullgame_to_waitlist": "Ajouter le jeu complet à votre liste d'attente",
     "remove_fullgame_from_waitlist_tooltip": "Retirer le jeu complet de votre liste d'attente",
     "remove_fullgame_from_wishlist_and_waitlist_tooltip": "Retirer le jeu complet de votre liste de souhaits et de votre liste d'attente",
-    "ok": "OK"
+    "ok": "OK",
+    "launch_random_game_error": "Impossible de trouver un jeu jouable"
 }

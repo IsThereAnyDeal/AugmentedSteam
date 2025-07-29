@@ -278,7 +278,6 @@
         "hidespamcomments": "Ocultar comentários de spam em perfis e nos itens da Oficina",
         "gift": "Itens que você possui uma cópia de presente",
         "regional_price_mouse": "Ao passar o mouse por cima do preço",
-        "lowestprice_header": "Informações de histórico de preços",
         "stores_all": "Comparar todas as lojas",
         "view_in_currency": "Moeda:",
         "show_early_access": "Exibir faixas de acesso antecipado",
@@ -416,7 +415,10 @@
         "friends_and_groups": "Grupos e amigos",
         "friends_append_nickname": "Adicionar apelidos ao nome de amigos",
         "collection_banner_not_owned": "Somente exibir na coleção jogos que não tem na sua Steam",
-        "homepage_default_tab_free": "Tendência gratuitos"
+        "homepage_default_tab_free": "Tendência gratuitos",
+        "headers": {
+            "itad_price_info": "Informações de preços por isThereAnyDeal"
+        }
     },
     "ready": {
         "loading": "Carregando dados do Augmented Steam...",
@@ -883,5 +885,6 @@
     "add_fullgame_to_waitlist": "Adicionar o jogo da sua lista de espera",
     "remove_fullgame_from_waitlist_tooltip": "Remover o jogo da sua lista de espera",
     "remove_fullgame_from_wishlist_and_waitlist_tooltip": "Remover o jogo da sua lista de desejos e espera",
-    "ok": "Ok"
+    "ok": "Ok",
+    "launch_random_game_error": "Falha ao encontrar um jogo jogável"
 }

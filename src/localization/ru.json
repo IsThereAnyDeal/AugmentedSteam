@@ -279,7 +279,6 @@
         "hidespamcomments": "Скрыть комментарии в мастерской и профилях, помеченные как спам",
         "gift": "Продукты, которые находятся в вашем инвентаре",
         "regional_price_mouse": "При наведении курсора",
-        "lowestprice_header": "Информация по истории цен",
         "stores_all": "Сравнить все магазины",
         "view_in_currency": "Валюта:",
         "show_early_access": "Показывать баннеры раннего доступа",
@@ -416,7 +415,10 @@
         "friends_and_groups": "Друзья и группы",
         "friends_append_nickname": "Присвоить ники к именам друзей",
         "collection_banner_not_owned": "Показывать баннер «В коллекции» только тогда, когда у меня нет игры в Steam",
-        "homepage_default_tab_free": "Популярные бесплатные игры"
+        "homepage_default_tab_free": "Популярные бесплатные игры",
+        "headers": {
+            "itad_price_info": "Информация о ценах от IsThereAnyDeal"
+        }
     },
     "ready": {
         "loading": "Augmented Steam загружается...",
@@ -880,5 +882,6 @@
     "add_fullgame_to_waitlist": "Добавить полную версию игры в список ожидаемого",
     "remove_fullgame_from_waitlist_tooltip": "Удалить полную версию игры из списка ожидаемого",
     "remove_fullgame_from_wishlist_and_waitlist_tooltip": "Удалить полную версию игры из списка желаемого и ожидаемых",
-    "ok": "OK"
+    "ok": "OK",
+    "launch_random_game_error": "Не удалось найти подходящую игру"
 }
