@@ -31,7 +31,7 @@ export default class FShowMarketOverview extends Feature<CInventory> {
          * If the item in user's inventory is not marketable due to market restrictions,
          * or if not in own inventory but the item is marketable, build the HTML for showing info
          */
-        if (!(this.context.myInventory && restriction && !marketable) && !marketable) { return; }
+        if (this.context.myInventory || !marketable) { return; }
 
         const thisItem = document.getElementById(`${globalId}_${contextId}_${assetId}`);
         const marketActions = document.getElementById(`iteminfo${view}_item_market_actions`);
