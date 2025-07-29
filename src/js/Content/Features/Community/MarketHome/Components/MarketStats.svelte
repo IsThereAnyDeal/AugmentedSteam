@@ -94,7 +94,9 @@
             }
         }
 
-        latestId = getEventId(page.events[0]!);
+        if (page.events.length > 0) {
+            latestId = getEventId(page.events[0]!);
+        }
     }
 
     /**
@@ -115,7 +117,7 @@
             sellTotal = cached.sellTotal;
         }
 
-        const pageSize = 2;
+        const pageSize = 500;
         const firstPage = await fetchPage(0, pageSize);
         totalEvents = firstPage.total_count;
 
@@ -136,6 +138,7 @@
                 parsePage(firstPage, cachedEventId);
             }
         } catch (e) {
+            console.error(e);
             // stop on error, cache what we have, allow restart
             error = e;
         }
