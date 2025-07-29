@@ -167,8 +167,8 @@ export default class AugmentedSteam {
 
         node = document.querySelector(
             this.react
-                ? "header a[href*='/addfunds/']"
-                : "#account_dropdown a[href*='/addfunds/']"
+                ? "header a[href*='/account/preferences/']"
+                : "#account_dropdown a[href*='/account/preferences/']"
         );
         if (!node) {
             console.error("Didn't find node to copy for adding redeem link");
@@ -179,7 +179,7 @@ export default class AugmentedSteam {
         cloned.href = "https://store.steampowered.com/account/registerkey";
         cloned.textContent = L(__activate);
 
-        node.insertAdjacentElement("beforebegin", cloned);
+        node.insertAdjacentElement("afterend", cloned);
     }
 
     async build(): Promise<void> {
