@@ -1,3 +1,29 @@
+4.2.3: |
+  tl;dr:
+  - improved accuracy of current card prices by removing the dependency on Augmented Steam server
+  - refactored market stats, they should be more reliable now, but I don't have large market history to properly test it on
+    so let me know if I broke it
+  - removed booster averages and worth on badge page 
+  
+  Steam has been making it increasingly hard to query market with throttling. You've probably seen this
+  with some features that stopped working because of too many requests.
+  
+  It got to the point where we have to drop some of the features, because claiming we do have them is almost becoming a lie,
+  but I'll try to keep what I can.
+  
+  I had to remove card averages and worth computation, because that relied on a server crawling market and fetching current prices.
+  With Steam's throttling this has become increasingly less accurate over time.
+  
+  In badge detail page I've moved fetching of current prices to extension instead of fetching them from server,
+  Same thing that Steam does for inventory. If you check many badges in quick succession, this may lead to throttling though,
+  so we'll see how this works.
+  
+  Lastly, I've refactored market stats. They should not be trying to fetch pages as aggressively as they were,
+  and it should be more robust. Even if it does not manage to fetch your entire history at once, once you can make requests again
+  it should continue where it ended. I don't have large market history to test this properly, so let me know
+  in case of issues.
+  
+
 4.2.2: |
   Long overdue bugfix release
   
