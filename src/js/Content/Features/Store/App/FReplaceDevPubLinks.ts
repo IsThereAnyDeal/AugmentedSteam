@@ -29,20 +29,21 @@ export default class FReplaceDevPubLinks extends Feature<CApp> {
 
         for (const node of [...devs, ...pubs, ...franchise]) {
             const homepageLink = new URL(node.href);
-            if (homepageLink.pathname.startsWith("/search/")) { continue; }
+            if (homepageLink.pathname.startsWith("/search/") || homepageLink.hostname !== location.hostname) { continue; }
 
-            let type;
+            let type: string;
             if (devs.includes(node)) {
                 type = "developer";
             } else if (pubs.includes(node)) {
                 type = "publisher";
             } else if (franchiseRow === node) {
                 type = "franchise";
+            } else {
+                continue;
             }
-            if (!type) { continue; }
 
             node.href = `https://store.steampowered.com/search/?${type}=${encodeURIComponent(node.textContent!)}`;
-            HTML.afterEnd(node, ` (<a href="${homepageLink.href}">${L(__options_homepage)}</a>)`);
+            HTML.afterEnd(node, ` <span class="as-homepage">(<a href="${homepageLink.href}">${L(__options_homepage)}</a>)</span>`);
         }
 
         for (const moreBtn of document.querySelectorAll(".dev_row > .more_btn")) {
