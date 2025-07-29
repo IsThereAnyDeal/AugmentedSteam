@@ -1056,25 +1056,6 @@ video.highlight_movie:hover + .html5_video_overlay {
 
 /***************************************
  * Market home
- * FMarketStats
- **************************************/
-#es_market_summary_status {
-  display: flex;
-  align-items: center;
-}
-#es_market_summary_status img {
-  margin-right: 10px;
-}
-.es_market_summary_item {
-  float: right;
-  line-height: inherit !important;
-  vertical-align: top;
-  line-height: 32px;
-  margin-left: 5px;
-}
-
-/***************************************
- * Market home
  * FPopularRefreshToggle
  **************************************/
 #es_popular_refresh_toggle {

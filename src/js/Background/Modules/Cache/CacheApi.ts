@@ -8,7 +8,10 @@ export default class CacheApi implements MessageHandlerInterface{
 
     private async clearCache(): Promise<void> {
         await LocalStorage.remove(
-            "currency"
+            "currency",
+            // @ts-expect-error
+            "market_stats", // deprecated entry, remove after some time
+            "market_stats2"
         );
 
         await IndexedDB.clear(

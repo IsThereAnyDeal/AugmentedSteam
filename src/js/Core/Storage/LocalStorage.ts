@@ -32,10 +32,11 @@ export interface LocalStorageSchema extends StorageSchema {
     hide_login_warn_store: boolean,
     hide_login_warn_community: boolean,
     guide_tags: string[],
-    market_stats: {
-        startListing: string|null,
-        purchaseTotal: number,
-        saleTotal: number
+    market_stats2: {
+        eventId: string,
+        events: number,
+        buyTotal: number,
+        sellTotal: number,
     },
     popular_refresh: boolean,
     expand_slider: boolean,
