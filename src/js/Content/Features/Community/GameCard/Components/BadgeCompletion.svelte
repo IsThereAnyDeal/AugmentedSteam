@@ -7,8 +7,6 @@
     let full: boolean = false;
 
     export function update(costMap: Map<string, Price|null>) {
-        console.log(costMap);
-
         full = true;
         for (const price of costMap.values()) {
             if (price === null) {
