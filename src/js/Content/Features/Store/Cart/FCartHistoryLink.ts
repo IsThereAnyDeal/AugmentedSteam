@@ -15,7 +15,7 @@ export default class FCartHistoryLink extends Feature<CCart> {
             new MutationObserver((_, observer) => {
                 observer.disconnect();
                 resolve(
-                    root.querySelector<HTMLElement>(":scope > div:first-child > div:last-child > div:last-child")
+                    root.querySelector<HTMLElement>(":scope > div:first-child > div:first-child > div:last-child > div:last-child")
                 );
             }).observe(root, {"childList": true, "subtree": true});
         });
