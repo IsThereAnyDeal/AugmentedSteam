@@ -187,7 +187,7 @@
                             <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/{appid}/header_292x136.jpg" class="banner" alt="Banner" loading="lazy" />
                         </a>
                         <a href="https://isthereanydeal.com/steam/app/{appid}/" target="_blank"><img src={icons.itad} alt="ITAD" /></a>
-                        <a href="https://steamdb.info/app/${appid}/" target="_blank"><img src={icons.steamdb} alt="SteamDB" /></a>
+                        <a href="https://steamdb.info/app/{appid}/" target="_blank"><img src={icons.steamdb} alt="SteamDB" /></a>
                         {#if canEdit}
                             <!-- TODO use button, cba to style button right now -->
                             <!-- svelte-ignore a11y-no-static-element-interactions a11y-click-events-have-key-events -->
