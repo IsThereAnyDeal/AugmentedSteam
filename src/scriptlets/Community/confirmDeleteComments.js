@@ -33,7 +33,7 @@
             checked = e.currentTarget.checked;
         });
 
-        modal.then(() => {
+        modal.then((result) => {
             if (checked) {
 
                 /*
@@ -44,7 +44,7 @@
                 document.dispatchEvent(new CustomEvent("noDeletionConfirm"));
             }
 
-            oldDeleteComment.call(this, id, gidcomment);
+            if (result === "OK") oldDeleteComment.call(this, id, gidcomment);
         });
     };
 })();
