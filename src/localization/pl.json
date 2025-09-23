@@ -286,7 +286,6 @@
         "quickinv": "Wyświetlaj przyciski szybkiej sprzedaży na kartach przedmiotów w ekwipunku",
         "quickinv_diff": "Modyfikator szybkiej sprzedaży:",
         "send_age_info": "Automatycznie potwierdzaj wiek na żądanie i pomijaj ostrzeżenia o treściach dla dorosłych",
-        "mp4video": "Wymuszaj odtwarzanie wideo w formacie MP4",
         "youtube": "Wyświetlaj odnośniki do YouTube",
         "twitch": "Wyświetlaj odnośniki do Twitch",
         "pcgw": "Wyświetlaj odnośniki do PCGamingWiki",
@@ -388,7 +387,7 @@
             "reset": "Resetuj"
         },
         "removebroadcasts": "Usuń wszystkie transmisje na żywo",
-        "maintainers": "Patroni projektu",
+        "maintainers": "Opiekunowie projektu",
         "with_help_of": "z dużą pomocą naszych __contributors__",
         "contributors": "super współautorów",
         "apppage": "Strona aplikacji",
@@ -410,11 +409,16 @@
         "confirmdeletecomment": "Wyświetlaj potwierdzenia przy usuwaniu komentarzy",
         "about_desc": "Augmented Steam to rozwidlenie dodatku Enhanced Steam.",
         "about_desc_links": "Odwiedź __website__ dodatku lub nasz serwer __discord__, aby uzyskać więcej informacji.",
+        "footer_fork": "rozwidlenie autorstwa IsThereAnyDeal",
+        "footer_author": "autor oryginału: jshackles",
         "show_players_info": "Wyświetlaj informacje o liczbie graczy",
         "friends_and_groups": "Znajomi i grupy",
         "friends_append_nickname": "Wyświetlaj pseudonimy znajomych obok ich nazw",
         "collection_banner_not_owned": "Wyświetlaj baner „W kolekcji” tylko wtedy, gdy nie posiadam danej gry w bibliotece Steam",
-        "homepage_default_tab_free": "Wschodzące darmowe"
+        "homepage_default_tab_free": "Wschodzące darmowe",
+        "headers": {
+            "itad_price_info": "Informacje o cenach z IsThereAnyDeal"
+        }
     },
     "ready": {
         "loading": "Wczytywanie danych Augmented Steam...",
@@ -463,7 +467,7 @@
         "sync_now": "Synchronizuj teraz",
         "info": {
             "itad-steam": "Połączenie Augmented Steam z IsThereAnyDeal pozwoli ci użyć podświetlania i oznaczania gier na twojej liście życzeń i w kolekcji, nawet jeżeli nie masz ich dodanych na platformie Steam.",
-            "steam-itad": "Co więcej, umożliwia importowanie gier z biblioteki Steam i/lub listy życzeń do IsThereAnyDeal, aby zwiększyć dokładność (np. DLC lub gry niepubliczne). Obecnie ta funkcja może tylko dodawać tytuły, a nie je usuwać, więc nie zastępuje zintegrowanej synchronizacji IsThereAnyDeal, ale jest dodatkiem do niej."
+            "steam-itad": "Co więcej, umożliwia importowanie gier z biblioteki Steam i/lub listy życzeń do IsThereAnyDeal, aby zwiększyć dokładność (np. DLC lub gry niepubliczne). Obecnie ta funkcja pozwala jedynie na dodawanie tytułów, bez możliwości ich usuwania, dlatego nie zastępuje zintegrowanej synchronizacji w IsThereAnyDeal – stanowi jedynie jej uzupełnienie."
         },
         "enable_sync_library": "Włącz synchronizację biblioteki",
         "enable_sync_wishlist": "Włącz synchronizację listy życzeń",
@@ -477,7 +481,7 @@
     "update": {
         "dont_show": "Nie pokazuj ponownie",
         "updated": "Augmented Steam został zaktualizowany do wersji __version__",
-        "changes": "Zobacz pełną listę zmian na GitHub"
+        "changes": "Zobacz pełną listę zmian na GitHubie"
     },
     "register": {
         "success": "Pomyślnie aktywowano __gamename__",
@@ -520,6 +524,9 @@
         "save_synced_storage": "Kontynuuj korzystanie z pamięci zsynchronizowanej",
         "save_local": "Przechowuj notatki lokalnie",
         "sync_option": "Synchronizuj notatki automatycznie",
+        "sync_info_1": "Możesz synchronizować swoje notatki między Augmented Steam i IsThereAnyDeal. Jeśli włączysz automatyczną synchronizację, notatki będą okresowo pobierane z ITAD, a edycje wprowadzone w dodatku będą natychmiast odzwierciedlane na ITAD.",
+        "sync_info_2": "Możesz również ręcznie przesyłać lub pobierać notatki między Augmented Steam a IsThereAnyDeal. Zalecamy wykonanie tej operacji przed włączeniem automatycznej synchronizacji, aby upewnić się, że użyta zostanie właściwa wersja notatki – na wypadek, gdybyś miał różne notatki zapisane dla tej samej gry.",
+        "sync_info_3": "Wszystkie swoje notatki możesz przejrzeć w sekcji „Notes and Tags” na stronie IsThereAnyDeal.",
         "sync_button_push": "Prześlij notatki\nna IsThereAnyDeal",
         "sync_button_pull": "Pobierz notatki\nz IsThereAnyDeal",
         "sync_pulled": "Pobrane notatki z IsThereAnyDeal: __n__",
@@ -869,7 +876,7 @@
         "zw": "Zimbabwe"
     },
     "using_language_return": "Kliknij tutaj, aby zmienić go na __base__.",
-    "using_language": "Aktualnie przeglądasz Steam w języku __current__m.",
+    "using_language": "Aktualnie przeglądasz Steam w języku: __current__.",
     "thewordunknown": "Nieznane",
     "badge_level": "Poziom __level__",
     "ignored_owned": "Tytuły ignorowane oznaczone jako grane na innej platformie",
@@ -878,5 +885,7 @@
     "add_fullgame_to_waitlist": "Dodaj pełną grę do listy oczekujących",
     "remove_fullgame_from_waitlist_tooltip": "Usuń pełną grę ze swojej listy oczekujących",
     "remove_fullgame_from_wishlist_and_waitlist_tooltip": "Usuń pełną grę ze swojej listy życzeń i oczekujących",
-    "ok": "OK"
+    "ok": "OK",
+    "launch_random_game_error": "Nie udało się znaleźć gry do uruchomienia",
+    "retry": "Spróbuj ponownie"
 }

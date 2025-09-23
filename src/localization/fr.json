@@ -286,7 +286,6 @@
         "quickinv": "Afficher les boutons pour la vente rapide d'objets de la communauté Steam dans l'inventaire",
         "quickinv_diff": "Modificateur de vente rapide :",
         "send_age_info": "Activer la vérification automatique de l'âge",
-        "mp4video": "Forcer les vidéos du magasin au format MP4",
         "youtube": "Afficher les liens YouTube",
         "twitch": "Afficher les liens Twitch",
         "pcgw": "Afficher les liens PCGamingWiki",
@@ -887,5 +886,6 @@
     "remove_fullgame_from_waitlist_tooltip": "Retirer le jeu complet de votre liste d'attente",
     "remove_fullgame_from_wishlist_and_waitlist_tooltip": "Retirer le jeu complet de votre liste de souhaits et de votre liste d'attente",
     "ok": "OK",
-    "launch_random_game_error": "Impossible de trouver un jeu jouable"
+    "launch_random_game_error": "Impossible de trouver un jeu jouable",
+    "retry": "Réessayer"
 }

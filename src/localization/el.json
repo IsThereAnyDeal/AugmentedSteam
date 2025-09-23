@@ -286,7 +286,6 @@
         "quickinv": "Να εμφανίζονται τα κουμπιά Γρήγορη Πώληση στα αντικείμενα της κοινότητας Steam στη σελίδα Αντικειμένων",
         "quickinv_diff": "Τροποποιητής Άμεσης Πώλησης:",
         "send_age_info": "Αυτόματη αποστολή επαλήθευσης ηλικίας όταν απαιτείται",
-        "mp4video": "Αναγκάστε τα βίντεο εφαρμογών του καταστήματος να είναι σε μορφή MP4",
         "youtube": "Εμφάνιση συνδέσμων YouTube",
         "twitch": "Εμφάνιση συνδέσμων Twitch",
         "pcgw": "Εμφάνιση συνδέσμων PCGamingWiki",
@@ -416,7 +415,10 @@
         "friends_and_groups": "Φίλοι και Ομάδες",
         "friends_append_nickname": "Προσθέστε ψευδώνυμα στα ονόματα των φίλων",
         "collection_banner_not_owned": "Εμφάνιση του banner In Collection μόνο όταν δεν είμαι κάτοχος του παιχνιδιού στο Steam",
-        "homepage_default_tab_free": "Στις τάσεις Δωρεάν"
+        "homepage_default_tab_free": "Στις τάσεις Δωρεάν",
+        "headers": {
+            "itad_price_info": "Πληροφορίες τιμών από το IsThereAnyDeal"
+        }
     },
     "ready": {
         "loading": "Φόρτωση δεδομένων Augmented Steam...",
@@ -883,5 +885,7 @@
     "add_fullgame_to_waitlist": "Προσθέστε πλήρες παιχνίδι στη λίστα αναμονής σας",
     "remove_fullgame_from_waitlist_tooltip": "Καταργήστε το πλήρες παιχνίδι από τη λίστα αναμονής σας",
     "remove_fullgame_from_wishlist_and_waitlist_tooltip": "Καταργήστε το πλήρες παιχνίδι τόσο από τη λίστα επιθυμιών όσο και από τη λίστα αναμονής",
-    "ok": "ΟΚ"
+    "ok": "ΟΚ",
+    "launch_random_game_error": "Αποτυχία εύρεσης παιχνιδιού που μπορεί να παιχτεί",
+    "retry": "Προσπάθησε ξανά"
 }

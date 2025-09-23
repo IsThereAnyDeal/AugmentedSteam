@@ -283,7 +283,6 @@
         "quickinv": "แสดงปุ่มขายด่วนบนไอเท็มชุมชน Steam ในช่องเก็บของ",
         "quickinv_diff": "ตัวแก้ไขการขายด่วน:",
         "send_age_info": "ส่งข้อมูลการตรวจสอบอายุโดยอัตโนมัติเมื่อมีการร้องขอ",
-        "mp4video": "แสดงวิดีโอในร้านค้าของแอปให้เป็นรูปแบบ MP4",
         "youtube": "แสดงลิงก์ YouTube",
         "twitch": "แสดงลิงก์ Twitch",
         "pcgw": "แสดงลิงก์ PCGamingWiki",
@@ -411,7 +410,10 @@
         "friends_and_groups": "เพื่อนและกลุ่ม",
         "friends_append_nickname": "เพิ่มชื่อเล่นให้กับชื่อของเพื่อน",
         "collection_banner_not_owned": "แสดงเฉพาะแบนเนอร์ชุดสะสมเมื่อฉันไม่ได้เป็นเจ้าของเกมบน Steam",
-        "homepage_default_tab_free": "ของฟรีที่กำลังได้รับความนิยม"
+        "homepage_default_tab_free": "ของฟรีที่กำลังได้รับความนิยม",
+        "headers": {
+            "itad_price_info": "ข้อมูลราคาจาก IsThereAnyDeal"
+        }
     },
     "ready": {
         "loading": "Augmented Steam กำลังโหลดข้อมูล...",
@@ -873,5 +875,7 @@
     "add_fullgame_to_waitlist": "เพิ่มเกมเต็มไปยังสิ่งที่รอคอยของคุณ",
     "remove_fullgame_from_waitlist_tooltip": "ลบเกมเต็มออกจากสิ่งที่รอคอยของคุณ",
     "remove_fullgame_from_wishlist_and_waitlist_tooltip": "ลบเกมเต็มออกจากทั้งสิ่งที่อยากได้และสิ่งที่รอคอยของคุณ",
-    "ok": "ตกลง"
+    "ok": "ตกลง",
+    "launch_random_game_error": "ล้มเหลวในการค้นหาเกมที่สามารถเล่นได้",
+    "retry": "ลองใหม่"
 }
