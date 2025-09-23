@@ -19,7 +19,6 @@ import FOpenCritic from "./FOpenCritic";
 import FOwnedActionsButtons from "./FOwnedActionsButtons";
 import FOwnedElsewhere from "./FOwnedElsewhere";
 import FPackageInfoButton from "./FPackageInfoButton";
-import FPackBreakdown from "./FPackBreakdown";
 import FPatchHighlightPlayer from "./FPatchHighlightPlayer";
 import FPlayers from "./FPlayers";
 import FPurchaseDate from "./FPurchaseDate";
@@ -90,7 +89,6 @@ export default class CApp extends CStoreBase {
                 FHowLongToBeat,
                 FExtraLinksApp,
                 FFamilySharingNotice,
-                FPackBreakdown,
                 FPackageInfoButton,
                 FPlayers,
                 FCustomizer,
@@ -152,8 +150,5 @@ export default class CApp extends CStoreBase {
                 console.error(e);
                 return null;
             });
-
-        // FPackBreakdown skips purchase options with a package info button to avoid false positives
-        this.dependency(FPackageInfoButton, [FPackBreakdown, true]);
     }
 }
