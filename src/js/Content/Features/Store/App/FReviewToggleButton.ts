@@ -15,7 +15,7 @@ export default class FReviewToggleButton extends Feature<CApp> {
     }
 
     override apply(): void {
-        const target = this.node!.querySelector("h1");
+        const target = this.node!.querySelector("h2");
         if (!target) {
             throw new Error("Node not found");
         }
