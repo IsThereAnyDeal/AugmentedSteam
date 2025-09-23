@@ -15,6 +15,7 @@ export const enum EHighlightStyle {
 export interface Options {
     owned: boolean,
     wishlisted: boolean,
+    followed: boolean,
     ignored: boolean,
     ignoredOwned: boolean,
     collected: boolean,
@@ -40,6 +41,7 @@ export default class HighlightsTagsUtils2 {
         let settings: Options = {
             owned:        Settings.highlight_owned         || Settings.tag_owned,
             wishlisted:   Settings.highlight_wishlist      || Settings.tag_wishlist,
+            followed:   Settings.highlight_followed        || Settings.tag_followed,
             ignored:      Settings.highlight_notinterested || Settings.tag_notinterested,
             ignoredOwned: Settings.highlight_ignored_owned || Settings.tag_ignored_owned,
             collected:    Settings.highlight_collection    || Settings.tag_collection,
@@ -70,6 +72,7 @@ export default class HighlightsTagsUtils2 {
         const colors: Record<keyof Options, string> = {
             ignoredOwned: Settings.highlight_ignored_owned_color,
             ignored:      Settings.highlight_notinterested_color,
+            followed:     Settings.highlight_followed_color,
             waitlisted:   Settings.highlight_waitlist_color,
             wishlisted:   Settings.highlight_wishlist_color,
             collected:    Settings.highlight_collection_color,
@@ -119,14 +122,15 @@ export default class HighlightsTagsUtils2 {
             const appids = query.filter(id => id.type === "app").map(id => id.number);
 
             const settings = this.settings;
-            const includeDsInfo = settings.owned || settings.wishlisted || settings.ignored || settings.ignoredOwned;
+            const includeDsInfo = settings.owned || settings.wishlisted || settings.followed || settings.ignored || settings.ignoredOwned;
             const dsStatus = includeDsInfo
                 ? await DynamicStore.getAppsStatus(storeIds)
                 : {
                     ignored: new Set<string>(),
                     ignoredOwned: new Set<string>(),
                     owned: new Set<string>(),
-                    wishlisted: new Set<string>()
+                    wishlisted: new Set<string>(),
+                    followed: new Set<string>()
                 };
 
             const [inCollection, inWaitlist] = await Promise.all([
@@ -163,6 +167,11 @@ export default class HighlightsTagsUtils2 {
                 if (settings.owned && dsStatus.owned.has(storeId)) {
                     if (Settings.highlight_owned) { high.push("owned"); }
                     if (Settings.tag_owned)       { tags.push("owned"); }
+                }
+
+                if (settings.followed && dsStatus.followed.has(storeId)) {
+                    if (Settings.highlight_followed) { high.push("followed"); }
+                    if (Settings.tag_followed)       { tags.push("followed"); }
                 }
 
                 if (settings.wishlisted && dsStatus.wishlisted.has(storeId)) {

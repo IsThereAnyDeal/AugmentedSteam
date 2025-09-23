@@ -16,6 +16,7 @@ export interface SettingsSchema {
 
     highlight_owned_color: TColor,
     highlight_wishlist_color: TColor,
+    highlight_followed_color: TColor,
     highlight_coupon_color: TColor,
     highlight_inv_gift_color: TColor,
     highlight_inv_guestpass_color: TColor,
@@ -26,6 +27,7 @@ export interface SettingsSchema {
 
     tag_owned_color: TColor,
     tag_wishlist_color: TColor,
+    tag_followed_color: TColor,
     tag_coupon_color: TColor,
     tag_inv_gift_color: TColor,
     tag_inv_guestpass_color: TColor,
@@ -36,6 +38,7 @@ export interface SettingsSchema {
 
     highlight_owned: boolean,
     highlight_wishlist: boolean,
+    highlight_followed: boolean,
     highlight_coupon: boolean,
     highlight_inv_gift: boolean,
     highlight_inv_guestpass: boolean,
@@ -47,6 +50,7 @@ export interface SettingsSchema {
 
     tag_owned: boolean,
     tag_wishlist: boolean,
+    tag_followed: boolean,
     tag_coupon: boolean,
     tag_inv_gift: boolean,
     tag_inv_guestpass: boolean,

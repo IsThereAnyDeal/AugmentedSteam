@@ -4,7 +4,7 @@
     import {L} from "@Core/Localization/Localization";
     import {
         __tag_collection,
-        __tag_coupon,
+        __tag_coupon, __tag_followed,
         __tag_ignoredOwned,
         __tag_invGift,
         __tag_invGuestpass,
@@ -18,6 +18,7 @@
     const setup: Record<keyof Options, [string, string]> = {
         owned:        [__tag_owned,         Settings.tag_owned_color],
         wishlisted:   [__tag_wishlist,      Settings.tag_wishlist_color],
+        followed:     [__tag_followed,      Settings.tag_followed_color],
         coupon:       [__tag_coupon,        Settings.tag_coupon_color],
         gift:         [__tag_invGift,       Settings.tag_inv_gift_color],
         guestPass:    [__tag_invGuestpass,  Settings.tag_inv_guestpass_color],

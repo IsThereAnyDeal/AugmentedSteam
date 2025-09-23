@@ -41,7 +41,8 @@ export default class DynamicStore {
         ignored: Set<string>,
         ignoredOwned: Set<string>,
         owned: Set<string>,
-        wishlisted: Set<string>
+        wishlisted: Set<string>,
+        followed: Set<string>,
     }> {
         const dsStatus = await SteamStoreApiFacade.getDynamicStoreStatus(storeIds);
         return {
@@ -49,6 +50,7 @@ export default class DynamicStore {
             ignoredOwned: new Set(dsStatus.ignoredOwned),
             owned: new Set(dsStatus.owned),
             wishlisted: new Set(dsStatus.wishlisted),
+            followed: new Set(dsStatus.followed)
         }
     }
 
@@ -56,7 +58,8 @@ export default class DynamicStore {
         ignored: boolean,
         ignoredOwned: boolean,
         owned: boolean,
-        wishlisted: boolean
+        wishlisted: boolean,
+        followed: boolean
     }> {
         const dsStatus = await SteamStoreApiFacade.getDynamicStoreStatus([storeId]);
         return {
@@ -64,6 +67,7 @@ export default class DynamicStore {
             ignoredOwned: dsStatus.ignoredOwned.length > 0,
             owned: dsStatus.owned.length > 0,
             wishlisted: dsStatus.wishlisted.length > 0,
+            followed: dsStatus.followed.length > 0,
         }
     }
 

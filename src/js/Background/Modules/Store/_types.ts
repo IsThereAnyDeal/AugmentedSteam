@@ -63,4 +63,5 @@ export interface TDynamicStoreStatusResponse {
     ignoredOwned: string[],
     owned: string[],
     wishlisted: string[],
+    followed: string[]
 }

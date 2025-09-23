@@ -211,10 +211,11 @@ export default class SteamStoreApi extends Api implements MessageHandlerInterfac
             rgOwnedApps: number[],
             rgOwnedPackages: number[],
             rgIgnoredApps: Record<number, number>,
-            rgWishlist: number[]
+            rgWishlist: number[],
+            rgFollowedApps: number[]
         }>(url, {cache: "no-cache"});
 
-        const {rgOwnedApps, rgOwnedPackages, rgIgnoredApps, rgWishlist} = store;
+        const {rgOwnedApps, rgOwnedPackages, rgIgnoredApps, rgWishlist, rgFollowedApps} = store;
 
         let ignored: number[] = [];
         let ignoredOwnedElsewhere: number[] = [];
@@ -234,6 +235,7 @@ export default class SteamStoreApi extends Api implements MessageHandlerInterfac
             ["ownedApps", rgOwnedApps],
             ["ownedPackages", rgOwnedPackages],
             ["wishlisted", rgWishlist],
+            ["followed", rgFollowedApps]
         ]);
         await IndexedDB.setStoreExpiry("dynamicStore", 5*60);
     }
@@ -249,6 +251,7 @@ export default class SteamStoreApi extends Api implements MessageHandlerInterfac
         let ignoredOwned: string[] = [];
         let owned: string[] = [];
         let wishlisted: string[] = [];
+        let followed: string[] = [];
 
         for (const strId of ids) {
             const parts = strId.split("/", 2);
@@ -265,6 +268,7 @@ export default class SteamStoreApi extends Api implements MessageHandlerInterfac
                     case "ignored": ignored.push(strId); break;
                     case "ignoredOwnedElsewhere": ignoredOwned.push(strId); break;
                     case "wishlisted": wishlisted.push(strId); break;
+                    case "followed": followed.push(strId); break;
                     case "ownedApps":
                         if (type === "app") {
                             owned.push(strId);
@@ -279,7 +283,7 @@ export default class SteamStoreApi extends Api implements MessageHandlerInterfac
             }
         }
 
-        return {ignored, ignoredOwned, owned, wishlisted};
+        return {ignored, ignoredOwned, owned, wishlisted, followed};
     }
 
     private async dynamicStoreRandomApp(): Promise<number|null> {

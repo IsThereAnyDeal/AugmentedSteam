@@ -4,7 +4,7 @@ import BundleId from "@Core/GameId/BundleId";
 import {L} from "@Core/Localization/Localization";
 import {
     __tag_collection,
-    __tag_coupon,
+    __tag_coupon, __tag_followed,
     __tag_ignoredOwned,
     __tag_invGift,
     __tag_invGuestpass,
@@ -24,6 +24,7 @@ import InventoryApiFacade from "@Content/Modules/Facades/InventoryApiFacade";
 type Options = {
     owned: boolean,
     wishlisted: boolean,
+    followed: boolean,
     ignored: boolean,
     ignoredOwned: boolean,
     collected: boolean,
@@ -102,6 +103,7 @@ export default class HighlightsTagsUtils {
         const settings = {
             owned:        Settings.highlight_owned         || Settings.tag_owned,
             wishlisted:   Settings.highlight_wishlist      || Settings.tag_wishlist,
+            followed:     Settings.highlight_followed      || Settings.tag_followed,
             ignored:      Settings.highlight_notinterested || Settings.tag_notinterested,
             ignoredOwned: Settings.highlight_ignored_owned || Settings.tag_ignored_owned,
             collected:    Settings.highlight_collection    || Settings.tag_collection,
@@ -160,14 +162,15 @@ export default class HighlightsTagsUtils {
         const storeIds = Array.from(storeIdsMap.keys());
         if (storeIds.length === 0) { return; }
 
-        const includeDsInfo = settings.owned || settings.wishlisted || settings.ignored || settings.ignoredOwned;
+        const includeDsInfo = settings.owned || settings.wishlisted || settings.followed || settings.ignored || settings.ignoredOwned;
         const dsStatus = includeDsInfo
             ? await DynamicStore.getAppsStatus(storeIds)
             : {
                 ignored: new Set<string>(),
                 ignoredOwned: new Set<string>(),
                 owned: new Set<string>(),
-                wishlisted: new Set<string>()
+                wishlisted: new Set<string>(),
+                followed: new Set<string>()
             };
 
         const [inCollection, inWaitlist] = await Promise.all([
@@ -199,6 +202,7 @@ export default class HighlightsTagsUtils {
         const actions = {
             owned: <HTMLElement[]>[],
             wishlist: <HTMLElement[]>[],
+            followed: <HTMLElement[]>[],
             ignored: <HTMLElement[]>[],
             ignoredOwned: <HTMLElement[]>[],
             collection: <HTMLElement[]>[],
@@ -211,6 +215,7 @@ export default class HighlightsTagsUtils {
         for (const [storeId, nodes] of storeIdsMap) {
             if (settings.owned        && dsStatus.owned.has(storeId))        { actions.owned.push(...nodes); }
             if (settings.wishlisted   && dsStatus.wishlisted.has(storeId))   { actions.wishlist.push(...nodes); }
+            if (settings.followed     && dsStatus.followed.has(storeId))     { actions.followed.push(...nodes); }
             if (settings.ignored      && dsStatus.ignored.has(storeId))      { actions.ignored.push(...nodes); }
             if (settings.ignoredOwned && dsStatus.ignoredOwned.has(storeId)) { actions.ignoredOwned.push(...nodes); }
             if (inCollection.has(storeId))    { actions.collection.push(...nodes); }
@@ -222,6 +227,7 @@ export default class HighlightsTagsUtils {
 
         this.highlightOwned(actions.owned);
         this.highlightWishlist(actions.wishlist);
+        this.highlightFollowed(actions.followed);
         this.highlightIgnored(actions.ignored);
         this.highlightIgnoredOwnedElsewhere(actions.ignoredOwned);
         this.highlightCollection(actions.collection);
@@ -236,6 +242,7 @@ export default class HighlightsTagsUtils {
         const locale = {
             owned:         __tag_owned,
             wishlist:      __tag_wishlist,
+            followed:      __tag_followed,
             coupon:        __tag_coupon,
             inv_gift:      __tag_invGift,
             inv_guestpass: __tag_invGuestpass,
@@ -252,6 +259,7 @@ export default class HighlightsTagsUtils {
             const colors = {
                 owned:         Settings.tag_owned_color,
                 wishlist:      Settings.tag_wishlist_color,
+                followed:      Settings.tag_followed_color,
                 coupon:        Settings.tag_coupon_color,
                 inv_gift:      Settings.tag_inv_gift_color,
                 inv_guestpass: Settings.tag_inv_guestpass_color,
@@ -334,6 +342,7 @@ export default class HighlightsTagsUtils {
                 notinterested: Settings.highlight_notinterested_color,
                 waitlist:      Settings.highlight_waitlist_color,
                 wishlist:      Settings.highlight_wishlist_color,
+                followed:      Settings.highlight_followed_color,
                 collection:    Settings.highlight_collection_color,
                 owned:         Settings.highlight_owned_color,
                 coupon:        Settings.highlight_coupon_color,
@@ -430,6 +439,13 @@ export default class HighlightsTagsUtils {
         this._highlightItems(nodes, "wishlist",
             Settings.tag_wishlist,
             Settings.highlight_wishlist
+        );
+    }
+
+    private static highlightFollowed(nodes: Iterable<HTMLElement>): void {
+        this._highlightItems(nodes, "followed",
+            Settings.tag_followed,
+            Settings.highlight_followed
         );
     }
 

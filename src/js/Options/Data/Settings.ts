@@ -11,6 +11,7 @@ export const DefaultSettings: Readonly<SettingsSchema> = {
 
     highlight_owned_color: "#00ce67",
     highlight_wishlist_color: "#0491bf",
+    highlight_followed_color: "#d64550",
     highlight_coupon_color: "#a26426",
     highlight_inv_gift_color: "#800040",
     highlight_inv_guestpass_color: "#513c73",
@@ -21,6 +22,7 @@ export const DefaultSettings: Readonly<SettingsSchema> = {
 
     tag_owned_color: "#00b75b",
     tag_wishlist_color: "#0383b4",
+    tag_followed_color: "#d64550",
     tag_coupon_color: "#c27120",
     tag_inv_gift_color: "#b10059",
     tag_inv_guestpass_color: "#65449a",
@@ -31,6 +33,7 @@ export const DefaultSettings: Readonly<SettingsSchema> = {
 
     highlight_owned: true,
     highlight_wishlist: true,
+    highlight_followed: true,
     highlight_coupon: false,
     highlight_inv_gift: false,
     highlight_inv_guestpass: false,
@@ -42,6 +45,7 @@ export const DefaultSettings: Readonly<SettingsSchema> = {
 
     tag_owned: false,
     tag_wishlist: false,
+    tag_followed: false,
     tag_coupon: false,
     tag_inv_gift: false,
     tag_inv_guestpass: false,
