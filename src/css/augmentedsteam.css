@@ -518,6 +518,8 @@ img.astats_icon {
  * Five items are at most fully visible on the strip. You can derive the following formula:
  * stripWidth(itemCount) = itemCount * (116px width + 3px margin) - 2px
  * On the expanded view 7 items are visible.
+ *
+ * NOTE: this will no longer be true when Steam rolls out wide pages everywhere
  */
 .workshop_item_header.es_expanded #highlight_strip {
   width: 831px;
@@ -534,27 +536,30 @@ img.astats_icon {
 .highlight_overflow {
   z-index: 5;
 }
-/* When browser window is too small hide the side details and the toggle button in Store */
+/* When browser window is too small hide the side details and the toggle button in Store
+ * TODO: .as-expandable is kept for intermediate compatibility while the narrow and wide pages still exist.
+     If we are not adding media expander back to wide pages, this can be removed in the future
+ */
 @media (max-width: 910px) {
-  #game_highlights .rightcol {
+  #game_highlights.as-expandable .rightcol {
     display: block !important;
   }
 
   .game_meta_data .es_side_details,
-  #game_highlights .es_slider_toggle {
+  #game_highlights.as-expandable .es_slider_toggle {
     display: none !important;
   }
 }
 @media (min-width: 910px) {
-  #game_highlights .highlight_ctn {
+  #game_highlights.as-expandable .highlight_ctn {
     width: 616px;
   }
 
-  #game_highlights.es_expanded .highlight_ctn {
+  #game_highlights.as-expandable.es_expanded .highlight_ctn {
     width: 940px;
   }
 
-  #game_highlights.es_expanded .highlight_overflow {
+  #game_highlights.as-expandable.es_expanded .highlight_overflow {
     margin-right: 0;
   }
 

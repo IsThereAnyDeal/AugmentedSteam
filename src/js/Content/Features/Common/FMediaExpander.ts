@@ -14,12 +14,22 @@ export default class FMediaExpander extends Feature<CApp|CSharedFiles> {
     private _sliderToggle: HTMLElement|null = null;
 
     override checkPrerequisites(): boolean {
+        const widestore = document.querySelector(".widestore");
+        if (widestore) {
+            return false;
+        }
+
         this._details = document.querySelector("#game_highlights .rightcol, .workshop_item_header .col_right");
         return this._details !== null;
     }
 
     override async apply(): Promise<void> {
         const details = this._details!;
+
+        const gameHighlights = document.querySelector("#game_highlights");
+        if (gameHighlights) {
+            gameHighlights.classList.add("as-expandable");
+        }
 
         HTML.beforeEnd("#highlight_player_area",
             `<div class="es_slider_toggle btnv6_blue_hoverfade btn_medium">
