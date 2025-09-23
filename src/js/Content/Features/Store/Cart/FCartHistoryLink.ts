@@ -11,20 +11,17 @@ export default class FCartHistoryLink extends Feature<CCart> {
         const root = document.querySelector('[data-featuretarget="react-root"]');
         if (!root) { return; }
 
-        const anchor = await new Promise<HTMLElement|null>(resolve => {
-            new MutationObserver((_, observer) => {
-                observer.disconnect();
-                resolve(
-                    root.querySelector<HTMLElement>(":scope > div:first-child > div:last-child > div:last-child")
-                );
-            }).observe(root, {"childList": true, "subtree": true});
-        });
+        new MutationObserver((_, observer) => {
+            const anchor = root.querySelector<HTMLElement>("._3TtUDn-J9j6rkwHqjT-i4Y")
 
-        if (anchor) {
-            HTML.beforeBegin(anchor,
-                `<a href="https://help.steampowered.com/accountdata/ShoppingCartHistory" target="_blank">
+            if (anchor) {
+                HTML.beforeEnd(anchor,
+                    `&nbsp;>&nbsp;<a href="https://help.steampowered.com/accountdata/ShoppingCartHistory" target="_blank">
                     ${L(__shoppingCartHistory)}
                 </a>`);
-        }
+
+                observer.disconnect();
+            }
+        }).observe(root, {"childList": true, "subtree": true});
     }
 }
