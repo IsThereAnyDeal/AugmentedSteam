@@ -392,6 +392,7 @@
         "quickinv_diff": "Quick Sell modifier:",
         "send_age_info": "Automatically send age verification and skip mature content warnings",
         "removebroadcasts": "Completely remove any live broadcast",
+        "prevent_video_pause": "Prevent videos pausing when tab loses focus (experimental)",
         "exfgls": "Show a notice if app is excluded from Family Sharing",
         "youtube": "Show YouTube links",
         "twitch": "Show Twitch links",

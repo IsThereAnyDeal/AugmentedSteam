@@ -354,6 +354,7 @@ export const __options_quickinv = "options_quickinv";
 export const __options_quickinvDiff = "options_quickinvDiff";
 export const __options_sendAgeInfo = "options_sendAgeInfo";
 export const __options_removebroadcasts = "options_removebroadcasts";
+export const __options_preventVideoPause = "options_preventVideoPause";
 export const __options_exfgls = "options_exfgls";
 export const __options_youtube = "options_youtube";
 export const __options_twitch = "options_twitch";

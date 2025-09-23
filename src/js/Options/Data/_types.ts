@@ -123,6 +123,7 @@ export interface SettingsSchema {
         | "tab_trendingfree_content_trigger",
     send_age_info: boolean,
     removebroadcasts: boolean,
+    prevent_video_pause: boolean,
     horizontalscrolling: boolean,
     showsupportinfo: boolean,
     showdrm: boolean,

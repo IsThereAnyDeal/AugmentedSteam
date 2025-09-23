@@ -41,6 +41,7 @@ import type {TStorePageData} from "@Background/Modules/AugmentedSteam/_types";
 import FWaitlistDropdown from "@Content/Features/Store/App/FWaitlistDropdown";
 import FHighlightTitle from "@Content/Features/Store/App/FHighlightTitle";
 import type {ContextParams} from "@Content/Modules/Context/Context";
+import FPreventVideoPause from "@Content/Features/Store/App/FPreventVideoPause";
 
 export default class CApp extends CStoreBase {
 
@@ -101,6 +102,7 @@ export default class CApp extends CStoreBase {
                 FSupportInfo,
                 FMediaExpander,
                 FRemoveBroadcasts,
+                FPreventVideoPause,
                 FDemoAbovePurchase,
                 FSaveReviewFilters,
                 FHideReportedTags,

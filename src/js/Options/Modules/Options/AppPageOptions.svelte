@@ -12,7 +12,7 @@
         __options_itadlinks,
         __options_metacritic,
         __options_opencritic,
-        __options_pcgw,
+        __options_pcgw, __options_preventVideoPause,
         __options_protondb,
         __options_purchaseDates,
         __options_removebroadcasts,
@@ -58,6 +58,10 @@
 
     <OptionGroup>
         <Toggle bind:value={$settings.removebroadcasts}>{L(__options_removebroadcasts)}</Toggle>
+    </OptionGroup>
+
+    <OptionGroup>
+        <Toggle bind:value={$settings.prevent_video_pause}>{L(__options_preventVideoPause)}</Toggle>
     </OptionGroup>
 </Section>
 
