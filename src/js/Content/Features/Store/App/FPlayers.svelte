@@ -40,7 +40,7 @@
         flex-direction: column-reverse;
         align-items: center;
         color: #67c1f5;
-        font-size: 15px;
+        font-size: 20px;
     }
 
     span {
