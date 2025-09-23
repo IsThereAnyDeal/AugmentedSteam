@@ -1,3 +1,17 @@
+4.3.0: |
+  - added highlighting/tagging for followed games
+  - fixed new wide store pages†
+  - fixed cart history link (thx yureitzk)
+  - fixed typo in SteamDB link for hidden apps in wishlist (thx yureitzk)
+  - fixed comment delete confirmation dialog (thx yureitzk)
+  - fixed review toggle
+  - made player counts a little bit larger
+  - removed some features that were deprecated by changes on Steam
+  
+  † I have removed expandable screenshots from new wide store pages, so the page does not look broken anymore. 
+    I feel like with more space that Steam added, having screenshots expandable is not so important and having them
+    on entire page width would be too much. If you want to though, let me know and I'll add it back in next release
+
 4.2.3: |
   tl;dr:
   - improved accuracy of current card prices by removing the dependency on Augmented Steam server
