@@ -11,13 +11,11 @@
         __options_hltb,
         __options_itadlinks,
         __options_metacritic,
-        __options_mp4video,
         __options_opencritic,
         __options_pcgw,
         __options_protondb,
         __options_purchaseDates,
         __options_removebroadcasts,
-        __options_showAstatslink,
         __options_showBadgeProgress,
         __options_showbartervg,
         __options_showCoupon,
@@ -47,10 +45,6 @@
 
 
 <Section title={L(__options_apppage)}>
-    <OptionGroup>
-        <Toggle bind:value={$settings.mp4video}>{L(__options_mp4video)}</Toggle>
-    </OptionGroup>
-
     <OptionGroup>
         <Toggle bind:value={$settings.showsupportinfo}>{L(__options_supportinfo)}</Toggle>
         <Toggle bind:value={$settings.showdrm}>{L(__options_drm)}</Toggle>

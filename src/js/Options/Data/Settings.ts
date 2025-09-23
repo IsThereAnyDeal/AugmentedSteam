@@ -115,7 +115,6 @@ export const DefaultSettings: Readonly<SettingsSchema> = {
     homepage_tab_selection: "remember",
     send_age_info: true,
     removebroadcasts: false,
-    mp4video: false,
     horizontalscrolling: true,
     showsupportinfo: true,
     showdrm: true,

@@ -10,9 +10,7 @@ import FDemoAbovePurchase from "./FDemoAbovePurchase";
 import FDLCCheckboxes from "./FDLCCheckboxes";
 import FDLCInfo from "./FDLCInfo";
 import FFamilySharingNotice from "./FFamilySharingNotice";
-import FForceMP4 from "./FForceMP4";
 import FFullscreenScreenshotView from "./FFullscreenScreenshotView";
-import FHDPlayer from "./FHDPlayer";
 import FHideReportedTags from "./FHideReportedTags";
 import FHowLongToBeat from "./FHowLongToBeat";
 import FMetacriticUserScore from "./FMetacriticUserScore";
@@ -75,8 +73,6 @@ export default class CApp extends CStoreBase {
                 FExtraLinksAppError
             ] : [
                 FReplaceDevPubLinks,
-                FForceMP4,
-                FHDPlayer,
                 FUserNotes,
                 FWaitlistDropdown,
                 FNewQueue,
@@ -159,46 +155,5 @@ export default class CApp extends CStoreBase {
 
         // FPackBreakdown skips purchase options with a package info button to avoid false positives
         this.dependency(FPackageInfoButton, [FPackBreakdown, true]);
-
-        // FHDPlayer needs to wait for mp4 sources to be set
-        this.dependency(FHDPlayer, [FForceMP4, true]);
-    }
-
-    /**
-     * @param videoEl - the video element
-     * @param {boolean} setHD - set HD or SD source
-     * @param {boolean} [force] - force set source, only current use is in FForceMP4, where we need to set mp4 source regardless of HD
-     */
-    toggleVideoDefinition(videoEl: HTMLVideoElement, setHD: boolean, force: boolean = false): void {
-        const container = videoEl.parentNode as HTMLElement;
-        container.classList.toggle("es_playback_hd", setHD);
-
-        // Return early if there's nothing to do, i.e. setting HD while the video is already in HD, and vice versa
-        const isHD = videoEl.src === videoEl.dataset.hdSrc;
-        if (!force && (setHD === isHD)) { return; }
-
-        const useWebM = /\.webm/.test(videoEl.dataset.hdSrc!); // `false` if browser doesn't support webm, or if "force mp4" feature is enabled
-        const isVisible = container.offsetHeight > 0 && container.offsetWidth > 0;
-
-        // https://github.com/SteamDatabase/SteamTracking/blob/4da99e29581ba6628ad5ce24c50856703aea71a2/store.steampowered.com/public/javascript/gamehighlightplayer.js#L1055-L1067
-        const position = videoEl.currentTime || 0;
-        videoEl.pause();
-        videoEl.preload = "metadata";
-
-        videoEl.addEventListener("loadedmetadata", () => {
-            videoEl.currentTime = position;
-
-            if (isVisible) {
-                videoEl.play();
-            }
-        }, {"once": true});
-
-        if (setHD) {
-            videoEl.src = useWebM ? container.dataset.webmHdSource! : container.dataset.mp4HdSource!;
-        } else {
-            videoEl.src = useWebM ? container.dataset.webmSource! : container.dataset.mp4Source!;
-        }
-
-        videoEl.load();
     }
 }

@@ -119,7 +119,6 @@ export interface SettingsSchema {
         | "tab_trendingfree_content_trigger",
     send_age_info: boolean,
     removebroadcasts: boolean,
-    mp4video: boolean,
     horizontalscrolling: boolean,
     showsupportinfo: boolean,
     showdrm: boolean,

@@ -393,7 +393,6 @@
         "send_age_info": "Automatically send age verification and skip mature content warnings",
         "removebroadcasts": "Completely remove any live broadcast",
         "exfgls": "Show a notice if app is excluded from Family Sharing",
-        "mp4video": "Force videos to be in MP4 format",
         "youtube": "Show YouTube links",
         "twitch": "Show Twitch links",
         "pcgw": "Show PCGamingWiki links",
