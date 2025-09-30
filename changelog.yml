@@ -1,3 +1,6 @@
+4.3.1: |
+  - fix options in Wishlist not showing, after Steam updated menu 
+
 4.3.0: |
   - added highlighting/tagging for followed games
   - added experimental option to stop videos pausing when tab loses focus (disabled by default, find it in App Page section of settings)
