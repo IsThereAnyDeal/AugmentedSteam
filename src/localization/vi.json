@@ -418,7 +418,8 @@
         "homepage_default_tab_free": "Miễn phí & Đang nổi",
         "headers": {
             "itad_price_info": "Thông tin Giá từ IsThereAnyDeal"
-        }
+        },
+        "followed": "Các trò chơi đã theo dõi"
     },
     "ready": {
         "loading": "Augmented Steam đang tải dữ liệu...",
@@ -444,7 +445,8 @@
         "notinterested": "Đã phớt lờ",
         "collection": "Đã thu thập",
         "waitlist": "Đã trong Danh sách Chờ",
-        "ignored_owned": "Đã bỏ qua (đã sở hữu)"
+        "ignored_owned": "Đã bỏ qua (đã sở hữu)",
+        "followed": "Đã theo dõi"
     },
     "wallet": {
         "custom_amount": "Thêm số tiền tự đặt:",
@@ -886,5 +888,6 @@
     "remove_fullgame_from_waitlist_tooltip": "Loại bỏ bản trò chơi đầy đủ khỏi Danh sách Chờ của bạn",
     "remove_fullgame_from_wishlist_and_waitlist_tooltip": "Loại bỏ bản trò chơi đầy đủ khỏi cả Danh sách ước và Danh sách chờ",
     "ok": "OK",
-    "launch_random_game_error": "Tìm trò chơi mở được thất bại"
+    "launch_random_game_error": "Tìm trò chơi mở được thất bại",
+    "retry": "Thử lại"
 }

@@ -418,7 +418,9 @@
         "homepage_default_tab_free": "Gratuits tendance",
         "headers": {
             "itad_price_info": "Informations sur les prix de IsThereAnyDeal"
-        }
+        },
+        "followed": "Jeux suivis",
+        "prevent_video_pause": "Empêcher la mise en pause des vidéos lorsque l'onglet perd le focus (expérimental)"
     },
     "ready": {
         "loading": "Chargement des données d'Augmented Steam...",
@@ -444,7 +446,8 @@
         "notinterested": "Pas intéressé",
         "collection": "Collecté",
         "waitlist": "Liste d'attente",
-        "ignored_owned": "Ignoré (possédé)"
+        "ignored_owned": "Ignoré (possédé)",
+        "followed": "Suivi"
     },
     "wallet": {
         "custom_amount": "Ajouter un montant personnalisé",

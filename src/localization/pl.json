@@ -227,7 +227,7 @@
         "peaktoday": "Najwięcej dziś"
     },
     "hltb": {
-        "title": "How Long to Beat",
+        "title": "Długość gry",
         "main_e": "Główny wątek i dodatki",
         "compl": "Kompletne ukończenie",
         "main": "Główny wątek"
@@ -418,7 +418,9 @@
         "homepage_default_tab_free": "Wschodzące darmowe",
         "headers": {
             "itad_price_info": "Informacje o cenach z IsThereAnyDeal"
-        }
+        },
+        "followed": "Obserwowane gry",
+        "prevent_video_pause": "Nie zatrzymuj filmów przy przełączaniu karty (eksperymentalne)"
     },
     "ready": {
         "loading": "Wczytywanie danych Augmented Steam...",
@@ -444,7 +446,8 @@
         "notinterested": "Ignorowane",
         "collection": "W kolekcji",
         "waitlist": "Na liście oczekujących",
-        "ignored_owned": "Ignorowane (posiadane)"
+        "ignored_owned": "Ignorowane (posiadane)",
+        "followed": "Obserwowane"
     },
     "wallet": {
         "custom_amount": "Dodaj własną kwotę",

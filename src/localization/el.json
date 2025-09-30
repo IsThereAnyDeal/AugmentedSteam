@@ -332,7 +332,7 @@
         "homepage_default_tab_topsellers": "Κορυφαία σε πωλήσεις",
         "homepage_default_tab_upcoming": "Επερχόμενα",
         "homepage_default_tab_specials": "Ειδικές προσφορές",
-        "wishlist": "αντικείμενα στην λίστα επιθυμιών σας",
+        "wishlist": "Αντικείμενα στην λίστα επιθυμιών σας",
         "add_another_region": "Προσθήκη",
         "skip_got_steam": "Παράλειψη διαλόγου \"Έχετε το Steam;\"",
         "store_general_thirdparty": "Επιλογές για πληροφορίες από ιστότοπους τρίτων",
@@ -418,7 +418,9 @@
         "homepage_default_tab_free": "Στις τάσεις Δωρεάν",
         "headers": {
             "itad_price_info": "Πληροφορίες τιμών από το IsThereAnyDeal"
-        }
+        },
+        "followed": "Ακολουθούμενα παιχνίδια",
+        "prevent_video_pause": "Αποτροπή παύσης των βίντεο όταν η καρτέλα χάνει την εστίαση (πειραματικό)"
     },
     "ready": {
         "loading": "Φόρτωση δεδομένων Augmented Steam...",
@@ -444,7 +446,8 @@
         "notinterested": "Δεν ενδιαφέρομαι",
         "collection": "Συλλέχθηκαν",
         "waitlist": "Στη λίστα αναμονής",
-        "ignored_owned": "Αγνοήθηκε (σε κατοχή)"
+        "ignored_owned": "Αγνοήθηκε (σε κατοχή)",
+        "followed": "Ακολουθούμενα"
     },
     "wallet": {
         "custom_amount": "Προσθέστε προσαρμοσμένο ποσό",

@@ -417,7 +417,9 @@
         "homepage_default_tab_free": "Популярные бесплатные игры",
         "headers": {
             "itad_price_info": "Информация о ценах от IsThereAnyDeal"
-        }
+        },
+        "followed": "Игры в подписках",
+        "prevent_video_pause": "Не приостанавливать видео при потере фокуса на вкладке (экспериментально)"
     },
     "ready": {
         "loading": "Augmented Steam загружается...",
@@ -443,7 +445,8 @@
         "notinterested": "Не интересно",
         "collection": "В коллекции",
         "waitlist": "В списке ожидаемого",
-        "ignored_owned": "Скрыто (уже приобретено)"
+        "ignored_owned": "Скрыто (уже приобретено)",
+        "followed": "В подписках"
     },
     "wallet": {
         "custom_amount": "Добавить определённую сумму",
