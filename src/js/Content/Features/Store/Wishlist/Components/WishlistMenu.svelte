@@ -34,8 +34,11 @@
 
 <style>
     div {
+        height: 25px;
         display: flex;
         gap: 2px;
-        margin-right: 15px;
+        justify-content: flex-end;
+        margin-top: -20px;
+        margin-bottom: 10px;
     }
 </style>
