@@ -554,7 +554,13 @@
         "unsubscribe_confirm": "Czy na pewno chcesz anulować subskrypcję wszystkich znalezionych przedmiotów (__count__)?",
         "unsubscribe_loading": "Trwa anulowanie subskrypcji przedmiotów (__i__/__count__), proszę czekać...",
         "finished": "Gotowe! Zakończone powodzeniem: __success__, zakończone niepowodzeniem: __fail__. Kliknij przycisk „OK”, by odświeżyć stronę",
-        "failed": "Zakończone niepowodzeniem: __n__"
+        "failed": "Zakończone niepowodzeniem: __n__",
+        "collection_sort_by": "Sortuj według:",
+        "collection_sort_default": "Domyślnie",
+        "collection_sort_subscription": "Subskrypcja",
+        "collection_sort_rating": "Ocena",
+        "collection_sort_title": "Tytuł",
+        "collection_sort_author": "Autor"
     },
     "original_authors": "Pierwotni autorzy",
     "acknowledgements": "Podziękowania",

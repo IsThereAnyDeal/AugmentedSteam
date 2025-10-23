@@ -302,5 +302,23 @@
         "wallet": "O código que introduziste é de um cartão-presente Steam ou um código para a Carteira Steam",
         "toomany": "Ocorreram recentemente demasiadas tentativas de ativação a partir desta conta. Aguarda uns momentos ou tenta mais tarde.",
         "default": "Ocorreu um erro inesperado. O teu código de produto não foi ativado. Por favor espera 30 minutos e tenta ativar o código novamente."
+    },
+    "workshop": {
+        "workshop": "Workshop",
+        "subscriptions": "Subscrições",
+        "subscribe_all": "Subscrever tudo",
+        "subscribe_confirm": "Tens a certeza de que queres subscrever todos os __count__ itens do Workshop com estes filtros?",
+        "subscribe_loading": "A subscrever __i__/__count__ itens do Workshop, aguarda...",
+        "unsubscribe_all": "Cancelar subscrição de tudo",
+        "unsubscribe_confirm": "Tens a certeza de que queres cancelar a subscrição de todos os __count__ itens do Workshop com estes filtros?",
+        "unsubscribe_loading": "A cancelar subscrição de __i__/__count__ itens do Workshop, aguarda...",
+        "finished": "Concluído! __success__ bem-sucedidos, __fail__ falharam. Clica em OK para atualizar a página",
+        "failed": "__n__ falharam",
+        "collection_sort_by": "Ordenar por:",
+        "collection_sort_default": "Predefinição",
+        "collection_sort_subscription": "Subscrição",
+        "collection_sort_rating": "Classificação",
+        "collection_sort_title": "Título",
+        "collection_sort_author": "Autor"
     }
 }

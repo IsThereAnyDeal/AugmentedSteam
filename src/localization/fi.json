@@ -551,7 +551,13 @@
         "unsubscribe_confirm": "Haluatko varmasti poistaa kaikkien __count__ workshop tuotteen tilauksen näillä suodattimilla?",
         "unsubscribe_loading": "Poistetan __i__/__count__ workshop tuotteen tilauksen, odotathan...",
         "finished": "Valmis! __success__ onnistunutts, __fail__ epäonnistunutta. Klikkaa OK päivittääksesi sivun",
-        "failed": "__n__ epäonnistui"
+        "failed": "__n__ epäonnistui",
+        "collection_sort_by": "Lajittele:",
+        "collection_sort_default": "Oletus",
+        "collection_sort_subscription": "Tilaus",
+        "collection_sort_rating": "Arvio",
+        "collection_sort_title": "Otsikko",
+        "collection_sort_author": "Tekijä"
     },
     "original_authors": "Alkuperäinen tekijä",
     "acknowledgements": "Huomiot",

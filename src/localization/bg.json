@@ -550,8 +550,14 @@
         "unsubscribe_all": "Премахване на абонамента към всички",
         "unsubscribe_confirm": "Сигурни ли сте, че искате да се премахнете абонамента за всичките __count__ артикула от работилницата с тези филтри?",
         "unsubscribe_loading": "Премахване на абонамента към __i__/__count__ артикула от работилницата, моля, изчаквайте…",
-        "finished": "Приключено! __success__ успешно, __fail__ неуспешно. Кликнете върху „Добре“, за да опресните страницата",
-        "failed": "__n__ неуспешно"
+        "finished": "Приключено! __success__ успешно, __fail__ неуспешно. Кликнете върху \"Добре\", за да опресните страницата",
+        "failed": "__n__ неуспешно",
+        "collection_sort_by": "Сортиране по:",
+        "collection_sort_default": "По подразбиране",
+        "collection_sort_subscription": "Абонамент",
+        "collection_sort_rating": "Рейтинг",
+        "collection_sort_title": "Заглавие",
+        "collection_sort_author": "Автор"
     },
     "original_authors": "Оригинални автори",
     "acknowledgements": "Признания",

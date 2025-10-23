@@ -302,5 +302,23 @@
         "wallet": "Koden du har skrivit in är ett Steam-gåvorkort eller Steam-plånbokskod",
         "toomany": "Det har varit för många senaste aktivering försök från detta konto.  Vänta och försök igen senare.",
         "default": "Ett oväntat fel uppstod. Din produktkod har inte aktiverats. Vänligen vänta 30 minuter och försök igen."
+    },
+    "workshop": {
+        "workshop": "Verkstad",
+        "subscriptions": "Prenumerationer",
+        "subscribe_all": "Prenumerera på alla",
+        "subscribe_confirm": "Är du säker på att du vill prenumerera på alla __count__ verkstadsobjekt med dessa filter?",
+        "subscribe_loading": "Prenumererar på __i__/__count__ verkstadsobjekt, vänta...",
+        "unsubscribe_all": "Avsluta prenumeration på alla",
+        "unsubscribe_confirm": "Är du säker på att du vill avsluta prenumerationen på alla __count__ verkstadsobjekt med dessa filter?",
+        "unsubscribe_loading": "Avslutar prenumeration på __i__/__count__ verkstadsobjekt, vänta...",
+        "finished": "Klart! __success__ lyckades, __fail__ misslyckades. Klicka OK för att uppdatera sidan",
+        "failed": "__n__ misslyckades",
+        "collection_sort_by": "Sortera efter:",
+        "collection_sort_default": "Standard",
+        "collection_sort_subscription": "Prenumeration",
+        "collection_sort_rating": "Betyg",
+        "collection_sort_title": "Titel",
+        "collection_sort_author": "Författare"
     }
 }

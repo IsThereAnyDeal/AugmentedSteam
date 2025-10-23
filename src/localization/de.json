@@ -548,7 +548,13 @@
         "unsubscribe_confirm": "Möchten Sie alle __count__ Workshop-Artikel mit diesen Filtern wirklich abbestellen?",
         "unsubscribe_loading": "__i__/__count__ Workshop-Artikel werden abbestellt, bitte warten ...",
         "finished": "Fertig! __success__ erfolgreich, __fail__ fehlgeschlagen. Klicken Sie auf „OK“, um die Seite neu zu laden.",
-        "failed": "__n__ fehlgeschlagen"
+        "failed": "__n__ fehlgeschlagen",
+        "collection_sort_by": "Sortieren nach:",
+        "collection_sort_default": "Standard",
+        "collection_sort_subscription": "Abonnement",
+        "collection_sort_rating": "Bewertung",
+        "collection_sort_title": "Titel",
+        "collection_sort_author": "Autor"
     },
     "original_authors": "Originalautoren",
     "acknowledgements": "Anerkennungen",

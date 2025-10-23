@@ -550,7 +550,13 @@
         "unsubscribe_confirm": "Tem certeza de que deseja cancelar a inscrição de todos os __count__ itens correspondentes ao filtro?",
         "unsubscribe_loading": "Cancelando inscrições de __i__/__count__ itens, aguarde...",
         "finished": "Pronto! __success__ bem-sucedidos, __fail__ falharam. Clique em OK para recarregar a página",
-        "failed": "__n__ falharam"
+        "failed": "__n__ falharam",
+        "collection_sort_by": "Ordenar por:",
+        "collection_sort_default": "Padrão",
+        "collection_sort_subscription": "Inscrição",
+        "collection_sort_rating": "Avaliação",
+        "collection_sort_title": "Título",
+        "collection_sort_author": "Autor"
     },
     "original_authors": "Autores originais",
     "acknowledgements": "Agradecimentos",

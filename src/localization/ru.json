@@ -550,7 +550,13 @@
         "unsubscribe_confirm": "Вы уверены, что хотите отписаться от всех __count__ работ мастерской с этими фильтрами?",
         "unsubscribe_loading": "Отписываемся от __i__/__count__ работ мастерской, пожалуйста подождите...",
         "finished": "Готово! __success__ удалось, __fail__ не удалось. Нажмите OK, чтобы обновить страницу",
-        "failed": "__n__ не удалось"
+        "failed": "__n__ не удалось",
+        "collection_sort_by": "Сортировать по:",
+        "collection_sort_default": "По умолчанию",
+        "collection_sort_subscription": "Подписка",
+        "collection_sort_rating": "Рейтинг",
+        "collection_sort_title": "Название",
+        "collection_sort_author": "Автор"
     },
     "original_authors": "Оригинальные авторы",
     "acknowledgements": "Благодарности",

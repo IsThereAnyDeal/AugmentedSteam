@@ -509,7 +509,13 @@
         "unsubscribe_confirm": "Weet u zeker dat u van alle __count__ workshop items met deze filters af wilt melden?",
         "unsubscribe_loading": "Afmelden van __i__/__count__ workshop items, een ogenblik geduld astublieft...",
         "finished": "Voltooid! __success__ successvul en __fail__ gefaald. Click OK to refresh the page",
-        "failed": "__n__ gefaald"
+        "failed": "__n__ gefaald",
+        "collection_sort_by": "Sorteer op:",
+        "collection_sort_default": "Standaard",
+        "collection_sort_subscription": "Abonnement",
+        "collection_sort_rating": "Beoordeling",
+        "collection_sort_title": "Titel",
+        "collection_sort_author": "Auteur"
     },
     "original_authors": "Originele makers",
     "acknowledgements": "Erkenningen",

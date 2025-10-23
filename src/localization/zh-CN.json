@@ -546,7 +546,13 @@
         "unsubscribe_confirm": "您确定要取消订阅 __count__ 个符合条件的创意工坊物品吗？",
         "unsubscribe_loading": "正在取消订阅 __i__/__count__ 个创意工坊物品，请稍候……",
         "finished": "已完成！__success__ 个成功，__fail__ 个失败。点击 OK 刷新页面。",
-        "failed": "__n__ 个失败"
+        "failed": "__n__ 个失败",
+        "collection_sort_by": "排序方式：",
+        "collection_sort_default": "默认",
+        "collection_sort_subscription": "订阅",
+        "collection_sort_rating": "评分",
+        "collection_sort_title": "标题",
+        "collection_sort_author": "作者"
     },
     "original_authors": "原版作者",
     "acknowledgements": "致谢",

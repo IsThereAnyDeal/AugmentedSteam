@@ -513,6 +513,60 @@ img.astats_icon {
   max-width: 920px;
 }
 
+/**************************************
+ * Workshop collection sorting controls
+**************************************/
+.es_collection_sort {
+  clear: both;
+  padding: 16px 0 12px 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.es_sort_label {
+  color: #8b8b8b;
+  font-size: 11px;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-right: 4px;
+}
+
+.es_sort_btn {
+  background: linear-gradient(to bottom, rgba(103, 193, 245, 0.2) 5%, rgba(65, 122, 155, 0.2) 95%);
+  border: 1px solid rgba(103, 193, 245, 0.3);
+  border-radius: 2px;
+  color: #67c1f5;
+  padding: 6px 14px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.es_sort_btn:hover {
+  background: linear-gradient(to bottom, rgba(103, 193, 245, 0.3) 5%, rgba(65, 122, 155, 0.3) 95%);
+  border-color: rgba(103, 193, 245, 0.5);
+  color: #a4d7f5;
+}
+
+.es_sort_btn.active {
+  background: linear-gradient(to bottom, #67c1f5 5%, #417a9b 95%);
+  border-color: #417a9b;
+  color: #fff;
+  text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.es_sort_btn.active:hover {
+  background: linear-gradient(to bottom, #76cafa 5%, #4d94b5 95%);
+}
+
 /*
  * The native highlight strip has a width of 593px. (https://github.com/SteamDatabase/SteamTracking/blob/8e19832027cf425b5db71c09c878739b5630c66a/steamcommunity.com/public/css/skin_1/workshop_itemdetails.css#L238)
  * Five items are at most fully visible on the strip. You can derive the following formula:

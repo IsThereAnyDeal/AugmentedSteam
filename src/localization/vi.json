@@ -553,7 +553,13 @@
         "unsubscribe_confirm": "Bạn có chắc chắn muốn hủy đăng kí hết tất cả __count__ vật phẩm Workshop với những bộ lọc này?",
         "unsubscribe_loading": "Đang hủy đăng kí __i__/__count__ vật phẩm Workshop, xin hãy đợi...",
         "finished": "Đã hoàn thành! __success__ đã thành công, __fail__ đã thất bại. Nhấn OK để tải lại trang",
-        "failed": "__n__ thất bại"
+        "failed": "__n__ thất bại",
+        "collection_sort_by": "Sắp xếp theo:",
+        "collection_sort_default": "Mặc định",
+        "collection_sort_subscription": "Đăng ký",
+        "collection_sort_rating": "Đánh giá",
+        "collection_sort_title": "Tiêu đề",
+        "collection_sort_author": "Tác giả"
     },
     "original_authors": "Tác giả gốc",
     "acknowledgements": "Công nhận",

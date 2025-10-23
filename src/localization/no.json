@@ -302,5 +302,23 @@
         "wallet": "Koden du har angitt er fra et Steam-gavekort eller en Steam-lommebokskode",
         "toomany": "Det har vært for mange nylige aktiveringsforsøk fra denne kontoen. Vennligst vent og prøv igjen senere.",
         "default": "Det oppstod en uventet feil. Din produktkode er ikke innløst. Vennligst vent 30 minutter og prøv å innløse koden igjen."
+    },
+    "workshop": {
+        "workshop": "Verksted",
+        "subscriptions": "Abonnementer",
+        "subscribe_all": "Abonner alle",
+        "subscribe_confirm": "Er du sikker på at du vil abonnere på alle __count__ verksted-elementer med disse filtrene?",
+        "subscribe_loading": "Abonnerer på __i__/__count__ verksted-elementer, vennligst vent...",
+        "unsubscribe_all": "Avslutt alle abonnementer",
+        "unsubscribe_confirm": "Er du sikker på at du vil avslutte abonnementet på alle __count__ verksted-elementer med disse filtrene?",
+        "unsubscribe_loading": "Avslutter abonnement på __i__/__count__ verksted-elementer, vennligst vent...",
+        "finished": "Ferdig! __success__ vellykket, __fail__ mislykket. Klikk OK for å oppdatere siden",
+        "failed": "__n__ mislykket",
+        "collection_sort_by": "Sorter etter:",
+        "collection_sort_default": "Standard",
+        "collection_sort_subscription": "Abonnement",
+        "collection_sort_rating": "Vurdering",
+        "collection_sort_title": "Tittel",
+        "collection_sort_author": "Forfatter"
     }
 }

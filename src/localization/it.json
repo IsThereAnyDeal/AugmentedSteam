@@ -537,7 +537,13 @@
         "unsubscribe_confirm": "Sei sicuro di voler eliminare la sottoscrizione da __count__ oggetti del workshop con questi filtri?",
         "unsubscribe_loading": "Rimuovendo sottoscrizione da __i__/__count__ oggetti del workshop, aspettare perfavore...",
         "finished": "Finito! __success__ con successo, __fail__ falliti. Fai clic su OK per ricaricare la pagina",
-        "failed": "__n__ fallito/i"
+        "failed": "__n__ fallito/i",
+        "collection_sort_by": "Ordina per:",
+        "collection_sort_default": "Predefinito",
+        "collection_sort_subscription": "Sottoscrizione",
+        "collection_sort_rating": "Valutazione",
+        "collection_sort_title": "Titolo",
+        "collection_sort_author": "Autore"
     },
     "original_authors": "Autori originali",
     "acknowledgements": "Riconoscimenti",
