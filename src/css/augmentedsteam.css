@@ -764,53 +764,6 @@ video.highlight_movie:hover + .html5_video_overlay {
   align-items: center;
 }
 
-/***************************************
- * App pages
- * Common/UserNotes
- **************************************/
-.es_note_prompt {
-  /* Long app titles stretch the modal but this element doesn't scale since it's width is 500 px at max */
-  width: auto !important;
-}
-#es_note_input {
-  height: 112px;
-  font-size: 14px !important;
-}
-
-#esi-user-note-button .esi-add-note,
-#esi-user-note-button .esi-update-note {
-  display: none;
-}
-#esi-user-note-button:not(.esi-has-note) .esi-add-note,
-#esi-user-note-button.esi-has-note .esi-update-note {
-  display: inline-block;
-}
-
-.esi-note {
-  font-size: 11px;
-  height: fit-content;
-  flex-grow: 2;
-  margin-top: 5px;
-  margin-right: 5px;
-  cursor: pointer;
-}
-.esi-note--store {
-  font-size: 1.4em;
-  font-style: italic;
-  margin-top: 20px;
-  display: none;
-}
-.esi-note--store.esi-has-note {
-  display: block;
-}
-.esi-note--wishlist {
-  font-style: italic;
-}
-.esi-note--wishlist.esi-has-note {
-  font-style: normal;
-  color: #5fafdd;
-}
-
 
 /***************************************
  * App pages
