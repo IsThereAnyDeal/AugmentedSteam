@@ -418,7 +418,9 @@
         "homepage_default_tab_free": "Тенденциозни безплатни",
         "headers": {
             "itad_price_info": "Информацията за цената е от IsThereAnyDeal"
-        }
+        },
+        "followed": "Следвани игри",
+        "prevent_video_pause": "Предотвратяване на паузирането на видеата, когато разделът загуби фокус (експериментално)"
     },
     "ready": {
         "loading": "Зареждане на данните за Augmented Steam…",
@@ -444,7 +446,8 @@
         "notinterested": "Не се интересувам",
         "collection": "Събрани",
         "waitlist": "В списъка за изчакване",
-        "ignored_owned": "Игнорирано (притежавано)"
+        "ignored_owned": "Игнорирано (притежавано)",
+        "followed": "Следван"
     },
     "wallet": {
         "custom_amount": "Добавяне на персонализирана сума",
