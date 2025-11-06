@@ -1,6 +1,6 @@
 import AppId from "@Core/GameId/AppId";
 import {L} from "@Core/Localization/Localization";
-import {__contact, __email, __support, __website} from "@Strings/_strings";
+import {__email, __getHelp, __support, __website} from "@Strings/_strings";
 import type CApp from "@Content/Features/Store/App/CApp";
 import Settings from "@Options/Data/Settings";
 import Feature from "@Content/Modules/Context/Feature";
@@ -57,17 +57,21 @@ export default class FSupportInfo extends Feature<CApp> {
         }
 
         if (email) {
+            email = email.replace("＠", "@"); // https://store.steampowered.com/app/2905790/PROJECT_TACHYON/
 
             // From https://emailregex.com/
             const emailRegex
-                = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                = /(?:(?:[^<>()[\]\\.,;:\s@"]+(?:\.[^<>()[\]\\.,;:\s@"]+)*)|(?:".+"))@(?:(?:\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(?:(?:[a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/g;
 
-            if (emailRegex.test(email)) {
-                links.push(`<a href="mailto:${email}">${L(__email)}</a>`);
-            } else {
-                links.push(`<a href="${email}">${L(__contact)}</a>`);
+            const m = [...email.matchAll(emailRegex)];
+            if (m.length > 0) {
+                const mailto = m.join(";")
+                links.push(`<a href="mailto:${mailto}">${L(__email)}</a>`);
             }
         }
+
+        const help = `https://help.steampowered.com/en/wizard/HelpWithGameTechnicalIssue?appid=${this.context.appid}`;
+        links.push(`<a href="${help}">${L(__getHelp)}</a>`);
 
         HTML.beforeEnd(".glance_ctn_responsive_left",
             `<div class="release_date" style="padding-bottom: 0;">
