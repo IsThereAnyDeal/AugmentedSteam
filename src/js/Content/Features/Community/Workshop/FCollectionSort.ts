@@ -25,7 +25,7 @@ export default class FCollectionSort extends Feature<Context> {
             target: collectionChildren.parentElement,
             anchor: collectionChildren,
             props: {
-                handler: config => this._sort(config)
+                handler: (config: SortConfig) => this._sort(config)
             }
         });
     }
