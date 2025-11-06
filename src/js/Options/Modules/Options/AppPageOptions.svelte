@@ -12,7 +12,8 @@
         __options_itadlinks,
         __options_metacritic,
         __options_opencritic,
-        __options_pcgw, __options_preventVideoPause,
+        __options_pcgw,
+        __options_preventVideoPause,
         __options_protondb,
         __options_purchaseDates,
         __options_removebroadcasts,
@@ -27,7 +28,7 @@
         __options_steamdb,
         __options_storeGeneralThirdparty,
         __options_storeSteamcards,
-        __options_supportinfo,
+        __options_supportinfo, __options_tabtitleAppnameFirst,
         __options_twitch,
         __options_wsgf,
         __options_youtube,
@@ -62,6 +63,7 @@
 
     <OptionGroup>
         <Toggle bind:value={$settings.prevent_video_pause}>{L(__options_preventVideoPause)}</Toggle>
+        <Toggle bind:value={$settings.tabtitle_appname_first}>{L(__options_tabtitleAppnameFirst)}</Toggle>
     </OptionGroup>
 </Section>
 

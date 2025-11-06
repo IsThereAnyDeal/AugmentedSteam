@@ -393,6 +393,7 @@
         "send_age_info": "Automatically send age verification and skip mature content warnings",
         "removebroadcasts": "Completely remove any live broadcast",
         "prevent_video_pause": "Prevent videos pausing when tab loses focus (experimental)",
+        "tabtitle_appname_first": "Make sure tab title always start with game name",
         "exfgls": "Show a notice if app is excluded from Family Sharing",
         "youtube": "Show YouTube links",
         "twitch": "Show Twitch links",

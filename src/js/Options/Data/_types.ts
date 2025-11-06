@@ -123,6 +123,7 @@ export interface SettingsSchema {
     send_age_info: boolean,
     removebroadcasts: boolean,
     prevent_video_pause: boolean,
+    tabtitle_appname_first: boolean,
     horizontalscrolling: boolean,
     showsupportinfo: boolean,
     showdrm: boolean,

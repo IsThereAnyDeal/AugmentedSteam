@@ -42,6 +42,7 @@ import FWaitlistDropdown from "@Content/Features/Store/App/FWaitlistDropdown";
 import FHighlightTitle from "@Content/Features/Store/App/FHighlightTitle";
 import type {ContextParams} from "@Content/Modules/Context/Context";
 import FPreventVideoPause from "@Content/Features/Store/App/FPreventVideoPause";
+import FAppTitle from "@Content/Features/Store/App/FAppTitle";
 
 export default class CApp extends CStoreBase {
 
@@ -108,7 +109,8 @@ export default class CApp extends CStoreBase {
                 FHideReportedTags,
                 FPatchHighlightPlayer,
                 FRemoveDupeScreenshots,
-                FHighlightTitle
+                FHighlightTitle,
+                FAppTitle
             ]);
 
         this.appid = AppId.fromUrl(window.location.host + window.location.pathname)!;

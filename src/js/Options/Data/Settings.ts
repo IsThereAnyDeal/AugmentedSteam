@@ -119,6 +119,7 @@ export const DefaultSettings: Readonly<SettingsSchema> = {
     send_age_info: true,
     removebroadcasts: false,
     prevent_video_pause: false,
+    tabtitle_appname_first: false,
     horizontalscrolling: true,
     showsupportinfo: true,
     showdrm: true,
