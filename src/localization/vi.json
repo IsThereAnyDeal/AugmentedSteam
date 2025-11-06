@@ -419,7 +419,8 @@
         "headers": {
             "itad_price_info": "Thông tin Giá từ IsThereAnyDeal"
         },
-        "followed": "Các trò chơi đã theo dõi"
+        "followed": "Các trò chơi đã theo dõi",
+        "prevent_video_pause": "Ngăn video tạm dừng khi thẻ không còn được chọn (thử nghiệm)"
     },
     "ready": {
         "loading": "Augmented Steam đang tải dữ liệu...",
