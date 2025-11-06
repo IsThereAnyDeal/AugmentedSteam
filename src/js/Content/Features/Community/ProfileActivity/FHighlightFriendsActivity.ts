@@ -26,6 +26,7 @@ export default class FHighlightFriendsActivity extends Feature<CProfileActivity>
             if ((AppId.fromElement(link) !== null && link.childElementCount <= 1)
                 // https://github.com/IsThereAnyDeal/AugmentedSteam/pull/470#pullrequestreview-284928257
                 && (link.childElementCount !== 1 || !link.closest(".vote_header"))
+                && (!link.closest(".blotter_viewallcomments_container")) // prevent highlighting "View all x comments"
             ) {
                 nodes.push(link);
             }
