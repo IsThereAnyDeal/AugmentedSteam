@@ -11,6 +11,8 @@
     }
 
     i :global(svg) {
+        overflow: visible;
         vertical-align: bottom;
+        fill: currentColor;
     }
 </style>

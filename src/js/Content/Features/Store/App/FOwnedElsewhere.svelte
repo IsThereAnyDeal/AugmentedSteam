@@ -2,8 +2,8 @@
     import {__coll_inCollection, __ownedCollection} from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
     import type {TCollectionCopy} from "@Background/Modules/IsThereAnyDeal/_types";
-    import RedeemedIcon from "@Content/Features/Store/App/Icons/RedeemedIcon.svelte";
-    import RedeemableIcon from "@Content/Features/Store/App/Icons/RedeemableIcon.svelte";
+    import RedeemedIcon from "@Content/Icons/RedeemedIcon.svelte";
+    import RedeemableIcon from "@Content/Icons/RedeemableIcon.svelte";
 
     export let appName: string;
     export let copies: TCollectionCopy[];

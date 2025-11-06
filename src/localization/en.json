@@ -648,7 +648,6 @@
         "finished": "Finished! __success__ successful, __fail__ failed. Click OK to refresh the page",
         "failed": "__n__ failed",
         "collection_sort_by": "Sort by:",
-        "collection_sort_default": "Default",
         "collection_sort_subscription": "Subscription",
         "collection_sort_rating": "Rating",
         "collection_sort_title": "Title",

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Icon from "@Content/Features/Store/App/Icons/Icon.svelte";
+    import Icon from "@Content/Icons/Icon.svelte";
 </script>
 
 

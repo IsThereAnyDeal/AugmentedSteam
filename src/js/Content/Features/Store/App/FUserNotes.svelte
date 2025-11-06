@@ -3,7 +3,7 @@
     import {__userNote_add, __userNote_update} from "@Strings/_strings";
     import UserNotes from "@Content/Features/Store/Common/UserNotes/UserNotes";
     import {onMount} from "svelte";
-    import UserNoteIcon from "@Content/Features/Store/App/Icons/UserNoteIcon.svelte";
+    import UserNoteIcon from "@Content/Icons/UserNoteIcon.svelte";
 
     export let notes: UserNotes;
     export let appName: string;
