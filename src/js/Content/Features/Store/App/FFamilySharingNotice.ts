@@ -8,6 +8,11 @@ export default class FFamilySharingNotice extends Feature<CApp> {
     override async checkPrerequisites(): Promise<boolean> {
         if (!Settings.exfgls) { return false; }
 
+        const comingSoon = document.querySelector(".game_area_comingsoon");
+        if (comingSoon) { // TODO temporary fix, return reason from server
+            return false;
+        }
+
         const result = await this.context.data;
         // Apply this feature if app is NOT family shareable
         return result !== null && !result.family_sharing;
