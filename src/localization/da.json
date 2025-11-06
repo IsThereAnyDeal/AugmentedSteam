@@ -387,7 +387,6 @@
         "finished": "Færdig! __success__ lykkedes, __fail__ mislykkedes. Klik OK for at opdatere siden",
         "failed": "__n__ mislykkedes",
         "collection_sort_by": "Sortér efter:",
-        "collection_sort_default": "Standard",
         "collection_sort_subscription": "Abonnement",
         "collection_sort_rating": "Vurdering",
         "collection_sort_title": "Titel",

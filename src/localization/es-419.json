@@ -520,7 +520,6 @@
         "finished": "¡Terminado! __sucess__ exitoso(s), __fail__ fallado(s). Haz clic en OK para refrescar la página",
         "failed": "__n__ falló/fallaron",
         "collection_sort_by": "Ordenar por:",
-        "collection_sort_default": "Predeterminado",
         "collection_sort_subscription": "Suscripción",
         "collection_sort_rating": "Valoración",
         "collection_sort_title": "Título",

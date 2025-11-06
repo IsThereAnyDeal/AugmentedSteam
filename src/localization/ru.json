@@ -552,7 +552,6 @@
         "finished": "Готово! __success__ удалось, __fail__ не удалось. Нажмите OK, чтобы обновить страницу",
         "failed": "__n__ не удалось",
         "collection_sort_by": "Сортировать по:",
-        "collection_sort_default": "По умолчанию",
         "collection_sort_subscription": "Подписка",
         "collection_sort_rating": "Рейтинг",
         "collection_sort_title": "Название",

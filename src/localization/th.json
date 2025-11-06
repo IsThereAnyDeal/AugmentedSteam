@@ -543,7 +543,6 @@
         "finished": "เสร็จสิ้น! มี __success__ รายการที่เสร็จสมบูรณ์ และมี __fail__ รายการที่ล้มเหลว คลิกตกลงเพื่อรีเฟรชหน้า",
         "failed": "__n__ รายการล้มเหลว",
         "collection_sort_by": "เรียงตาม:",
-        "collection_sort_default": "ค่าเริ่มต้น",
         "collection_sort_subscription": "การสมัครสมาชิก",
         "collection_sort_rating": "คะแนน",
         "collection_sort_title": "ชื่อ",

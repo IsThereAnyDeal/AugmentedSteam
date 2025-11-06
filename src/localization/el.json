@@ -556,7 +556,6 @@
         "finished": "Τέλος! __success__ επιτυχής, __fail__ απέτυχαν. Κάντε κλικ στο OK για να ανανεώσετε τη σελίδα\n",
         "failed": "__n__ απέτυχαν",
         "collection_sort_by": "Ταξινόμηση κατά:",
-        "collection_sort_default": "Προεπιλογή",
         "collection_sort_subscription": "Συνδρομή",
         "collection_sort_rating": "Βαθμολογία",
         "collection_sort_title": "Τίτλος",

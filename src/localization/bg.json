@@ -556,7 +556,6 @@
         "finished": "Приключено! __success__ успешно, __fail__ неуспешно. Кликнете върху „Добре“, за да опресните страницата",
         "failed": "__n__ неуспешно",
         "collection_sort_by": "Сортиране по:",
-        "collection_sort_default": "По подразбиране",
         "collection_sort_subscription": "Абонамент",
         "collection_sort_rating": "Рейтинг",
         "collection_sort_title": "Заглавие",

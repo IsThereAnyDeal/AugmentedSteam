@@ -350,7 +350,6 @@
         "finished": "완료! __success__개 성공, __fail__개 실패. 페이지를 새로고침하려면 확인을 클릭하세요",
         "failed": "__n__개 실패",
         "collection_sort_by": "정렬 기준:",
-        "collection_sort_default": "기본값",
         "collection_sort_subscription": "구독",
         "collection_sort_rating": "평가",
         "collection_sort_title": "제목",

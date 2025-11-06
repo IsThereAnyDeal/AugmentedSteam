@@ -371,7 +371,6 @@
         "finished": "Dokončeno! __success__ úspěšných, __fail__ selhalo. Klikněte na OK pro obnovení stránky",
         "failed": "__n__ selhalo",
         "collection_sort_by": "Řadit podle:",
-        "collection_sort_default": "Výchozí",
         "collection_sort_subscription": "Odběr",
         "collection_sort_rating": "Hodnocení",
         "collection_sort_title": "Název",

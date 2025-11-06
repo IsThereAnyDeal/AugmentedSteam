@@ -315,7 +315,6 @@
         "finished": "Concluído! __success__ bem-sucedidos, __fail__ falharam. Clica em OK para atualizar a página",
         "failed": "__n__ falharam",
         "collection_sort_by": "Ordenar por:",
-        "collection_sort_default": "Predefinição",
         "collection_sort_subscription": "Subscrição",
         "collection_sort_rating": "Classificação",
         "collection_sort_title": "Título",

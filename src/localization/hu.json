@@ -499,7 +499,6 @@
         "finished": "Kész!__success__sikeres, __fail__sikertelen. Kattints az OK-ra az oldal frissítéséhez.",
         "failed": "__n__ sikertelen",
         "collection_sort_by": "Rendezés:",
-        "collection_sort_default": "Alapértelmezett",
         "collection_sort_subscription": "Feliratkozás",
         "collection_sort_rating": "Értékelés",
         "collection_sort_title": "Cím",

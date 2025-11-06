@@ -315,7 +315,6 @@
         "finished": "Klart! __success__ lyckades, __fail__ misslyckades. Klicka OK för att uppdatera sidan",
         "failed": "__n__ misslyckades",
         "collection_sort_by": "Sortera efter:",
-        "collection_sort_default": "Standard",
         "collection_sort_subscription": "Prenumeration",
         "collection_sort_rating": "Betyg",
         "collection_sort_title": "Titel",

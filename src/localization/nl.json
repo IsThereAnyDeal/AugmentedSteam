@@ -511,7 +511,6 @@
         "finished": "Voltooid! __success__ successvul en __fail__ gefaald. Click OK to refresh the page",
         "failed": "__n__ gefaald",
         "collection_sort_by": "Sorteer op:",
-        "collection_sort_default": "Standaard",
         "collection_sort_subscription": "Abonnement",
         "collection_sort_rating": "Beoordeling",
         "collection_sort_title": "Titel",

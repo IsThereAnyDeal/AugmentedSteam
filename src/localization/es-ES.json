@@ -545,7 +545,6 @@
         "finished": "¡Completado! __success__ con éxito, __fail__ con error. Haz clic en Aceptar para actualizar la página.",
         "failed": "__n__ con error",
         "collection_sort_by": "Ordenar por:",
-        "collection_sort_default": "Predeterminado",
         "collection_sort_subscription": "Suscripción",
         "collection_sort_rating": "Valoración",
         "collection_sort_title": "Título",

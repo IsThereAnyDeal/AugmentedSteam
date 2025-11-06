@@ -553,7 +553,6 @@
         "finished": "Valmis! __success__ onnistunutts, __fail__ epäonnistunutta. Klikkaa OK päivittääksesi sivun",
         "failed": "__n__ epäonnistui",
         "collection_sort_by": "Lajittele:",
-        "collection_sort_default": "Oletus",
         "collection_sort_subscription": "Tilaus",
         "collection_sort_rating": "Arvio",
         "collection_sort_title": "Otsikko",

@@ -572,7 +572,6 @@ export const __workshop_unsubscribeLoading = "workshop_unsubscribeLoading";
 export const __workshop_finished = "workshop_finished";
 export const __workshop_failed = "workshop_failed";
 export const __workshop_collectionSortBy = "workshop_collectionSortBy";
-export const __workshop_collectionSortDefault = "workshop_collectionSortDefault";
 export const __workshop_collectionSortSubscription = "workshop_collectionSortSubscription";
 export const __workshop_collectionSortRating = "workshop_collectionSortRating";
 export const __workshop_collectionSortTitle = "workshop_collectionSortTitle";

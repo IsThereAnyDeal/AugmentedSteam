@@ -315,7 +315,6 @@
         "finished": "Ferdig! __success__ vellykket, __fail__ mislykket. Klikk OK for å oppdatere siden",
         "failed": "__n__ mislykket",
         "collection_sort_by": "Sorter etter:",
-        "collection_sort_default": "Standard",
         "collection_sort_subscription": "Abonnement",
         "collection_sort_rating": "Vurdering",
         "collection_sort_title": "Tittel",

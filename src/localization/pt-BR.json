@@ -552,7 +552,6 @@
         "finished": "Pronto! __success__ bem-sucedidos, __fail__ falharam. Clique em OK para recarregar a página",
         "failed": "__n__ falharam",
         "collection_sort_by": "Ordenar por:",
-        "collection_sort_default": "Padrão",
         "collection_sort_subscription": "Inscrição",
         "collection_sort_rating": "Avaliação",
         "collection_sort_title": "Título",

@@ -317,7 +317,6 @@
         "finished": "Terminat! __success__ reușite, __fail__ eșuate. Apasă OK pentru a reîmprospăta pagina",
         "failed": "__n__ eșuate",
         "collection_sort_by": "Sortează după:",
-        "collection_sort_default": "Implicit",
         "collection_sort_subscription": "Abonament",
         "collection_sort_rating": "Evaluare",
         "collection_sort_title": "Titlu",

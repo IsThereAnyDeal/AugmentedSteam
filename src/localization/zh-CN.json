@@ -548,7 +548,6 @@
         "finished": "已完成！__success__ 个成功，__fail__ 个失败。点击 OK 刷新页面。",
         "failed": "__n__ 个失败",
         "collection_sort_by": "排序方式：",
-        "collection_sort_default": "默认",
         "collection_sort_subscription": "订阅",
         "collection_sort_rating": "评分",
         "collection_sort_title": "标题",
