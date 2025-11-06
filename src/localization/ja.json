@@ -517,7 +517,13 @@
         "unsubscribe_confirm": "現在のフィルターで全部 __count__ 個のワークショップアイテムのサブスクリプションを解除しますか？",
         "unsubscribe_loading": "__i__/__count__ 個のワークショップアイテムのサブスクリプションを解除中、お待ち下さい…",
         "finished": "完成しました！ __success__ 個は成功、 __fail__ 個は失敗失敗しました。OKをクリックして再読み込み。",
-        "failed": "__n__ は失敗した。"
+        "failed": "__n__ は失敗した。",
+        "collection_sort_by": "並び替え:",
+        "collection_sort_default": "デフォルト",
+        "collection_sort_subscription": "サブスクリプション",
+        "collection_sort_rating": "評価",
+        "collection_sort_title": "タイトル",
+        "collection_sort_author": "作成者"
     },
     "original_authors": "元開発者",
     "acknowledgements": "感謝",

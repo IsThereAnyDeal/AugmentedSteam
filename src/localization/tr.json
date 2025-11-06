@@ -543,7 +543,13 @@
         "unsubscribe_confirm": "Bu filtreleri içeren tüm __count__ atölye öğesinin aboneliğini iptal etmek istediğinizden emin misiniz?",
         "unsubscribe_loading": "Aboneliği sonlandırılan __i__/__count__ atölye öğesi,  lütfen bekleyin...",
         "finished": "Tamamlandı! __success__ başarılı, __fail__ başarısız. Sayfayı yenilemek için Tamam tıklayın",
-        "failed": "__n__ başarısız"
+        "failed": "__n__ başarısız",
+        "collection_sort_by": "Sıralama ölçütü:",
+        "collection_sort_default": "Varsayılan",
+        "collection_sort_subscription": "Abonelik",
+        "collection_sort_rating": "Değerlendirme",
+        "collection_sort_title": "Başlık",
+        "collection_sort_author": "Yazar"
     },
     "original_authors": "Özgün geliştiriciler",
     "acknowledgements": "Teşekkürler",

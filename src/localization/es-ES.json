@@ -543,7 +543,13 @@
         "unsubscribe_confirm": "¿Seguro que quieres anular tu suscripción de los __count__ elementos de Workshop con estos filtros?",
         "unsubscribe_loading": "Anulando tu suscripción de __i__/__count__ artículos de Workshop. Por favor, espera...",
         "finished": "¡Completado! __success__ con éxito, __fail__ con error. Haz clic en Aceptar para actualizar la página.",
-        "failed": "__n__ con error"
+        "failed": "__n__ con error",
+        "collection_sort_by": "Ordenar por:",
+        "collection_sort_default": "Predeterminado",
+        "collection_sort_subscription": "Suscripción",
+        "collection_sort_rating": "Valoración",
+        "collection_sort_title": "Título",
+        "collection_sort_author": "Autor"
     },
     "original_authors": "Autores originales",
     "acknowledgements": "Agradecimientos",

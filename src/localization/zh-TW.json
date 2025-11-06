@@ -544,7 +544,13 @@
         "unsubscribe_confirm": "你確定要套用這些篩選條件取消訂閱全部 __count__ 個工作坊物品？",
         "unsubscribe_loading": "正在取消訂閱第 __i__ / __count__ 個工作坊物品，請稍候…",
         "finished": "完成！__success__ 個操作成功，__fail__ 個操作失敗。點擊確定以重新整理頁面。",
-        "failed": "__n__ 個操作失敗。"
+        "failed": "__n__ 個操作失敗。",
+        "collection_sort_by": "排序方式：",
+        "collection_sort_default": "預設",
+        "collection_sort_subscription": "訂閱",
+        "collection_sort_rating": "評分",
+        "collection_sort_title": "標題",
+        "collection_sort_author": "作者"
     },
     "original_authors": "原版作者",
     "acknowledgements": "致謝",

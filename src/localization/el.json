@@ -554,7 +554,13 @@
         "unsubscribe_confirm": "Είστε βέβαιοι ότι θέλετε να καταργήσετε την εγγραφή σας σε όλα τα __count__ αντικείμενα του workshop με αυτά τα φίλτρα;",
         "unsubscribe_loading": "Κατάργηση της εγγραφής από τα __i __ / __ count__ αντικειμένων του workshop, παρακαλώ περιμένετε ...",
         "finished": "Τέλος! __success__ επιτυχής, __fail__ απέτυχαν. Κάντε κλικ στο OK για να ανανεώσετε τη σελίδα\n",
-        "failed": "__n__ απέτυχαν"
+        "failed": "__n__ απέτυχαν",
+        "collection_sort_by": "Ταξινόμηση κατά:",
+        "collection_sort_default": "Προεπιλογή",
+        "collection_sort_subscription": "Συνδρομή",
+        "collection_sort_rating": "Βαθμολογία",
+        "collection_sort_title": "Τίτλος",
+        "collection_sort_author": "Δημιουργός"
     },
     "original_authors": "Αρχικοί συγγραφείς",
     "acknowledgements": "Ευχαριστίες",

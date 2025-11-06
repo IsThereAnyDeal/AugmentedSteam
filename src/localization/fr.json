@@ -554,7 +554,13 @@
         "unsubscribe_confirm": "Voulez-vous vraiment vous désabonner aux __count__ objets du workshop avec ces filtres ?",
         "unsubscribe_loading": "Désabonnement de __i__/__count__ objets du workshop, veuillez patienter...",
         "finished": "Terminé ! __success__ réussis, __fail__ échoués. Cliquez OK pour actualiser la page",
-        "failed": "__n__ échoués"
+        "failed": "__n__ échoués",
+        "collection_sort_by": "Trier par :",
+        "collection_sort_default": "Par défaut",
+        "collection_sort_subscription": "Abonnement",
+        "collection_sort_rating": "Note",
+        "collection_sort_title": "Titre",
+        "collection_sort_author": "Auteur"
     },
     "original_authors": "Auteurs originaux",
     "acknowledgements": "Remerciements",

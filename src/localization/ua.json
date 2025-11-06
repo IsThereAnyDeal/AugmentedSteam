@@ -497,7 +497,13 @@
         "unsubscribe_confirm": "Ви впевнені що хочете відписатися від усіх __count__ предметів майстерні за цими фільтрами?",
         "unsubscribe_loading": "Відписуємося від __i__/__count__ предмета майстерні, зачекайте...",
         "finished": "Завершено! __success__ успішно, __fail__ помилок. Натисніть OK щоб оновити сторінку",
-        "failed": "__n__ помилок"
+        "failed": "__n__ помилок",
+        "collection_sort_by": "Сортувати за:",
+        "collection_sort_default": "За замовчуванням",
+        "collection_sort_subscription": "Підписка",
+        "collection_sort_rating": "Рейтинг",
+        "collection_sort_title": "Назва",
+        "collection_sort_author": "Автор"
     },
     "original_authors": "Автори оригіналу",
     "acknowledgements": "Подяки",

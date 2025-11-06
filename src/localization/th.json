@@ -541,7 +541,13 @@
         "unsubscribe_confirm": "คุณแน่ใจหรือไม่ว่าคุณต้องการยกเลิกสมัครสมาชิกผลงานเวิร์กชอปทั้งหมด __count__ รายการด้วยตัวกรองเหล่านี้?",
         "unsubscribe_loading": "กำลังยกเลิกสมัครสมาชิกผลงานเวิร์กชอป __i__/__count__ รายการ กรุณารอสักครู่...",
         "finished": "เสร็จสิ้น! มี __success__ รายการที่เสร็จสมบูรณ์ และมี __fail__ รายการที่ล้มเหลว คลิกตกลงเพื่อรีเฟรชหน้า",
-        "failed": "__n__ รายการล้มเหลว"
+        "failed": "__n__ รายการล้มเหลว",
+        "collection_sort_by": "เรียงตาม:",
+        "collection_sort_default": "ค่าเริ่มต้น",
+        "collection_sort_subscription": "การสมัครสมาชิก",
+        "collection_sort_rating": "คะแนน",
+        "collection_sort_title": "ชื่อ",
+        "collection_sort_author": "ผู้สร้าง"
     },
     "original_authors": "ผู้เขียนต้นฉบับ",
     "acknowledgements": "กิตติกรรมประกาศ",

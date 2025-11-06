@@ -304,5 +304,23 @@
         "wallet": "Codul pe care l-ai introdus este de pe un Card Cadou Steam sau un cod pentru Portofelul Steam",
         "toomany": "Recent au avut loc prea multe tentative de activare de pe acest cont. Te rugăm să așteptați și să încerci din nou mai târziu.",
         "default": "A apărut o eroare neașteptată. Codul produsului tău nu a fost revendicat. Te rugăm să aștepți 30 de minute și să încerci din nou să revendici codul."
+    },
+    "workshop": {
+        "workshop": "Atelier",
+        "subscriptions": "Abonamente",
+        "subscribe_all": "Abonează-te la toate",
+        "subscribe_confirm": "Ești sigur că vrei să te abonezi la toate __count__ articole de atelier cu aceste filtre?",
+        "subscribe_loading": "Se abonează la __i__/__count__ articole de atelier, te rog așteaptă...",
+        "unsubscribe_all": "Dezabonează-te de la toate",
+        "unsubscribe_confirm": "Ești sigur că vrei să te dezabonezi de la toate __count__ articole de atelier cu aceste filtre?",
+        "unsubscribe_loading": "Se dezabonează de la __i__/__count__ articole de atelier, te rog așteaptă...",
+        "finished": "Terminat! __success__ reușite, __fail__ eșuate. Apasă OK pentru a reîmprospăta pagina",
+        "failed": "__n__ eșuate",
+        "collection_sort_by": "Sortează după:",
+        "collection_sort_default": "Implicit",
+        "collection_sort_subscription": "Abonament",
+        "collection_sort_rating": "Evaluare",
+        "collection_sort_title": "Titlu",
+        "collection_sort_author": "Autor"
     }
 }
