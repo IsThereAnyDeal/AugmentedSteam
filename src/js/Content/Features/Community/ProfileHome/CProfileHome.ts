@@ -4,7 +4,6 @@ import FWishlistProfileLink from "./FWishlistProfileLink";
 import FSupporterBadges from "./FSupporterBadges";
 import FCustomBackground from "./FCustomBackground";
 import FProfileStoreLinks from "./FProfileStoreLinks";
-import FSteamRep from "./FSteamRep";
 import FProfileDropdownOptions from "./FProfileDropdownOptions";
 import FInGameStoreLink from "./FInGameStoreLink";
 import FCustomStyle from "./FCustomStyle";
@@ -36,7 +35,6 @@ export default class CProfileHome extends CCommunityBase {
             FSupporterBadges,
             FCustomBackground,
             FProfileStoreLinks,
-            FSteamRep,
             FProfileDropdownOptions,
             FInGameStoreLink,
             FCustomStyle,

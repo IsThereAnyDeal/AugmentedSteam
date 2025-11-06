@@ -30,10 +30,6 @@
     .asi-steamrepcn {
         background-image: url("extension://img/ico/srcn.png");
     }
-    .asi-steamrep {
-        background-image: url("extension://img/ico/steamrep.png");
-        background-color: rgb(235, 235, 235);
-    }
     .asi-steamdbcalc {
         background-image: url("extension://img/ico/steamdb.png");
     }

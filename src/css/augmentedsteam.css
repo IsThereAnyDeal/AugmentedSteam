@@ -1214,32 +1214,6 @@ video.highlight_movie:hover + .html5_video_overlay {
   float: none;
 }
 
-/***************************************
- * User profiles
- * FSteamRep
- **************************************/
-#es_steamrep {
-  display: grid;
-  grid-template-columns: auto auto;
-  margin-bottom: 10px;
-  font-size: 13px;
-  font-family: Verdana;
-}
-#es_steamrep div {
-  margin: 0 8px;
-}
-#es_steamrep .bad span {
-  color: red;
-}
-#es_steamrep .caution span {
-  color: orangered;
-}
-#es_steamrep .good span {
-  color: green;
-}
-#es_steamrep .neutral span {
-  color: gray;
-}
 
 /***************************************
  * User profiles

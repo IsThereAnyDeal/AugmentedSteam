@@ -15,11 +15,6 @@
         {language === "schinese" ? "查看信誉记录" : "確認信譽記錄"}
     </ProfileLink>
 {/if}
-
-{#if Settings.profile_steamrep}
-    <ProfileLink id="steamrep" href="https://steamrep.com/profiles/{steamId}">SteamRep</ProfileLink>
-{/if}
-
 {#if Settings.profile_steamdbcalc}
     <ProfileLink id="steamdbcalc" href="https://steamdb.info/calculator/?player={steamId}">SteamDB</ProfileLink>
 {/if}
