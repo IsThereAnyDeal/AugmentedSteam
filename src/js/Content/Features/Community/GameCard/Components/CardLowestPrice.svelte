@@ -66,7 +66,7 @@
             }
         }
         if (data.success) {
-            await SessionCacheApiFacade.set(CachePrefix, marketHashName, Object.assign(data, {url: uriPath}));
+            await SessionCacheApiFacade.set(CachePrefix, cacheName, Object.assign(data, {url: uriPath}));
         }
         return data.lowest_price ?? null;
     }
