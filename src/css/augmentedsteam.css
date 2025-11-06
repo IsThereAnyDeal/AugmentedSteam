@@ -1279,7 +1279,7 @@ video.highlight_movie:hover + .html5_video_overlay {
 .search_results.reviews-score .as-reviews-score,
 .search_results .as-reviews-count,
 .search_results .as-discount-percent {
-  height: 0;
+  display: none;
   margin: 0;
   border: none;
 }
