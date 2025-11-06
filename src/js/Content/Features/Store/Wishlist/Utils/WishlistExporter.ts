@@ -4,6 +4,7 @@ import Price from "@Content/Modules/Currency/Price";
 export type WishlistData = Array<{
     appid: number,
     name: string,
+    addedDate: number,
     releaseDate: number|null,
     price: number|null,
     basePrice: number|null,
@@ -40,6 +41,9 @@ export class WishlistExporter {
                 gameid: ["steam", `app/${item.appid}`],
                 title: item.name,
                 url: `https://store.steampowered.com/app/${item.appid}/`,
+                added_date: item.addedDate
+                    ? (new Date(item.addedDate*1000)).toLocaleDateString()
+                    : null,
                 release_date: item.releaseDate
                     ? (new Date(item.releaseDate*1000)).toLocaleDateString()
                     : null,
@@ -74,6 +78,10 @@ export class WishlistExporter {
                     .replace("%id%", `app/${item.appid}`)
                     .replace("%url%", `https://store.steampowered.com/app/${item.appid}/`)
                     .replace("%title%", item.name)
+                    .replace("%added_date%", item.addedDate
+                        ? (new Date(item.addedDate*1000)).toLocaleDateString()
+                        : ""
+                    )
                     .replace("%release_date%", item.releaseDate
                         ? (new Date(item.releaseDate*1000)).toLocaleDateString()
                         : ""

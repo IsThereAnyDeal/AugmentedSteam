@@ -70,6 +70,8 @@
             steamid: Long.fromString(user.steamId)
         });
 
+        const dateAddedMap = new Map(wishlist.items.map(item => [item.appid, item.dateAdded]));
+
         const chunkSize = 50;
         for (let i=0; i <= wishlist.items.length; i += chunkSize) {
             const chunk = wishlist.items.slice(i, i+chunkSize).map(item => new StoreItemID({
@@ -93,6 +95,7 @@
                 data.push({
                     appid: item.id!,
                     name: item.name!,
+                    addedDate: dateAddedMap.get(item.id)!,
                     releaseDate: item.release?.steamReleaseDate ?? null,
                     price: ProtobufUtils.getNumber(
                         item.bestPurchaseOption?.finalPriceInCents ?? null
@@ -172,7 +175,7 @@
                 <div>
                     <input type="text" bind:value={format} bind:this={input} on:change>
                     <div class="as_wexport_symbols">
-                        {#each ["%title%", "%id%", "%appid%", "%url%", "%release_date%", "%price%", "%discount%", "%base_price%", "%note%"] as str, index}
+                        {#each ["%title%", "%id%", "%appid%", "%url%", "%added_date%", "%release_date%", "%price%", "%discount%", "%base_price%", "%note%"] as str, index}
                             {#if index > 0}, {/if}
                             <button type="button" on:click={() => add(str)}>{str}</button>
                         {/each}
