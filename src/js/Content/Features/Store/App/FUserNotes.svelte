@@ -4,6 +4,7 @@
     import UserNotes from "@Content/Features/Store/Common/UserNotes/UserNotes";
     import {onMount} from "svelte";
     import UserNoteIcon from "@Content/Icons/UserNoteIcon.svelte";
+    import DOMPurify from "dompurify";
 
     export let notes: UserNotes;
     export let appName: string;
@@ -22,15 +23,20 @@
     onMount(() => {
         notes.get(appid).then(n => note = n.get(appid) ?? null);
     });
+
+    function parseNote(note: string): string {
+        return DOMPurify.sanitize(note, {ALLOWED_TAGS: []}) // remove all potential HTML first
+            .replaceAll(/(https?:\/\/\S+)/g, "<a href='$1' target='_blank' rel='noopener'>$1</a>"); // then convert links
+    }
 </script>
 
 
-<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
-<div class="container" on:click={handleNote}>
-    <span class="label"><UserNoteIcon /> {L(note ? __userNote_update : __userNote_add)}</span>
+<div class="container">
+    <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
+    <span class="label" on:click={handleNote}><UserNoteIcon /> {L(note ? __userNote_update : __userNote_add)}</span>
 
     {#if note}
-        <span class="note">{note}</span>
+        <span class="note">{@html parseNote(note)}</span>
     {/if}
 </div>
 
@@ -42,25 +48,21 @@
         background: linear-gradient(to right, rgba(48, 144, 206, 0.6) 0%, transparent 60%);
         cursor: pointer;
     }
-    .container:hover {
-        background: rgba(48, 144, 206, 0.6);
-    }
 
     .label {
         margin-right: 16px;
         color: #67c1f5;
+    }
+    .label:hover {
+        color: #fff;
     }
     .label :global(i) {
         fill: #67c1f5;
         width: 1.6em;
     }
 
-    .container:hover .label {
-        color: #fff;
-    }
-
     .note {
         display: inline-block;
-        font-size: 1.4em;
+        font-size: 1.1em;
     }
 </style>
