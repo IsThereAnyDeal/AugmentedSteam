@@ -419,7 +419,8 @@
             "itad_price_info": "Informations sur les prix de IsThereAnyDeal"
         },
         "followed": "Jeux suivis",
-        "prevent_video_pause": "Empêcher la mise en pause des vidéos lorsque l'onglet perd le focus (expérimental)"
+        "prevent_video_pause": "Empêcher la mise en pause des vidéos lorsque l'onglet perd le focus (expérimental)",
+        "tabtitle_appname_first": "S'assurer que le titre de l'onglet commence toujours par le nom du jeu"
     },
     "ready": {
         "loading": "Chargement des données d'Augmented Steam...",
