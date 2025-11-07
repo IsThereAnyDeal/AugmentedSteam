@@ -1,6 +1,8 @@
 <svelte:options immutable={false} />
 
 <script lang="ts">
+    import { run } from 'svelte/legacy';
+
     import {
         __always, __never,
         __options_addAnotherRegion,
@@ -21,11 +23,17 @@
     import OptionGroup from "../Components/OptionGroup.svelte";
     import FlagIcon from "@Icons/FlagIcon.svelte";
 
-    export let settings: Writable<SettingsSchema>;
+    interface Props {
+        settings: Writable<SettingsSchema>;
+    }
 
-    let localizedCountries: [string, string][] = [];
-    let selection: string[] = [];
-    $: selection = $settings.regional_countries;
+    let { settings }: Props = $props();
+
+    let localizedCountries: [string, string][] = $state([]);
+    let selection: string[] = $state([]);
+    run(() => {
+        selection = $settings.regional_countries;
+    });
 
     function add() {
         selection.push("us");
@@ -85,7 +93,7 @@
                     <div class="option">
                         <FlagIcon {country} />
                         <Select value={country} options={localizedCountries} on:change={e => handleChange(index, e)} />
-                        <button type="button" on:click={() => handleRemove(index)}>
+                        <button type="button" onclick={() => handleRemove(index)}>
                             <DeleteIcon />
                         </button>
                     </div>
@@ -93,9 +101,9 @@
             </div>
 
             <div class="buttons">
-                <button type="button" class="btn" on:click={add}>{L(__options_addAnotherRegion)}</button>
-                <button type="button" class="btn" on:click={reset}>{L(__theworddefault)}</button>
-                <button type="button" class="btn" on:click={clear}>{L(__thewordclear)}</button>
+                <button type="button" class="btn" onclick={add}>{L(__options_addAnotherRegion)}</button>
+                <button type="button" class="btn" onclick={reset}>{L(__theworddefault)}</button>
+                <button type="button" class="btn" onclick={clear}>{L(__thewordclear)}</button>
             </div>
         </OptionGroup>
     </div>

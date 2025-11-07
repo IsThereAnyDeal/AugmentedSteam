@@ -7,6 +7,7 @@ import Feature from "@Content/Modules/Context/Feature";
 import type CProfileStats from "@Content/Features/Community/ProfileStats/CProfileStats";
 import SortBox from "@Content/Modules/Widgets/SortBox.svelte";
 import RequestData from "@Content/Modules/RequestData";
+import { mount } from "svelte";
 
 interface DateFormatSettings {
     format: string,
@@ -40,18 +41,18 @@ export default class FAchievementSort extends Feature<CProfileStats> {
             throw new Error("Did not find #tabs");
         }
 
-        (new SortBox({
-            target: tabs.parentElement!,
-            anchor: tabs,
-            props: {
-                name: "achievements",
-                options: [
-                    ["default", L(__theworddefault)],
-                    ["time", L(__dateUnlocked)],
-                ],
-                value: "default_ASC"
-            }
-        })).$on("change", e => {
+        (mount(SortBox, {
+                    target: tabs.parentElement!,
+                    anchor: tabs,
+                    props: {
+                        name: "achievements",
+                        options: [
+                            ["default", L(__theworddefault)],
+                            ["time", L(__dateUnlocked)],
+                        ],
+                        value: "default_ASC"
+                    }
+                })).$on("change", e => {
             const {key, direction} = e.detail;
             this._sortRows(key, direction < 0);
         })

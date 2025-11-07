@@ -1,5 +1,3 @@
-<svelte:options accessors />
-
 <script lang="ts">
     import PriceWithAlt from "./PriceWithAlt.svelte";
     import type {TPriceOverview} from "@Background/Modules/AugmentedSteam/_types";
@@ -15,17 +13,27 @@
     import HTML from "@Core/Html/Html";
     import external from "@Content/externalLink";
 
-    export let data: TPriceOverview;
-    export let marginTop: string|undefined = undefined;
-    export let marginBottom: string|undefined = undefined;
+    interface Props {
+        data: TPriceOverview;
+        marginTop?: string|undefined;
+        marginBottom?: string|undefined;
+    }
 
-    let node: HTMLElement;
-    let currentDrms: string[];
+    let { data, marginTop = undefined, marginBottom = undefined }: Props = $props();
+
+    let node: HTMLElement = $state();
+    let currentDrms: string[] = $state();
 
     if (data.current) {
         currentDrms = data.current.drm
             .filter(d => d.id !== 61) // 61 = Steam
             .map(d => d.name);
+    }
+
+    export {
+    	data,
+    	marginTop,
+    	marginBottom,
     }
 </script>
 

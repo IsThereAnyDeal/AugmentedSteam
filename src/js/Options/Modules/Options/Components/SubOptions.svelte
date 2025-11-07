@@ -2,11 +2,16 @@
 
 <script lang="ts">
     import {slide} from "svelte/transition";
+    interface Props {
+        children?: import('svelte').Snippet;
+    }
+
+    let { children }: Props = $props();
 </script>
 
 
 <div class="box" transition:slide={{axis: "y", duration: 200}}>
-    <slot></slot>
+    {@render children?.()}
 </div>
 
 

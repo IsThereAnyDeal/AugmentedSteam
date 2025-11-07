@@ -2,6 +2,7 @@ import self_ from "./FGroupLinks.svelte";
 import Feature from "@Content/Modules/Context/Feature";
 import Settings from "@Options/Data/Settings";
 import type CGroupHome from "@Content/Features/Community/GroupHome/CGroupHome";
+import { mount } from "svelte";
 
 export default class FGroupLinks extends Feature<CGroupHome> {
 
@@ -19,12 +20,12 @@ export default class FGroupLinks extends Feature<CGroupHome> {
             throw new Error("Node not found");
         }
 
-        (new self_({
-            target: anchor.parentElement!,
-            anchor,
-            props: {
-                groupId: this.context.groupId!
-            }
-        }));
+        (mount(self_, {
+                    target: anchor.parentElement!,
+                    anchor,
+                    props: {
+                        groupId: this.context.groupId!
+                    }
+                }));
     }
 }

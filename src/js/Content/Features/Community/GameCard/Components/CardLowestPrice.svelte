@@ -18,15 +18,26 @@
     }
     const CachePrefix = "market:card";
 
-    export let country: string;
-    export let currency: string;
-    export let appid: number;
-    export let cardName: string;
-    export let foil: boolean;
-    export let onprice: (price: Price) => void;
+    interface Props {
+        country: string;
+        currency: string;
+        appid: number;
+        cardName: string;
+        foil: boolean;
+        onprice: (price: Price) => void;
+    }
 
-    let uriPath: string = `${appid}-${encodeURIComponent(cardName)}`;
-    let promise = new Promise(() => {});
+    let {
+        country,
+        currency,
+        appid,
+        cardName,
+        foil,
+        onprice
+    }: Props = $props();
+
+    let uriPath: string = $state(`${appid}-${encodeURIComponent(cardName)}`);
+    let promise = $state(new Promise(() => {}));
 
     async function fetchCardPrices(marketHashName: string): Promise<TMarketPriceOverview> {
         // try to reduce chance for 429, not sure if this will help in any way shape or form
@@ -102,7 +113,7 @@
     {:then price}
         {price ?? "N/A"}
     {:catch e}
-        <button type="button" on:click={load}>
+        <button type="button" onclick={load}>
             {#if e instanceof Errors.HTTPError && e.code === 429}
                 {L(__toomanyrequests)}
             {:else}

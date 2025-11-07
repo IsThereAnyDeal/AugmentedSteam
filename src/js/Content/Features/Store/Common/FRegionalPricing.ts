@@ -3,6 +3,7 @@ import type CSub from "@Content/Features/Store/Sub/CSub";
 import Feature from "@Content/Modules/Context/Feature";
 import RequestData from "@Content/Modules/RequestData";
 import Settings from "@Options/Data/Settings";
+import { mount } from "svelte";
 
 export interface PackageDetailsPrice {
     currency: string,
@@ -69,29 +70,29 @@ export default class FRegionalPricing extends Feature<CSub> {
             if (Settings.showregionalprice === "always") {
                 purchaseArea.classList.add("es_regional_always");
 
-                (new self_({
-                    target: node.parentElement!,
-                    anchor: node,
-                    props: {
-                        user: this.context.user,
-                        countries,
-                        prices,
-                        errors
-                    }
-                }));
+                (mount(self_, {
+                                    target: node.parentElement!,
+                                    anchor: node,
+                                    props: {
+                                        user: this.context.user,
+                                        countries,
+                                        prices,
+                                        errors
+                                    }
+                                }));
             } else if (Settings.showregionalprice === "mouse") {
                 const priceNode = node.querySelector(".price, .discount_prices")!;
 
-                (new self_({
-                    target: document.body,
-                    props: {
-                        user: this.context.user,
-                        countries,
-                        prices,
-                        errors,
-                        priceNode
-                    }
-                }));
+                (mount(self_, {
+                                    target: document.body,
+                                    props: {
+                                        user: this.context.user,
+                                        countries,
+                                        prices,
+                                        errors,
+                                        priceNode
+                                    }
+                                }));
             }
         }
     }

@@ -2,6 +2,7 @@ import self_ from "./FGamesStats.svelte";
 import Feature from "@Content/Modules/Context/Feature";
 import type CGames from "@Content/Features/Community/Games/CGames";
 import Settings from "@Options/Data/Settings";
+import { mount } from "svelte";
 
 export default class FGamesStats extends Feature<CGames> {
 
@@ -41,15 +42,15 @@ export default class FGamesStats extends Feature<CGames> {
             throw new Error("Node not found");
         }
 
-        (new self_({
-            target,
-            anchor: target.firstElementChild ?? undefined, // Potential race condition with React
-            props: {
-                countTotal: String(countTotal),
-                countPlayed: String(countPlayed),
-                countNeverPlayed: String(countNeverPlayed),
-                totalTime: String((time / 60).toFixed(1))
-            }
-        }));
+        (mount(self_, {
+                    target,
+                    anchor: target.firstElementChild ?? undefined, // Potential race condition with React
+                    props: {
+                        countTotal: String(countTotal),
+                        countPlayed: String(countPlayed),
+                        countNeverPlayed: String(countNeverPlayed),
+                        totalTime: String((time / 60).toFixed(1))
+                    }
+                }));
     }
 }

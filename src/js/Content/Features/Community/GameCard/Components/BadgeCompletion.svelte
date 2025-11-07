@@ -3,8 +3,8 @@
     import {__badgeCompletionCost} from "@Strings/_strings";
     import Price from "@Content/Modules/Currency/Price";
 
-    let cost: number = 0;
-    let full: boolean = false;
+    let cost: number = $state(0);
+    let full: boolean = $state(false);
 
     export function update(costMap: Map<string, Price|null>) {
         full = true;

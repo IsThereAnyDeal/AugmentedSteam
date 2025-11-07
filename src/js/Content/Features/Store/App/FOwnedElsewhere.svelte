@@ -5,8 +5,12 @@
     import RedeemedIcon from "@Content/Icons/RedeemedIcon.svelte";
     import RedeemableIcon from "@Content/Icons/RedeemableIcon.svelte";
 
-    export let appName: string;
-    export let copies: TCollectionCopy[];
+    interface Props {
+        appName: string;
+        copies: TCollectionCopy[];
+    }
+
+    let { appName, copies }: Props = $props();
 </script>
 
 

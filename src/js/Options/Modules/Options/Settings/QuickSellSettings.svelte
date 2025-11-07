@@ -9,7 +9,11 @@
     import type {Writable} from "svelte/store";
     import {SettingsStore} from "../../../Data/Settings";
 
-    export let settings: Writable<SettingsSchema>;
+    interface Props {
+        settings: Writable<SettingsSchema>;
+    }
+
+    let { settings }: Props = $props();
 
     function handleDefault() {
         SettingsStore.remove("quickinv_diff");
@@ -27,7 +31,7 @@
                 <span>{L(__options_quickinvDiff)}</span>
                 <input type="number" class="inpt" step="0.01" bind:value={$settings.quickinv_diff}>
             </label>
-            <button type="button" class="btn" on:click={handleDefault}>{L(__theworddefault)}</button>
+            <button type="button" class="btn" onclick={handleDefault}>{L(__theworddefault)}</button>
         </div>
     </SubOptions>
 {/if}

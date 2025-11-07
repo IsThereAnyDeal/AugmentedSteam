@@ -7,9 +7,13 @@
     import CommonExtraLinks from "@Content/Features/Common/CommonExtraLinks.svelte";
     import UrlUtils from "@Core/Utils/UrlUtils";
 
-    export let appid: number;
-    export let communityAppid: number;
-    export let appName: string = "";
+    interface Props {
+        appid: number;
+        communityAppid: number;
+        appName?: string;
+    }
+
+    let { appid, communityAppid, appName = "" }: Props = $props();
 </script>
 
 

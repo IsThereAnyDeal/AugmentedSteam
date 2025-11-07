@@ -1,5 +1,3 @@
-<svelte:options accessors />
-
 <script lang="ts">
     import {createEventDispatcher} from "svelte";
 
@@ -7,10 +5,14 @@
         reposition: {appid: number, position: number};
     }>();
 
-    export let appid: number;
-    export let position: number|undefined;
+    interface Props {
+        appid: number;
+        position: number|undefined;
+    }
 
-    let node: HTMLElement;
+    let { appid, position }: Props = $props();
+
+    let node: HTMLElement = $state();
 
     function reposition(e: Event): void {
         const newPosition = (e.target! as HTMLInputElement).value.trim();
@@ -22,11 +24,16 @@
     export function isConnected(): boolean {
         return node.isConnected;
     }
+
+    export {
+    	appid,
+    	position,
+    }
 </script>
 
 
 <div bind:this={node}>
-    <input type="text" value={position} on:change={reposition} data-appid={appid} />
+    <input type="text" value={position} onchange={reposition} data-appid={appid} />
 </div>
 
 

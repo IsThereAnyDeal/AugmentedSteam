@@ -9,12 +9,16 @@
 
     const dispatch = createEventDispatcher<{syncEvent: void}>();
 
-    export let isConnected: boolean;
-    export let enableSync: boolean;
-    export let status: ESyncStatus = ESyncStatus.OK;
+    interface Props {
+        isConnected: boolean;
+        enableSync: boolean;
+        status?: ESyncStatus;
+    }
 
-    let from: number|null = null;
-    let to: number|null = null;
+    let { isConnected, enableSync, status = $bindable(ESyncStatus.OK) }: Props = $props();
+
+    let from: number|null = $state(null);
+    let to: number|null = $state(null);
 
     export async function updateLastImport(): Promise<void> {
         const last = await ITADApiFacade.getLastImport();
@@ -60,7 +64,7 @@
             {#if status === ESyncStatus.Loading}
                 <span><SyncIndicator status={ESyncStatus.Loading} /> {L(__loading)}</span>
             {:else}
-                <button type="button" class="asi__sync-now" on:click={syncNow}>{L(__itad_syncNow)}</button>
+                <button type="button" class="asi__sync-now" onclick={syncNow}>{L(__itad_syncNow)}</button>
             {/if}
         </div>
     {/if}

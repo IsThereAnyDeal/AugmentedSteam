@@ -1,18 +1,25 @@
 <svelte:options immutable={false} />
 
 <script lang="ts">
+    import { createBubbler, stopPropagation } from 'svelte/legacy';
+
+    const bubble = createBubbler();
     import {L} from "@Core/Localization/Localization";
     import {__apppageSections, __customize,} from "@Strings/_strings";
     import {onMount} from "svelte";
     import Settings from "@Options/Data/Settings";
     import type {CustomizerSetup} from "@Content/Features/Store/Common/Customizer/CustomizerSetup";
 
-    export let type: "app"|"frontpage";
-    export let setup: CustomizerSetup = [];
-    export let dynamicSelector: string|undefined = undefined;
+    interface Props {
+        type: "app"|"frontpage";
+        setup?: CustomizerSetup;
+        dynamicSelector?: string|undefined;
+    }
 
-    let entries: Map<string, [string, boolean]> = new Map();
-    let isActive: boolean = false;
+    let { type, setup = [], dynamicSelector = undefined }: Props = $props();
+
+    let entries: Map<string, [string, boolean]> = $state(new Map());
+    let isActive: boolean = $state(false);
 
     function getLabel(node: HTMLElement): string {
         const textNode = node.querySelector("h1, h2, .home_title, .home_section_title");
@@ -110,22 +117,22 @@
 </script>
 
 
-<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
+<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
 <div class="store_header_btn_gray store_header_btn" class:active={isActive} id="es_customize_btn"
-     on:click={() => isActive = !isActive}
-     on:mouseleave={() => isActive = false}
+     onclick={() => isActive = !isActive}
+     onmouseleave={() => isActive = false}
 >
     <div class="es_customize_title">
         {L(__customize)}
         <img src="//store.cloudflare.steamstatic.com/public/images/v6/btn_arrow_down_padded_white.png" alt="" />
     </div>
-    <div class="home_viewsettings_popup" on:click|stopPropagation>
+    <div class="home_viewsettings_popup" onclick={stopPropagation(bubble('click'))}>
         <div class="home_viewsettings_instructions">{L(__apppageSections)}</div>
 
         {#each entries.entries() as [name, entry](name)}
             {@const label = entry[0]}
             {@const enabled = entry[1]}
-            <div class="home_viewsettings_checkboxrow ellipsis" on:click={() => toggle(name)}>
+            <div class="home_viewsettings_checkboxrow ellipsis" onclick={() => toggle(name)}>
                 <div class="home_viewsettings_checkbox" class:checked={enabled}></div>
                 <div class="home_viewsettings_label">{label}</div>
             </div>

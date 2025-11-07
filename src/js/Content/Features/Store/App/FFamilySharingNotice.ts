@@ -2,6 +2,7 @@ import self_ from "./FFamilySharingNotice.svelte";
 import type CApp from "@Content/Features/Store/App/CApp";
 import Feature from "@Content/Modules/Context/Feature";
 import Settings from "@Options/Data/Settings";
+import { mount } from "svelte";
 
 export default class FFamilySharingNotice extends Feature<CApp> {
 
@@ -24,9 +25,9 @@ export default class FFamilySharingNotice extends Feature<CApp> {
             throw new Error("Node not found");
         }
 
-        (new self_({
-            target: anchor.parentElement!,
-            anchor,
-        }));
+        (mount(self_, {
+                    target: anchor.parentElement!,
+                    anchor,
+                }));
     }
 }

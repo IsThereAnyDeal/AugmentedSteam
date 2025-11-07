@@ -5,6 +5,7 @@ import InventoryApiFacade from "@Content/Modules/Facades/InventoryApiFacade";
 import DOMHelper from "@Content/Modules/DOMHelper";
 import Tags from "@Content/Modules/Highlights/Tags.svelte";
 import type GameId from "@Core/GameId/GameId";
+import { mount } from "svelte";
 
 export const enum EHighlightStyle {
     BgGradient,
@@ -262,11 +263,11 @@ export default class HighlightsTagsUtils2 {
             return;
         }
 
-        const tags = new Tags({
-            target,
-            anchor,
-            props: {options}
-        });
+        const tags = mount(Tags, {
+                    target,
+                    anchor,
+                    props: {options}
+                });
 
         this.tagsComponents.push(tags);
     }

@@ -27,9 +27,9 @@
     import type {TSyncEvent} from "@Background/Modules/IsThereAnyDeal/_types";
 
     let settings: Writable<SettingsSchema> = writable(Settings);
-    let isConnected: boolean = false;
+    let isConnected: boolean = $state(false);
 
-    let events: TSyncEvent[];
+    let events: TSyncEvent[] = $state();
 
     async function loadSyncEvents(): Promise<void> {
         events = await ITADApiFacade.getSyncEvents();

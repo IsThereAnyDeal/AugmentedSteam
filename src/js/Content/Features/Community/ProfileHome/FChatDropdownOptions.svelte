@@ -4,9 +4,13 @@
     import SteamFacade from "@Content/Modules/Facades/SteamFacade";
     import {onMount} from "svelte";
 
-    export let sendButton: HTMLElement;
-    export let steamid: string;
-    export let accountid: number;
+    interface Props {
+        sendButton: HTMLElement;
+        steamid: string;
+        accountid: number;
+    }
+
+    let { sendButton, steamid, accountid }: Props = $props();
 
     function openSteamChat() {
         window.location.assign(`steam://friends/message/${steamid}`);
@@ -31,23 +35,23 @@
 <!--
  This feature largely relies on Steam styling, so certain a11y warnings have been disabled.
 -->
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class="btn_profile_action btn_medium" id="profile_chat_btn" on:click={showMenu} tabindex="0" role="button">
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<span class="btn_profile_action btn_medium" id="profile_chat_btn" onclick={showMenu} tabindex="0" role="button">
     <span>
         {sendButton.textContent}
         <img src="//community.cloudflare.steamstatic.com/public/images/profile/profile_action_dropdown.png" alt="Arrow">
     </span>
 </span>
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<div class="popup_block" id="profile_chat_dropdown" on:click={hideMenu} tabindex="0" role="button">
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<div class="popup_block" id="profile_chat_dropdown" onclick={hideMenu} tabindex="0" role="button">
     <div class="popup_body popup_menu shadow_content">
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <div class="popup_menu_item" on:click={openWebChat} tabindex="0" role="button">
+        <!-- svelte-ignore a11y_click_events_have_key_events -->
+        <div class="popup_menu_item" onclick={openWebChat} tabindex="0" role="button">
             <img src="//community.cloudflare.steamstatic.com/public/images/skin_1/icon_btn_comment.png" alt="Chat">
             &nbsp; {L(__webBrowserChat)}
         </div>
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <div class="popup_menu_item" on:click={openSteamChat} tabindex="0" role="button">
+        <!-- svelte-ignore a11y_click_events_have_key_events -->
+        <div class="popup_menu_item" onclick={openSteamChat} tabindex="0" role="button">
             <img src="//community.cloudflare.steamstatic.com/public/images/skin_1/icon_btn_comment.png" alt="Chat">
             &nbsp; {L(__steamClientChat)}
         </div>

@@ -26,23 +26,32 @@
 
     const PageSize = 50;
 
-    export let user: UserInterface;
-    export let language: Language;
-    export let wishlistData: WishlistEntry[];
-    export let canEdit: boolean;
+    interface Props {
+        user: UserInterface;
+        language: Language;
+        wishlistData: WishlistEntry[];
+        canEdit: boolean;
+    }
+
+    let {
+        user,
+        language,
+        wishlistData,
+        canEdit
+    }: Props = $props();
 
     const service = ServiceFactory.StoreBrowseService(user);
 
     const count: number = wishlistData.length;
-    let totalPrice: number = 0;
-    let onSaleCount: number = 0;
-    let noPriceCount: number = 0;
-    let unlistedApps: IStoreItemID[] = [];
+    let totalPrice: number = $state(0);
+    let onSaleCount: number = $state(0);
+    let noPriceCount: number = $state(0);
+    let unlistedApps: IStoreItemID[] = $state([]);
 
-    let promise: Promise<void>;
+    let promise: Promise<void> = $state();
 
-    let isOpen: boolean = false;
-    let isHiddenOpen: boolean = false;
+    let isOpen: boolean = $state(false);
+    let isHiddenOpen: boolean = $state(false);
 
     const icons = {
         itad: ExtensionResources.getURL("img/itad.png"),
@@ -163,8 +172,8 @@
                     {#if unlistedApps.length > 0}
                         <!-- TODO better tooltips -->
                         <!-- TODO use button, cba to style button right now -->
-                        <!-- svelte-ignore a11y-no-static-element-interactions a11y-click-events-have-key-events -->
-                        <div class="stat button" title={L(__wl_hiddenTooltip)} on:click={() => isHiddenOpen = true}>
+                        <!-- svelte-ignore a11y_no_static_element_interactions, a11y_click_events_have_key_events -->
+                        <div class="stat button" title={L(__wl_hiddenTooltip)} onclick={() => isHiddenOpen = true}>
                             {unlistedApps.length}
                             <span class="label">
                                 {L(__wl_hidden)}
@@ -190,8 +199,8 @@
                         <a href="https://steamdb.info/app/{appid}/" target="_blank"><img src={icons.steamdb} alt="SteamDB" /></a>
                         {#if canEdit}
                             <!-- TODO use button, cba to style button right now -->
-                            <!-- svelte-ignore a11y-no-static-element-interactions a11y-click-events-have-key-events -->
-                            <div on:click={() => handleRemove(app)} class="remove button">{L(__remove)}</div>
+                            <!-- svelte-ignore a11y_no_static_element_interactions, a11y_click_events_have_key_events -->
+                            <div onclick={() => handleRemove(app)} class="remove button">{L(__remove)}</div>
                         {/if}
                     </div>
                 {/each}

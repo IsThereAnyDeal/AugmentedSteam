@@ -1,9 +1,13 @@
 <script lang="ts">
     import {onMount} from "svelte";
 
-    export let target: HTMLElement|undefined;
+    interface Props {
+        target: HTMLElement|undefined;
+    }
 
-    let visible: boolean = false;
+    let { target }: Props = $props();
+
+    let visible: boolean = $state(false);
 
     function toTop(): void {
         (target ?? window).scroll({
@@ -28,7 +32,7 @@
 
 
 <button class:is-visible={visible}
-     on:click={toTop}
+     onclick={toTop}
 >▲</button>
 
 

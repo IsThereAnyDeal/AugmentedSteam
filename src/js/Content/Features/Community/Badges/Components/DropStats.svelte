@@ -3,15 +3,19 @@
     import {L} from "@Core/Localization/Localization";
     import {onMount} from "svelte";
 
-    export let multipage: boolean;
-    export let getDropCounts: () => Promise<[number, number]>;
-    export let getBoosterCountEligibility: () => Promise<number>;
+    interface Props {
+        multipage: boolean;
+        getDropCounts: () => Promise<[number, number]>;
+        getBoosterCountEligibility: () => Promise<number>;
+    }
 
-    let dropsGames: number;
-    let dropsCount: number;
-    let boosterCount: number|null;
+    let { multipage, getDropCounts, getBoosterCountEligibility }: Props = $props();
 
-    let promise: Promise<void>|null = null;
+    let dropsGames: number = $state();
+    let dropsCount: number = $state();
+    let boosterCount: number|null = $state();
+
+    let promise: Promise<void>|null = $state(null);
 
     async function load(): Promise<void> {
         const [games, count] = await getDropCounts();
@@ -35,7 +39,7 @@
 
 <div id="es_calculations">
     {#if promise === null}
-        <button type="button" class="btn_grey_black btn_small_thin" on:click={() => promise = load()}>
+        <button type="button" class="btn_grey_black btn_small_thin" onclick={() => promise = load()}>
             <span>{L(__dropCalc)}</span>
         </button>
     {:else}

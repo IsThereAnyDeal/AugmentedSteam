@@ -6,6 +6,7 @@ import DOMHelper from "@Content/Modules/DOMHelper";
 import CardLowestPrice from "@Content/Features/Community/GameCard/Components/CardLowestPrice.svelte";
 import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
 import BadgeCompletion from "@Content/Features/Community/GameCard/Components/BadgeCompletion.svelte";
+import { mount } from "svelte";
 
 export default class FCardMarketLinks extends Feature<CGameCard> {
 
@@ -21,7 +22,7 @@ export default class FCardMarketLinks extends Feature<CGameCard> {
             if (badgeRow) {
                 const target = DOMHelper.selectLastNode(badgeRow, ".badge_empty_name")?.nextElementSibling;
                 if (target) {
-                    badgeCompletion = new BadgeCompletion({target});
+                    badgeCompletion = mount(BadgeCompletion, {target});
                 }
 
                 badgeRow.classList.add("esi-badge");
@@ -43,22 +44,22 @@ export default class FCardMarketLinks extends Feature<CGameCard> {
                 costMap.set(cardName, null);
             }
 
-            (new CardLowestPrice({
-                target: node,
-                props: {
-                    country: this.context.user.storeCountry,
-                    currency: CurrencyManager.storeCurrency,
-                    appid: this.context.appid,
-                    cardName,
-                    foil: this.context.isFoil,
-                    onprice: (price: Price) => {
-                        if (isUnowned) {
-                            costMap.set(cardName, price);
-                            badgeCompletion.update(costMap);
-                        }
-                    }
-                }
-            }));
+            (mount(CardLowestPrice, {
+                            target: node,
+                            props: {
+                                country: this.context.user.storeCountry,
+                                currency: CurrencyManager.storeCurrency,
+                                appid: this.context.appid,
+                                cardName,
+                                foil: this.context.isFoil,
+                                onprice: (price: Price) => {
+                                    if (isUnowned) {
+                                        costMap.set(cardName, price);
+                                        badgeCompletion.update(costMap);
+                                    }
+                                }
+                            }
+                        }));
         }
     }
 }

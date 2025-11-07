@@ -7,13 +7,13 @@
 
     const itadLogo = ExtensionResources.getURL("img/itad.png");
 
-    let statusComponent: ITADSyncStatus;
-    let status: ESyncStatus|undefined = undefined;
+    let statusComponent: ITADSyncStatus = $state();
+    let status: ESyncStatus|undefined = $state(undefined);
 </script>
 
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<div class="asi" on:mouseenter={() => statusComponent.updateLastImport()}>
+<!-- svelte-ignore a11y_no_static_element_interactions -->
+<div class="asi" onmouseenter={() => statusComponent.updateLastImport()}>
     <img class="asi__logo" src={itadLogo} alt="ITAD logo">
     <SyncIndicator {status} />
 

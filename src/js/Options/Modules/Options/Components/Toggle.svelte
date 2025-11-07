@@ -6,7 +6,12 @@
 
     const dispatch = createEventDispatcher<{toggle: boolean}>();
 
-    export let value: boolean;
+    interface Props {
+        value: boolean;
+        children?: import('svelte').Snippet;
+    }
+
+    let { value = $bindable(), children }: Props = $props();
 
     function dispatchChange(): void {
         dispatch("toggle", value);
@@ -16,12 +21,12 @@
 
 <label>
     <span>
-        <input type="checkbox" bind:checked={value} on:change={dispatchChange}>
+        <input type="checkbox" bind:checked={value} onchange={dispatchChange}>
         <ToggleIcon on={value} />
     </span>
 
     <span>
-        <slot></slot>
+        {@render children?.()}
     </span>
 </label>
 

@@ -16,7 +16,7 @@
     import ITADOptions from "./Modules/Options/ITADOptions.svelte";
     import AppPageOptions from "./Modules/Options/AppPageOptions.svelte";
 
-    let initialLoad: Promise<void>|null = null;
+    let initialLoad: Promise<void>|null = $state(null);
 
     onMount(() => {
         initialLoad = (async () => {
@@ -25,9 +25,13 @@
         })();
     });
 
-    export let section: string = (window.location.hash === "")
+    interface Props {
+        section?: string;
+    }
+
+    let { section = $bindable((window.location.hash === "")
         ? "general"
-        : window.location.hash.substring(1);
+        : window.location.hash.substring(1)) }: Props = $props();
 </script>
 
 

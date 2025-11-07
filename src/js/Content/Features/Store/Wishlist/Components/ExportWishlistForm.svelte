@@ -1,4 +1,7 @@
 <script lang="ts">
+    import { createBubbler } from 'svelte/legacy';
+
+    const bubble = createBubbler();
     import {L} from "@Core/Localization/Localization";
     import {
         __cancel,
@@ -34,12 +37,21 @@
         close: void
     }>();
 
-    export let language: Language;
-    export let user: UserInterface;
-    export let type: "text"|"json" = "text";
-    export let format: string = "%title%";
+    interface Props {
+        language: Language;
+        user: UserInterface;
+        type?: "text"|"json";
+        format?: string;
+    }
 
-    let input: HTMLInputElement;
+    let {
+        language,
+        user,
+        type = $bindable("text"),
+        format = $bindable("%title%")
+    }: Props = $props();
+
+    let input: HTMLInputElement = $state();
 
     function add(value: string): void {
         if (!input) { return; }
@@ -164,8 +176,8 @@
         <div class="as_wexport">
             <h2>{L(__export_type)}</h2>
             <div class="as_wexport_buttons">
-                <label><input type="radio" value="text" bind:group={type} on:change> {L(__export_text)}</label>
-                <label><input type="radio" value="json" bind:group={type} on:change> JSON</label>
+                <label><input type="radio" value="text" bind:group={type} onchange={bubble('change')}> {L(__export_text)}</label>
+                <label><input type="radio" value="json" bind:group={type} onchange={bubble('change')}> JSON</label>
             </div>
         </div>
 
@@ -173,11 +185,11 @@
             <div class="as_wexport" transition:slide={{axis: "y", duration: 200}}>
                 <h2>{L(__export_format)}</h2>
                 <div>
-                    <input type="text" bind:value={format} bind:this={input} on:change>
+                    <input type="text" bind:value={format} bind:this={input} onchange={bubble('change')}>
                     <div class="as_wexport_symbols">
                         {#each ["%title%", "%id%", "%appid%", "%url%", "%added_date%", "%release_date%", "%price%", "%discount%", "%base_price%", "%note%"] as str, index}
                             {#if index > 0}, {/if}
-                            <button type="button" on:click={() => add(str)}>{str}</button>
+                            <button type="button" onclick={() => add(str)}>{str}</button>
                         {/each}
                     </div>
                 </div>
@@ -218,7 +230,7 @@
         color: white;
         border-color: white;
     }
-    label:has(input[type=radio]:checked) {
+    label:has(:global(input[type=radio]:checked)) {
         color: white;
         border-color: #1a97ff;
     }

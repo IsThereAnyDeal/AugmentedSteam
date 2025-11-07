@@ -3,6 +3,7 @@ import type CInventory from "@Content/Features/Community/Inventory/CInventory";
 import {type MarketInfo} from "@Content/Features/Community/Inventory/CInventory";
 import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
 import MarketOverview from "@Content/Features/Community/Inventory/Components/MarketOverview.svelte";
+import { mount } from "svelte";
 
 export default class FShowMarketOverview extends Feature<CInventory> {
 
@@ -40,14 +41,14 @@ export default class FShowMarketOverview extends Feature<CInventory> {
         }
 
         marketActions.style.display = "block";
-        (new MarketOverview({
-            target: marketActions,
-            anchor: marketActions.firstElementChild ?? undefined,
-            props: {
-                currency: CurrencyManager.getCurrencyInfo(CurrencyManager.storeCurrency).id,
-                globalId,
-                hashName
-            }
-        }));
+        (mount(MarketOverview, {
+                    target: marketActions,
+                    anchor: marketActions.firstElementChild ?? undefined,
+                    props: {
+                        currency: CurrencyManager.getCurrencyInfo(CurrencyManager.storeCurrency).id,
+                        globalId,
+                        hashName
+                    }
+                }));
     }
 }

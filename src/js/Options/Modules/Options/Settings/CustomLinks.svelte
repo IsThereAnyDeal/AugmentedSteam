@@ -11,9 +11,13 @@
     import DeleteIcon from "../../Icons/DeleteIcon.svelte";
     import AddIcon from "../../Icons/AddIcon.svelte";
 
-    export let type: "app"|"profile";
+    interface Props {
+        type: "app"|"profile";
+    }
 
-    let customLinks: TCustomLink[] = [];
+    let { type }: Props = $props();
+
+    let customLinks: TCustomLink[] = $state([]);
 
     function removeLink(index: number): void {
         customLinks.splice(index, 1);
@@ -60,13 +64,13 @@
 
 <div>
     {#each customLinks as link, index (link)}
-        <div class="box" on:change={save} transition:slide={{axis: "y", duration: 200}}>
+        <div class="box" onchange={save} transition:slide={{axis: "y", duration: 200}}>
             <div class="controls">
-                <button type="button" class="toggle" on:click={() => toggleLink(link)}>
+                <button type="button" class="toggle" onclick={() => toggleLink(link)}>
                     <ToggleIcon on={link.enabled} />
                 </button>
 
-                <button type="button" class="delete" on:click={() => removeLink(index)}>
+                <button type="button" class="delete" onclick={() => removeLink(index)}>
                     <DeleteIcon />
                 </button>
             </div>
@@ -93,7 +97,7 @@
         </div>
     {/each}
 
-    <button type="button" class="add" on:click={addLink}>
+    <button type="button" class="add" onclick={addLink}>
         <AddIcon />
         {L(__options_addCustomLink)}
     </button>

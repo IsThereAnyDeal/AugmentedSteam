@@ -3,6 +3,7 @@ import type CWishlist from "@Content/Features/Store/Wishlist/CWishlist";
 import Settings from "@Options/Data/Settings";
 import UserNotes from "@Content/Features/Store/Common/UserNotes/UserNotes";
 import UserNote from "@Content/Features/Store/Wishlist/Components/WishlistUserNote.svelte";
+import { mount } from "svelte";
 
 export default class FWishlistUserNotes extends Feature<CWishlist> {
 
@@ -46,14 +47,14 @@ export default class FWishlistUserNotes extends Feature<CWishlist> {
                 continue;
             }
 
-            const component = new UserNote({
-                target: platforms,
-                props: {
-                    notes: this.notes!,
-                    appName,
-                    appid: appid.number
-                }
-            });
+            const component = mount(UserNote, {
+                            target: platforms,
+                            props: {
+                                notes: this.notes!,
+                                appName,
+                                appid: appid.number
+                            }
+                        });
 
             this.components.push(component);
         }

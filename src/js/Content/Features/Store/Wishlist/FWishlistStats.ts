@@ -7,6 +7,7 @@ import WishlistButton from "@Content/Features/Store/Wishlist/Components/Wishlist
 import {__wl_label} from "@Strings/_strings";
 import {L} from "@Core/Localization/Localization";
 import {getMenuNode} from "@Content/Features/Store/Wishlist/Components/WishlistMenu";
+import { mount } from "svelte";
 
 export default class FWishlistStats extends Feature<CWishlist> {
 
@@ -16,22 +17,22 @@ export default class FWishlistStats extends Feature<CWishlist> {
 
     override async apply(): Promise<void> {
 
-        new WishlistStats({
-            target: document.body,
-            props: {
-                user: this.context.user,
-                language: this.context.language ?? new Language("english"),
-                wishlistData: this.context.wishlistData ?? [],
-                canEdit: this.context.user.steamId === this.context.ownerId
-            }
-        });
+        mount(WishlistStats, {
+                    target: document.body,
+                    props: {
+                        user: this.context.user,
+                        language: this.context.language ?? new Language("english"),
+                        wishlistData: this.context.wishlistData ?? [],
+                        canEdit: this.context.user.steamId === this.context.ownerId
+                    }
+                });
 
-        const button = new WishlistButton({
-            target: getMenuNode().getTarget(3),
-            props: {
-                label: L(__wl_label)
-            }
-        });
+        const button = mount(WishlistButton, {
+                    target: getMenuNode().getTarget(3),
+                    props: {
+                        label: L(__wl_label)
+                    }
+                });
         button.$on("click", () => {
             document.dispatchEvent(new CustomEvent("as:openStats"))
         });

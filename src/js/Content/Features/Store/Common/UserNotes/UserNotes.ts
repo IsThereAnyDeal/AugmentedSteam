@@ -24,6 +24,7 @@ import CustomModal from "@Core/Modals/CustomModal";
 import NoteEditModal from "@Content/Modules/UserNotes/Modals/NoteEditModal.svelte";
 import ConfirmDialog from "@Core/Modals/ConfirmDialog";
 import {EModalAction} from "@Core/Modals/Contained/EModalAction";
+import { mount, unmount } from "svelte";
 
 export default class UserNotes {
 
@@ -125,10 +126,10 @@ export default class UserNotes {
                 explicitDismissal: true
             },
             modalFn: (target) => {
-                form = new NotesForm({
-                    target,
-                    props: {note}
-                });
+                form = mount(NotesForm, {
+                                    target,
+                                    props: {note}
+                                });
                 form.$on("change", () => {
                     note = form!.note;
                 });
@@ -166,13 +167,13 @@ export default class UserNotes {
         const savedNote: string = (await this.get(appid))?.get(appid) ?? "";
 
         return new Promise(resolve => {
-            const modal = new NoteEditModal({
-                target: document.body,
-                props: {
-                    appName,
-                    note: savedNote
-                }
-            });
+            const modal = mount(NoteEditModal, {
+                            target: document.body,
+                            props: {
+                                appName,
+                                note: savedNote
+                            }
+                        });
             modal.$on("save", (e) => {
                 let note: string|null = e.detail.trim();
                 if (note === "") {
@@ -186,11 +187,11 @@ export default class UserNotes {
                 }
 
                 resolve(note);
-                modal.$destroy();
+                unmount(modal);
             });
             modal.$on("cancel", () => {
                 resolve(savedNote);
-                modal.$destroy();
+                unmount(modal);
             });
         });
     }

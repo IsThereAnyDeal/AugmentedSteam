@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { preventDefault } from 'svelte/legacy';
+
     import Localization, {type TLocale} from "@Core/Localization/Localization";
     import {__usingLanguage, __usingLanguageReturn} from "@Strings/_strings";
     import {createEventDispatcher, onMount} from "svelte";
@@ -11,11 +13,15 @@
         close: void
     }>();
 
-    let promise: Promise<TLocale>;
+    let promise: Promise<TLocale> = $state();
 
-    export let react: boolean;
-    export let currentLanguage: Language;
-    export let warningLanguage: Language;
+    interface Props {
+        react: boolean;
+        currentLanguage: Language;
+        warningLanguage: Language;
+    }
+
+    let { react, currentLanguage, warningLanguage }: Props = $props();
 
     function resetLanguageCode(): void {
         // TODO find a way to change language for user in React pages
@@ -60,11 +66,11 @@
             {str__usingLanguage(locale)}
 
             {#if react}
-                <button type="button" on:click={handleSetLanguage}>
+                <button type="button" onclick={handleSetLanguage}>
                     {str__usingLanguageReturn(locale)}
                 </button>
             {:else}
-                <button type="button" on:click|preventDefault={resetLanguageCode}>
+                <button type="button" onclick={preventDefault(resetLanguageCode)}>
                     {str__usingLanguageReturn(locale)}
                 </button>
             {/if}

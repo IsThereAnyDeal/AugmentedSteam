@@ -2,6 +2,7 @@ import self_ from "./FWishlistProfileLink.svelte";
 import type CProfileHome from "@Content/Features/Community/ProfileHome/CProfileHome";
 import Feature from "@Content/Modules/Context/Feature";
 import Settings from "@Options/Data/Settings";
+import { mount } from "svelte";
 
 export default class FWishlistProfileLink extends Feature<CProfileHome> {
 
@@ -14,12 +15,12 @@ export default class FWishlistProfileLink extends Feature<CProfileHome> {
     override async apply(): Promise<void> {
 
         const node = document.querySelector(".profile_item_links .profile_count_link")!;
-        new self_({
-            target: node.parentElement!,
-            anchor: node.nextElementSibling!,
-            props: {
-                steamid: this.context.steamId!
-            }
-        });
+        mount(self_, {
+                    target: node.parentElement!,
+                    anchor: node.nextElementSibling!,
+                    props: {
+                        steamid: this.context.steamId!
+                    }
+                });
     }
 }

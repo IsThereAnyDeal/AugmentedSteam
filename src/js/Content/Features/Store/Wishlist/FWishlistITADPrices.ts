@@ -4,6 +4,7 @@ import Prices from "@Content/Modules/Prices/Prices";
 import PriceOverview from "@Content/Modules/Prices/PriceOverview.svelte";
 import Settings from "@Options/Data/Settings";
 import type {TPriceOverview} from "@Background/Modules/AugmentedSteam/_types";
+import { mount } from "svelte";
 
 export default class FWishlistITADPrices extends Feature<CWishlist> {
 
@@ -59,14 +60,14 @@ export default class FWishlistITADPrices extends Feature<CWishlist> {
             // margin of game node
             const margin = window.getComputedStyle(node.querySelector(".LSY1zV2DJSM-")!).marginBottom;
 
-            this.currentElement = new PriceOverview({
-                target: node,
-                props: {
-                    data,
-                    marginTop: `-${margin}`,
-                    marginBottom: margin
-                }
-            });
+            this.currentElement = mount(PriceOverview, {
+                            target: node,
+                            props: {
+                                data,
+                                marginTop: `-${margin}`,
+                                marginBottom: margin
+                            }
+                        });
         }
     }
 

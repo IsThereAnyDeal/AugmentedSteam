@@ -2,6 +2,7 @@ import Feature from "@Content/Modules/Context/Feature";
 import StringUtils from "@Core/Utils/StringUtils";
 import AppLinks from "@Content/Features/Store/Common/ExtraLinks/AppLinks.svelte";
 import type CApp from "@Content/Features/Store/App/CApp";
+import { mount } from "svelte";
 
 export default class FExtraLinksApp extends Feature<CApp> {
 
@@ -21,14 +22,14 @@ export default class FExtraLinksApp extends Feature<CApp> {
             document.querySelector("div.rightcol.game_meta_data")!.insertAdjacentElement("afterbegin", target);
         }
 
-        (new AppLinks({
-            target,
-            anchor: target.firstElementChild!,
-            props: {
-                appid: this.context.appid,
-                communityAppid: this.context.communityAppid,
-                appName: StringUtils.clearSpecialSymbols(this.context.appName)
-            }
-        }));
+        (mount(AppLinks, {
+                    target,
+                    anchor: target.firstElementChild!,
+                    props: {
+                        appid: this.context.appid,
+                        communityAppid: this.context.communityAppid,
+                        appName: StringUtils.clearSpecialSymbols(this.context.appName)
+                    }
+                }));
     }
 }

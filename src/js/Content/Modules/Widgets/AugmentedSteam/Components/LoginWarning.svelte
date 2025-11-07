@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { run } from 'svelte/legacy';
+
     import {L} from "@Core/Localization/Localization";
     import {__loginWarning} from "@Strings/_strings";
     import Warning from "@Content/Modules/Widgets/AugmentedSteam/Components/Warning.svelte";
@@ -9,15 +11,21 @@
         close: void
     }>();
 
-    export let react: boolean;
-    export let page: "store"|"community";
+    interface Props {
+        react: boolean;
+        page: "store"|"community";
+    }
 
-    let host: string;
-    $: switch(page) {
-          case "store": host = "store.steampowered.com"; break;
-          case "community": host = "steamcommunity.com"; break;
-          default: throw new Error();
-      }
+    let { react, page }: Props = $props();
+
+    let host: string = $state();
+    run(() => {
+        switch(page) {
+              case "store": host = "store.steampowered.com"; break;
+              case "community": host = "steamcommunity.com"; break;
+              default: throw new Error();
+          }
+    });
 
     function handleClose(): void {
         if (page === "store") {

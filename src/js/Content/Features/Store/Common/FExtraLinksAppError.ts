@@ -5,6 +5,7 @@ import {__communityHub} from "@Strings/_strings";
 import AppLinks from "@Content/Features/Store/Common/ExtraLinks/AppLinks.svelte";
 import type CApp from "@Content/Features/Store/App/CApp";
 import Settings from "@Options/Data/Settings";
+import { mount } from "svelte";
 
 export default class FExtraLinksAppError extends Feature<CApp> {
 
@@ -26,13 +27,13 @@ export default class FExtraLinksAppError extends Feature<CApp> {
         target.classList.add("es_extralinks_ctn");
         document.querySelector("#error_box")!.insertAdjacentElement("afterend", target);
 
-        (new AppLinks({
-            target,
-            props: {
-                appid: this.context.appid,
-                communityAppid: this.context.appid,
-            }
-        }));
+        (mount(AppLinks, {
+                    target,
+                    props: {
+                        appid: this.context.appid,
+                        communityAppid: this.context.appid,
+                    }
+                }));
     }
 
     private hasExtraLinksEnabled(): boolean {

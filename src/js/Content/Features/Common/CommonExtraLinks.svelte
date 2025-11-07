@@ -4,9 +4,13 @@
     import Settings from "@Options/Data/Settings";
     import ExtraLink from "@Content/Features/Store/Common/ExtraLinks/ExtraLink.svelte";
 
-    export let type: "app"|"sub"|"bundle";
-    export let gameid: number;
-    export let isCommunity: boolean = false;
+    interface Props {
+        type: "app"|"sub"|"bundle";
+        gameid: number;
+        isCommunity?: boolean;
+    }
+
+    let { type, gameid, isCommunity = false }: Props = $props();
 </script>
 
 

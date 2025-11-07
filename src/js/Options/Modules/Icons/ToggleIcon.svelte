@@ -1,5 +1,9 @@
 <script lang="ts">
-    export let on: boolean;
+    interface Props {
+        on: boolean;
+    }
+
+    let { on }: Props = $props();
 </script>
 
 

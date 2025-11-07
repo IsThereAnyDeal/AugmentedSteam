@@ -10,8 +10,12 @@
         cancel: void
     }>();
 
-    export let appName: string;
-    export let note: string;
+    interface Props {
+        appName: string;
+        note: string;
+    }
+
+    let { appName, note = $bindable() }: Props = $props();
 
     async function handleButton(e: CustomEvent<EModalAction>): Promise<void> {
         const action = e.detail;
@@ -30,7 +34,7 @@
     cancel: L(__cancel)
 }} on:button={handleButton}>
     <div>
-        <textarea bind:value={note} />
+        <textarea bind:value={note}></textarea>
     </div>
 </Modal>
 

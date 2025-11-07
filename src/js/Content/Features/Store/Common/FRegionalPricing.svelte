@@ -8,13 +8,23 @@
     import FlagIcon from "@Icons/FlagIcon.svelte";
     import type UserInterface from "@Core/User/UserInterface";
 
-    export let user: UserInterface;
-    export let countries: string[];
-    export let prices: Record<string, PackageDetailsPrice>;
-    export let errors: Set<string>;
-    export let priceNode: Element|null = null;
+    interface Props {
+        user: UserInterface;
+        countries: string[];
+        prices: Record<string, PackageDetailsPrice>;
+        errors: Set<string>;
+        priceNode?: Element|null;
+    }
 
-    let priceLocal: Price|null = null;
+    let {
+        user,
+        countries,
+        prices,
+        errors,
+        priceNode = null
+    }: Props = $props();
+
+    let priceLocal: Price|null = $state(null);
     try {
         const apiPrice: PackageDetailsPrice = prices[user.storeCountry.toLowerCase()]!;
         priceLocal = (new Price(apiPrice.final / 100, apiPrice.currency))
@@ -47,7 +57,7 @@
         }
     }
 
-    let container: HTMLElement;
+    let container: HTMLElement = $state();
 
     if (Settings.showregionalprice === "mouse") {
         priceNode!.classList.add("es_regional_onmouse");

@@ -3,6 +3,7 @@ import Feature from "@Content/Modules/Context/Feature";
 import type CApp from "@Content/Features/Community/App/CApp";
 import DynamicStore from "@Content/Modules/Data/DynamicStore";
 import Settings from "@Options/Data/Settings";
+import { mount } from "svelte";
 
 export default class FCommunityAppPageWishlist extends Feature<CApp> {
 
@@ -26,9 +27,9 @@ export default class FCommunityAppPageWishlist extends Feature<CApp> {
             return;
         }
 
-        (new self_({
-            target,
-            props: {appid, wishlisted}
-        }));
+        (mount(self_, {
+                    target,
+                    props: {appid, wishlisted}
+                }));
     }
 }

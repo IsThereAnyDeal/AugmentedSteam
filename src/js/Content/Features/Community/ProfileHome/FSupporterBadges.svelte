@@ -5,7 +5,11 @@
     import {L} from "@Core/Localization/Localization";
     import {__esSupporter} from "@Strings/_strings";
 
-    export let badges: TProfileData["badges"];
+    interface Props {
+        badges: TProfileData["badges"];
+    }
+
+    let { badges }: Props = $props();
 </script>
 
 

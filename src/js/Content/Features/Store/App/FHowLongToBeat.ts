@@ -3,6 +3,7 @@ import type CApp from "@Content/Features/Store/App/CApp";
 import Feature from "@Content/Modules/Context/Feature";
 import type {TStorePageData} from "@Background/Modules/AugmentedSteam/_types";
 import Settings from "@Options/Data/Settings";
+import { mount } from "svelte";
 
 export default class FHowLongToBeat extends Feature<CApp> {
 
@@ -26,15 +27,15 @@ export default class FHowLongToBeat extends Feature<CApp> {
         if (!this.hltb) { return }
 
         const anchor = document.querySelector("div.game_details")!.nextElementSibling!;
-        new self_({
-            target: anchor.parentElement!,
-            anchor,
-            props: {
-                story: this.hltb.story,
-                extras: this.hltb.extras,
-                complete: this.hltb.complete,
-                url: this.hltb.url
-            }
-        })
+        mount(self_, {
+                    target: anchor.parentElement!,
+                    anchor,
+                    props: {
+                        story: this.hltb.story,
+                        extras: this.hltb.extras,
+                        complete: this.hltb.complete,
+                        url: this.hltb.url
+                    }
+                })
     }
 }

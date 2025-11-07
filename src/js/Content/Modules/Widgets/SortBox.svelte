@@ -8,17 +8,21 @@
         change: SortboxChangeEvent
     }>();
 
-    export let name: string;
-    export let options: Array<[string, string]>;
-    export let value: string; // format: {key}_{ASC|DESC}
+    interface Props {
+        name: string;
+        options: Array<[string, string]>;
+        value: string; // format: {key}_{ASC|DESC}
+    }
 
-    let highlighted: string;
+    let { name, options, value = $bindable() }: Props = $props();
+
+    let highlighted: string = $state();
     let selected: string;
-    let selectedName: string;
-    let direction: number;
+    let selectedName: string = $state();
+    let direction: number = $state();
 
-    let containerNode: HTMLElement;
-    let isOpen: boolean = false;
+    let containerNode: HTMLElement = $state();
+    let isOpen: boolean = $state(false);
 
     function clickOutsideHandler(e: MouseEvent): void {
         if (!containerNode.contains(<HTMLElement>e.target)) {
@@ -87,17 +91,17 @@
     <div class="as-sortbox__container" bind:this={containerNode}>
         <button class="as-sortbox__trigger"
                 class:is-open={isOpen}
-                on:click={show}>{selectedName}</button>
+                onclick={show}>{selectedName}</button>
 
         <div class="as-dropdown" class:is-open={isOpen}>
             <ul>
                 {#each options as [key, name]}
                     <li>
-                        <!-- svelte-ignore a11y-mouse-events-have-key-events -->
+                        <!-- svelte-ignore a11y_mouse_events_have_key_events -->
                         <button type="button"
                                 class:is-highlighted={highlighted === key}
-                                on:mouseover={() => highlighted = key}
-                                on:click={() => select(key, name)}
+                                onmouseover={() => highlighted = key}
+                                onclick={() => select(key, name)}
                         >{name}</button>
                     </li>
                 {/each}
@@ -105,7 +109,7 @@
         </div>
     </div>
 
-    <button type="button" class="as-sortbox__reverse" on:click={reverse}>
+    <button type="button" class="as-sortbox__reverse" onclick={reverse}>
         {#if direction < 0}↓{:else}↑{/if}
     </button>
 </div>

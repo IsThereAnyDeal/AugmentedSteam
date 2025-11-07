@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
     interface TPriceOverview {
         success?: boolean,
         lowest_price?: string,
@@ -14,14 +14,18 @@
     import RequestData from "@Content/Modules/RequestData";
     import {onMount} from "svelte";
 
-    export let currency: number;
-    export let globalId: number;
-    export let hashName: string;
+    interface Props {
+        currency: number;
+        globalId: number;
+        hashName: string;
+    }
 
-    let lowestPrice: string|null = null;
-    let soldVolume: string|null = null;
+    let { currency, globalId, hashName }: Props = $props();
 
-    let promise: Promise<void> = new Promise(() => {});
+    let lowestPrice: string|null = $state(null);
+    let soldVolume: string|null = $state(null);
+
+    let promise: Promise<void> = $state(new Promise(() => {}));
 
     async function fetchMarketPriceOverview(): Promise<void> {
         try {

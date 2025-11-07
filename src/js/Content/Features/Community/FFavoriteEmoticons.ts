@@ -1,6 +1,7 @@
 import self_ from "./FFavoriteEmoticons.svelte";
 import type CCommunityBase from "@Content/Features/Community/CCommunityBase";
 import Feature from "@Content/Modules/Context/Feature";
+import { mount } from "svelte";
 
 export function handleDrag(e: DragEvent): void {
     if (!e.dataTransfer || !e.target) {
@@ -38,13 +39,13 @@ export default class FFavoriteEmoticons extends Feature<CCommunityBase> {
                 node.addEventListener("dragstart", handleDrag);
             }
 
-            new self_({
-                target: emoticonPopup,
-                anchor: emoticonPopup.firstElementChild ?? undefined,
-                props: {
-                    emoticonPopup
-                }
-            });
+            mount(self_, {
+                            target: emoticonPopup,
+                            anchor: emoticonPopup.firstElementChild ?? undefined,
+                            props: {
+                                emoticonPopup
+                            }
+                        });
         }).observe(document.body, {"childList": true});
     }
 }

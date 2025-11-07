@@ -1,7 +1,11 @@
 <script lang="ts">
-    export let id: string;
-    export let gray: boolean = false;
-    export let iconUrl: string|undefined = undefined;
+    interface Props {
+        id: string;
+        gray?: boolean;
+        iconUrl?: string|undefined;
+    }
+
+    let { id, gray = false, iconUrl = undefined }: Props = $props();
 </script>
 
 

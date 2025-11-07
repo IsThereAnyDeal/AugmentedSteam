@@ -9,7 +9,11 @@
     import {SettingsStore} from "../../../Data/Settings";
     import SubOptions from "../Components/SubOptions.svelte";
 
-    export let settings: Writable<SettingsSchema>
+    interface Props {
+        settings: Writable<SettingsSchema>;
+    }
+
+    let { settings }: Props = $props();
 
     function handleDefault() {
         SettingsStore.remove("spamcommentregex");
@@ -27,7 +31,7 @@
                 <span>{L(__options_spamcommentregex)}</span>
                 <input type="text" class="inpt" bind:value={$settings.spamcommentregex}>
             </label>
-            <button type="button" class="btn" on:click={handleDefault}>{L(__theworddefault)}</button>
+            <button type="button" class="btn" onclick={handleDefault}>{L(__theworddefault)}</button>
         </div>
     </SubOptions>
 {/if}

@@ -6,6 +6,7 @@ import SortBox from "@Content/Modules/Widgets/SortBox.svelte";
 import SyncedStorage from "@Core/Storage/SyncedStorage";
 import Price from "@Content/Modules/Currency/Price";
 import type {SortboxChangeEvent} from "@Content/Modules/Widgets/SortboxChangeEvent";
+import { mount } from "svelte";
 
 export default class FMarketSort extends Feature<CMarketHome> {
 
@@ -46,20 +47,20 @@ export default class FMarketSort extends Feature<CMarketHome> {
             return;
         }
 
-        this.sortbox = new SortBox({
-            target: anchor.parentElement!,
-            anchor,
-            props: {
-                name: "my_market_listings",
-                options: [
-                    ["default", header.querySelector(".market_listing_listed_date")!.textContent!.trim()],
-                    ["item", header.querySelector(".market_listing_header_namespacer")!.parentNode!.textContent!.trim()],
-                    ["game", L(__gameName).toUpperCase()],
-                    ["price", header.querySelector(".market_listing_my_price")!.textContent!.trim()],
-                ],
-                value: (await SyncedStorage.get("sortmylistingsby")) ?? "default_ASC",
-            }
-        });
+        this.sortbox = mount(SortBox, {
+                    target: anchor.parentElement!,
+                    anchor,
+                    props: {
+                        name: "my_market_listings",
+                        options: [
+                            ["default", header.querySelector(".market_listing_listed_date")!.textContent!.trim()],
+                            ["item", header.querySelector(".market_listing_header_namespacer")!.parentNode!.textContent!.trim()],
+                            ["game", L(__gameName).toUpperCase()],
+                            ["price", header.querySelector(".market_listing_my_price")!.textContent!.trim()],
+                        ],
+                        value: (await SyncedStorage.get("sortmylistingsby")) ?? "default_ASC",
+                    }
+                });
         this.sortbox.$on("change", (e: CustomEvent<SortboxChangeEvent>) => {
             const {value, key, direction} = e.detail;
             this._sortRows(key, direction < 0);

@@ -32,7 +32,11 @@
         window.location.hash = value;
     }
 
-    export let selected: string = setup[0]![0]![0];
+    interface Props {
+        selected?: string;
+    }
+
+    let { selected = $bindable(setup[0]![0]![0]) }: Props = $props();
 </script>
 
 <div class="sidebar">
@@ -41,7 +45,7 @@
             {#each group as [value, locale]}
                 <button type="button"
                         class:is-selected={selected === value}
-                        on:click={() => select(value)}>{locale}</button>
+                        onclick={() => select(value)}>{locale}</button>
             {/each}
         </div>
     {/each}

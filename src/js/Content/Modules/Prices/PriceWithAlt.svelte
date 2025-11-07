@@ -3,7 +3,11 @@
     import Price from "@Content/Modules/Currency/Price";
     import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
 
-    export let price: TPrice;
+    interface Props {
+        price: TPrice;
+    }
+
+    let { price }: Props = $props();
 
     function getAltPrice(price: TPrice): Price|null {
         const customCurrency = CurrencyManager.customCurrency;

@@ -1,6 +1,7 @@
 import self_ from "./FFriendsInviteButton.svelte";
 import Feature from "@Content/Modules/Context/Feature";
 import type CGroupHome from "@Content/Features/Community/GroupHome/CGroupHome";
+import { mount } from "svelte";
 
 export default class FFriendsInviteButton extends Feature<CGroupHome> {
 
@@ -17,11 +18,11 @@ export default class FFriendsInviteButton extends Feature<CGroupHome> {
             throw new Error("Node not found");
         }
 
-        (new self_({
-            target: node.parentElement!,
-            props: {
-                groupId: this.context.groupId!
-            }
-        }));
+        (mount(self_, {
+                    target: node.parentElement!,
+                    props: {
+                        groupId: this.context.groupId!
+                    }
+                }));
     }
 }

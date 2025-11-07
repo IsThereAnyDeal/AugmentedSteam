@@ -2,9 +2,13 @@
     import {__charts_current, __charts_peakall, __charts_peaktoday, __charts_playingNow} from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
 
-    export let recent: number
-    export let peakToday: number;
-    export let peakAll: number;
+    interface Props {
+        recent: number;
+        peakToday: number;
+        peakAll: number;
+    }
+
+    let { recent, peakToday, peakAll }: Props = $props();
 
     const formatter = new Intl.NumberFormat(document.documentElement.lang || navigator.language);
 </script>

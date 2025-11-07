@@ -1,10 +1,21 @@
 <script lang="ts">
     import external from "@Content/externalLink";
 
-    export let href: string;
-    export let icon: string = "";
-    export let iconUrl: string|null = null;
-    export let isCommunity: boolean = false;
+    interface Props {
+        href: string;
+        icon?: string;
+        iconUrl?: string|null;
+        isCommunity?: boolean;
+        children?: import('svelte').Snippet;
+    }
+
+    let {
+        href,
+        icon = "",
+        iconUrl = null,
+        isCommunity = false,
+        children
+    }: Props = $props();
 </script>
 
 
@@ -19,7 +30,7 @@
         {:else}
             <i class="ico16"></i>
         {/if}
-        <slot></slot>
+        {@render children?.()}
     </span>
 </a>
 

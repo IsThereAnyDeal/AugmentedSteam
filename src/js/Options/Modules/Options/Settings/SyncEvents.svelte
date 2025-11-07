@@ -1,7 +1,11 @@
 <script lang="ts">
     import type {TSyncEvent} from "@Background/Modules/IsThereAnyDeal/_types";
 
-    export let events: TSyncEvent[];
+    interface Props {
+        events: TSyncEvent[];
+    }
+
+    let { events }: Props = $props();
 </script>
 
 

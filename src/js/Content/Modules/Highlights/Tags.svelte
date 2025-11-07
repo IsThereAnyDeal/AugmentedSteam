@@ -28,9 +28,13 @@
         collected:    [__tag_collection,    Settings.tag_collection_color],
     };
 
-    export let options: Array<keyof Options>;
+    interface Props {
+        options: Array<keyof Options>;
+    }
 
-    let node: HTMLElement;
+    let { options }: Props = $props();
+
+    let node: HTMLElement = $state();
 
     export function isConnected(): boolean {
         return node.isConnected;

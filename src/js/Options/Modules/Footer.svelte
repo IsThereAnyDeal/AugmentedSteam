@@ -105,11 +105,11 @@
     <div class="author">{L(__options_footerAuthor)}</div>
     <div class="buttons">
         <label>
-            <input type="file" accept=".json" on:change={importSettings}>
+            <input type="file" accept=".json" onchange={importSettings}>
             <button type="button">{L(__options_settingsMngmt_import)}</button>
         </label>
-        <button type="button" on:click={exportSettings}>{L(__options_settingsMngmt_export)}</button>
-        <button type="button" on:click={resetSettings}>{L(__options_settingsMngmt_reset)}</button>
+        <button type="button" onclick={exportSettings}>{L(__options_settingsMngmt_export)}</button>
+        <button type="button" onclick={resetSettings}>{L(__options_settingsMngmt_reset)}</button>
     </div>
 </footer>
 

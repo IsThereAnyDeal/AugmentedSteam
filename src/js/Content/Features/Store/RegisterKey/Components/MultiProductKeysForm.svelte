@@ -36,17 +36,21 @@
         close: void
     }>();
 
-    export let value: string;
-    export let user: UserInterface;
+    interface Props {
+        value: string;
+        user: UserInterface;
+    }
 
-    let keys: [string, Promise<TActivationResult>][] = [];
+    let { value = $bindable(), user }: Props = $props();
+
+    let keys: [string, Promise<TActivationResult>][] = $state([]);
     let buttons: {
         primary?: string,
         cancel?: string
-    } = {
+    } = $state({
         primary: L(__activateProducts),
         cancel: L(__cancel)
-    };
+    });
 
     async function activateKey(key: string): Promise<TActivationResult> {
         const response = await RequestData.post("https://store.steampowered.com/account/ajaxregisterkey", {

@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { preventDefault } from 'svelte/legacy';
+
     import {L} from "@Core/Localization/Localization";
     import ExtensionResources from "@Core/ExtensionResources";
     import {
@@ -25,10 +27,14 @@
     import {EModalAction} from "@Core/Modals/Contained/EModalAction";
     import AlertDialog from "@Core/Modals/AlertDialog";
 
-    export let user: UserInterface;
+    interface Props {
+        user: UserInterface;
+    }
 
-    let isOpen: boolean = false;
-    let parentNode: HTMLElement;
+    let { user }: Props = $props();
+
+    let isOpen: boolean = $state(false);
+    let parentNode: HTMLElement = $state();
 
     function outsideClickHandler(e: MouseEvent) {
         const target = e.target as HTMLElement;
@@ -103,14 +109,14 @@
 </script>
 
 <div class="as-menu" bind:this={parentNode}>
-    <button class:is-open={isOpen} on:click={toggleMenu}>Augmented Steam</button>
+    <button class:is-open={isOpen} onclick={toggleMenu}>Augmented Steam</button>
 
     {#if isOpen}
-        <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
-        <div class="body" on:click={closeMenu} transition:fade={{duration: 100}}>
+        <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
+        <div class="body" onclick={closeMenu} transition:fade={{duration: 100}}>
             <div class="group">
                 <a target="_blank" href={ExtensionResources.getURL("html/options.html")}>{L(__thewordoptions)}</a>
-                <a href="#clear_cache" on:click|preventDefault={clearCache}>{L(__clearCache)}</a>
+                <a href="#clear_cache" onclick={preventDefault(clearCache)}>{L(__clearCache)}</a>
             </div>
             <div class="group">
                 <a use:external href="https://github.com/IsThereAnyDeal/AugmentedSteam">{L(__contribute)}</a>
@@ -124,7 +130,7 @@
 
             {#if user.isSignedIn}
                 <div class="group">
-                    <a id="es_random_game" class="popup_menu_item" on:click={launchRandom}>{L(__launchRandom)}</a>
+                    <a id="es_random_game" class="popup_menu_item" onclick={launchRandom}>{L(__launchRandom)}</a>
                 </div>
             {/if}
         </div>

@@ -20,6 +20,7 @@ import SteamCommunityApiFacade from "@Content/Modules/Facades/SteamCommunityApiF
 import type {TReview} from "@Background/Modules/Community/_types";
 import HTML from "@Core/Html/Html";
 import BlockingWaitDialog from "@Core/Modals/BlockingWaitDialog";
+import { mount } from "svelte";
 
 export default class FReviewSort extends Feature<CRecommended> {
 
@@ -56,24 +57,24 @@ export default class FReviewSort extends Feature<CRecommended> {
             return;
         }
 
-        (new SortBox({
-            target: anchor.parentElement!,
-            anchor,
-            props: {
-                name: "reviews",
-                options: [
-                    ["default", L(__date)],
-                    ["rating", L(__rating)],
-                    ["helpful", L(__helpful)],
-                    ["funny", L(__funny)],
-                    ["length", L(__length)],
-                    ["visibility", L(__visibility)],
-                    ["playtime", L(__playtime)],
-                    ["awards", L(__awards)],
-                ],
-                value: (await SyncedStorage.get("sortreviewsby")) ?? "default_ASC"
-            }
-        })).$on("change", e => {
+        (mount(SortBox, {
+                    target: anchor.parentElement!,
+                    anchor,
+                    props: {
+                        name: "reviews",
+                        options: [
+                            ["default", L(__date)],
+                            ["rating", L(__rating)],
+                            ["helpful", L(__helpful)],
+                            ["funny", L(__funny)],
+                            ["length", L(__length)],
+                            ["visibility", L(__visibility)],
+                            ["playtime", L(__playtime)],
+                            ["awards", L(__awards)],
+                        ],
+                        value: (await SyncedStorage.get("sortreviewsby")) ?? "default_ASC"
+                    }
+                })).$on("change", e => {
             const {value, key, direction} = e.detail;
             SyncedStorage.set("sortreviewsby", value);
             this._sortReviews(key, direction < 0);

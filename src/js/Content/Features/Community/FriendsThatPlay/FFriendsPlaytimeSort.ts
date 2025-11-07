@@ -4,6 +4,7 @@ import type CFriendsThatPlay from "@Content/Features/Community/FriendsThatPlay/C
 import SortBox from "@Content/Modules/Widgets/SortBox.svelte";
 import {L} from "@Core/Localization/Localization";
 import type {SortboxChangeEvent} from "@Content/Modules/Widgets/SortboxChangeEvent";
+import { mount } from "svelte";
 
 export default class FFriendsPlaytimeSort extends Feature<CFriendsThatPlay> {
 
@@ -54,17 +55,17 @@ export default class FFriendsPlaytimeSort extends Feature<CFriendsThatPlay> {
         const target = document.querySelector(".friendListSectionHeader");
         if (!target) { return; }
 
-        const sortbox = new SortBox({
-            target,
-            props: {
-                name: "friends_that_play",
-                options: [
-                    ["default", L(__theworddefault)],
-                    ["playtime", L(__playtime)],
-                ],
-                value: "default_ASC"
-            }
-        });
+        const sortbox = mount(SortBox, {
+                    target,
+                    props: {
+                        name: "friends_that_play",
+                        options: [
+                            ["default", L(__theworddefault)],
+                            ["playtime", L(__playtime)],
+                        ],
+                        value: "default_ASC"
+                    }
+                });
         sortbox.$on("change", (e: CustomEvent<SortboxChangeEvent>) => {
             const {key, direction} = e.detail;
             onChange(key, direction < 0);

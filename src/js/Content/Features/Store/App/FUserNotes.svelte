@@ -6,11 +6,15 @@
     import UserNoteIcon from "@Content/Icons/UserNoteIcon.svelte";
     import DOMPurify from "dompurify";
 
-    export let notes: UserNotes;
-    export let appName: string;
-    export let appid: number;
+    interface Props {
+        notes: UserNotes;
+        appName: string;
+        appid: number;
+    }
 
-    let note: string|null = null;
+    let { notes, appName, appid }: Props = $props();
+
+    let note: string|null = $state(null);
 
     async function handleNote(): Promise<void> {
         let newNote: string|null = await notes.showModalDialog2(appName, appid);
@@ -32,8 +36,8 @@
 
 
 <div class="container">
-    <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
-    <span class="label" on:click={handleNote}><UserNoteIcon /> {L(note ? __userNote_update : __userNote_add)}</span>
+    <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
+    <span class="label" onclick={handleNote}><UserNoteIcon /> {L(note ? __userNote_update : __userNote_add)}</span>
 
     {#if note}
         <span class="note">{@html parseNote(note)}</span>

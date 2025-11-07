@@ -1,12 +1,19 @@
-<svelte:options accessors />
-
 <script lang="ts">
     import {__wait} from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
     import Modal from "./Modal.svelte";
 
-    export let title: string;
-    export let status: string|string[] = L(__wait);
+    interface Props {
+        title: string;
+        status?: string|string[];
+    }
+
+    let { title, status = L(__wait) }: Props = $props();
+
+    export {
+    	title,
+    	status,
+    }
 </script>
 
 

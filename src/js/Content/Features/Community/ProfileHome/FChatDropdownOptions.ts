@@ -1,6 +1,7 @@
 import self_ from "./FChatDropdownOptions.svelte";
 import Feature from "@Content/Modules/Context/Feature";
 import type CProfileHome from "@Content/Features/Community/ProfileHome/CProfileHome";
+import { mount } from "svelte";
 
 export default class FChatDropdownOptions extends Feature<CProfileHome> {
 
@@ -20,14 +21,14 @@ export default class FChatDropdownOptions extends Feature<CProfileHome> {
             throw new Error("steamids not found from anchor href");
         }
 
-        (new self_({
-            target: anchor.parentElement!,
-            anchor,
-            props: {
-                sendButton: anchor,
-                steamid: m[1],
-                accountid: Number(m[2]),
-            }
-        }));
+        (mount(self_, {
+                    target: anchor.parentElement!,
+                    anchor,
+                    props: {
+                        sendButton: anchor,
+                        steamid: m[1],
+                        accountid: Number(m[2]),
+                    }
+                }));
     }
 }

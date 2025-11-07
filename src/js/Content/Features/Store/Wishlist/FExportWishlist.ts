@@ -6,26 +6,26 @@ import ExportWishlistForm from "@Content/Features/Store/Wishlist/Components/Expo
 import Language from "@Core/Localization/Language";
 import WishlistButton from "@Content/Features/Store/Wishlist/Components/WishlistButton.svelte";
 import {getMenuNode} from "@Content/Features/Store/Wishlist/Components/WishlistMenu";
-
+import { mount, unmount } from "svelte";
 
 export default class FExportWishlist extends Feature<CWishlist> {
 
     override apply(): void {
-        const button = new WishlistButton({
-            target: getMenuNode().getTarget(2),
-            props: {
-                label: L(__export_wishlist)
-            }
-        });
+        const button = mount(WishlistButton, {
+                    target: getMenuNode().getTarget(2),
+                    props: {
+                        label: L(__export_wishlist)
+                    }
+                });
         button.$on("click", () => {
-            const form = new ExportWishlistForm({
-                target: document.body,
-                props: {
-                    language: this.context.language ?? new Language("english"),
-                    user: this.context.user
-                }
-            });
-            form.$on("close", () => form.$destroy());
+            const form = mount(ExportWishlistForm, {
+                            target: document.body,
+                            props: {
+                                language: this.context.language ?? new Language("english"),
+                                user: this.context.user
+                            }
+                        });
+            form.$on("close", () => unmount(form));
         });
     }
 }

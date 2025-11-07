@@ -5,9 +5,13 @@
     import Settings from "@Options/Data/Settings";
     import RequestData from "@Content/Modules/RequestData";
 
-    export let steamid: string;
+    interface Props {
+        steamid: string;
+    }
 
-    let countPromise: Promise<string|null> = Promise.resolve(null);
+    let { steamid }: Props = $props();
+
+    let countPromise: Promise<string|null> = $state(Promise.resolve(null));
 
     onMount(() => {
         if (Settings.show_wishlist_count) {

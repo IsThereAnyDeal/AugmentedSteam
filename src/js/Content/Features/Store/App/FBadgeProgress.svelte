@@ -8,7 +8,11 @@
         __cardsOwned, __viewBadge, __viewBadgeProgress
     } from "@Strings/_strings";
 
-    export let data: TBadgeData;
+    interface Props {
+        data: TBadgeData;
+    }
+
+    let { data }: Props = $props();
 
     let cardOwned = data.rgCards.filter(c => c.owned === 1).length;
     let cardTotal = data.rgCards.length;

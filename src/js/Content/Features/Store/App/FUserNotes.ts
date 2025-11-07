@@ -3,6 +3,7 @@ import Settings from "@Options/Data/Settings";
 import type CApp from "@Content/Features/Store/App/CApp";
 import Feature from "@Content/Modules/Context/Feature";
 import UserNotes from "@Content/Features/Store/Common/UserNotes/UserNotes";
+import { mount } from "svelte";
 
 export default class FUserNotes extends Feature<CApp> {
 
@@ -16,13 +17,13 @@ export default class FUserNotes extends Feature<CApp> {
             throw new Error("Node not found");
         }
 
-        (new self_({
-            target: queue,
-            props: {
-                notes: new UserNotes(),
-                appid: this.context.appid,
-                appName: this.context.appName
-            }
-        }));
+        (mount(self_, {
+                    target: queue,
+                    props: {
+                        notes: new UserNotes(),
+                        appid: this.context.appid,
+                        appName: this.context.appName
+                    }
+                }));
     }
 }

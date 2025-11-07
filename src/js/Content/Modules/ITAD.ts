@@ -1,6 +1,7 @@
 import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";
 import ITADSyncMenu from "@Content/Modules/Widgets/ITADSync/ITADSyncMenu.svelte";
 import type UserInterface from "@Core/User/UserInterface";
+import { mount } from "svelte";
 
 export default class ITAD {
 
@@ -15,10 +16,10 @@ export default class ITAD {
 
         const menu = document.querySelector(".as-menu");
         if (menu) {
-            (new ITADSyncMenu({
-                target: menu.parentElement!,
-                anchor: menu
-            }));
+            (mount(ITADSyncMenu, {
+                            target: menu.parentElement!,
+                            anchor: menu
+                        }));
         }
     }
 

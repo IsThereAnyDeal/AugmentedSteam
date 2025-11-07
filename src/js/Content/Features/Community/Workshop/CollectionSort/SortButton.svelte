@@ -7,18 +7,29 @@
     import CaretDownIcon from "@Content/Icons/CaretDownIcon.svelte";
     import CaretUpIcon from "@Content/Icons/CaretUpIcon.svelte";
 
-    export let by: ESortCriteria;
-    export let dir: SortDirection;
-    export let config: SortConfig;
-    export let toggle: (by: ESortCriteria, defaultDir: SortDirection) => void;
+    interface Props {
+        by: ESortCriteria;
+        dir: SortDirection;
+        config: SortConfig;
+        toggle: (by: ESortCriteria, defaultDir: SortDirection) => void;
+        children?: import('svelte').Snippet;
+    }
 
-    let currentDir: number|null;
-    $: currentDir = config.get(by) ?? null;
+    let {
+        by,
+        dir,
+        config,
+        toggle,
+        children
+    }: Props = $props();
+
+    let currentDir: number|null = $derived(config.get(by) ?? null);
+    
 </script>
 
 
-<button class:active={config.has(by)} on:click={() => toggle(by, dir)}>
-    <slot></slot><!--
+<button class:active={config.has(by)} onclick={() => toggle(by, dir)}>
+    {@render children?.()}<!--
 
     -->{#if (currentDir && currentDir < 0) || (!currentDir && dir < 0)}
         <CaretDownIcon />

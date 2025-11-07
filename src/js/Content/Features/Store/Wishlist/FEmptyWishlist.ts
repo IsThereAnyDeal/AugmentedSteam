@@ -16,6 +16,7 @@ import {getMenuNode} from "@Content/Features/Store/Wishlist/Components/WishlistM
 import ConfirmDialog from "@Core/Modals/ConfirmDialog";
 import {EModalAction} from "@Core/Modals/Contained/EModalAction";
 import ServiceFactory from "@Protobufs/ServiceFactory";
+import { mount } from "svelte";
 
 export default class FEmptyWishlist extends Feature<CWishlist> {
 
@@ -25,13 +26,13 @@ export default class FEmptyWishlist extends Feature<CWishlist> {
 
     override apply(): void {
 
-        const button = new WishlistButton({
-            target: getMenuNode().getTarget(1),
-            props: {
-                label: L(__emptyWishlist_title),
-                destructive: true
-            }
-        });
+        const button = mount(WishlistButton, {
+                    target: getMenuNode().getTarget(1),
+                    props: {
+                        label: L(__emptyWishlist_title),
+                        destructive: true
+                    }
+                });
         button.$on("click", () => {
             this.handleClick()
         });

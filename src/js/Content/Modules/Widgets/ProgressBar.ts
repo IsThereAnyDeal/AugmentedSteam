@@ -1,6 +1,7 @@
 import self_ from "./ProgressBar.svelte";
 import Settings from "@Options/Data/Settings";
 import ReactDOM from "@Content/Steam/ReactDOM";
+import { mount } from "svelte";
 
 export default class ProgressBar {
 
@@ -9,11 +10,11 @@ export default class ProgressBar {
             return;
         }
 
-        new self_({
-            target: node.parentElement!,
-            anchor: node.nextElementSibling ?? undefined,
-            props: {react}
-        });
+        mount(self_, {
+                    target: node.parentElement!,
+                    anchor: node.nextElementSibling ?? undefined,
+                    props: {react}
+                });
     }
 
     static buildLegacy(): void {

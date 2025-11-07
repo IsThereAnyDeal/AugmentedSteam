@@ -2,6 +2,7 @@ import self_ from "./FViewSteamId.svelte";
 import type CProfileHome from "@Content/Features/Community/ProfileHome/CProfileHome";
 import Feature from "@Content/Modules/Context/Feature";
 import Settings from "@Options/Data/Settings";
+import { mount } from "svelte";
 
 export default class FViewSteamId extends Feature<CProfileHome> {
 
@@ -22,20 +23,20 @@ export default class FViewSteamId extends Feature<CProfileHome> {
 
         const dropdown = document.querySelector("#profile_action_dropdown .popup_body.popup_menu");
         if (dropdown) {
-            new self_({
-                target: dropdown,
-                props: {ids}
-            });
+            mount(self_, {
+                            target: dropdown,
+                            props: {ids}
+                        });
         } else {
             const actions = document.querySelector(".profile_header_actions");
             if (actions) {
-                new self_({
-                    target: actions,
-                    props: {
-                        ids,
-                        ownProfile: true
-                    }
-                });
+                mount(self_, {
+                                    target: actions,
+                                    props: {
+                                        ids,
+                                        ownProfile: true
+                                    }
+                                });
             }
         }
     }

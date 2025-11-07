@@ -70,9 +70,13 @@
         ["vietnamese", __options_lang_vietnamese, "Vietnamese"],
     ];
 
-    export let settings: Writable<SettingsSchema>;
+    interface Props {
+        settings: Writable<SettingsSchema>;
+    }
 
-    let options: Array<[string, string]> = [];
+    let { settings }: Props = $props();
+
+    let options: Array<[string, string]> = $state([]);
 
     onMount(() => {
         options = setup.map(([value, locale, english]) => {

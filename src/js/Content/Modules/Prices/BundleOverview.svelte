@@ -12,7 +12,11 @@
     import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
     import external from "@Content/externalLink";
 
-    export let data: TBundle[];
+    interface Props {
+        data: TBundle[];
+    }
+
+    let { data }: Props = $props();
 
     /**
      * Filters out tiers that contain no games to prevent displaying empty tier sections
@@ -33,7 +37,7 @@
         return tierPrice;
     }
 
-    let appName: string|null;
+    let appName: string|null = $state();
 
     function getBundlePrice(bundle: TBundle): TPrice|null {
         return bundle.tiers

@@ -5,8 +5,12 @@
     import SteamFacade from "@Content/Modules/Facades/SteamFacade";
     import Clipboard from "@Content/Modules/Clipboard";
 
-    export let ids: Array<string|null>;
-    export let ownProfile: boolean = false;
+    interface Props {
+        ids: Array<string|null>;
+        ownProfile?: boolean;
+    }
+
+    let { ids, ownProfile = false }: Props = $props();
 
     async function showDialog(): Promise<void> {
 
@@ -59,13 +63,13 @@
  This feature largely relies on Steam styling, so certain a11y warnings have been disabled.
 -->
 {#if ownProfile}
-    <!-- svelte-ignore a11y-click-events-have-key-events a11y-missing-attribute -->
-    <a class="btn_profile_action btn_medium" on:click={showDialog} tabindex="0" role="button">
+    <!-- svelte-ignore a11y_click_events_have_key_events, a11y_missing_attribute -->
+    <a class="btn_profile_action btn_medium" onclick={showDialog} tabindex="0" role="button">
         <span>{L(__viewSteamid)}</span>
     </a>
 {:else}
-    <!-- svelte-ignore a11y-click-events-have-key-events a11y-missing-attribute -->
-    <a class="popup_menu_item" on:click={showDialog} tabindex="0" role="button">
+    <!-- svelte-ignore a11y_click_events_have_key_events, a11y_missing_attribute -->
+    <a class="popup_menu_item" onclick={showDialog} tabindex="0" role="button">
         <img src="//community.cloudflare.steamstatic.com/public/images/skin_1/iconForums.png" alt="icon">&nbsp; {L(__viewSteamid)}
     </a>
 {/if}

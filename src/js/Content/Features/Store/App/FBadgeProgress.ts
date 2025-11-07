@@ -4,6 +4,7 @@ import SteamCommunityApiFacade from "../../../Modules/Facades/SteamCommunityApiF
 import Settings from "@Options/Data/Settings";
 import Feature from "@Content/Modules/Context/Feature";
 import type CApp from "@Content/Features/Store/App/CApp";
+import { mount } from "svelte";
 
 export default class FBadgeProgress extends Feature<CApp> {
 
@@ -31,10 +32,10 @@ export default class FBadgeProgress extends Feature<CApp> {
             throw new Error("Node not found");
         }
 
-        (new self_({
-            target,
-            anchor: target.querySelector("#category_block")?.nextElementSibling ?? undefined,
-            props: {data}
-        }));
+        (mount(self_, {
+                    target,
+                    anchor: target.querySelector("#category_block")?.nextElementSibling ?? undefined,
+                    props: {data}
+                }));
     }
 }

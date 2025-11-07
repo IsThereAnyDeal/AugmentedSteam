@@ -1,6 +1,7 @@
 import type CWishlist from "@Content/Features/Store/Wishlist/CWishlist";
 import Feature from "@Content/Modules/Context/Feature";
 import RankInput from "@Content/Features/Store/Wishlist/Components/RankInput.svelte";
+import { mount } from "svelte";
 
 export default class FKeepEditableRanking extends Feature<CWishlist> {
 
@@ -94,14 +95,14 @@ export default class FKeepEditableRanking extends Feature<CWishlist> {
                 }
             }
 
-            const component = new RankInput({
-                target: game.node,
-                anchor: game.node.firstElementChild!,
-                props: {
-                    appid,
-                    position: this.positions.get(appid)
-                }
-            });
+            const component = mount(RankInput, {
+                            target: game.node,
+                            anchor: game.node.firstElementChild!,
+                            props: {
+                                appid,
+                                position: this.positions.get(appid)
+                            }
+                        });
             component.$on("reposition", e => this.handleReposition(e));
 
             this.inputComponents.push(component);

@@ -9,6 +9,7 @@ import type UserInterface from "@Core/User/UserInterface";
 import BackToTop from "@Content/Modules/Widgets/AugmentedSteam/BackToTop.svelte";
 import DynamicStore from "@Content/Modules/Data/DynamicStore";
 import LocalStorage from "@Core/Storage/LocalStorage";
+import { mount } from "svelte";
 
 export default class AugmentedSteam {
 
@@ -34,13 +35,13 @@ export default class AugmentedSteam {
             : "#global_action_menu"
         )!;
 
-        (new AugmentedSteamMenu({
-            target,
-            anchor: target.firstElementChild!,
-            props: {
-                user: this.user
-            }
-        }));
+        (mount(AugmentedSteamMenu, {
+                    target,
+                    anchor: target.firstElementChild!,
+                    props: {
+                        user: this.user
+                    }
+                }));
     }
 
     private addBackToTop(): void {
@@ -50,12 +51,12 @@ export default class AugmentedSteam {
             ? document.querySelector<HTMLElement>("#StoreTemplate")
             : null;
 
-        (new BackToTop({
-            target: document.body,
-            props: {
-                target: scrollTarget ?? undefined
-            }
-        }))
+        (mount(BackToTop, {
+                    target: document.body,
+                    props: {
+                        target: scrollTarget ?? undefined
+                    }
+                }))
     }
 
     private focusSearchBox() {
@@ -100,10 +101,10 @@ export default class AugmentedSteam {
 
         if (!this.warningComponent) {
             const header = document.querySelector("#global_header")!;
-            this.warningComponent = new AugmentedSteamWarnings({
-                target: header.parentElement!,
-                anchor: header.nextElementSibling!
-            });
+            this.warningComponent = mount(AugmentedSteamWarnings, {
+                            target: header.parentElement!,
+                            anchor: header.nextElementSibling!
+                        });
         }
         return this.warningComponent;
     }
@@ -121,14 +122,14 @@ export default class AugmentedSteam {
             anchor = header.nextElementSibling!;
         }
 
-        new AugmentedSteamWarnings({
-            target,
-            anchor,
-            props: {
-                react: this.react,
-                language: this.language
-            }
-        });
+        mount(AugmentedSteamWarnings, {
+                    target,
+                    anchor,
+                    props: {
+                        react: this.react,
+                        language: this.language
+                    }
+                });
     }
 
     private handleInstallSteamButton(): void {

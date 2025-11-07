@@ -1,4 +1,5 @@
 import self_ from "./WishlistMenu.svelte";
+import { mount } from "svelte";
 
 let menuComponent: self_|undefined;
 
@@ -11,9 +12,9 @@ export function getMenuNode(): self_ {
         throw new Error("Didn't find menu container node");
     }
 
-    menuComponent = new self_({
-        target: header.parentElement!,
-        anchor: header.nextElementSibling ?? undefined
-    });
+    menuComponent = mount(self_, {
+            target: header.parentElement!,
+            anchor: header.nextElementSibling ?? undefined
+        });
     return menuComponent;
 }

@@ -12,9 +12,13 @@
     import SortButton from "@Content/Features/Community/Workshop/CollectionSort/SortButton.svelte";
     import ClearIcon from "@Content/Icons/ClearIcon.svelte";
 
-    export let handler: (config: SortConfig) => void;
+    interface Props {
+        handler: (config: SortConfig) => void;
+    }
 
-    let config: SortConfig = new Map<ESortCriteria, SortDirection>();
+    let { handler }: Props = $props();
+
+    let config: SortConfig = $state(new Map<ESortCriteria, SortDirection>());
 
     function toggle(by: ESortCriteria, defaultDir: SortDirection): void {
         const dir = config.get(by) ?? null;
@@ -55,7 +59,7 @@
         {L(__workshop_collectionSortAuthor)}
     </SortButton>
 
-    <button class="reset" on:click={reset}>
+    <button class="reset" onclick={reset}>
         {L(__thewordclear)} <ClearIcon />
     </button>
 </div>
