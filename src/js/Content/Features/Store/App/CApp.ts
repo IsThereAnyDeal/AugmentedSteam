@@ -101,7 +101,6 @@ export default class CApp extends CStoreBase {
                 FReviewToggleButton,
                 FOwnedActionsButtons,
                 FSupportInfo,
-                FMediaExpander,
                 FRemoveBroadcasts,
                 FPreventVideoPause,
                 FDemoAbovePurchase,
