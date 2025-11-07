@@ -15,7 +15,7 @@ export default class FExtraLinksCommon extends Feature<CSub|CBundle> {
         if (this.context.type === ContextType.SUB) {
             type = "sub";
             gameid = (<CSub>(this.context)).subid;
-            target = document.querySelector(".share")?.parentElement ?? null;
+            target = document.querySelector(".rightcol.game_meta_data");
         } else {
             type = "bundle";
             gameid = (<CBundle>(this.context)).bundleid;
