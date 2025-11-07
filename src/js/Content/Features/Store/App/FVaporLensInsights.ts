@@ -1,5 +1,6 @@
 import type CApp from '@Content/Features/Store/App/CApp';
 import Feature from '@Content/Modules/Context/Feature';
+import Settings from '@Options/Data/Settings';
 import self_ from './FVaporLensInsights.svelte';
 import type {
   VaporLensEntry,
@@ -33,16 +34,16 @@ const SECTION_LABELS: Record<SectionKey, string> = {
   misc: 'Miscellaneous',
 };
 
-const SECTION_KEY_ALIASES: Partial<Record<string, SectionKey>> = {
-  general: 'recommendations',
-};
-
 export default class FVaporLensInsights extends Feature<CApp> {
   private _viewModel: VaporLensViewModel | null = null;
   private _sections: VaporLensSection[] = [];
   private _insertAfter: Element | null = null;
 
   override async checkPrerequisites(): Promise<boolean> {
+    if (!Settings.showvaporlenssummary) {
+      return false;
+    }
+
     this._insertAfter = document.querySelector('.review_score_summaries');
     if (!this._insertAfter) {
       return false;
@@ -207,10 +208,6 @@ export default class FVaporLensInsights extends Feature<CApp> {
   }
 
   private _normalizeSectionKey(key: string): SectionKey {
-    const alias = SECTION_KEY_ALIASES[key as keyof typeof SECTION_KEY_ALIASES];
-    if (alias) {
-      return alias;
-    }
     if (
       SECTION_ORDER.includes(
         key as (typeof SECTION_ORDER)[number]
