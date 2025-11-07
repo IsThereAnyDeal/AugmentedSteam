@@ -11,6 +11,7 @@
   - fix search leaving gaps when using Augmented Steam filters
   - fix Steam bug where they did not allow collapsing Steam deck filters
   - fix highlighting on "View all comments" in Friend activity page
+  - fix "View all comments" breaking with "Replace community hub links with store page links" enabled (thanks przemo20)
   - don't show misleading "Excluded from Family sharing" notice on games that have not been released yet
   - remove SteamRep (closed down)
 
