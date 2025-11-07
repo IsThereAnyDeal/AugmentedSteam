@@ -100,9 +100,17 @@ async function zip(dirpath, outname) {
 }
 
 async function cleanup() {
-    await fsAsync.rm(sourceDir, {
-        "recursive": true
-    });
+    while(true) {
+        try {
+            await fsAsync.rm(sourceDir, {
+                "recursive": true
+            });
+            break;
+        } catch(e) {
+            console.error(e);
+            console.log("Retrying...");
+        }
+    }
 }
 
 function dumpInstructions() {
@@ -142,5 +150,4 @@ console.log("6. dump instructions");
 dumpInstructions();
 
 console.log("7. cleanup");
-await (new Promise(resolve => setTimeout(resolve, 10000)));
 await cleanup();
