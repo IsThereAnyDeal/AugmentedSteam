@@ -576,6 +576,7 @@
     "update": {
         "dont_show": "Don't Show Again",
         "updated": "Augmented Steam has been updated to __version__",
+        "updated_no_version": "Augmented Steam has been updated",
         "changes": "View all changes on GitHub"
     },
     "register": {

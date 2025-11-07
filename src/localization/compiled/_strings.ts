@@ -512,6 +512,7 @@ export const __tradeoffer_numItems = "tradeoffer_numItems";
 export const __tradeoffer_back = "tradeoffer_back";
 export const __update_dontShow = "update_dontShow";
 export const __update_updated = "update_updated";
+export const __update_updatedNoVersion = "update_updatedNoVersion";
 export const __update_changes = "update_changes";
 export const __register_success = "register_success";
 export const __register_owned = "register_owned";
