@@ -141,4 +141,5 @@ console.log("6. dump instructions");
 dumpInstructions();
 
 console.log("7. cleanup");
+await (new Promise(resolve => setTimeout(resolve, 10000)));
 await cleanup();
