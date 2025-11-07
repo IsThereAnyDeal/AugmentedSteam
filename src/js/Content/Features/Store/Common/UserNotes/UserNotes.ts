@@ -174,7 +174,7 @@ export default class UserNotes {
                 }
             });
             modal.$on("save", (e) => {
-                let note: string|null = e.detail.trim().replace(/\s\s+/g, " ");
+                let note: string|null = e.detail.trim();
                 if (note === "") {
                     note = null;
                 }

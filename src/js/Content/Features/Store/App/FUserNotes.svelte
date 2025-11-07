@@ -46,10 +46,13 @@
         border-top: 1px solid #15202c;
         padding: 6px 16px;
         background: linear-gradient(to right, rgba(48, 144, 206, 0.6) 0%, transparent 60%);
-        cursor: pointer;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
     }
 
     .label {
+        cursor: pointer;
         margin-right: 16px;
         color: #67c1f5;
     }
@@ -64,5 +67,6 @@
     .note {
         display: inline-block;
         font-size: 1.1em;
+        white-space: pre-line;
     }
 </style>
