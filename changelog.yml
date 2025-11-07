@@ -1,3 +1,7 @@
+4.4.1: |
+  - tweak formatting of notes
+  - fix ITAD, SteamDb links not showing up on /sub/ pages (thanks przemo20)
+
 4.4.0: |
   - update user notes on app pages after latest Steam change.
      The visual style has changed but notes now also have rudimentary URL handling, so your links will be clickable,
