@@ -112,6 +112,7 @@ function dumpInstructions() {
     fs.writeFileSync(`${releaseDir}/instructions.txt`,
         `node ${nodeVersion}\n`
         +`npm ${npmVersion}\n\n`
+        +`npm install\n`
         +`npm run protobufs\n`
         +`npm run build firefox -- --production\n`
     );
