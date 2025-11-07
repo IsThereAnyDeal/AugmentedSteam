@@ -18,6 +18,7 @@ export default class FReplaceCommunityHubLinks extends Feature<CProfileActivity>
         const excluded = [
             ".bb_link", // User-provided links, i.e. links in announcements/comments
             "[href*='/announcements/detail/']", // Announcement header links
+            "[href*='/eventcomments/']", // View all comments button
         ].join(",");
 
         const nodes = parent.querySelectorAll<HTMLAnchorElement>(`.blotter_block a[href]:not(${excluded})`);
