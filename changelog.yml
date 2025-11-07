@@ -1,3 +1,19 @@
+4.4.0: |
+  - update user notes on app pages after latest Steam change.
+     The visual style has changed but notes now also have rudimentary URL handling, so your links will be clickable,
+     and new lines will be respected.
+  - add sorting for workshop collections (thanks G0bbleG0bble)
+  - add option to always prepend app name for tab title on app pages - turned off by default.
+     What it does is it prepends game name to the tab, so instead of "Save 20% on Cities Skylines" you'll see "Cities Skylines" first
+  - add date when you added game to your wishlist to wishlist export 
+  - add Steam help link to Support links and improve email parsing
+  - fix incorrect caching behavior for card prices (thanks MinetaS)
+  - fix search leaving gaps when using Augmented Steam filters
+  - fix Steam bug where they did not allow collapsing Steam deck filters
+  - fix highlighting on "View all comments" in Friend activity page
+  - don't show misleading "Excluded from Family sharing" notice on games that have not been released yet
+  - remove SteamRep (closed down)
+
 4.3.1: |
   - fix options in Wishlist not showing, after Steam updated menu 
 
