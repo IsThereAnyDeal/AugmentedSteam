@@ -1,5 +1,6 @@
 import type CApp from '@Content/Features/Store/App/CApp';
 import Feature from '@Content/Modules/Context/Feature';
+import SessionCacheApiFacade from '@Content/Modules/Facades/SessionCacheApiFacade';
 import Settings from '@Options/Data/Settings';
 import self_ from './FVaporLensInsights.svelte';
 import type {
@@ -34,6 +35,15 @@ const SECTION_LABELS: Record<SectionKey, string> = {
   misc: 'Miscellaneous',
 };
 
+const CACHE_PREFIX = 'store:vaporlens';
+const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 12 hours
+
+interface VaporLensCacheEntry {
+  viewModel: VaporLensViewModel | null;
+  sections: VaporLensSection[];
+  expiresAt: number;
+}
+
 export default class FVaporLensInsights extends Feature<CApp> {
   private _viewModel: VaporLensViewModel | null = null;
   private _sections: VaporLensSection[] = [];
@@ -47,6 +57,16 @@ export default class FVaporLensInsights extends Feature<CApp> {
     this._insertAfter = document.querySelector('.review_score_summaries');
     if (!this._insertAfter) {
       return false;
+    }
+
+    const cached = await this._loadFromCache();
+    if (cached) {
+      if (!cached.viewModel) {
+        return false;
+      }
+      this._viewModel = cached.viewModel;
+      this._sections = cached.sections;
+      return true;
     }
 
     try {
@@ -73,6 +93,7 @@ export default class FVaporLensInsights extends Feature<CApp> {
       const sections = this._buildSections(payload);
 
       if (!categories.length && !summary.length && sections.length === 0) {
+        await this._saveToCache(null, []);
         return false;
       }
 
@@ -82,6 +103,7 @@ export default class FVaporLensInsights extends Feature<CApp> {
         summary,
       };
       this._sections = sections;
+      await this._saveToCache(this._viewModel, this._sections);
       return true;
     } catch (error) {
       this.logError(error, 'Failed to fetch VaporLens insights');
@@ -109,18 +131,52 @@ export default class FVaporLensInsights extends Feature<CApp> {
     });
   }
 
+  private async _loadFromCache(): Promise<VaporLensCacheEntry | null> {
+    try {
+      const cached = await SessionCacheApiFacade.get<VaporLensCacheEntry>(
+        CACHE_PREFIX,
+        String(this.context.appid)
+      );
+      if (!cached || cached.expiresAt <= Date.now()) {
+        return null;
+      }
+      return cached;
+    } catch (error) {
+      this.logError(error, 'Failed to read VaporLens cache');
+      return null;
+    }
+  }
+
+  private async _saveToCache(
+    viewModel: VaporLensViewModel | null,
+    sections: VaporLensSection[]
+  ): Promise<void> {
+    try {
+      await SessionCacheApiFacade.set(
+        CACHE_PREFIX,
+        String(this.context.appid),
+        {
+          viewModel,
+          sections,
+          expiresAt: Date.now() + CACHE_TTL_MS,
+        }
+      );
+    } catch (error) {
+      this.logError(error, 'Failed to write VaporLens cache');
+    }
+  }
+
   private _buildSections(payload: VaporLensResponse): VaporLensSection[] {
-    const sectionsMap = SECTION_ORDER.reduce<Record<SectionKey, VaporLensSection>>(
-      (acc, key) => {
-        acc[key] = {
-          key,
-          label: SECTION_LABELS[key],
-          entries: [],
-        };
-        return acc;
-      },
-      {} as Record<SectionKey, VaporLensSection>
-    );
+    const sectionsMap = SECTION_ORDER.reduce<
+      Record<SectionKey, VaporLensSection>
+    >((acc, key) => {
+      acc[key] = {
+        key,
+        label: SECTION_LABELS[key],
+        entries: [],
+      };
+      return acc;
+    }, {} as Record<SectionKey, VaporLensSection>);
 
     for (const [key, value] of Object.entries(payload)) {
       if (key === 'name' || key === 'categories' || key === 'summary') {
@@ -145,10 +201,7 @@ export default class FVaporLensInsights extends Feature<CApp> {
       }
 
       const normalizedKey = this._normalizeSectionKey(key);
-      const mergedEntries = [
-        ...sectionsMap[normalizedKey].entries,
-        ...entries,
-      ];
+      const mergedEntries = [...sectionsMap[normalizedKey].entries, ...entries];
       sectionsMap[normalizedKey].entries = this._sortEntries(mergedEntries);
     }
 
@@ -208,11 +261,7 @@ export default class FVaporLensInsights extends Feature<CApp> {
   }
 
   private _normalizeSectionKey(key: string): SectionKey {
-    if (
-      SECTION_ORDER.includes(
-        key as (typeof SECTION_ORDER)[number]
-      )
-    ) {
+    if (SECTION_ORDER.includes(key as (typeof SECTION_ORDER)[number])) {
       return key as SectionKey;
     }
     return 'misc';
