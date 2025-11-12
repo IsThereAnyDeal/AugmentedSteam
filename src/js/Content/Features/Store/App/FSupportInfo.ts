@@ -70,7 +70,7 @@ export default class FSupportInfo extends Feature<CApp> {
             }
         }
 
-        const help = `https://help.steampowered.com/en/wizard/HelpWithGameTechnicalIssue?appid=${this.context.appid}`;
+        const help = `https://help.steampowered.com/wizard/HelpWithGameTechnicalIssue?appid=${this.context.appid}`;
         links.push(`<a href="${help}">${L(__getHelp)}</a>`);
 
         HTML.beforeEnd(".glance_ctn_responsive_left",
