@@ -366,24 +366,6 @@ img.astats_icon {
 
 /***************************************
  * User Inventory
- * FQuickSellOptions
- **************************************/
-.es_qsell_ctn .btn_small {
-  margin-bottom: 4px;
-  overflow: hidden;
-  width: max-content;
-}
-.es_qsell_ctn .btn_small,
-.es_qsell_loading {
-  display: none;
-}
-.view_inventory_page .item.btn_disabled,
-.item_market_actions .item_market_action_button.btn_disabled {
-  pointer-events: none;
-}
-
-/***************************************
- * User Inventory
  * FAddPriceToGifts
  **************************************/
 .es_game_purchase_action {
