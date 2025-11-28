@@ -4,17 +4,13 @@ import {type MarketInfo} from "@Content/Features/Community/Inventory/CInventory"
 import Feature from "@Content/Modules/Context/Feature";
 import Settings from "@Options/Data/Settings";
 import MarketPrices from "@Content/Features/Community/Inventory/Components/MarketPrices";
-
-interface ItemPrices {
-    priceLow: number,
-    priceHigh: number
-}
+import type {SvelteComponent} from "svelte";
 
 export default class FQuickSellOptions extends Feature<CInventory> {
 
-    private readonly marketPrices: Map<string, ItemPrices> = new Map();
+    private readonly marketPrices: Map<string, MarketPrices> = new Map();
 
-    private svelte: typeof self_|null;
+    private svelte: SvelteComponent|null = null;
 
     constructor(context: CInventory) {
         super(context);
@@ -47,7 +43,7 @@ export default class FQuickSellOptions extends Feature<CInventory> {
         if (!marketAllowed || (walletCurrency === 0) || !marketable) { return; }
 
         const key = `${marketInfo.appid}_${marketInfo.hashName}`;
-        let prices: MarketPrices = this.marketPrices.get(key);
+        let prices: MarketPrices|undefined = this.marketPrices.get(key);
         if (!prices) {
             prices = new MarketPrices(marketInfo);
             this.marketPrices.set(key, prices);
@@ -64,7 +60,7 @@ export default class FQuickSellOptions extends Feature<CInventory> {
                     svelte.$destroy();
                     this.marketPrices.delete(key);
                     thisItem.classList.add("btn_disabled", "activeInfo");
-                    thisItem.querySelector("a").click(); // reload item?
+                    thisItem.querySelector("a")?.click(); // reload item?
                 }
             }
         });
