@@ -1,7 +1,5 @@
 (function() {
-    document.addEventListener("click", ({target}) => {
-        if (!target.closest("a.inventory_item_link, a.newitem")) { return; }
-
+    function dispatchMarketInfo() {
         const inv = window.g_ActiveInventory;
         const wallet = window.g_rgWalletInfo;
         const item = inv.selectedItem;
@@ -104,5 +102,12 @@
                 itemType,
             }
         }));
+    }
+
+    document.addEventListener("click", ({target}) => {
+        if (!target.closest("a.inventory_item_link, a.newitem")) { return; }
+        dispatchMarketInfo();
     });
+
+    dispatchMarketInfo();
 }());
