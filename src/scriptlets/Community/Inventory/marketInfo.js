@@ -3,6 +3,9 @@
         const inv = window.g_ActiveInventory;
         const wallet = window.g_rgWalletInfo;
         const item = inv.selectedItem;
+        if (!item) {
+            return;
+        }
 
         // https://github.com/SteamDatabase/SteamTracking/blob/b3abe9c82f9e9d260265591320cac6304e500e58/steamcommunity.com/public/javascript/economy_common.js#L161
         const hashName = GetMarketHashName(item.description);
@@ -109,5 +112,13 @@
         dispatchMarketInfo();
     });
 
-    dispatchMarketInfo();
+    function waitForFirstItem(tries) {
+        if (window.g_ActiveInventory.selectedItem) {
+            dispatchMarketInfo();
+        } else if (tries < 10) {
+            setTimeout(() => waitForFirstItem(tries+1), 50);
+        }
+    }
+
+    waitForFirstItem(1);
 }());

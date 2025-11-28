@@ -131,15 +131,15 @@
         height: 24px;
         padding: 0 12px;
         border-radius: 2px;
-        background: #80a006;
-        transition: background-color .15s cubic-bezier(.07,.95,0,1);
+        background-color: #80a006;
+        transition: background-color 0.2s ease-out;
         font-family: var(--font-family, "Motiva Sans");
         font-size: 12px;
         color: white;
         cursor: pointer;
 
         &:hover {
-            background: #a5cb00;
+            background-color: #a5cb00;
         }
     }
 </style>
