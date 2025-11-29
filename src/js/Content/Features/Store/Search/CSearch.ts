@@ -3,6 +3,7 @@ import CStoreBase from "@Content/Features/Store/Common/CStoreBase";
 import ContextType from "@Content/Modules/Context/ContextType";
 import type {ContextParams} from "@Content/Modules/Context/Context";
 import DOMHelper from "@Content/Modules/DOMHelper";
+import FIFeelLucky from "@Content/Features/Store/Search/FIFeelLucky";
 
 export default class CSearch extends CStoreBase {
 
@@ -11,6 +12,7 @@ export default class CSearch extends CStoreBase {
     constructor(params: ContextParams) {
         super(params, ContextType.SEARCH, [
             FSearchFilters,
+            FIFeelLucky
         ]);
 
         this.infiniScrollEnabled = document.querySelector<HTMLElement>(".search_pagination")?.style.display === "none";

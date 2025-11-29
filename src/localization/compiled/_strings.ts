@@ -307,6 +307,7 @@ export const __options_screenshots = "options_screenshots";
 export const __options_showBacktotop = "options_showBacktotop";
 export const __options_contextMenu = "options_contextMenu";
 export const __options_contextSteamStore = "options_contextSteamStore";
+export const __options_contextSteamLucky = "options_contextSteamLucky";
 export const __options_contextSteamMarket = "options_contextSteamMarket";
 export const __options_contextItad = "options_contextItad";
 export const __options_contextBartervg = "options_contextBartervg";

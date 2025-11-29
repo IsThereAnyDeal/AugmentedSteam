@@ -189,6 +189,7 @@ export interface SettingsSchema {
     itad_sync_notes: boolean,
 
     context_steam_store: boolean,
+    context_steam_lucky: boolean,
     context_steam_market: boolean,
     context_itad: boolean,
     context_bartervg: boolean,

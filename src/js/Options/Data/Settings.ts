@@ -182,6 +182,7 @@ export const DefaultSettings: Readonly<SettingsSchema> = {
     itad_sync_notes: false,
 
     context_steam_store: false,
+    context_steam_lucky: false,
     context_steam_market: false,
     context_itad: false,
     context_bartervg: false,
