@@ -30,7 +30,8 @@
     cancel: L(__cancel)
 }} on:button={handleButton}>
     <div>
-        <textarea bind:value={note} />
+        <!-- svelte-ignore a11y-autofocus -->
+        <textarea bind:value={note} autofocus />
     </div>
 </Modal>
 
