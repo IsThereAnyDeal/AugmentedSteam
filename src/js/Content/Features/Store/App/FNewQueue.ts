@@ -15,7 +15,7 @@ export default class FNewQueue extends Feature<CApp> {
         }
 
         new self_({
-            target: next.parentElement,
+            target: next.parentElement!,
             anchor: next
         });
     }
