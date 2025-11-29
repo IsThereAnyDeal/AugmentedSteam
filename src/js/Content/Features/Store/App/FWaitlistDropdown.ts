@@ -67,7 +67,7 @@ export default class FWaitlistDropdown extends Feature<CApp> {
          * makes it easier to apply the dropdown menu
          */
         HTML.beforeBegin(wishlistArea,
-            `<div style="position: relative; display: inline-block;">
+            `<div style="position: relative;display: inline-flex;gap: 1px;">
                 <div class="queue_control_button as_btn_wishlist"></div>
             </div>`);
 
