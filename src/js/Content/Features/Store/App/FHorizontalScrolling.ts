@@ -9,9 +9,10 @@ export default class FHorizontalScrolling extends Feature<CApp> {
     }
 
     apply() {
-        const parent = document.querySelector(".highlight_ctn");
+        const parent = document.querySelector<HTMLElement>(".highlight_ctn");
         if (!parent) {
             console.error("Couldn't find highlights");
+            return;
         }
 
         const slider = this.#getSlider(parent);
@@ -19,20 +20,21 @@ export default class FHorizontalScrolling extends Feature<CApp> {
             this.#setup(slider);
         } else {
             const observer = new MutationObserver(() => {
-                const slider = this.#getSlider();
+                const slider = this.#getSlider(parent);
                 if (slider) {
                     this.#setup(slider);
                     observer.disconnect();
                 }
             });
             observer.observe(parent, {
+                childList: true,
                 subtree: true
             });
         }
     }
 
-    #getSlider(parent: HTMLElement): HTMLElement|undefined {
-        return parent.querySelector("._21pEuTVe17EOUzkHK8ZGnJ");
+    #getSlider(parent: HTMLElement): HTMLElement|null {
+        return parent.querySelector<HTMLElement>("._21pEuTVe17EOUzkHK8ZGnJ");
     }
 
     #setup(slider: HTMLElement): void {
@@ -46,12 +48,15 @@ export default class FHorizontalScrolling extends Feature<CApp> {
             lastScroll = Date.now();
 
             const currentNode = slider.querySelector(".deMuRscIE7upszCfACmbK._3VIimult0z05qCgQN1CfPg")
+            if (currentNode) {
+                const isScrollDown = e.deltaY > 0;
+                const sibling = isScrollDown
+                    ? currentNode.nextElementSibling
+                    : currentNode.previousElementSibling
 
-            const isScrollDown = e.deltaY > 0;
-            if (isScrollDown) {
-                currentNode.nextElementSibling?.click();
-            } else {
-                currentNode.previousElementSibling?.click();
+                if (sibling) {
+                    (<HTMLElement>sibling).click();
+                }
             }
         });
     }

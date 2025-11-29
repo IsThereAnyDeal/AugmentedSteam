@@ -9,7 +9,7 @@ export default class FIFeelLucky extends Feature<CSearch> {
     }
 
     override apply(): void {
-        const firstResult = document.querySelector("a.search_result_row");
+        const firstResult = document.querySelector<HTMLAnchorElement>("a.search_result_row");
         if (firstResult && firstResult.href) {
             window.location.href = firstResult.href;
         }
