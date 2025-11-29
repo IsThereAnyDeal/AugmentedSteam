@@ -1,9 +1,18 @@
 (function() {
+    let lastItem = null;
+
     function dispatchMarketInfo() {
         const inv = window.g_ActiveInventory;
         const wallet = window.g_rgWalletInfo;
         const item = inv.selectedItem;
+
+        if (item === lastItem) {
+            return;
+        }
+        lastItem = item;
+
         if (!item) {
+            document.dispatchEvent(new CustomEvent("as_marketInfo", {detail: null}));
             return;
         }
 
@@ -116,18 +125,13 @@
         }));
     }
 
-    document.addEventListener("click", ({target}) => {
-        if (!target.closest("a.inventory_item_link, a.newitem")) { return; }
+    const observer = new MutationObserver(() => {
         dispatchMarketInfo();
     });
-
-    function waitForFirstItem(tries) {
-        if (window.g_ActiveInventory.selectedItem) {
-            dispatchMarketInfo();
-        } else if (tries < 10) {
-            setTimeout(() => waitForFirstItem(tries+1), 50);
-        }
-    }
-
-    waitForFirstItem(1);
+    observer.observe(
+        document.querySelector("#iteminfo0"), {attributes: true}
+    )
+    observer.observe(
+        document.querySelector("#iteminfo1"), {attributes: true}
+    )
 }());

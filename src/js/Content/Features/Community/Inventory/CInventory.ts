@@ -30,7 +30,7 @@ export interface MarketInfo {
 export default class CInventory extends CCommunityBase {
 
     public readonly myInventory: boolean = false;
-    public readonly onMarketInfo: ASEventHandler<MarketInfo> = new ASEventHandler<MarketInfo>();
+    public readonly onMarketInfo: ASEventHandler<MarketInfo|null> = new ASEventHandler<MarketInfo|null>();
 
     constructor(params: ContextParams) {
 
@@ -50,7 +50,7 @@ export default class CInventory extends CCommunityBase {
         this.myInventory = CommunityUtils.userIsOwner(this.user);
 
         // @ts-ignore
-        document.addEventListener("as_marketInfo", (e: CustomEvent<MarketInfo>) => {
+        document.addEventListener("as_marketInfo", (e: CustomEvent<MarketInfo|null>) => {
             this.onMarketInfo.dispatch(e.detail);
         });
 
