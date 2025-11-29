@@ -52,7 +52,6 @@ export default class FBadgeSortAndFilter extends Feature<CBadges> {
         }
         if (isOwnProfile) {
             html += `<a class="popup_menu_item" id="es_badge_sort_drops">${L(__mostDrops)}</a>`;
-            html += `<a class="popup_menu_item" id="es_badge_sort_value">${L(__dropsValue)}</a>`;
             html += `<a class="popup_menu_item" id="es_badge_sort_remain">${L(__cardsRemain)}</a>`;
         }
 
@@ -74,9 +73,6 @@ export default class FBadgeSortAndFilter extends Feature<CBadges> {
         if (isOwnProfile) {
             document.querySelector("#es_badge_sort_drops")!
                 .addEventListener("click", () => this._sortBadgeRows("drops"));
-
-            document.querySelector("#es_badge_sort_value")!
-                .addEventListener("click", () => this._sortBadgeRows("value"));
 
             document.querySelector("#es_badge_sort_remain")!
                 .addEventListener("click", () => this._sortBadgeRows("remain"));
@@ -112,13 +108,6 @@ export default class FBadgeSortAndFilter extends Feature<CBadges> {
 
                 return Number(drops[0]);
             }
-        } else if (sortBy === "value") {
-            activeText = L(__dropsValue);
-
-            nodeValue = (node: HTMLElement) => {
-                const dropWorth = node.querySelector<HTMLElement>("[data-es-card-worth]");
-                return parseFloat(dropWorth?.dataset.esCardWorth ?? "0");
-            };
         } else if (sortBy === "remain") {
             activeText = L(__cardsRemain);
 
@@ -280,6 +269,7 @@ export default class FBadgeSortAndFilter extends Feature<CBadges> {
 
         for (const node of document.querySelectorAll<HTMLElement>(".profile_paging")) {
             node.style.display = "none";
+            this.context.hasMultiplePages = false;
         }
 
         DOMHelper.insertScript("scriptlets/Community/Badges/loadImages.js", {images});
