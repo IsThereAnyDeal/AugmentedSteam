@@ -43,6 +43,7 @@ import FHighlightTitle from "@Content/Features/Store/App/FHighlightTitle";
 import type {ContextParams} from "@Content/Modules/Context/Context";
 import FPreventVideoPause from "@Content/Features/Store/App/FPreventVideoPause";
 import FAppTitle from "@Content/Features/Store/App/FAppTitle";
+import FHorizontalScrolling from "@Content/Features/Store/App/FHorizontalScrolling";
 
 export default class CApp extends CStoreBase {
 
@@ -109,7 +110,8 @@ export default class CApp extends CStoreBase {
                 FPatchHighlightPlayer,
                 FRemoveDupeScreenshots,
                 FHighlightTitle,
-                FAppTitle
+                FAppTitle,
+                FHorizontalScrolling
             ]);
 
         this.appid = AppId.fromUrl(window.location.host + window.location.pathname)!;
