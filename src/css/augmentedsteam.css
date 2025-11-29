@@ -1110,11 +1110,6 @@ video.highlight_movie:hover + .html5_video_overlay {
 }
 
 
-#es_new_queue {
-  width: 150px;
-  margin-right: -10px;
-}
-
 
 /** spam comments */
 .esi_commentthread_button {
