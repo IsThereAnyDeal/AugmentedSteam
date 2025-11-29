@@ -86,6 +86,14 @@
             }
         }
 
+        let hasGooOption = false;
+        const ownerActions = item.description.owner_actions ?? [];
+        for (const action of ownerActions) {
+            if (/GetGooValue/.test(action.link)) {
+                hasGooOption = true;
+            }
+        }
+
         document.dispatchEvent(new CustomEvent("as_marketInfo", {
             detail: {
                 view: window.iActiveSelectView,
@@ -103,6 +111,7 @@
                 restriction,
                 appid,
                 itemType,
+                hasGooOption
             }
         }));
     }

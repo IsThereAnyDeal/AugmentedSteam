@@ -344,6 +344,44 @@ img.astats_icon {
 
 /***************************************
  * User Inventory
+ **************************************/
+.as-inv-btn {
+  display: inline-block;
+  border: 0;
+  outline: 0;
+  height: 24px;
+  line-height: 24px;
+  padding: 0 12px;
+  border-radius: 2px;
+  background: #80a006;
+  transition: background-color 0.2s ease-out;
+  font-family: "Motiva Sans";
+  font-size: 12px;
+  color: white;
+  cursor: pointer;
+
+  &:hover {
+    background: #a5cb00;
+  }
+
+  &.as-dull {
+    background: #3d4450;
+  }
+  &.as-dull:hover {
+    background: #67707b
+  }
+
+  &.as-blue {
+    background: #1a9fff;
+  }
+  &.as-blue:hover {
+    background: #56abff;
+  }
+}
+
+
+/***************************************
+ * User Inventory
  * FInventoryGoTo
  **************************************/
 #pagebtn_first,

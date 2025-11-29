@@ -91,6 +91,8 @@
     "badge_completion_cost": "Cost of completing badge: __cost__",
     "loading": "Loading...",
     "selling": "Selling...",
+    "saving": "Saving...",
+    "saved": "Saved",
     "quick_sell": "Quick Sell for __amount__",
     "quick_sell_desc": "Price difference of __modifier__ compared to the price of the cheapest offer currently listed on the Steam Market",
     "instant_sell": "Instant Sell for __amount__",

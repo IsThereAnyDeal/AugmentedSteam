@@ -32166,3 +32166,10473 @@ export namespace Wishlist {
      */
     type RemoveFromWishlistCallback = (error: (Error|null), response?: CWishlist_RemoveFromWishlist_Response) => void;
 }
+
+/** Properties of a CPlayer_AcceptSSA_Request. */
+export interface ICPlayer_AcceptSSA_Request {
+
+    /** CPlayer_AcceptSSA_Request agreementType */
+    agreementType?: (number|null);
+
+    /** CPlayer_AcceptSSA_Request timeSignedUtc */
+    timeSignedUtc?: (number|null);
+}
+
+/** Represents a CPlayer_AcceptSSA_Request. */
+export class CPlayer_AcceptSSA_Request implements ICPlayer_AcceptSSA_Request {
+
+    /**
+     * Constructs a new CPlayer_AcceptSSA_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_AcceptSSA_Request);
+
+    /** CPlayer_AcceptSSA_Request agreementType. */
+    public agreementType: number;
+
+    /** CPlayer_AcceptSSA_Request timeSignedUtc. */
+    public timeSignedUtc: number;
+
+    /**
+     * Encodes the specified CPlayer_AcceptSSA_Request message. Does not implicitly {@link CPlayer_AcceptSSA_Request.verify|verify} messages.
+     * @param message CPlayer_AcceptSSA_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_AcceptSSA_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_AcceptSSA_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_AcceptSSA_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_AcceptSSA_Request;
+
+    /**
+     * Gets the default type url for CPlayer_AcceptSSA_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_AcceptSSA_Response. */
+export interface ICPlayer_AcceptSSA_Response {
+}
+
+/** Represents a CPlayer_AcceptSSA_Response. */
+export class CPlayer_AcceptSSA_Response implements ICPlayer_AcceptSSA_Response {
+
+    /**
+     * Constructs a new CPlayer_AcceptSSA_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_AcceptSSA_Response);
+
+    /**
+     * Encodes the specified CPlayer_AcceptSSA_Response message. Does not implicitly {@link CPlayer_AcceptSSA_Response.verify|verify} messages.
+     * @param message CPlayer_AcceptSSA_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_AcceptSSA_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_AcceptSSA_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_AcceptSSA_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_AcceptSSA_Response;
+
+    /**
+     * Gets the default type url for CPlayer_AcceptSSA_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_AddFriend_Request. */
+export interface ICPlayer_AddFriend_Request {
+
+    /** CPlayer_AddFriend_Request steamid */
+    steamid?: (number|Long|null);
+}
+
+/** Represents a CPlayer_AddFriend_Request. */
+export class CPlayer_AddFriend_Request implements ICPlayer_AddFriend_Request {
+
+    /**
+     * Constructs a new CPlayer_AddFriend_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_AddFriend_Request);
+
+    /** CPlayer_AddFriend_Request steamid. */
+    public steamid: (number|Long);
+
+    /**
+     * Encodes the specified CPlayer_AddFriend_Request message. Does not implicitly {@link CPlayer_AddFriend_Request.verify|verify} messages.
+     * @param message CPlayer_AddFriend_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_AddFriend_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_AddFriend_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_AddFriend_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_AddFriend_Request;
+
+    /**
+     * Gets the default type url for CPlayer_AddFriend_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_AddFriend_Response. */
+export interface ICPlayer_AddFriend_Response {
+
+    /** CPlayer_AddFriend_Response inviteSent */
+    inviteSent?: (boolean|null);
+
+    /** CPlayer_AddFriend_Response friendRelationship */
+    friendRelationship?: (number|null);
+
+    /** CPlayer_AddFriend_Response result */
+    result?: (number|null);
+}
+
+/** Represents a CPlayer_AddFriend_Response. */
+export class CPlayer_AddFriend_Response implements ICPlayer_AddFriend_Response {
+
+    /**
+     * Constructs a new CPlayer_AddFriend_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_AddFriend_Response);
+
+    /** CPlayer_AddFriend_Response inviteSent. */
+    public inviteSent: boolean;
+
+    /** CPlayer_AddFriend_Response friendRelationship. */
+    public friendRelationship: number;
+
+    /** CPlayer_AddFriend_Response result. */
+    public result: number;
+
+    /**
+     * Encodes the specified CPlayer_AddFriend_Response message. Does not implicitly {@link CPlayer_AddFriend_Response.verify|verify} messages.
+     * @param message CPlayer_AddFriend_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_AddFriend_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_AddFriend_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_AddFriend_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_AddFriend_Response;
+
+    /**
+     * Gets the default type url for CPlayer_AddFriend_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_CommunityPreferences. */
+export interface ICPlayer_CommunityPreferences {
+
+    /** CPlayer_CommunityPreferences timestampUpdated */
+    timestampUpdated?: (number|null);
+
+    /** CPlayer_CommunityPreferences parenthesizeNicknames */
+    parenthesizeNicknames?: (boolean|null);
+
+    /** CPlayer_CommunityPreferences textFilterSetting */
+    textFilterSetting?: (number|null);
+
+    /** CPlayer_CommunityPreferences textFilterIgnoreFriends */
+    textFilterIgnoreFriends?: (boolean|null);
+
+    /** CPlayer_CommunityPreferences textFilterWordsRevision */
+    textFilterWordsRevision?: (number|null);
+}
+
+/** Represents a CPlayer_CommunityPreferences. */
+export class CPlayer_CommunityPreferences implements ICPlayer_CommunityPreferences {
+
+    /**
+     * Constructs a new CPlayer_CommunityPreferences.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_CommunityPreferences);
+
+    /** CPlayer_CommunityPreferences timestampUpdated. */
+    public timestampUpdated: number;
+
+    /** CPlayer_CommunityPreferences parenthesizeNicknames. */
+    public parenthesizeNicknames: boolean;
+
+    /** CPlayer_CommunityPreferences textFilterSetting. */
+    public textFilterSetting: number;
+
+    /** CPlayer_CommunityPreferences textFilterIgnoreFriends. */
+    public textFilterIgnoreFriends: boolean;
+
+    /** CPlayer_CommunityPreferences textFilterWordsRevision. */
+    public textFilterWordsRevision: number;
+
+    /**
+     * Encodes the specified CPlayer_CommunityPreferences message. Does not implicitly {@link CPlayer_CommunityPreferences.verify|verify} messages.
+     * @param message CPlayer_CommunityPreferences message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_CommunityPreferences, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_CommunityPreferences message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_CommunityPreferences
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_CommunityPreferences;
+
+    /**
+     * Gets the default type url for CPlayer_CommunityPreferences
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_CommunityPreferencesChanged_Notification. */
+export interface ICPlayer_CommunityPreferencesChanged_Notification {
+
+    /** CPlayer_CommunityPreferencesChanged_Notification preferences */
+    preferences?: (ICPlayer_CommunityPreferences|null);
+
+    /** CPlayer_CommunityPreferencesChanged_Notification contentDescriptorPreferences */
+    contentDescriptorPreferences?: (IUserContentDescriptorPreferences|null);
+}
+
+/** Represents a CPlayer_CommunityPreferencesChanged_Notification. */
+export class CPlayer_CommunityPreferencesChanged_Notification implements ICPlayer_CommunityPreferencesChanged_Notification {
+
+    /**
+     * Constructs a new CPlayer_CommunityPreferencesChanged_Notification.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_CommunityPreferencesChanged_Notification);
+
+    /** CPlayer_CommunityPreferencesChanged_Notification preferences. */
+    public preferences?: (ICPlayer_CommunityPreferences|null);
+
+    /** CPlayer_CommunityPreferencesChanged_Notification contentDescriptorPreferences. */
+    public contentDescriptorPreferences?: (IUserContentDescriptorPreferences|null);
+
+    /**
+     * Encodes the specified CPlayer_CommunityPreferencesChanged_Notification message. Does not implicitly {@link CPlayer_CommunityPreferencesChanged_Notification.verify|verify} messages.
+     * @param message CPlayer_CommunityPreferencesChanged_Notification message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_CommunityPreferencesChanged_Notification, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_CommunityPreferencesChanged_Notification message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_CommunityPreferencesChanged_Notification
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_CommunityPreferencesChanged_Notification;
+
+    /**
+     * Gets the default type url for CPlayer_CommunityPreferencesChanged_Notification
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_DeletePostedStatus_Request. */
+export interface ICPlayer_DeletePostedStatus_Request {
+
+    /** CPlayer_DeletePostedStatus_Request postid */
+    postid?: (number|Long|null);
+}
+
+/** Represents a CPlayer_DeletePostedStatus_Request. */
+export class CPlayer_DeletePostedStatus_Request implements ICPlayer_DeletePostedStatus_Request {
+
+    /**
+     * Constructs a new CPlayer_DeletePostedStatus_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_DeletePostedStatus_Request);
+
+    /** CPlayer_DeletePostedStatus_Request postid. */
+    public postid: (number|Long);
+
+    /**
+     * Encodes the specified CPlayer_DeletePostedStatus_Request message. Does not implicitly {@link CPlayer_DeletePostedStatus_Request.verify|verify} messages.
+     * @param message CPlayer_DeletePostedStatus_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_DeletePostedStatus_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_DeletePostedStatus_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_DeletePostedStatus_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_DeletePostedStatus_Request;
+
+    /**
+     * Gets the default type url for CPlayer_DeletePostedStatus_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_DeletePostedStatus_Response. */
+export interface ICPlayer_DeletePostedStatus_Response {
+}
+
+/** Represents a CPlayer_DeletePostedStatus_Response. */
+export class CPlayer_DeletePostedStatus_Response implements ICPlayer_DeletePostedStatus_Response {
+
+    /**
+     * Constructs a new CPlayer_DeletePostedStatus_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_DeletePostedStatus_Response);
+
+    /**
+     * Encodes the specified CPlayer_DeletePostedStatus_Response message. Does not implicitly {@link CPlayer_DeletePostedStatus_Response.verify|verify} messages.
+     * @param message CPlayer_DeletePostedStatus_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_DeletePostedStatus_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_DeletePostedStatus_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_DeletePostedStatus_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_DeletePostedStatus_Response;
+
+    /**
+     * Gets the default type url for CPlayer_DeletePostedStatus_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_FriendEquippedProfileItemsChanged_Notification. */
+export interface ICPlayer_FriendEquippedProfileItemsChanged_Notification {
+
+    /** CPlayer_FriendEquippedProfileItemsChanged_Notification accountid */
+    accountid?: (number|null);
+}
+
+/** Represents a CPlayer_FriendEquippedProfileItemsChanged_Notification. */
+export class CPlayer_FriendEquippedProfileItemsChanged_Notification implements ICPlayer_FriendEquippedProfileItemsChanged_Notification {
+
+    /**
+     * Constructs a new CPlayer_FriendEquippedProfileItemsChanged_Notification.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_FriendEquippedProfileItemsChanged_Notification);
+
+    /** CPlayer_FriendEquippedProfileItemsChanged_Notification accountid. */
+    public accountid: number;
+
+    /**
+     * Encodes the specified CPlayer_FriendEquippedProfileItemsChanged_Notification message. Does not implicitly {@link CPlayer_FriendEquippedProfileItemsChanged_Notification.verify|verify} messages.
+     * @param message CPlayer_FriendEquippedProfileItemsChanged_Notification message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_FriendEquippedProfileItemsChanged_Notification, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_FriendEquippedProfileItemsChanged_Notification message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_FriendEquippedProfileItemsChanged_Notification
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_FriendEquippedProfileItemsChanged_Notification;
+
+    /**
+     * Gets the default type url for CPlayer_FriendEquippedProfileItemsChanged_Notification
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_FriendNicknameChanged_Notification. */
+export interface ICPlayer_FriendNicknameChanged_Notification {
+
+    /** CPlayer_FriendNicknameChanged_Notification accountid */
+    accountid?: (number|null);
+
+    /** CPlayer_FriendNicknameChanged_Notification nickname */
+    nickname?: (string|null);
+
+    /** CPlayer_FriendNicknameChanged_Notification isEchoToSelf */
+    isEchoToSelf?: (boolean|null);
+}
+
+/** Represents a CPlayer_FriendNicknameChanged_Notification. */
+export class CPlayer_FriendNicknameChanged_Notification implements ICPlayer_FriendNicknameChanged_Notification {
+
+    /**
+     * Constructs a new CPlayer_FriendNicknameChanged_Notification.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_FriendNicknameChanged_Notification);
+
+    /** CPlayer_FriendNicknameChanged_Notification accountid. */
+    public accountid: number;
+
+    /** CPlayer_FriendNicknameChanged_Notification nickname. */
+    public nickname: string;
+
+    /** CPlayer_FriendNicknameChanged_Notification isEchoToSelf. */
+    public isEchoToSelf: boolean;
+
+    /**
+     * Encodes the specified CPlayer_FriendNicknameChanged_Notification message. Does not implicitly {@link CPlayer_FriendNicknameChanged_Notification.verify|verify} messages.
+     * @param message CPlayer_FriendNicknameChanged_Notification message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_FriendNicknameChanged_Notification, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_FriendNicknameChanged_Notification message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_FriendNicknameChanged_Notification
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_FriendNicknameChanged_Notification;
+
+    /**
+     * Gets the default type url for CPlayer_FriendNicknameChanged_Notification
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetAchievementsProgress_Request. */
+export interface ICPlayer_GetAchievementsProgress_Request {
+
+    /** CPlayer_GetAchievementsProgress_Request steamid */
+    steamid?: (number|Long|null);
+
+    /** CPlayer_GetAchievementsProgress_Request language */
+    language?: (string|null);
+
+    /** CPlayer_GetAchievementsProgress_Request appids */
+    appids?: (number[]|null);
+
+    /** CPlayer_GetAchievementsProgress_Request includeUnvettedApps */
+    includeUnvettedApps?: (boolean|null);
+}
+
+/** Represents a CPlayer_GetAchievementsProgress_Request. */
+export class CPlayer_GetAchievementsProgress_Request implements ICPlayer_GetAchievementsProgress_Request {
+
+    /**
+     * Constructs a new CPlayer_GetAchievementsProgress_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetAchievementsProgress_Request);
+
+    /** CPlayer_GetAchievementsProgress_Request steamid. */
+    public steamid: (number|Long);
+
+    /** CPlayer_GetAchievementsProgress_Request language. */
+    public language: string;
+
+    /** CPlayer_GetAchievementsProgress_Request appids. */
+    public appids: number[];
+
+    /** CPlayer_GetAchievementsProgress_Request includeUnvettedApps. */
+    public includeUnvettedApps: boolean;
+
+    /**
+     * Encodes the specified CPlayer_GetAchievementsProgress_Request message. Does not implicitly {@link CPlayer_GetAchievementsProgress_Request.verify|verify} messages.
+     * @param message CPlayer_GetAchievementsProgress_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetAchievementsProgress_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetAchievementsProgress_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetAchievementsProgress_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetAchievementsProgress_Request;
+
+    /**
+     * Gets the default type url for CPlayer_GetAchievementsProgress_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetAchievementsProgress_Response. */
+export interface ICPlayer_GetAchievementsProgress_Response {
+
+    /** CPlayer_GetAchievementsProgress_Response achievementProgress */
+    achievementProgress?: (ICPlayer_GetAchievementsProgress_Response_AchievementProgress[]|null);
+}
+
+/** Represents a CPlayer_GetAchievementsProgress_Response. */
+export class CPlayer_GetAchievementsProgress_Response implements ICPlayer_GetAchievementsProgress_Response {
+
+    /**
+     * Constructs a new CPlayer_GetAchievementsProgress_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetAchievementsProgress_Response);
+
+    /** CPlayer_GetAchievementsProgress_Response achievementProgress. */
+    public achievementProgress: ICPlayer_GetAchievementsProgress_Response_AchievementProgress[];
+
+    /**
+     * Encodes the specified CPlayer_GetAchievementsProgress_Response message. Does not implicitly {@link CPlayer_GetAchievementsProgress_Response.verify|verify} messages.
+     * @param message CPlayer_GetAchievementsProgress_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetAchievementsProgress_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetAchievementsProgress_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetAchievementsProgress_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetAchievementsProgress_Response;
+
+    /**
+     * Gets the default type url for CPlayer_GetAchievementsProgress_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetAchievementsProgress_Response_AchievementProgress. */
+export interface ICPlayer_GetAchievementsProgress_Response_AchievementProgress {
+
+    /** CPlayer_GetAchievementsProgress_Response_AchievementProgress appid */
+    appid?: (number|null);
+
+    /** CPlayer_GetAchievementsProgress_Response_AchievementProgress unlocked */
+    unlocked?: (number|null);
+
+    /** CPlayer_GetAchievementsProgress_Response_AchievementProgress total */
+    total?: (number|null);
+
+    /** CPlayer_GetAchievementsProgress_Response_AchievementProgress percentage */
+    percentage?: (number|null);
+
+    /** CPlayer_GetAchievementsProgress_Response_AchievementProgress allUnlocked */
+    allUnlocked?: (boolean|null);
+
+    /** CPlayer_GetAchievementsProgress_Response_AchievementProgress cacheTime */
+    cacheTime?: (number|null);
+
+    /** CPlayer_GetAchievementsProgress_Response_AchievementProgress vetted */
+    vetted?: (boolean|null);
+}
+
+/** Represents a CPlayer_GetAchievementsProgress_Response_AchievementProgress. */
+export class CPlayer_GetAchievementsProgress_Response_AchievementProgress implements ICPlayer_GetAchievementsProgress_Response_AchievementProgress {
+
+    /**
+     * Constructs a new CPlayer_GetAchievementsProgress_Response_AchievementProgress.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetAchievementsProgress_Response_AchievementProgress);
+
+    /** CPlayer_GetAchievementsProgress_Response_AchievementProgress appid. */
+    public appid: number;
+
+    /** CPlayer_GetAchievementsProgress_Response_AchievementProgress unlocked. */
+    public unlocked: number;
+
+    /** CPlayer_GetAchievementsProgress_Response_AchievementProgress total. */
+    public total: number;
+
+    /** CPlayer_GetAchievementsProgress_Response_AchievementProgress percentage. */
+    public percentage: number;
+
+    /** CPlayer_GetAchievementsProgress_Response_AchievementProgress allUnlocked. */
+    public allUnlocked: boolean;
+
+    /** CPlayer_GetAchievementsProgress_Response_AchievementProgress cacheTime. */
+    public cacheTime: number;
+
+    /** CPlayer_GetAchievementsProgress_Response_AchievementProgress vetted. */
+    public vetted: boolean;
+
+    /**
+     * Encodes the specified CPlayer_GetAchievementsProgress_Response_AchievementProgress message. Does not implicitly {@link CPlayer_GetAchievementsProgress_Response_AchievementProgress.verify|verify} messages.
+     * @param message CPlayer_GetAchievementsProgress_Response_AchievementProgress message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetAchievementsProgress_Response_AchievementProgress, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetAchievementsProgress_Response_AchievementProgress message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetAchievementsProgress_Response_AchievementProgress
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetAchievementsProgress_Response_AchievementProgress;
+
+    /**
+     * Gets the default type url for CPlayer_GetAchievementsProgress_Response_AchievementProgress
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetAnimatedAvatar_Request. */
+export interface ICPlayer_GetAnimatedAvatar_Request {
+
+    /** CPlayer_GetAnimatedAvatar_Request steamid */
+    steamid?: (number|Long|null);
+
+    /** CPlayer_GetAnimatedAvatar_Request language */
+    language?: (string|null);
+}
+
+/** Represents a CPlayer_GetAnimatedAvatar_Request. */
+export class CPlayer_GetAnimatedAvatar_Request implements ICPlayer_GetAnimatedAvatar_Request {
+
+    /**
+     * Constructs a new CPlayer_GetAnimatedAvatar_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetAnimatedAvatar_Request);
+
+    /** CPlayer_GetAnimatedAvatar_Request steamid. */
+    public steamid: (number|Long);
+
+    /** CPlayer_GetAnimatedAvatar_Request language. */
+    public language: string;
+
+    /**
+     * Encodes the specified CPlayer_GetAnimatedAvatar_Request message. Does not implicitly {@link CPlayer_GetAnimatedAvatar_Request.verify|verify} messages.
+     * @param message CPlayer_GetAnimatedAvatar_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetAnimatedAvatar_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetAnimatedAvatar_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetAnimatedAvatar_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetAnimatedAvatar_Request;
+
+    /**
+     * Gets the default type url for CPlayer_GetAnimatedAvatar_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetAnimatedAvatar_Response. */
+export interface ICPlayer_GetAnimatedAvatar_Response {
+
+    /** CPlayer_GetAnimatedAvatar_Response avatar */
+    avatar?: (IProfileItem|null);
+}
+
+/** Represents a CPlayer_GetAnimatedAvatar_Response. */
+export class CPlayer_GetAnimatedAvatar_Response implements ICPlayer_GetAnimatedAvatar_Response {
+
+    /**
+     * Constructs a new CPlayer_GetAnimatedAvatar_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetAnimatedAvatar_Response);
+
+    /** CPlayer_GetAnimatedAvatar_Response avatar. */
+    public avatar?: (IProfileItem|null);
+
+    /**
+     * Encodes the specified CPlayer_GetAnimatedAvatar_Response message. Does not implicitly {@link CPlayer_GetAnimatedAvatar_Response.verify|verify} messages.
+     * @param message CPlayer_GetAnimatedAvatar_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetAnimatedAvatar_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetAnimatedAvatar_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetAnimatedAvatar_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetAnimatedAvatar_Response;
+
+    /**
+     * Gets the default type url for CPlayer_GetAnimatedAvatar_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetAvatarFrame_Request. */
+export interface ICPlayer_GetAvatarFrame_Request {
+
+    /** CPlayer_GetAvatarFrame_Request steamid */
+    steamid?: (number|Long|null);
+
+    /** CPlayer_GetAvatarFrame_Request language */
+    language?: (string|null);
+}
+
+/** Represents a CPlayer_GetAvatarFrame_Request. */
+export class CPlayer_GetAvatarFrame_Request implements ICPlayer_GetAvatarFrame_Request {
+
+    /**
+     * Constructs a new CPlayer_GetAvatarFrame_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetAvatarFrame_Request);
+
+    /** CPlayer_GetAvatarFrame_Request steamid. */
+    public steamid: (number|Long);
+
+    /** CPlayer_GetAvatarFrame_Request language. */
+    public language: string;
+
+    /**
+     * Encodes the specified CPlayer_GetAvatarFrame_Request message. Does not implicitly {@link CPlayer_GetAvatarFrame_Request.verify|verify} messages.
+     * @param message CPlayer_GetAvatarFrame_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetAvatarFrame_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetAvatarFrame_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetAvatarFrame_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetAvatarFrame_Request;
+
+    /**
+     * Gets the default type url for CPlayer_GetAvatarFrame_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetAvatarFrame_Response. */
+export interface ICPlayer_GetAvatarFrame_Response {
+
+    /** CPlayer_GetAvatarFrame_Response avatarFrame */
+    avatarFrame?: (IProfileItem|null);
+}
+
+/** Represents a CPlayer_GetAvatarFrame_Response. */
+export class CPlayer_GetAvatarFrame_Response implements ICPlayer_GetAvatarFrame_Response {
+
+    /**
+     * Constructs a new CPlayer_GetAvatarFrame_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetAvatarFrame_Response);
+
+    /** CPlayer_GetAvatarFrame_Response avatarFrame. */
+    public avatarFrame?: (IProfileItem|null);
+
+    /**
+     * Encodes the specified CPlayer_GetAvatarFrame_Response message. Does not implicitly {@link CPlayer_GetAvatarFrame_Response.verify|verify} messages.
+     * @param message CPlayer_GetAvatarFrame_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetAvatarFrame_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetAvatarFrame_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetAvatarFrame_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetAvatarFrame_Response;
+
+    /**
+     * Gets the default type url for CPlayer_GetAvatarFrame_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetCommunityBadgeProgress_Request. */
+export interface ICPlayer_GetCommunityBadgeProgress_Request {
+
+    /** CPlayer_GetCommunityBadgeProgress_Request steamid */
+    steamid?: (number|Long|null);
+
+    /** CPlayer_GetCommunityBadgeProgress_Request badgeid */
+    badgeid?: (number|null);
+}
+
+/** Represents a CPlayer_GetCommunityBadgeProgress_Request. */
+export class CPlayer_GetCommunityBadgeProgress_Request implements ICPlayer_GetCommunityBadgeProgress_Request {
+
+    /**
+     * Constructs a new CPlayer_GetCommunityBadgeProgress_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetCommunityBadgeProgress_Request);
+
+    /** CPlayer_GetCommunityBadgeProgress_Request steamid. */
+    public steamid: (number|Long);
+
+    /** CPlayer_GetCommunityBadgeProgress_Request badgeid. */
+    public badgeid: number;
+
+    /**
+     * Encodes the specified CPlayer_GetCommunityBadgeProgress_Request message. Does not implicitly {@link CPlayer_GetCommunityBadgeProgress_Request.verify|verify} messages.
+     * @param message CPlayer_GetCommunityBadgeProgress_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetCommunityBadgeProgress_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetCommunityBadgeProgress_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetCommunityBadgeProgress_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetCommunityBadgeProgress_Request;
+
+    /**
+     * Gets the default type url for CPlayer_GetCommunityBadgeProgress_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetCommunityBadgeProgress_Response. */
+export interface ICPlayer_GetCommunityBadgeProgress_Response {
+
+    /** CPlayer_GetCommunityBadgeProgress_Response quests */
+    quests?: (ICPlayer_GetCommunityBadgeProgress_Response_Quest[]|null);
+}
+
+/** Represents a CPlayer_GetCommunityBadgeProgress_Response. */
+export class CPlayer_GetCommunityBadgeProgress_Response implements ICPlayer_GetCommunityBadgeProgress_Response {
+
+    /**
+     * Constructs a new CPlayer_GetCommunityBadgeProgress_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetCommunityBadgeProgress_Response);
+
+    /** CPlayer_GetCommunityBadgeProgress_Response quests. */
+    public quests: ICPlayer_GetCommunityBadgeProgress_Response_Quest[];
+
+    /**
+     * Encodes the specified CPlayer_GetCommunityBadgeProgress_Response message. Does not implicitly {@link CPlayer_GetCommunityBadgeProgress_Response.verify|verify} messages.
+     * @param message CPlayer_GetCommunityBadgeProgress_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetCommunityBadgeProgress_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetCommunityBadgeProgress_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetCommunityBadgeProgress_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetCommunityBadgeProgress_Response;
+
+    /**
+     * Gets the default type url for CPlayer_GetCommunityBadgeProgress_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetCommunityBadgeProgress_Response_Quest. */
+export interface ICPlayer_GetCommunityBadgeProgress_Response_Quest {
+
+    /** CPlayer_GetCommunityBadgeProgress_Response_Quest questid */
+    questid?: (number|null);
+
+    /** CPlayer_GetCommunityBadgeProgress_Response_Quest completed */
+    completed?: (boolean|null);
+}
+
+/** Represents a CPlayer_GetCommunityBadgeProgress_Response_Quest. */
+export class CPlayer_GetCommunityBadgeProgress_Response_Quest implements ICPlayer_GetCommunityBadgeProgress_Response_Quest {
+
+    /**
+     * Constructs a new CPlayer_GetCommunityBadgeProgress_Response_Quest.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetCommunityBadgeProgress_Response_Quest);
+
+    /** CPlayer_GetCommunityBadgeProgress_Response_Quest questid. */
+    public questid: number;
+
+    /** CPlayer_GetCommunityBadgeProgress_Response_Quest completed. */
+    public completed: boolean;
+
+    /**
+     * Encodes the specified CPlayer_GetCommunityBadgeProgress_Response_Quest message. Does not implicitly {@link CPlayer_GetCommunityBadgeProgress_Response_Quest.verify|verify} messages.
+     * @param message CPlayer_GetCommunityBadgeProgress_Response_Quest message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetCommunityBadgeProgress_Response_Quest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetCommunityBadgeProgress_Response_Quest message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetCommunityBadgeProgress_Response_Quest
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetCommunityBadgeProgress_Response_Quest;
+
+    /**
+     * Gets the default type url for CPlayer_GetCommunityBadgeProgress_Response_Quest
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetCommunityPreferences_Request. */
+export interface ICPlayer_GetCommunityPreferences_Request {
+}
+
+/** Represents a CPlayer_GetCommunityPreferences_Request. */
+export class CPlayer_GetCommunityPreferences_Request implements ICPlayer_GetCommunityPreferences_Request {
+
+    /**
+     * Constructs a new CPlayer_GetCommunityPreferences_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetCommunityPreferences_Request);
+
+    /**
+     * Encodes the specified CPlayer_GetCommunityPreferences_Request message. Does not implicitly {@link CPlayer_GetCommunityPreferences_Request.verify|verify} messages.
+     * @param message CPlayer_GetCommunityPreferences_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetCommunityPreferences_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetCommunityPreferences_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetCommunityPreferences_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetCommunityPreferences_Request;
+
+    /**
+     * Gets the default type url for CPlayer_GetCommunityPreferences_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetCommunityPreferences_Response. */
+export interface ICPlayer_GetCommunityPreferences_Response {
+
+    /** CPlayer_GetCommunityPreferences_Response preferences */
+    preferences?: (ICPlayer_CommunityPreferences|null);
+
+    /** CPlayer_GetCommunityPreferences_Response contentDescriptorPreferences */
+    contentDescriptorPreferences?: (IUserContentDescriptorPreferences|null);
+}
+
+/** Represents a CPlayer_GetCommunityPreferences_Response. */
+export class CPlayer_GetCommunityPreferences_Response implements ICPlayer_GetCommunityPreferences_Response {
+
+    /**
+     * Constructs a new CPlayer_GetCommunityPreferences_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetCommunityPreferences_Response);
+
+    /** CPlayer_GetCommunityPreferences_Response preferences. */
+    public preferences?: (ICPlayer_CommunityPreferences|null);
+
+    /** CPlayer_GetCommunityPreferences_Response contentDescriptorPreferences. */
+    public contentDescriptorPreferences?: (IUserContentDescriptorPreferences|null);
+
+    /**
+     * Encodes the specified CPlayer_GetCommunityPreferences_Response message. Does not implicitly {@link CPlayer_GetCommunityPreferences_Response.verify|verify} messages.
+     * @param message CPlayer_GetCommunityPreferences_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetCommunityPreferences_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetCommunityPreferences_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetCommunityPreferences_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetCommunityPreferences_Response;
+
+    /**
+     * Gets the default type url for CPlayer_GetCommunityPreferences_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetDurationControl_Request. */
+export interface ICPlayer_GetDurationControl_Request {
+
+    /** CPlayer_GetDurationControl_Request appid */
+    appid?: (number|null);
+}
+
+/** Represents a CPlayer_GetDurationControl_Request. */
+export class CPlayer_GetDurationControl_Request implements ICPlayer_GetDurationControl_Request {
+
+    /**
+     * Constructs a new CPlayer_GetDurationControl_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetDurationControl_Request);
+
+    /** CPlayer_GetDurationControl_Request appid. */
+    public appid: number;
+
+    /**
+     * Encodes the specified CPlayer_GetDurationControl_Request message. Does not implicitly {@link CPlayer_GetDurationControl_Request.verify|verify} messages.
+     * @param message CPlayer_GetDurationControl_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetDurationControl_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetDurationControl_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetDurationControl_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetDurationControl_Request;
+
+    /**
+     * Gets the default type url for CPlayer_GetDurationControl_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetDurationControl_Response. */
+export interface ICPlayer_GetDurationControl_Response {
+
+    /** CPlayer_GetDurationControl_Response isEnabled */
+    isEnabled?: (boolean|null);
+
+    /** CPlayer_GetDurationControl_Response seconds */
+    seconds?: (number|null);
+
+    /** CPlayer_GetDurationControl_Response secondsToday */
+    secondsToday?: (number|null);
+
+    /** CPlayer_GetDurationControl_Response isSteamchinaAccount */
+    isSteamchinaAccount?: (boolean|null);
+
+    /** CPlayer_GetDurationControl_Response isAgeVerified */
+    isAgeVerified?: (boolean|null);
+
+    /** CPlayer_GetDurationControl_Response secondsAllowedToday */
+    secondsAllowedToday?: (number|null);
+
+    /** CPlayer_GetDurationControl_Response ageVerificationPending */
+    ageVerificationPending?: (boolean|null);
+
+    /** CPlayer_GetDurationControl_Response blockMinors */
+    blockMinors?: (boolean|null);
+}
+
+/** Represents a CPlayer_GetDurationControl_Response. */
+export class CPlayer_GetDurationControl_Response implements ICPlayer_GetDurationControl_Response {
+
+    /**
+     * Constructs a new CPlayer_GetDurationControl_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetDurationControl_Response);
+
+    /** CPlayer_GetDurationControl_Response isEnabled. */
+    public isEnabled: boolean;
+
+    /** CPlayer_GetDurationControl_Response seconds. */
+    public seconds: number;
+
+    /** CPlayer_GetDurationControl_Response secondsToday. */
+    public secondsToday: number;
+
+    /** CPlayer_GetDurationControl_Response isSteamchinaAccount. */
+    public isSteamchinaAccount: boolean;
+
+    /** CPlayer_GetDurationControl_Response isAgeVerified. */
+    public isAgeVerified: boolean;
+
+    /** CPlayer_GetDurationControl_Response secondsAllowedToday. */
+    public secondsAllowedToday: number;
+
+    /** CPlayer_GetDurationControl_Response ageVerificationPending. */
+    public ageVerificationPending: boolean;
+
+    /** CPlayer_GetDurationControl_Response blockMinors. */
+    public blockMinors: boolean;
+
+    /**
+     * Encodes the specified CPlayer_GetDurationControl_Response message. Does not implicitly {@link CPlayer_GetDurationControl_Response.verify|verify} messages.
+     * @param message CPlayer_GetDurationControl_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetDurationControl_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetDurationControl_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetDurationControl_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetDurationControl_Response;
+
+    /**
+     * Gets the default type url for CPlayer_GetDurationControl_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetEmoticonList_Request. */
+export interface ICPlayer_GetEmoticonList_Request {
+}
+
+/** Represents a CPlayer_GetEmoticonList_Request. */
+export class CPlayer_GetEmoticonList_Request implements ICPlayer_GetEmoticonList_Request {
+
+    /**
+     * Constructs a new CPlayer_GetEmoticonList_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetEmoticonList_Request);
+
+    /**
+     * Encodes the specified CPlayer_GetEmoticonList_Request message. Does not implicitly {@link CPlayer_GetEmoticonList_Request.verify|verify} messages.
+     * @param message CPlayer_GetEmoticonList_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetEmoticonList_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetEmoticonList_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetEmoticonList_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetEmoticonList_Request;
+
+    /**
+     * Gets the default type url for CPlayer_GetEmoticonList_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetEmoticonList_Response. */
+export interface ICPlayer_GetEmoticonList_Response {
+
+    /** CPlayer_GetEmoticonList_Response emoticons */
+    emoticons?: (ICPlayer_GetEmoticonList_Response_Emoticon[]|null);
+}
+
+/** Represents a CPlayer_GetEmoticonList_Response. */
+export class CPlayer_GetEmoticonList_Response implements ICPlayer_GetEmoticonList_Response {
+
+    /**
+     * Constructs a new CPlayer_GetEmoticonList_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetEmoticonList_Response);
+
+    /** CPlayer_GetEmoticonList_Response emoticons. */
+    public emoticons: ICPlayer_GetEmoticonList_Response_Emoticon[];
+
+    /**
+     * Encodes the specified CPlayer_GetEmoticonList_Response message. Does not implicitly {@link CPlayer_GetEmoticonList_Response.verify|verify} messages.
+     * @param message CPlayer_GetEmoticonList_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetEmoticonList_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetEmoticonList_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetEmoticonList_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetEmoticonList_Response;
+
+    /**
+     * Gets the default type url for CPlayer_GetEmoticonList_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetEmoticonList_Response_Emoticon. */
+export interface ICPlayer_GetEmoticonList_Response_Emoticon {
+
+    /** CPlayer_GetEmoticonList_Response_Emoticon name */
+    name?: (string|null);
+
+    /** CPlayer_GetEmoticonList_Response_Emoticon count */
+    count?: (number|null);
+
+    /** CPlayer_GetEmoticonList_Response_Emoticon timeLastUsed */
+    timeLastUsed?: (number|null);
+
+    /** CPlayer_GetEmoticonList_Response_Emoticon useCount */
+    useCount?: (number|null);
+
+    /** CPlayer_GetEmoticonList_Response_Emoticon timeReceived */
+    timeReceived?: (number|null);
+
+    /** CPlayer_GetEmoticonList_Response_Emoticon appid */
+    appid?: (number|null);
+}
+
+/** Represents a CPlayer_GetEmoticonList_Response_Emoticon. */
+export class CPlayer_GetEmoticonList_Response_Emoticon implements ICPlayer_GetEmoticonList_Response_Emoticon {
+
+    /**
+     * Constructs a new CPlayer_GetEmoticonList_Response_Emoticon.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetEmoticonList_Response_Emoticon);
+
+    /** CPlayer_GetEmoticonList_Response_Emoticon name. */
+    public name: string;
+
+    /** CPlayer_GetEmoticonList_Response_Emoticon count. */
+    public count: number;
+
+    /** CPlayer_GetEmoticonList_Response_Emoticon timeLastUsed. */
+    public timeLastUsed: number;
+
+    /** CPlayer_GetEmoticonList_Response_Emoticon useCount. */
+    public useCount: number;
+
+    /** CPlayer_GetEmoticonList_Response_Emoticon timeReceived. */
+    public timeReceived: number;
+
+    /** CPlayer_GetEmoticonList_Response_Emoticon appid. */
+    public appid: number;
+
+    /**
+     * Encodes the specified CPlayer_GetEmoticonList_Response_Emoticon message. Does not implicitly {@link CPlayer_GetEmoticonList_Response_Emoticon.verify|verify} messages.
+     * @param message CPlayer_GetEmoticonList_Response_Emoticon message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetEmoticonList_Response_Emoticon, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetEmoticonList_Response_Emoticon message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetEmoticonList_Response_Emoticon
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetEmoticonList_Response_Emoticon;
+
+    /**
+     * Gets the default type url for CPlayer_GetEmoticonList_Response_Emoticon
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetFavoriteBadge_Request. */
+export interface ICPlayer_GetFavoriteBadge_Request {
+
+    /** CPlayer_GetFavoriteBadge_Request steamid */
+    steamid?: (number|Long|null);
+}
+
+/** Represents a CPlayer_GetFavoriteBadge_Request. */
+export class CPlayer_GetFavoriteBadge_Request implements ICPlayer_GetFavoriteBadge_Request {
+
+    /**
+     * Constructs a new CPlayer_GetFavoriteBadge_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetFavoriteBadge_Request);
+
+    /** CPlayer_GetFavoriteBadge_Request steamid. */
+    public steamid: (number|Long);
+
+    /**
+     * Encodes the specified CPlayer_GetFavoriteBadge_Request message. Does not implicitly {@link CPlayer_GetFavoriteBadge_Request.verify|verify} messages.
+     * @param message CPlayer_GetFavoriteBadge_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetFavoriteBadge_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetFavoriteBadge_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetFavoriteBadge_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetFavoriteBadge_Request;
+
+    /**
+     * Gets the default type url for CPlayer_GetFavoriteBadge_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetFavoriteBadge_Response. */
+export interface ICPlayer_GetFavoriteBadge_Response {
+
+    /** CPlayer_GetFavoriteBadge_Response hasFavoriteBadge */
+    hasFavoriteBadge?: (boolean|null);
+
+    /** CPlayer_GetFavoriteBadge_Response badgeid */
+    badgeid?: (number|null);
+
+    /** CPlayer_GetFavoriteBadge_Response communityitemid */
+    communityitemid?: (number|Long|null);
+
+    /** CPlayer_GetFavoriteBadge_Response itemType */
+    itemType?: (number|null);
+
+    /** CPlayer_GetFavoriteBadge_Response borderColor */
+    borderColor?: (number|null);
+
+    /** CPlayer_GetFavoriteBadge_Response appid */
+    appid?: (number|null);
+
+    /** CPlayer_GetFavoriteBadge_Response level */
+    level?: (number|null);
+}
+
+/** Represents a CPlayer_GetFavoriteBadge_Response. */
+export class CPlayer_GetFavoriteBadge_Response implements ICPlayer_GetFavoriteBadge_Response {
+
+    /**
+     * Constructs a new CPlayer_GetFavoriteBadge_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetFavoriteBadge_Response);
+
+    /** CPlayer_GetFavoriteBadge_Response hasFavoriteBadge. */
+    public hasFavoriteBadge: boolean;
+
+    /** CPlayer_GetFavoriteBadge_Response badgeid. */
+    public badgeid: number;
+
+    /** CPlayer_GetFavoriteBadge_Response communityitemid. */
+    public communityitemid: (number|Long);
+
+    /** CPlayer_GetFavoriteBadge_Response itemType. */
+    public itemType: number;
+
+    /** CPlayer_GetFavoriteBadge_Response borderColor. */
+    public borderColor: number;
+
+    /** CPlayer_GetFavoriteBadge_Response appid. */
+    public appid: number;
+
+    /** CPlayer_GetFavoriteBadge_Response level. */
+    public level: number;
+
+    /**
+     * Encodes the specified CPlayer_GetFavoriteBadge_Response message. Does not implicitly {@link CPlayer_GetFavoriteBadge_Response.verify|verify} messages.
+     * @param message CPlayer_GetFavoriteBadge_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetFavoriteBadge_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetFavoriteBadge_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetFavoriteBadge_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetFavoriteBadge_Response;
+
+    /**
+     * Gets the default type url for CPlayer_GetFavoriteBadge_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetFriendsGameplayInfo_Request. */
+export interface ICPlayer_GetFriendsGameplayInfo_Request {
+
+    /** CPlayer_GetFriendsGameplayInfo_Request appid */
+    appid?: (number|null);
+}
+
+/** Represents a CPlayer_GetFriendsGameplayInfo_Request. */
+export class CPlayer_GetFriendsGameplayInfo_Request implements ICPlayer_GetFriendsGameplayInfo_Request {
+
+    /**
+     * Constructs a new CPlayer_GetFriendsGameplayInfo_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetFriendsGameplayInfo_Request);
+
+    /** CPlayer_GetFriendsGameplayInfo_Request appid. */
+    public appid: number;
+
+    /**
+     * Encodes the specified CPlayer_GetFriendsGameplayInfo_Request message. Does not implicitly {@link CPlayer_GetFriendsGameplayInfo_Request.verify|verify} messages.
+     * @param message CPlayer_GetFriendsGameplayInfo_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetFriendsGameplayInfo_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetFriendsGameplayInfo_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetFriendsGameplayInfo_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetFriendsGameplayInfo_Request;
+
+    /**
+     * Gets the default type url for CPlayer_GetFriendsGameplayInfo_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetFriendsGameplayInfo_Response. */
+export interface ICPlayer_GetFriendsGameplayInfo_Response {
+
+    /** CPlayer_GetFriendsGameplayInfo_Response yourInfo */
+    yourInfo?: (ICPlayer_GetFriendsGameplayInfo_Response_OwnGameplayInfo|null);
+
+    /** CPlayer_GetFriendsGameplayInfo_Response inGame */
+    inGame?: (ICPlayer_GetFriendsGameplayInfo_Response_FriendsGameplayInfo[]|null);
+
+    /** CPlayer_GetFriendsGameplayInfo_Response playedRecently */
+    playedRecently?: (ICPlayer_GetFriendsGameplayInfo_Response_FriendsGameplayInfo[]|null);
+
+    /** CPlayer_GetFriendsGameplayInfo_Response playedEver */
+    playedEver?: (ICPlayer_GetFriendsGameplayInfo_Response_FriendsGameplayInfo[]|null);
+
+    /** CPlayer_GetFriendsGameplayInfo_Response owns */
+    owns?: (ICPlayer_GetFriendsGameplayInfo_Response_FriendsGameplayInfo[]|null);
+
+    /** CPlayer_GetFriendsGameplayInfo_Response inWishlist */
+    inWishlist?: (ICPlayer_GetFriendsGameplayInfo_Response_FriendsGameplayInfo[]|null);
+}
+
+/** Represents a CPlayer_GetFriendsGameplayInfo_Response. */
+export class CPlayer_GetFriendsGameplayInfo_Response implements ICPlayer_GetFriendsGameplayInfo_Response {
+
+    /**
+     * Constructs a new CPlayer_GetFriendsGameplayInfo_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetFriendsGameplayInfo_Response);
+
+    /** CPlayer_GetFriendsGameplayInfo_Response yourInfo. */
+    public yourInfo?: (ICPlayer_GetFriendsGameplayInfo_Response_OwnGameplayInfo|null);
+
+    /** CPlayer_GetFriendsGameplayInfo_Response inGame. */
+    public inGame: ICPlayer_GetFriendsGameplayInfo_Response_FriendsGameplayInfo[];
+
+    /** CPlayer_GetFriendsGameplayInfo_Response playedRecently. */
+    public playedRecently: ICPlayer_GetFriendsGameplayInfo_Response_FriendsGameplayInfo[];
+
+    /** CPlayer_GetFriendsGameplayInfo_Response playedEver. */
+    public playedEver: ICPlayer_GetFriendsGameplayInfo_Response_FriendsGameplayInfo[];
+
+    /** CPlayer_GetFriendsGameplayInfo_Response owns. */
+    public owns: ICPlayer_GetFriendsGameplayInfo_Response_FriendsGameplayInfo[];
+
+    /** CPlayer_GetFriendsGameplayInfo_Response inWishlist. */
+    public inWishlist: ICPlayer_GetFriendsGameplayInfo_Response_FriendsGameplayInfo[];
+
+    /**
+     * Encodes the specified CPlayer_GetFriendsGameplayInfo_Response message. Does not implicitly {@link CPlayer_GetFriendsGameplayInfo_Response.verify|verify} messages.
+     * @param message CPlayer_GetFriendsGameplayInfo_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetFriendsGameplayInfo_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetFriendsGameplayInfo_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetFriendsGameplayInfo_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetFriendsGameplayInfo_Response;
+
+    /**
+     * Gets the default type url for CPlayer_GetFriendsGameplayInfo_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetFriendsGameplayInfo_Response_FriendsGameplayInfo. */
+export interface ICPlayer_GetFriendsGameplayInfo_Response_FriendsGameplayInfo {
+
+    /** CPlayer_GetFriendsGameplayInfo_Response_FriendsGameplayInfo steamid */
+    steamid?: (number|Long|null);
+
+    /** CPlayer_GetFriendsGameplayInfo_Response_FriendsGameplayInfo minutesPlayed */
+    minutesPlayed?: (number|null);
+
+    /** CPlayer_GetFriendsGameplayInfo_Response_FriendsGameplayInfo minutesPlayedForever */
+    minutesPlayedForever?: (number|null);
+}
+
+/** Represents a CPlayer_GetFriendsGameplayInfo_Response_FriendsGameplayInfo. */
+export class CPlayer_GetFriendsGameplayInfo_Response_FriendsGameplayInfo implements ICPlayer_GetFriendsGameplayInfo_Response_FriendsGameplayInfo {
+
+    /**
+     * Constructs a new CPlayer_GetFriendsGameplayInfo_Response_FriendsGameplayInfo.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetFriendsGameplayInfo_Response_FriendsGameplayInfo);
+
+    /** CPlayer_GetFriendsGameplayInfo_Response_FriendsGameplayInfo steamid. */
+    public steamid: (number|Long);
+
+    /** CPlayer_GetFriendsGameplayInfo_Response_FriendsGameplayInfo minutesPlayed. */
+    public minutesPlayed: number;
+
+    /** CPlayer_GetFriendsGameplayInfo_Response_FriendsGameplayInfo minutesPlayedForever. */
+    public minutesPlayedForever: number;
+
+    /**
+     * Encodes the specified CPlayer_GetFriendsGameplayInfo_Response_FriendsGameplayInfo message. Does not implicitly {@link CPlayer_GetFriendsGameplayInfo_Response_FriendsGameplayInfo.verify|verify} messages.
+     * @param message CPlayer_GetFriendsGameplayInfo_Response_FriendsGameplayInfo message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetFriendsGameplayInfo_Response_FriendsGameplayInfo, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetFriendsGameplayInfo_Response_FriendsGameplayInfo message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetFriendsGameplayInfo_Response_FriendsGameplayInfo
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetFriendsGameplayInfo_Response_FriendsGameplayInfo;
+
+    /**
+     * Gets the default type url for CPlayer_GetFriendsGameplayInfo_Response_FriendsGameplayInfo
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetFriendsGameplayInfo_Response_OwnGameplayInfo. */
+export interface ICPlayer_GetFriendsGameplayInfo_Response_OwnGameplayInfo {
+
+    /** CPlayer_GetFriendsGameplayInfo_Response_OwnGameplayInfo steamid */
+    steamid?: (number|Long|null);
+
+    /** CPlayer_GetFriendsGameplayInfo_Response_OwnGameplayInfo minutesPlayed */
+    minutesPlayed?: (number|null);
+
+    /** CPlayer_GetFriendsGameplayInfo_Response_OwnGameplayInfo minutesPlayedForever */
+    minutesPlayedForever?: (number|null);
+
+    /** CPlayer_GetFriendsGameplayInfo_Response_OwnGameplayInfo inWishlist */
+    inWishlist?: (boolean|null);
+
+    /** CPlayer_GetFriendsGameplayInfo_Response_OwnGameplayInfo owned */
+    owned?: (boolean|null);
+}
+
+/** Represents a CPlayer_GetFriendsGameplayInfo_Response_OwnGameplayInfo. */
+export class CPlayer_GetFriendsGameplayInfo_Response_OwnGameplayInfo implements ICPlayer_GetFriendsGameplayInfo_Response_OwnGameplayInfo {
+
+    /**
+     * Constructs a new CPlayer_GetFriendsGameplayInfo_Response_OwnGameplayInfo.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetFriendsGameplayInfo_Response_OwnGameplayInfo);
+
+    /** CPlayer_GetFriendsGameplayInfo_Response_OwnGameplayInfo steamid. */
+    public steamid: (number|Long);
+
+    /** CPlayer_GetFriendsGameplayInfo_Response_OwnGameplayInfo minutesPlayed. */
+    public minutesPlayed: number;
+
+    /** CPlayer_GetFriendsGameplayInfo_Response_OwnGameplayInfo minutesPlayedForever. */
+    public minutesPlayedForever: number;
+
+    /** CPlayer_GetFriendsGameplayInfo_Response_OwnGameplayInfo inWishlist. */
+    public inWishlist: boolean;
+
+    /** CPlayer_GetFriendsGameplayInfo_Response_OwnGameplayInfo owned. */
+    public owned: boolean;
+
+    /**
+     * Encodes the specified CPlayer_GetFriendsGameplayInfo_Response_OwnGameplayInfo message. Does not implicitly {@link CPlayer_GetFriendsGameplayInfo_Response_OwnGameplayInfo.verify|verify} messages.
+     * @param message CPlayer_GetFriendsGameplayInfo_Response_OwnGameplayInfo message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetFriendsGameplayInfo_Response_OwnGameplayInfo, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetFriendsGameplayInfo_Response_OwnGameplayInfo message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetFriendsGameplayInfo_Response_OwnGameplayInfo
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetFriendsGameplayInfo_Response_OwnGameplayInfo;
+
+    /**
+     * Gets the default type url for CPlayer_GetFriendsGameplayInfo_Response_OwnGameplayInfo
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetGameAchievements_Request. */
+export interface ICPlayer_GetGameAchievements_Request {
+
+    /** CPlayer_GetGameAchievements_Request appid */
+    appid?: (number|null);
+
+    /** CPlayer_GetGameAchievements_Request language */
+    language?: (string|null);
+}
+
+/** Represents a CPlayer_GetGameAchievements_Request. */
+export class CPlayer_GetGameAchievements_Request implements ICPlayer_GetGameAchievements_Request {
+
+    /**
+     * Constructs a new CPlayer_GetGameAchievements_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetGameAchievements_Request);
+
+    /** CPlayer_GetGameAchievements_Request appid. */
+    public appid: number;
+
+    /** CPlayer_GetGameAchievements_Request language. */
+    public language: string;
+
+    /**
+     * Encodes the specified CPlayer_GetGameAchievements_Request message. Does not implicitly {@link CPlayer_GetGameAchievements_Request.verify|verify} messages.
+     * @param message CPlayer_GetGameAchievements_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetGameAchievements_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetGameAchievements_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetGameAchievements_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetGameAchievements_Request;
+
+    /**
+     * Gets the default type url for CPlayer_GetGameAchievements_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetGameAchievements_Response. */
+export interface ICPlayer_GetGameAchievements_Response {
+
+    /** CPlayer_GetGameAchievements_Response achievements */
+    achievements?: (ICPlayer_GetGameAchievements_Response_Achievement[]|null);
+}
+
+/** Represents a CPlayer_GetGameAchievements_Response. */
+export class CPlayer_GetGameAchievements_Response implements ICPlayer_GetGameAchievements_Response {
+
+    /**
+     * Constructs a new CPlayer_GetGameAchievements_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetGameAchievements_Response);
+
+    /** CPlayer_GetGameAchievements_Response achievements. */
+    public achievements: ICPlayer_GetGameAchievements_Response_Achievement[];
+
+    /**
+     * Encodes the specified CPlayer_GetGameAchievements_Response message. Does not implicitly {@link CPlayer_GetGameAchievements_Response.verify|verify} messages.
+     * @param message CPlayer_GetGameAchievements_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetGameAchievements_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetGameAchievements_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetGameAchievements_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetGameAchievements_Response;
+
+    /**
+     * Gets the default type url for CPlayer_GetGameAchievements_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetGameAchievements_Response_Achievement. */
+export interface ICPlayer_GetGameAchievements_Response_Achievement {
+
+    /** CPlayer_GetGameAchievements_Response_Achievement internalName */
+    internalName?: (string|null);
+
+    /** CPlayer_GetGameAchievements_Response_Achievement localizedName */
+    localizedName?: (string|null);
+
+    /** CPlayer_GetGameAchievements_Response_Achievement localizedDesc */
+    localizedDesc?: (string|null);
+
+    /** CPlayer_GetGameAchievements_Response_Achievement icon */
+    icon?: (string|null);
+
+    /** CPlayer_GetGameAchievements_Response_Achievement iconGray */
+    iconGray?: (string|null);
+
+    /** CPlayer_GetGameAchievements_Response_Achievement hidden */
+    hidden?: (boolean|null);
+
+    /** CPlayer_GetGameAchievements_Response_Achievement playerPercentUnlocked */
+    playerPercentUnlocked?: (string|null);
+}
+
+/** Represents a CPlayer_GetGameAchievements_Response_Achievement. */
+export class CPlayer_GetGameAchievements_Response_Achievement implements ICPlayer_GetGameAchievements_Response_Achievement {
+
+    /**
+     * Constructs a new CPlayer_GetGameAchievements_Response_Achievement.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetGameAchievements_Response_Achievement);
+
+    /** CPlayer_GetGameAchievements_Response_Achievement internalName. */
+    public internalName: string;
+
+    /** CPlayer_GetGameAchievements_Response_Achievement localizedName. */
+    public localizedName: string;
+
+    /** CPlayer_GetGameAchievements_Response_Achievement localizedDesc. */
+    public localizedDesc: string;
+
+    /** CPlayer_GetGameAchievements_Response_Achievement icon. */
+    public icon: string;
+
+    /** CPlayer_GetGameAchievements_Response_Achievement iconGray. */
+    public iconGray: string;
+
+    /** CPlayer_GetGameAchievements_Response_Achievement hidden. */
+    public hidden: boolean;
+
+    /** CPlayer_GetGameAchievements_Response_Achievement playerPercentUnlocked. */
+    public playerPercentUnlocked: string;
+
+    /**
+     * Encodes the specified CPlayer_GetGameAchievements_Response_Achievement message. Does not implicitly {@link CPlayer_GetGameAchievements_Response_Achievement.verify|verify} messages.
+     * @param message CPlayer_GetGameAchievements_Response_Achievement message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetGameAchievements_Response_Achievement, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetGameAchievements_Response_Achievement message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetGameAchievements_Response_Achievement
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetGameAchievements_Response_Achievement;
+
+    /**
+     * Gets the default type url for CPlayer_GetGameAchievements_Response_Achievement
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetGameBadgeLevels_Request. */
+export interface ICPlayer_GetGameBadgeLevels_Request {
+
+    /** CPlayer_GetGameBadgeLevels_Request appid */
+    appid?: (number|null);
+}
+
+/** Represents a CPlayer_GetGameBadgeLevels_Request. */
+export class CPlayer_GetGameBadgeLevels_Request implements ICPlayer_GetGameBadgeLevels_Request {
+
+    /**
+     * Constructs a new CPlayer_GetGameBadgeLevels_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetGameBadgeLevels_Request);
+
+    /** CPlayer_GetGameBadgeLevels_Request appid. */
+    public appid: number;
+
+    /**
+     * Encodes the specified CPlayer_GetGameBadgeLevels_Request message. Does not implicitly {@link CPlayer_GetGameBadgeLevels_Request.verify|verify} messages.
+     * @param message CPlayer_GetGameBadgeLevels_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetGameBadgeLevels_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetGameBadgeLevels_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetGameBadgeLevels_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetGameBadgeLevels_Request;
+
+    /**
+     * Gets the default type url for CPlayer_GetGameBadgeLevels_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetGameBadgeLevels_Response. */
+export interface ICPlayer_GetGameBadgeLevels_Response {
+
+    /** CPlayer_GetGameBadgeLevels_Response playerLevel */
+    playerLevel?: (number|null);
+
+    /** CPlayer_GetGameBadgeLevels_Response badges */
+    badges?: (ICPlayer_GetGameBadgeLevels_Response_Badge[]|null);
+}
+
+/** Represents a CPlayer_GetGameBadgeLevels_Response. */
+export class CPlayer_GetGameBadgeLevels_Response implements ICPlayer_GetGameBadgeLevels_Response {
+
+    /**
+     * Constructs a new CPlayer_GetGameBadgeLevels_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetGameBadgeLevels_Response);
+
+    /** CPlayer_GetGameBadgeLevels_Response playerLevel. */
+    public playerLevel: number;
+
+    /** CPlayer_GetGameBadgeLevels_Response badges. */
+    public badges: ICPlayer_GetGameBadgeLevels_Response_Badge[];
+
+    /**
+     * Encodes the specified CPlayer_GetGameBadgeLevels_Response message. Does not implicitly {@link CPlayer_GetGameBadgeLevels_Response.verify|verify} messages.
+     * @param message CPlayer_GetGameBadgeLevels_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetGameBadgeLevels_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetGameBadgeLevels_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetGameBadgeLevels_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetGameBadgeLevels_Response;
+
+    /**
+     * Gets the default type url for CPlayer_GetGameBadgeLevels_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetGameBadgeLevels_Response_Badge. */
+export interface ICPlayer_GetGameBadgeLevels_Response_Badge {
+
+    /** CPlayer_GetGameBadgeLevels_Response_Badge level */
+    level?: (number|null);
+
+    /** CPlayer_GetGameBadgeLevels_Response_Badge series */
+    series?: (number|null);
+
+    /** CPlayer_GetGameBadgeLevels_Response_Badge borderColor */
+    borderColor?: (number|null);
+}
+
+/** Represents a CPlayer_GetGameBadgeLevels_Response_Badge. */
+export class CPlayer_GetGameBadgeLevels_Response_Badge implements ICPlayer_GetGameBadgeLevels_Response_Badge {
+
+    /**
+     * Constructs a new CPlayer_GetGameBadgeLevels_Response_Badge.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetGameBadgeLevels_Response_Badge);
+
+    /** CPlayer_GetGameBadgeLevels_Response_Badge level. */
+    public level: number;
+
+    /** CPlayer_GetGameBadgeLevels_Response_Badge series. */
+    public series: number;
+
+    /** CPlayer_GetGameBadgeLevels_Response_Badge borderColor. */
+    public borderColor: number;
+
+    /**
+     * Encodes the specified CPlayer_GetGameBadgeLevels_Response_Badge message. Does not implicitly {@link CPlayer_GetGameBadgeLevels_Response_Badge.verify|verify} messages.
+     * @param message CPlayer_GetGameBadgeLevels_Response_Badge message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetGameBadgeLevels_Response_Badge, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetGameBadgeLevels_Response_Badge message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetGameBadgeLevels_Response_Badge
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetGameBadgeLevels_Response_Badge;
+
+    /**
+     * Gets the default type url for CPlayer_GetGameBadgeLevels_Response_Badge
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetLastPlayedTimes_Request. */
+export interface ICPlayer_GetLastPlayedTimes_Request {
+
+    /** CPlayer_GetLastPlayedTimes_Request minLastPlayed */
+    minLastPlayed?: (number|null);
+}
+
+/** Represents a CPlayer_GetLastPlayedTimes_Request. */
+export class CPlayer_GetLastPlayedTimes_Request implements ICPlayer_GetLastPlayedTimes_Request {
+
+    /**
+     * Constructs a new CPlayer_GetLastPlayedTimes_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetLastPlayedTimes_Request);
+
+    /** CPlayer_GetLastPlayedTimes_Request minLastPlayed. */
+    public minLastPlayed: number;
+
+    /**
+     * Encodes the specified CPlayer_GetLastPlayedTimes_Request message. Does not implicitly {@link CPlayer_GetLastPlayedTimes_Request.verify|verify} messages.
+     * @param message CPlayer_GetLastPlayedTimes_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetLastPlayedTimes_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetLastPlayedTimes_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetLastPlayedTimes_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetLastPlayedTimes_Request;
+
+    /**
+     * Gets the default type url for CPlayer_GetLastPlayedTimes_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetLastPlayedTimes_Response. */
+export interface ICPlayer_GetLastPlayedTimes_Response {
+
+    /** CPlayer_GetLastPlayedTimes_Response games */
+    games?: (ICPlayer_GetLastPlayedTimes_Response_Game[]|null);
+}
+
+/** Represents a CPlayer_GetLastPlayedTimes_Response. */
+export class CPlayer_GetLastPlayedTimes_Response implements ICPlayer_GetLastPlayedTimes_Response {
+
+    /**
+     * Constructs a new CPlayer_GetLastPlayedTimes_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetLastPlayedTimes_Response);
+
+    /** CPlayer_GetLastPlayedTimes_Response games. */
+    public games: ICPlayer_GetLastPlayedTimes_Response_Game[];
+
+    /**
+     * Encodes the specified CPlayer_GetLastPlayedTimes_Response message. Does not implicitly {@link CPlayer_GetLastPlayedTimes_Response.verify|verify} messages.
+     * @param message CPlayer_GetLastPlayedTimes_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetLastPlayedTimes_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetLastPlayedTimes_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetLastPlayedTimes_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetLastPlayedTimes_Response;
+
+    /**
+     * Gets the default type url for CPlayer_GetLastPlayedTimes_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetLastPlayedTimes_Response_Game. */
+export interface ICPlayer_GetLastPlayedTimes_Response_Game {
+
+    /** CPlayer_GetLastPlayedTimes_Response_Game appid */
+    appid?: (number|null);
+
+    /** CPlayer_GetLastPlayedTimes_Response_Game lastPlaytime */
+    lastPlaytime?: (number|null);
+
+    /** CPlayer_GetLastPlayedTimes_Response_Game playtime_2weeks */
+    playtime_2weeks?: (number|null);
+
+    /** CPlayer_GetLastPlayedTimes_Response_Game playtimeForever */
+    playtimeForever?: (number|null);
+
+    /** CPlayer_GetLastPlayedTimes_Response_Game firstPlaytime */
+    firstPlaytime?: (number|null);
+
+    /** CPlayer_GetLastPlayedTimes_Response_Game playtimeWindowsForever */
+    playtimeWindowsForever?: (number|null);
+
+    /** CPlayer_GetLastPlayedTimes_Response_Game playtimeMacForever */
+    playtimeMacForever?: (number|null);
+
+    /** CPlayer_GetLastPlayedTimes_Response_Game playtimeLinuxForever */
+    playtimeLinuxForever?: (number|null);
+
+    /** CPlayer_GetLastPlayedTimes_Response_Game firstWindowsPlaytime */
+    firstWindowsPlaytime?: (number|null);
+
+    /** CPlayer_GetLastPlayedTimes_Response_Game firstMacPlaytime */
+    firstMacPlaytime?: (number|null);
+
+    /** CPlayer_GetLastPlayedTimes_Response_Game firstLinuxPlaytime */
+    firstLinuxPlaytime?: (number|null);
+
+    /** CPlayer_GetLastPlayedTimes_Response_Game lastWindowsPlaytime */
+    lastWindowsPlaytime?: (number|null);
+
+    /** CPlayer_GetLastPlayedTimes_Response_Game lastMacPlaytime */
+    lastMacPlaytime?: (number|null);
+
+    /** CPlayer_GetLastPlayedTimes_Response_Game lastLinuxPlaytime */
+    lastLinuxPlaytime?: (number|null);
+
+    /** CPlayer_GetLastPlayedTimes_Response_Game playtimeDisconnected */
+    playtimeDisconnected?: (number|null);
+
+    /** CPlayer_GetLastPlayedTimes_Response_Game playtimeDeckForever */
+    playtimeDeckForever?: (number|null);
+
+    /** CPlayer_GetLastPlayedTimes_Response_Game firstDeckPlaytime */
+    firstDeckPlaytime?: (number|null);
+
+    /** CPlayer_GetLastPlayedTimes_Response_Game lastDeckPlaytime */
+    lastDeckPlaytime?: (number|null);
+}
+
+/** Represents a CPlayer_GetLastPlayedTimes_Response_Game. */
+export class CPlayer_GetLastPlayedTimes_Response_Game implements ICPlayer_GetLastPlayedTimes_Response_Game {
+
+    /**
+     * Constructs a new CPlayer_GetLastPlayedTimes_Response_Game.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetLastPlayedTimes_Response_Game);
+
+    /** CPlayer_GetLastPlayedTimes_Response_Game appid. */
+    public appid: number;
+
+    /** CPlayer_GetLastPlayedTimes_Response_Game lastPlaytime. */
+    public lastPlaytime: number;
+
+    /** CPlayer_GetLastPlayedTimes_Response_Game playtime_2weeks. */
+    public playtime_2weeks: number;
+
+    /** CPlayer_GetLastPlayedTimes_Response_Game playtimeForever. */
+    public playtimeForever: number;
+
+    /** CPlayer_GetLastPlayedTimes_Response_Game firstPlaytime. */
+    public firstPlaytime: number;
+
+    /** CPlayer_GetLastPlayedTimes_Response_Game playtimeWindowsForever. */
+    public playtimeWindowsForever: number;
+
+    /** CPlayer_GetLastPlayedTimes_Response_Game playtimeMacForever. */
+    public playtimeMacForever: number;
+
+    /** CPlayer_GetLastPlayedTimes_Response_Game playtimeLinuxForever. */
+    public playtimeLinuxForever: number;
+
+    /** CPlayer_GetLastPlayedTimes_Response_Game firstWindowsPlaytime. */
+    public firstWindowsPlaytime: number;
+
+    /** CPlayer_GetLastPlayedTimes_Response_Game firstMacPlaytime. */
+    public firstMacPlaytime: number;
+
+    /** CPlayer_GetLastPlayedTimes_Response_Game firstLinuxPlaytime. */
+    public firstLinuxPlaytime: number;
+
+    /** CPlayer_GetLastPlayedTimes_Response_Game lastWindowsPlaytime. */
+    public lastWindowsPlaytime: number;
+
+    /** CPlayer_GetLastPlayedTimes_Response_Game lastMacPlaytime. */
+    public lastMacPlaytime: number;
+
+    /** CPlayer_GetLastPlayedTimes_Response_Game lastLinuxPlaytime. */
+    public lastLinuxPlaytime: number;
+
+    /** CPlayer_GetLastPlayedTimes_Response_Game playtimeDisconnected. */
+    public playtimeDisconnected: number;
+
+    /** CPlayer_GetLastPlayedTimes_Response_Game playtimeDeckForever. */
+    public playtimeDeckForever: number;
+
+    /** CPlayer_GetLastPlayedTimes_Response_Game firstDeckPlaytime. */
+    public firstDeckPlaytime: number;
+
+    /** CPlayer_GetLastPlayedTimes_Response_Game lastDeckPlaytime. */
+    public lastDeckPlaytime: number;
+
+    /**
+     * Encodes the specified CPlayer_GetLastPlayedTimes_Response_Game message. Does not implicitly {@link CPlayer_GetLastPlayedTimes_Response_Game.verify|verify} messages.
+     * @param message CPlayer_GetLastPlayedTimes_Response_Game message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetLastPlayedTimes_Response_Game, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetLastPlayedTimes_Response_Game message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetLastPlayedTimes_Response_Game
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetLastPlayedTimes_Response_Game;
+
+    /**
+     * Gets the default type url for CPlayer_GetLastPlayedTimes_Response_Game
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetMiniProfileBackground_Request. */
+export interface ICPlayer_GetMiniProfileBackground_Request {
+
+    /** CPlayer_GetMiniProfileBackground_Request steamid */
+    steamid?: (number|Long|null);
+
+    /** CPlayer_GetMiniProfileBackground_Request language */
+    language?: (string|null);
+}
+
+/** Represents a CPlayer_GetMiniProfileBackground_Request. */
+export class CPlayer_GetMiniProfileBackground_Request implements ICPlayer_GetMiniProfileBackground_Request {
+
+    /**
+     * Constructs a new CPlayer_GetMiniProfileBackground_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetMiniProfileBackground_Request);
+
+    /** CPlayer_GetMiniProfileBackground_Request steamid. */
+    public steamid: (number|Long);
+
+    /** CPlayer_GetMiniProfileBackground_Request language. */
+    public language: string;
+
+    /**
+     * Encodes the specified CPlayer_GetMiniProfileBackground_Request message. Does not implicitly {@link CPlayer_GetMiniProfileBackground_Request.verify|verify} messages.
+     * @param message CPlayer_GetMiniProfileBackground_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetMiniProfileBackground_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetMiniProfileBackground_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetMiniProfileBackground_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetMiniProfileBackground_Request;
+
+    /**
+     * Gets the default type url for CPlayer_GetMiniProfileBackground_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetMiniProfileBackground_Response. */
+export interface ICPlayer_GetMiniProfileBackground_Response {
+
+    /** CPlayer_GetMiniProfileBackground_Response profileBackground */
+    profileBackground?: (IProfileItem|null);
+}
+
+/** Represents a CPlayer_GetMiniProfileBackground_Response. */
+export class CPlayer_GetMiniProfileBackground_Response implements ICPlayer_GetMiniProfileBackground_Response {
+
+    /**
+     * Constructs a new CPlayer_GetMiniProfileBackground_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetMiniProfileBackground_Response);
+
+    /** CPlayer_GetMiniProfileBackground_Response profileBackground. */
+    public profileBackground?: (IProfileItem|null);
+
+    /**
+     * Encodes the specified CPlayer_GetMiniProfileBackground_Response message. Does not implicitly {@link CPlayer_GetMiniProfileBackground_Response.verify|verify} messages.
+     * @param message CPlayer_GetMiniProfileBackground_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetMiniProfileBackground_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetMiniProfileBackground_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetMiniProfileBackground_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetMiniProfileBackground_Response;
+
+    /**
+     * Gets the default type url for CPlayer_GetMiniProfileBackground_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetMutualFriendsForIncomingInvites_Request. */
+export interface ICPlayer_GetMutualFriendsForIncomingInvites_Request {
+}
+
+/** Represents a CPlayer_GetMutualFriendsForIncomingInvites_Request. */
+export class CPlayer_GetMutualFriendsForIncomingInvites_Request implements ICPlayer_GetMutualFriendsForIncomingInvites_Request {
+
+    /**
+     * Constructs a new CPlayer_GetMutualFriendsForIncomingInvites_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetMutualFriendsForIncomingInvites_Request);
+
+    /**
+     * Encodes the specified CPlayer_GetMutualFriendsForIncomingInvites_Request message. Does not implicitly {@link CPlayer_GetMutualFriendsForIncomingInvites_Request.verify|verify} messages.
+     * @param message CPlayer_GetMutualFriendsForIncomingInvites_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetMutualFriendsForIncomingInvites_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetMutualFriendsForIncomingInvites_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetMutualFriendsForIncomingInvites_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetMutualFriendsForIncomingInvites_Request;
+
+    /**
+     * Gets the default type url for CPlayer_GetMutualFriendsForIncomingInvites_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetMutualFriendsForIncomingInvites_Response. */
+export interface ICPlayer_GetMutualFriendsForIncomingInvites_Response {
+
+    /** CPlayer_GetMutualFriendsForIncomingInvites_Response incomingInviteMutualFriendsLists */
+    incomingInviteMutualFriendsLists?: (ICPlayer_IncomingInviteMutualFriendList[]|null);
+}
+
+/** Represents a CPlayer_GetMutualFriendsForIncomingInvites_Response. */
+export class CPlayer_GetMutualFriendsForIncomingInvites_Response implements ICPlayer_GetMutualFriendsForIncomingInvites_Response {
+
+    /**
+     * Constructs a new CPlayer_GetMutualFriendsForIncomingInvites_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetMutualFriendsForIncomingInvites_Response);
+
+    /** CPlayer_GetMutualFriendsForIncomingInvites_Response incomingInviteMutualFriendsLists. */
+    public incomingInviteMutualFriendsLists: ICPlayer_IncomingInviteMutualFriendList[];
+
+    /**
+     * Encodes the specified CPlayer_GetMutualFriendsForIncomingInvites_Response message. Does not implicitly {@link CPlayer_GetMutualFriendsForIncomingInvites_Response.verify|verify} messages.
+     * @param message CPlayer_GetMutualFriendsForIncomingInvites_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetMutualFriendsForIncomingInvites_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetMutualFriendsForIncomingInvites_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetMutualFriendsForIncomingInvites_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetMutualFriendsForIncomingInvites_Response;
+
+    /**
+     * Gets the default type url for CPlayer_GetMutualFriendsForIncomingInvites_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetNewSteamAnnouncementState_Request. */
+export interface ICPlayer_GetNewSteamAnnouncementState_Request {
+
+    /** CPlayer_GetNewSteamAnnouncementState_Request language */
+    language?: (number|null);
+}
+
+/** Represents a CPlayer_GetNewSteamAnnouncementState_Request. */
+export class CPlayer_GetNewSteamAnnouncementState_Request implements ICPlayer_GetNewSteamAnnouncementState_Request {
+
+    /**
+     * Constructs a new CPlayer_GetNewSteamAnnouncementState_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetNewSteamAnnouncementState_Request);
+
+    /** CPlayer_GetNewSteamAnnouncementState_Request language. */
+    public language: number;
+
+    /**
+     * Encodes the specified CPlayer_GetNewSteamAnnouncementState_Request message. Does not implicitly {@link CPlayer_GetNewSteamAnnouncementState_Request.verify|verify} messages.
+     * @param message CPlayer_GetNewSteamAnnouncementState_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetNewSteamAnnouncementState_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetNewSteamAnnouncementState_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetNewSteamAnnouncementState_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetNewSteamAnnouncementState_Request;
+
+    /**
+     * Gets the default type url for CPlayer_GetNewSteamAnnouncementState_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetNewSteamAnnouncementState_Response. */
+export interface ICPlayer_GetNewSteamAnnouncementState_Response {
+
+    /** CPlayer_GetNewSteamAnnouncementState_Response state */
+    state?: (number|null);
+
+    /** CPlayer_GetNewSteamAnnouncementState_Response announcementHeadline */
+    announcementHeadline?: (string|null);
+
+    /** CPlayer_GetNewSteamAnnouncementState_Response announcementUrl */
+    announcementUrl?: (string|null);
+
+    /** CPlayer_GetNewSteamAnnouncementState_Response timePosted */
+    timePosted?: (number|null);
+
+    /** CPlayer_GetNewSteamAnnouncementState_Response announcementGid */
+    announcementGid?: (number|Long|null);
+}
+
+/** Represents a CPlayer_GetNewSteamAnnouncementState_Response. */
+export class CPlayer_GetNewSteamAnnouncementState_Response implements ICPlayer_GetNewSteamAnnouncementState_Response {
+
+    /**
+     * Constructs a new CPlayer_GetNewSteamAnnouncementState_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetNewSteamAnnouncementState_Response);
+
+    /** CPlayer_GetNewSteamAnnouncementState_Response state. */
+    public state: number;
+
+    /** CPlayer_GetNewSteamAnnouncementState_Response announcementHeadline. */
+    public announcementHeadline: string;
+
+    /** CPlayer_GetNewSteamAnnouncementState_Response announcementUrl. */
+    public announcementUrl: string;
+
+    /** CPlayer_GetNewSteamAnnouncementState_Response timePosted. */
+    public timePosted: number;
+
+    /** CPlayer_GetNewSteamAnnouncementState_Response announcementGid. */
+    public announcementGid: (number|Long);
+
+    /**
+     * Encodes the specified CPlayer_GetNewSteamAnnouncementState_Response message. Does not implicitly {@link CPlayer_GetNewSteamAnnouncementState_Response.verify|verify} messages.
+     * @param message CPlayer_GetNewSteamAnnouncementState_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetNewSteamAnnouncementState_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetNewSteamAnnouncementState_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetNewSteamAnnouncementState_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetNewSteamAnnouncementState_Response;
+
+    /**
+     * Gets the default type url for CPlayer_GetNewSteamAnnouncementState_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetNicknameList_Request. */
+export interface ICPlayer_GetNicknameList_Request {
+}
+
+/** Represents a CPlayer_GetNicknameList_Request. */
+export class CPlayer_GetNicknameList_Request implements ICPlayer_GetNicknameList_Request {
+
+    /**
+     * Constructs a new CPlayer_GetNicknameList_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetNicknameList_Request);
+
+    /**
+     * Encodes the specified CPlayer_GetNicknameList_Request message. Does not implicitly {@link CPlayer_GetNicknameList_Request.verify|verify} messages.
+     * @param message CPlayer_GetNicknameList_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetNicknameList_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetNicknameList_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetNicknameList_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetNicknameList_Request;
+
+    /**
+     * Gets the default type url for CPlayer_GetNicknameList_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetNicknameList_Response. */
+export interface ICPlayer_GetNicknameList_Response {
+
+    /** CPlayer_GetNicknameList_Response nicknames */
+    nicknames?: (ICPlayer_GetNicknameList_Response_PlayerNickname[]|null);
+}
+
+/** Represents a CPlayer_GetNicknameList_Response. */
+export class CPlayer_GetNicknameList_Response implements ICPlayer_GetNicknameList_Response {
+
+    /**
+     * Constructs a new CPlayer_GetNicknameList_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetNicknameList_Response);
+
+    /** CPlayer_GetNicknameList_Response nicknames. */
+    public nicknames: ICPlayer_GetNicknameList_Response_PlayerNickname[];
+
+    /**
+     * Encodes the specified CPlayer_GetNicknameList_Response message. Does not implicitly {@link CPlayer_GetNicknameList_Response.verify|verify} messages.
+     * @param message CPlayer_GetNicknameList_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetNicknameList_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetNicknameList_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetNicknameList_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetNicknameList_Response;
+
+    /**
+     * Gets the default type url for CPlayer_GetNicknameList_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetNicknameList_Response_PlayerNickname. */
+export interface ICPlayer_GetNicknameList_Response_PlayerNickname {
+
+    /** CPlayer_GetNicknameList_Response_PlayerNickname accountid */
+    accountid?: (number|null);
+
+    /** CPlayer_GetNicknameList_Response_PlayerNickname nickname */
+    nickname?: (string|null);
+}
+
+/** Represents a CPlayer_GetNicknameList_Response_PlayerNickname. */
+export class CPlayer_GetNicknameList_Response_PlayerNickname implements ICPlayer_GetNicknameList_Response_PlayerNickname {
+
+    /**
+     * Constructs a new CPlayer_GetNicknameList_Response_PlayerNickname.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetNicknameList_Response_PlayerNickname);
+
+    /** CPlayer_GetNicknameList_Response_PlayerNickname accountid. */
+    public accountid: number;
+
+    /** CPlayer_GetNicknameList_Response_PlayerNickname nickname. */
+    public nickname: string;
+
+    /**
+     * Encodes the specified CPlayer_GetNicknameList_Response_PlayerNickname message. Does not implicitly {@link CPlayer_GetNicknameList_Response_PlayerNickname.verify|verify} messages.
+     * @param message CPlayer_GetNicknameList_Response_PlayerNickname message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetNicknameList_Response_PlayerNickname, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetNicknameList_Response_PlayerNickname message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetNicknameList_Response_PlayerNickname
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetNicknameList_Response_PlayerNickname;
+
+    /**
+     * Gets the default type url for CPlayer_GetNicknameList_Response_PlayerNickname
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetOwnedGames_Request. */
+export interface ICPlayer_GetOwnedGames_Request {
+
+    /** CPlayer_GetOwnedGames_Request steamid */
+    steamid?: (number|Long|null);
+
+    /** CPlayer_GetOwnedGames_Request includeAppinfo */
+    includeAppinfo?: (boolean|null);
+
+    /** CPlayer_GetOwnedGames_Request includePlayedFreeGames */
+    includePlayedFreeGames?: (boolean|null);
+
+    /** CPlayer_GetOwnedGames_Request appidsFilter */
+    appidsFilter?: (number[]|null);
+
+    /** CPlayer_GetOwnedGames_Request includeFreeSub */
+    includeFreeSub?: (boolean|null);
+
+    /** CPlayer_GetOwnedGames_Request skipUnvettedApps */
+    skipUnvettedApps?: (boolean|null);
+
+    /** CPlayer_GetOwnedGames_Request language */
+    language?: (string|null);
+
+    /** CPlayer_GetOwnedGames_Request includeExtendedAppinfo */
+    includeExtendedAppinfo?: (boolean|null);
+}
+
+/** Represents a CPlayer_GetOwnedGames_Request. */
+export class CPlayer_GetOwnedGames_Request implements ICPlayer_GetOwnedGames_Request {
+
+    /**
+     * Constructs a new CPlayer_GetOwnedGames_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetOwnedGames_Request);
+
+    /** CPlayer_GetOwnedGames_Request steamid. */
+    public steamid: (number|Long);
+
+    /** CPlayer_GetOwnedGames_Request includeAppinfo. */
+    public includeAppinfo: boolean;
+
+    /** CPlayer_GetOwnedGames_Request includePlayedFreeGames. */
+    public includePlayedFreeGames: boolean;
+
+    /** CPlayer_GetOwnedGames_Request appidsFilter. */
+    public appidsFilter: number[];
+
+    /** CPlayer_GetOwnedGames_Request includeFreeSub. */
+    public includeFreeSub: boolean;
+
+    /** CPlayer_GetOwnedGames_Request skipUnvettedApps. */
+    public skipUnvettedApps: boolean;
+
+    /** CPlayer_GetOwnedGames_Request language. */
+    public language: string;
+
+    /** CPlayer_GetOwnedGames_Request includeExtendedAppinfo. */
+    public includeExtendedAppinfo: boolean;
+
+    /**
+     * Encodes the specified CPlayer_GetOwnedGames_Request message. Does not implicitly {@link CPlayer_GetOwnedGames_Request.verify|verify} messages.
+     * @param message CPlayer_GetOwnedGames_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetOwnedGames_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetOwnedGames_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetOwnedGames_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetOwnedGames_Request;
+
+    /**
+     * Gets the default type url for CPlayer_GetOwnedGames_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetOwnedGames_Response. */
+export interface ICPlayer_GetOwnedGames_Response {
+
+    /** CPlayer_GetOwnedGames_Response gameCount */
+    gameCount?: (number|null);
+
+    /** CPlayer_GetOwnedGames_Response games */
+    games?: (ICPlayer_GetOwnedGames_Response_Game[]|null);
+}
+
+/** Represents a CPlayer_GetOwnedGames_Response. */
+export class CPlayer_GetOwnedGames_Response implements ICPlayer_GetOwnedGames_Response {
+
+    /**
+     * Constructs a new CPlayer_GetOwnedGames_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetOwnedGames_Response);
+
+    /** CPlayer_GetOwnedGames_Response gameCount. */
+    public gameCount: number;
+
+    /** CPlayer_GetOwnedGames_Response games. */
+    public games: ICPlayer_GetOwnedGames_Response_Game[];
+
+    /**
+     * Encodes the specified CPlayer_GetOwnedGames_Response message. Does not implicitly {@link CPlayer_GetOwnedGames_Response.verify|verify} messages.
+     * @param message CPlayer_GetOwnedGames_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetOwnedGames_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetOwnedGames_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetOwnedGames_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetOwnedGames_Response;
+
+    /**
+     * Gets the default type url for CPlayer_GetOwnedGames_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetOwnedGames_Response_Game. */
+export interface ICPlayer_GetOwnedGames_Response_Game {
+
+    /** CPlayer_GetOwnedGames_Response_Game appid */
+    appid?: (number|null);
+
+    /** CPlayer_GetOwnedGames_Response_Game name */
+    name?: (string|null);
+
+    /** CPlayer_GetOwnedGames_Response_Game playtime_2weeks */
+    playtime_2weeks?: (number|null);
+
+    /** CPlayer_GetOwnedGames_Response_Game playtimeForever */
+    playtimeForever?: (number|null);
+
+    /** CPlayer_GetOwnedGames_Response_Game imgIconUrl */
+    imgIconUrl?: (string|null);
+
+    /** CPlayer_GetOwnedGames_Response_Game hasCommunityVisibleStats */
+    hasCommunityVisibleStats?: (boolean|null);
+
+    /** CPlayer_GetOwnedGames_Response_Game playtimeWindowsForever */
+    playtimeWindowsForever?: (number|null);
+
+    /** CPlayer_GetOwnedGames_Response_Game playtimeMacForever */
+    playtimeMacForever?: (number|null);
+
+    /** CPlayer_GetOwnedGames_Response_Game playtimeLinuxForever */
+    playtimeLinuxForever?: (number|null);
+
+    /** CPlayer_GetOwnedGames_Response_Game rtimeLastPlayed */
+    rtimeLastPlayed?: (number|null);
+
+    /** CPlayer_GetOwnedGames_Response_Game capsuleFilename */
+    capsuleFilename?: (string|null);
+
+    /** CPlayer_GetOwnedGames_Response_Game sortAs */
+    sortAs?: (string|null);
+
+    /** CPlayer_GetOwnedGames_Response_Game hasWorkshop */
+    hasWorkshop?: (boolean|null);
+
+    /** CPlayer_GetOwnedGames_Response_Game hasMarket */
+    hasMarket?: (boolean|null);
+
+    /** CPlayer_GetOwnedGames_Response_Game hasDlc */
+    hasDlc?: (boolean|null);
+
+    /** CPlayer_GetOwnedGames_Response_Game hasLeaderboards */
+    hasLeaderboards?: (boolean|null);
+
+    /** CPlayer_GetOwnedGames_Response_Game contentDescriptorids */
+    contentDescriptorids?: (number[]|null);
+
+    /** CPlayer_GetOwnedGames_Response_Game playtimeDisconnected */
+    playtimeDisconnected?: (number|null);
+
+    /** CPlayer_GetOwnedGames_Response_Game playtimeDeckForever */
+    playtimeDeckForever?: (number|null);
+}
+
+/** Represents a CPlayer_GetOwnedGames_Response_Game. */
+export class CPlayer_GetOwnedGames_Response_Game implements ICPlayer_GetOwnedGames_Response_Game {
+
+    /**
+     * Constructs a new CPlayer_GetOwnedGames_Response_Game.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetOwnedGames_Response_Game);
+
+    /** CPlayer_GetOwnedGames_Response_Game appid. */
+    public appid: number;
+
+    /** CPlayer_GetOwnedGames_Response_Game name. */
+    public name: string;
+
+    /** CPlayer_GetOwnedGames_Response_Game playtime_2weeks. */
+    public playtime_2weeks: number;
+
+    /** CPlayer_GetOwnedGames_Response_Game playtimeForever. */
+    public playtimeForever: number;
+
+    /** CPlayer_GetOwnedGames_Response_Game imgIconUrl. */
+    public imgIconUrl: string;
+
+    /** CPlayer_GetOwnedGames_Response_Game hasCommunityVisibleStats. */
+    public hasCommunityVisibleStats: boolean;
+
+    /** CPlayer_GetOwnedGames_Response_Game playtimeWindowsForever. */
+    public playtimeWindowsForever: number;
+
+    /** CPlayer_GetOwnedGames_Response_Game playtimeMacForever. */
+    public playtimeMacForever: number;
+
+    /** CPlayer_GetOwnedGames_Response_Game playtimeLinuxForever. */
+    public playtimeLinuxForever: number;
+
+    /** CPlayer_GetOwnedGames_Response_Game rtimeLastPlayed. */
+    public rtimeLastPlayed: number;
+
+    /** CPlayer_GetOwnedGames_Response_Game capsuleFilename. */
+    public capsuleFilename: string;
+
+    /** CPlayer_GetOwnedGames_Response_Game sortAs. */
+    public sortAs: string;
+
+    /** CPlayer_GetOwnedGames_Response_Game hasWorkshop. */
+    public hasWorkshop: boolean;
+
+    /** CPlayer_GetOwnedGames_Response_Game hasMarket. */
+    public hasMarket: boolean;
+
+    /** CPlayer_GetOwnedGames_Response_Game hasDlc. */
+    public hasDlc: boolean;
+
+    /** CPlayer_GetOwnedGames_Response_Game hasLeaderboards. */
+    public hasLeaderboards: boolean;
+
+    /** CPlayer_GetOwnedGames_Response_Game contentDescriptorids. */
+    public contentDescriptorids: number[];
+
+    /** CPlayer_GetOwnedGames_Response_Game playtimeDisconnected. */
+    public playtimeDisconnected: number;
+
+    /** CPlayer_GetOwnedGames_Response_Game playtimeDeckForever. */
+    public playtimeDeckForever: number;
+
+    /**
+     * Encodes the specified CPlayer_GetOwnedGames_Response_Game message. Does not implicitly {@link CPlayer_GetOwnedGames_Response_Game.verify|verify} messages.
+     * @param message CPlayer_GetOwnedGames_Response_Game message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetOwnedGames_Response_Game, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetOwnedGames_Response_Game message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetOwnedGames_Response_Game
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetOwnedGames_Response_Game;
+
+    /**
+     * Gets the default type url for CPlayer_GetOwnedGames_Response_Game
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetPerFriendPreferences_Request. */
+export interface ICPlayer_GetPerFriendPreferences_Request {
+}
+
+/** Represents a CPlayer_GetPerFriendPreferences_Request. */
+export class CPlayer_GetPerFriendPreferences_Request implements ICPlayer_GetPerFriendPreferences_Request {
+
+    /**
+     * Constructs a new CPlayer_GetPerFriendPreferences_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetPerFriendPreferences_Request);
+
+    /**
+     * Encodes the specified CPlayer_GetPerFriendPreferences_Request message. Does not implicitly {@link CPlayer_GetPerFriendPreferences_Request.verify|verify} messages.
+     * @param message CPlayer_GetPerFriendPreferences_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetPerFriendPreferences_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetPerFriendPreferences_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetPerFriendPreferences_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetPerFriendPreferences_Request;
+
+    /**
+     * Gets the default type url for CPlayer_GetPerFriendPreferences_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetPerFriendPreferences_Response. */
+export interface ICPlayer_GetPerFriendPreferences_Response {
+
+    /** CPlayer_GetPerFriendPreferences_Response preferences */
+    preferences?: (IPerFriendPreferences[]|null);
+}
+
+/** Represents a CPlayer_GetPerFriendPreferences_Response. */
+export class CPlayer_GetPerFriendPreferences_Response implements ICPlayer_GetPerFriendPreferences_Response {
+
+    /**
+     * Constructs a new CPlayer_GetPerFriendPreferences_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetPerFriendPreferences_Response);
+
+    /** CPlayer_GetPerFriendPreferences_Response preferences. */
+    public preferences: IPerFriendPreferences[];
+
+    /**
+     * Encodes the specified CPlayer_GetPerFriendPreferences_Response message. Does not implicitly {@link CPlayer_GetPerFriendPreferences_Response.verify|verify} messages.
+     * @param message CPlayer_GetPerFriendPreferences_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetPerFriendPreferences_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetPerFriendPreferences_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetPerFriendPreferences_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetPerFriendPreferences_Response;
+
+    /**
+     * Gets the default type url for CPlayer_GetPerFriendPreferences_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetPlayerLinkDetails_Request. */
+export interface ICPlayer_GetPlayerLinkDetails_Request {
+
+    /** CPlayer_GetPlayerLinkDetails_Request steamids */
+    steamids?: ((number|Long)[]|null);
+}
+
+/** Represents a CPlayer_GetPlayerLinkDetails_Request. */
+export class CPlayer_GetPlayerLinkDetails_Request implements ICPlayer_GetPlayerLinkDetails_Request {
+
+    /**
+     * Constructs a new CPlayer_GetPlayerLinkDetails_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetPlayerLinkDetails_Request);
+
+    /** CPlayer_GetPlayerLinkDetails_Request steamids. */
+    public steamids: (number|Long)[];
+
+    /**
+     * Encodes the specified CPlayer_GetPlayerLinkDetails_Request message. Does not implicitly {@link CPlayer_GetPlayerLinkDetails_Request.verify|verify} messages.
+     * @param message CPlayer_GetPlayerLinkDetails_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetPlayerLinkDetails_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetPlayerLinkDetails_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetPlayerLinkDetails_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetPlayerLinkDetails_Request;
+
+    /**
+     * Gets the default type url for CPlayer_GetPlayerLinkDetails_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetPlayerLinkDetails_Response. */
+export interface ICPlayer_GetPlayerLinkDetails_Response {
+
+    /** CPlayer_GetPlayerLinkDetails_Response accounts */
+    accounts?: (ICPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails[]|null);
+}
+
+/** Represents a CPlayer_GetPlayerLinkDetails_Response. */
+export class CPlayer_GetPlayerLinkDetails_Response implements ICPlayer_GetPlayerLinkDetails_Response {
+
+    /**
+     * Constructs a new CPlayer_GetPlayerLinkDetails_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetPlayerLinkDetails_Response);
+
+    /** CPlayer_GetPlayerLinkDetails_Response accounts. */
+    public accounts: ICPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails[];
+
+    /**
+     * Encodes the specified CPlayer_GetPlayerLinkDetails_Response message. Does not implicitly {@link CPlayer_GetPlayerLinkDetails_Response.verify|verify} messages.
+     * @param message CPlayer_GetPlayerLinkDetails_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetPlayerLinkDetails_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetPlayerLinkDetails_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetPlayerLinkDetails_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetPlayerLinkDetails_Response;
+
+    /**
+     * Gets the default type url for CPlayer_GetPlayerLinkDetails_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails. */
+export interface ICPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails {
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails publicData */
+    publicData?: (ICPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPublicData|null);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails privateData */
+    privateData?: (ICPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData|null);
+}
+
+/** Represents a CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails. */
+export class CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails implements ICPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails {
+
+    /**
+     * Constructs a new CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails publicData. */
+    public publicData?: (ICPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPublicData|null);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails privateData. */
+    public privateData?: (ICPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData|null);
+
+    /**
+     * Encodes the specified CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails message. Does not implicitly {@link CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails.verify|verify} messages.
+     * @param message CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails;
+
+    /**
+     * Gets the default type url for CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData. */
+export interface ICPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData {
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData personaState */
+    personaState?: (number|null);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData personaStateFlags */
+    personaStateFlags?: (number|null);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData timeCreated */
+    timeCreated?: (number|null);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData gameId */
+    gameId?: (number|Long|null);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData gameServerSteamId */
+    gameServerSteamId?: (number|Long|null);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData gameServerIpAddress */
+    gameServerIpAddress?: (number|null);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData gameServerPort */
+    gameServerPort?: (number|null);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData gameExtraInfo */
+    gameExtraInfo?: (string|null);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData accountName */
+    accountName?: (string|null);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData lobbySteamId */
+    lobbySteamId?: (number|Long|null);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData richPresenceKv */
+    richPresenceKv?: (string|null);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData broadcastSessionId */
+    broadcastSessionId?: (number|Long|null);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData watchingBroadcastAccountid */
+    watchingBroadcastAccountid?: (number|null);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData watchingBroadcastAppid */
+    watchingBroadcastAppid?: (number|null);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData watchingBroadcastViewers */
+    watchingBroadcastViewers?: (number|null);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData watchingBroadcastTitle */
+    watchingBroadcastTitle?: (string|null);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData lastLogoffTime */
+    lastLogoffTime?: (number|null);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData lastSeenOnline */
+    lastSeenOnline?: (number|null);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData gameOsType */
+    gameOsType?: (number|null);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData gameDeviceType */
+    gameDeviceType?: (number|null);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData gameDeviceName */
+    gameDeviceName?: (string|null);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData gameIsPrivate */
+    gameIsPrivate?: (boolean|null);
+}
+
+/** Represents a CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData. */
+export class CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData implements ICPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData {
+
+    /**
+     * Constructs a new CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData personaState. */
+    public personaState: number;
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData personaStateFlags. */
+    public personaStateFlags: number;
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData timeCreated. */
+    public timeCreated: number;
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData gameId. */
+    public gameId: (number|Long);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData gameServerSteamId. */
+    public gameServerSteamId: (number|Long);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData gameServerIpAddress. */
+    public gameServerIpAddress: number;
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData gameServerPort. */
+    public gameServerPort: number;
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData gameExtraInfo. */
+    public gameExtraInfo: string;
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData accountName. */
+    public accountName: string;
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData lobbySteamId. */
+    public lobbySteamId: (number|Long);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData richPresenceKv. */
+    public richPresenceKv: string;
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData broadcastSessionId. */
+    public broadcastSessionId: (number|Long);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData watchingBroadcastAccountid. */
+    public watchingBroadcastAccountid: number;
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData watchingBroadcastAppid. */
+    public watchingBroadcastAppid: number;
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData watchingBroadcastViewers. */
+    public watchingBroadcastViewers: number;
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData watchingBroadcastTitle. */
+    public watchingBroadcastTitle: string;
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData lastLogoffTime. */
+    public lastLogoffTime: number;
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData lastSeenOnline. */
+    public lastSeenOnline: number;
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData gameOsType. */
+    public gameOsType: number;
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData gameDeviceType. */
+    public gameDeviceType: number;
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData gameDeviceName. */
+    public gameDeviceName: string;
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData gameIsPrivate. */
+    public gameIsPrivate: boolean;
+
+    /**
+     * Encodes the specified CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData message. Does not implicitly {@link CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData.verify|verify} messages.
+     * @param message CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData;
+
+    /**
+     * Gets the default type url for CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPrivateData
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPublicData. */
+export interface ICPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPublicData {
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPublicData steamid */
+    steamid?: (number|Long|null);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPublicData visibilityState */
+    visibilityState?: (number|null);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPublicData privacyState */
+    privacyState?: (number|null);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPublicData profileState */
+    profileState?: (number|null);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPublicData banExpiresTime */
+    banExpiresTime?: (number|null);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPublicData accountFlags */
+    accountFlags?: (number|null);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPublicData shaDigestAvatar */
+    shaDigestAvatar?: (Uint8Array|null);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPublicData personaName */
+    personaName?: (string|null);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPublicData profileUrl */
+    profileUrl?: (string|null);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPublicData contentCountryRestricted */
+    contentCountryRestricted?: (boolean|null);
+}
+
+/** Represents a CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPublicData. */
+export class CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPublicData implements ICPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPublicData {
+
+    /**
+     * Constructs a new CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPublicData.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPublicData);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPublicData steamid. */
+    public steamid: (number|Long);
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPublicData visibilityState. */
+    public visibilityState: number;
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPublicData privacyState. */
+    public privacyState: number;
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPublicData profileState. */
+    public profileState: number;
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPublicData banExpiresTime. */
+    public banExpiresTime: number;
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPublicData accountFlags. */
+    public accountFlags: number;
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPublicData shaDigestAvatar. */
+    public shaDigestAvatar: Uint8Array;
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPublicData personaName. */
+    public personaName: string;
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPublicData profileUrl. */
+    public profileUrl: string;
+
+    /** CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPublicData contentCountryRestricted. */
+    public contentCountryRestricted: boolean;
+
+    /**
+     * Encodes the specified CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPublicData message. Does not implicitly {@link CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPublicData.verify|verify} messages.
+     * @param message CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPublicData message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPublicData, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPublicData message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPublicData
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPublicData;
+
+    /**
+     * Gets the default type url for CPlayer_GetPlayerLinkDetails_Response_PlayerLinkDetails_AccountPublicData
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetPlayNext_Request. */
+export interface ICPlayer_GetPlayNext_Request {
+
+    /** CPlayer_GetPlayNext_Request maxAgeSeconds */
+    maxAgeSeconds?: (number|null);
+
+    /** CPlayer_GetPlayNext_Request ignoreAppids */
+    ignoreAppids?: (number[]|null);
+}
+
+/** Represents a CPlayer_GetPlayNext_Request. */
+export class CPlayer_GetPlayNext_Request implements ICPlayer_GetPlayNext_Request {
+
+    /**
+     * Constructs a new CPlayer_GetPlayNext_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetPlayNext_Request);
+
+    /** CPlayer_GetPlayNext_Request maxAgeSeconds. */
+    public maxAgeSeconds: number;
+
+    /** CPlayer_GetPlayNext_Request ignoreAppids. */
+    public ignoreAppids: number[];
+
+    /**
+     * Encodes the specified CPlayer_GetPlayNext_Request message. Does not implicitly {@link CPlayer_GetPlayNext_Request.verify|verify} messages.
+     * @param message CPlayer_GetPlayNext_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetPlayNext_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetPlayNext_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetPlayNext_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetPlayNext_Request;
+
+    /**
+     * Gets the default type url for CPlayer_GetPlayNext_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetPlayNext_Response. */
+export interface ICPlayer_GetPlayNext_Response {
+
+    /** CPlayer_GetPlayNext_Response lastUpdateTime */
+    lastUpdateTime?: (number|null);
+
+    /** CPlayer_GetPlayNext_Response appids */
+    appids?: (number[]|null);
+}
+
+/** Represents a CPlayer_GetPlayNext_Response. */
+export class CPlayer_GetPlayNext_Response implements ICPlayer_GetPlayNext_Response {
+
+    /**
+     * Constructs a new CPlayer_GetPlayNext_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetPlayNext_Response);
+
+    /** CPlayer_GetPlayNext_Response lastUpdateTime. */
+    public lastUpdateTime: number;
+
+    /** CPlayer_GetPlayNext_Response appids. */
+    public appids: number[];
+
+    /**
+     * Encodes the specified CPlayer_GetPlayNext_Response message. Does not implicitly {@link CPlayer_GetPlayNext_Response.verify|verify} messages.
+     * @param message CPlayer_GetPlayNext_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetPlayNext_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetPlayNext_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetPlayNext_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetPlayNext_Response;
+
+    /**
+     * Gets the default type url for CPlayer_GetPlayNext_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetPostedStatus_Request. */
+export interface ICPlayer_GetPostedStatus_Request {
+
+    /** CPlayer_GetPostedStatus_Request steamid */
+    steamid?: (number|Long|null);
+
+    /** CPlayer_GetPostedStatus_Request postid */
+    postid?: (number|Long|null);
+}
+
+/** Represents a CPlayer_GetPostedStatus_Request. */
+export class CPlayer_GetPostedStatus_Request implements ICPlayer_GetPostedStatus_Request {
+
+    /**
+     * Constructs a new CPlayer_GetPostedStatus_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetPostedStatus_Request);
+
+    /** CPlayer_GetPostedStatus_Request steamid. */
+    public steamid: (number|Long);
+
+    /** CPlayer_GetPostedStatus_Request postid. */
+    public postid: (number|Long);
+
+    /**
+     * Encodes the specified CPlayer_GetPostedStatus_Request message. Does not implicitly {@link CPlayer_GetPostedStatus_Request.verify|verify} messages.
+     * @param message CPlayer_GetPostedStatus_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetPostedStatus_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetPostedStatus_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetPostedStatus_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetPostedStatus_Request;
+
+    /**
+     * Gets the default type url for CPlayer_GetPostedStatus_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetPostedStatus_Response. */
+export interface ICPlayer_GetPostedStatus_Response {
+
+    /** CPlayer_GetPostedStatus_Response accountid */
+    accountid?: (number|null);
+
+    /** CPlayer_GetPostedStatus_Response postid */
+    postid?: (number|Long|null);
+
+    /** CPlayer_GetPostedStatus_Response statusText */
+    statusText?: (string|null);
+
+    /** CPlayer_GetPostedStatus_Response deleted */
+    deleted?: (boolean|null);
+
+    /** CPlayer_GetPostedStatus_Response appid */
+    appid?: (number|null);
+}
+
+/** Represents a CPlayer_GetPostedStatus_Response. */
+export class CPlayer_GetPostedStatus_Response implements ICPlayer_GetPostedStatus_Response {
+
+    /**
+     * Constructs a new CPlayer_GetPostedStatus_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetPostedStatus_Response);
+
+    /** CPlayer_GetPostedStatus_Response accountid. */
+    public accountid: number;
+
+    /** CPlayer_GetPostedStatus_Response postid. */
+    public postid: (number|Long);
+
+    /** CPlayer_GetPostedStatus_Response statusText. */
+    public statusText: string;
+
+    /** CPlayer_GetPostedStatus_Response deleted. */
+    public deleted: boolean;
+
+    /** CPlayer_GetPostedStatus_Response appid. */
+    public appid: number;
+
+    /**
+     * Encodes the specified CPlayer_GetPostedStatus_Response message. Does not implicitly {@link CPlayer_GetPostedStatus_Response.verify|verify} messages.
+     * @param message CPlayer_GetPostedStatus_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetPostedStatus_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetPostedStatus_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetPostedStatus_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetPostedStatus_Response;
+
+    /**
+     * Gets the default type url for CPlayer_GetPostedStatus_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetPrivacySettings_Request. */
+export interface ICPlayer_GetPrivacySettings_Request {
+}
+
+/** Represents a CPlayer_GetPrivacySettings_Request. */
+export class CPlayer_GetPrivacySettings_Request implements ICPlayer_GetPrivacySettings_Request {
+
+    /**
+     * Constructs a new CPlayer_GetPrivacySettings_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetPrivacySettings_Request);
+
+    /**
+     * Encodes the specified CPlayer_GetPrivacySettings_Request message. Does not implicitly {@link CPlayer_GetPrivacySettings_Request.verify|verify} messages.
+     * @param message CPlayer_GetPrivacySettings_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetPrivacySettings_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetPrivacySettings_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetPrivacySettings_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetPrivacySettings_Request;
+
+    /**
+     * Gets the default type url for CPlayer_GetPrivacySettings_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetPrivacySettings_Response. */
+export interface ICPlayer_GetPrivacySettings_Response {
+
+    /** CPlayer_GetPrivacySettings_Response privacySettings */
+    privacySettings?: (ICPrivacySettings|null);
+}
+
+/** Represents a CPlayer_GetPrivacySettings_Response. */
+export class CPlayer_GetPrivacySettings_Response implements ICPlayer_GetPrivacySettings_Response {
+
+    /**
+     * Constructs a new CPlayer_GetPrivacySettings_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetPrivacySettings_Response);
+
+    /** CPlayer_GetPrivacySettings_Response privacySettings. */
+    public privacySettings?: (ICPrivacySettings|null);
+
+    /**
+     * Encodes the specified CPlayer_GetPrivacySettings_Response message. Does not implicitly {@link CPlayer_GetPrivacySettings_Response.verify|verify} messages.
+     * @param message CPlayer_GetPrivacySettings_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetPrivacySettings_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetPrivacySettings_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetPrivacySettings_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetPrivacySettings_Response;
+
+    /**
+     * Gets the default type url for CPlayer_GetPrivacySettings_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetProfileBackground_Request. */
+export interface ICPlayer_GetProfileBackground_Request {
+
+    /** CPlayer_GetProfileBackground_Request steamid */
+    steamid?: (number|Long|null);
+
+    /** CPlayer_GetProfileBackground_Request language */
+    language?: (string|null);
+}
+
+/** Represents a CPlayer_GetProfileBackground_Request. */
+export class CPlayer_GetProfileBackground_Request implements ICPlayer_GetProfileBackground_Request {
+
+    /**
+     * Constructs a new CPlayer_GetProfileBackground_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetProfileBackground_Request);
+
+    /** CPlayer_GetProfileBackground_Request steamid. */
+    public steamid: (number|Long);
+
+    /** CPlayer_GetProfileBackground_Request language. */
+    public language: string;
+
+    /**
+     * Encodes the specified CPlayer_GetProfileBackground_Request message. Does not implicitly {@link CPlayer_GetProfileBackground_Request.verify|verify} messages.
+     * @param message CPlayer_GetProfileBackground_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetProfileBackground_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetProfileBackground_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetProfileBackground_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetProfileBackground_Request;
+
+    /**
+     * Gets the default type url for CPlayer_GetProfileBackground_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetProfileBackground_Response. */
+export interface ICPlayer_GetProfileBackground_Response {
+
+    /** CPlayer_GetProfileBackground_Response profileBackground */
+    profileBackground?: (IProfileItem|null);
+}
+
+/** Represents a CPlayer_GetProfileBackground_Response. */
+export class CPlayer_GetProfileBackground_Response implements ICPlayer_GetProfileBackground_Response {
+
+    /**
+     * Constructs a new CPlayer_GetProfileBackground_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetProfileBackground_Response);
+
+    /** CPlayer_GetProfileBackground_Response profileBackground. */
+    public profileBackground?: (IProfileItem|null);
+
+    /**
+     * Encodes the specified CPlayer_GetProfileBackground_Response message. Does not implicitly {@link CPlayer_GetProfileBackground_Response.verify|verify} messages.
+     * @param message CPlayer_GetProfileBackground_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetProfileBackground_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetProfileBackground_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetProfileBackground_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetProfileBackground_Response;
+
+    /**
+     * Gets the default type url for CPlayer_GetProfileBackground_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetProfileCustomization_Request. */
+export interface ICPlayer_GetProfileCustomization_Request {
+
+    /** CPlayer_GetProfileCustomization_Request steamid */
+    steamid?: (number|Long|null);
+
+    /** CPlayer_GetProfileCustomization_Request includeInactiveCustomizations */
+    includeInactiveCustomizations?: (boolean|null);
+
+    /** CPlayer_GetProfileCustomization_Request includePurchasedCustomizations */
+    includePurchasedCustomizations?: (boolean|null);
+}
+
+/** Represents a CPlayer_GetProfileCustomization_Request. */
+export class CPlayer_GetProfileCustomization_Request implements ICPlayer_GetProfileCustomization_Request {
+
+    /**
+     * Constructs a new CPlayer_GetProfileCustomization_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetProfileCustomization_Request);
+
+    /** CPlayer_GetProfileCustomization_Request steamid. */
+    public steamid: (number|Long);
+
+    /** CPlayer_GetProfileCustomization_Request includeInactiveCustomizations. */
+    public includeInactiveCustomizations: boolean;
+
+    /** CPlayer_GetProfileCustomization_Request includePurchasedCustomizations. */
+    public includePurchasedCustomizations: boolean;
+
+    /**
+     * Encodes the specified CPlayer_GetProfileCustomization_Request message. Does not implicitly {@link CPlayer_GetProfileCustomization_Request.verify|verify} messages.
+     * @param message CPlayer_GetProfileCustomization_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetProfileCustomization_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetProfileCustomization_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetProfileCustomization_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetProfileCustomization_Request;
+
+    /**
+     * Gets the default type url for CPlayer_GetProfileCustomization_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetProfileCustomization_Response. */
+export interface ICPlayer_GetProfileCustomization_Response {
+
+    /** CPlayer_GetProfileCustomization_Response customizations */
+    customizations?: (IProfileCustomization[]|null);
+
+    /** CPlayer_GetProfileCustomization_Response slotsAvailable */
+    slotsAvailable?: (number|null);
+
+    /** CPlayer_GetProfileCustomization_Response profileTheme */
+    profileTheme?: (IProfileTheme|null);
+
+    /** CPlayer_GetProfileCustomization_Response purchasedCustomizations */
+    purchasedCustomizations?: (ICPlayer_GetProfileCustomization_Response_PurchasedCustomization[]|null);
+
+    /** CPlayer_GetProfileCustomization_Response profilePreferences */
+    profilePreferences?: (IProfilePreferences|null);
+}
+
+/** Represents a CPlayer_GetProfileCustomization_Response. */
+export class CPlayer_GetProfileCustomization_Response implements ICPlayer_GetProfileCustomization_Response {
+
+    /**
+     * Constructs a new CPlayer_GetProfileCustomization_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetProfileCustomization_Response);
+
+    /** CPlayer_GetProfileCustomization_Response customizations. */
+    public customizations: IProfileCustomization[];
+
+    /** CPlayer_GetProfileCustomization_Response slotsAvailable. */
+    public slotsAvailable: number;
+
+    /** CPlayer_GetProfileCustomization_Response profileTheme. */
+    public profileTheme?: (IProfileTheme|null);
+
+    /** CPlayer_GetProfileCustomization_Response purchasedCustomizations. */
+    public purchasedCustomizations: ICPlayer_GetProfileCustomization_Response_PurchasedCustomization[];
+
+    /** CPlayer_GetProfileCustomization_Response profilePreferences. */
+    public profilePreferences?: (IProfilePreferences|null);
+
+    /**
+     * Encodes the specified CPlayer_GetProfileCustomization_Response message. Does not implicitly {@link CPlayer_GetProfileCustomization_Response.verify|verify} messages.
+     * @param message CPlayer_GetProfileCustomization_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetProfileCustomization_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetProfileCustomization_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetProfileCustomization_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetProfileCustomization_Response;
+
+    /**
+     * Gets the default type url for CPlayer_GetProfileCustomization_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetProfileCustomization_Response_PurchasedCustomization. */
+export interface ICPlayer_GetProfileCustomization_Response_PurchasedCustomization {
+
+    /** CPlayer_GetProfileCustomization_Response_PurchasedCustomization purchaseid */
+    purchaseid?: (number|Long|null);
+
+    /** CPlayer_GetProfileCustomization_Response_PurchasedCustomization customizationType */
+    customizationType?: (number|null);
+
+    /** CPlayer_GetProfileCustomization_Response_PurchasedCustomization level */
+    level?: (number|null);
+}
+
+/** Represents a CPlayer_GetProfileCustomization_Response_PurchasedCustomization. */
+export class CPlayer_GetProfileCustomization_Response_PurchasedCustomization implements ICPlayer_GetProfileCustomization_Response_PurchasedCustomization {
+
+    /**
+     * Constructs a new CPlayer_GetProfileCustomization_Response_PurchasedCustomization.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetProfileCustomization_Response_PurchasedCustomization);
+
+    /** CPlayer_GetProfileCustomization_Response_PurchasedCustomization purchaseid. */
+    public purchaseid: (number|Long);
+
+    /** CPlayer_GetProfileCustomization_Response_PurchasedCustomization customizationType. */
+    public customizationType: number;
+
+    /** CPlayer_GetProfileCustomization_Response_PurchasedCustomization level. */
+    public level: number;
+
+    /**
+     * Encodes the specified CPlayer_GetProfileCustomization_Response_PurchasedCustomization message. Does not implicitly {@link CPlayer_GetProfileCustomization_Response_PurchasedCustomization.verify|verify} messages.
+     * @param message CPlayer_GetProfileCustomization_Response_PurchasedCustomization message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetProfileCustomization_Response_PurchasedCustomization, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetProfileCustomization_Response_PurchasedCustomization message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetProfileCustomization_Response_PurchasedCustomization
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetProfileCustomization_Response_PurchasedCustomization;
+
+    /**
+     * Gets the default type url for CPlayer_GetProfileCustomization_Response_PurchasedCustomization
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetProfileItemsEquipped_Request. */
+export interface ICPlayer_GetProfileItemsEquipped_Request {
+
+    /** CPlayer_GetProfileItemsEquipped_Request steamid */
+    steamid?: (number|Long|null);
+
+    /** CPlayer_GetProfileItemsEquipped_Request language */
+    language?: (string|null);
+}
+
+/** Represents a CPlayer_GetProfileItemsEquipped_Request. */
+export class CPlayer_GetProfileItemsEquipped_Request implements ICPlayer_GetProfileItemsEquipped_Request {
+
+    /**
+     * Constructs a new CPlayer_GetProfileItemsEquipped_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetProfileItemsEquipped_Request);
+
+    /** CPlayer_GetProfileItemsEquipped_Request steamid. */
+    public steamid: (number|Long);
+
+    /** CPlayer_GetProfileItemsEquipped_Request language. */
+    public language: string;
+
+    /**
+     * Encodes the specified CPlayer_GetProfileItemsEquipped_Request message. Does not implicitly {@link CPlayer_GetProfileItemsEquipped_Request.verify|verify} messages.
+     * @param message CPlayer_GetProfileItemsEquipped_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetProfileItemsEquipped_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetProfileItemsEquipped_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetProfileItemsEquipped_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetProfileItemsEquipped_Request;
+
+    /**
+     * Gets the default type url for CPlayer_GetProfileItemsEquipped_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetProfileItemsEquipped_Response. */
+export interface ICPlayer_GetProfileItemsEquipped_Response {
+
+    /** CPlayer_GetProfileItemsEquipped_Response profileBackground */
+    profileBackground?: (IProfileItem|null);
+
+    /** CPlayer_GetProfileItemsEquipped_Response miniProfileBackground */
+    miniProfileBackground?: (IProfileItem|null);
+
+    /** CPlayer_GetProfileItemsEquipped_Response avatarFrame */
+    avatarFrame?: (IProfileItem|null);
+
+    /** CPlayer_GetProfileItemsEquipped_Response animatedAvatar */
+    animatedAvatar?: (IProfileItem|null);
+
+    /** CPlayer_GetProfileItemsEquipped_Response profileModifier */
+    profileModifier?: (IProfileItem|null);
+
+    /** CPlayer_GetProfileItemsEquipped_Response steamDeckKeyboardSkin */
+    steamDeckKeyboardSkin?: (IProfileItem|null);
+}
+
+/** Represents a CPlayer_GetProfileItemsEquipped_Response. */
+export class CPlayer_GetProfileItemsEquipped_Response implements ICPlayer_GetProfileItemsEquipped_Response {
+
+    /**
+     * Constructs a new CPlayer_GetProfileItemsEquipped_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetProfileItemsEquipped_Response);
+
+    /** CPlayer_GetProfileItemsEquipped_Response profileBackground. */
+    public profileBackground?: (IProfileItem|null);
+
+    /** CPlayer_GetProfileItemsEquipped_Response miniProfileBackground. */
+    public miniProfileBackground?: (IProfileItem|null);
+
+    /** CPlayer_GetProfileItemsEquipped_Response avatarFrame. */
+    public avatarFrame?: (IProfileItem|null);
+
+    /** CPlayer_GetProfileItemsEquipped_Response animatedAvatar. */
+    public animatedAvatar?: (IProfileItem|null);
+
+    /** CPlayer_GetProfileItemsEquipped_Response profileModifier. */
+    public profileModifier?: (IProfileItem|null);
+
+    /** CPlayer_GetProfileItemsEquipped_Response steamDeckKeyboardSkin. */
+    public steamDeckKeyboardSkin?: (IProfileItem|null);
+
+    /**
+     * Encodes the specified CPlayer_GetProfileItemsEquipped_Response message. Does not implicitly {@link CPlayer_GetProfileItemsEquipped_Response.verify|verify} messages.
+     * @param message CPlayer_GetProfileItemsEquipped_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetProfileItemsEquipped_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetProfileItemsEquipped_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetProfileItemsEquipped_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetProfileItemsEquipped_Response;
+
+    /**
+     * Gets the default type url for CPlayer_GetProfileItemsEquipped_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetProfileItemsOwned_Request. */
+export interface ICPlayer_GetProfileItemsOwned_Request {
+
+    /** CPlayer_GetProfileItemsOwned_Request language */
+    language?: (string|null);
+
+    /** CPlayer_GetProfileItemsOwned_Request filters */
+    filters?: (number[]|null);
+}
+
+/** Represents a CPlayer_GetProfileItemsOwned_Request. */
+export class CPlayer_GetProfileItemsOwned_Request implements ICPlayer_GetProfileItemsOwned_Request {
+
+    /**
+     * Constructs a new CPlayer_GetProfileItemsOwned_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetProfileItemsOwned_Request);
+
+    /** CPlayer_GetProfileItemsOwned_Request language. */
+    public language: string;
+
+    /** CPlayer_GetProfileItemsOwned_Request filters. */
+    public filters: number[];
+
+    /**
+     * Encodes the specified CPlayer_GetProfileItemsOwned_Request message. Does not implicitly {@link CPlayer_GetProfileItemsOwned_Request.verify|verify} messages.
+     * @param message CPlayer_GetProfileItemsOwned_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetProfileItemsOwned_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetProfileItemsOwned_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetProfileItemsOwned_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetProfileItemsOwned_Request;
+
+    /**
+     * Gets the default type url for CPlayer_GetProfileItemsOwned_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetProfileItemsOwned_Response. */
+export interface ICPlayer_GetProfileItemsOwned_Response {
+
+    /** CPlayer_GetProfileItemsOwned_Response profileBackgrounds */
+    profileBackgrounds?: (IProfileItem[]|null);
+
+    /** CPlayer_GetProfileItemsOwned_Response miniProfileBackgrounds */
+    miniProfileBackgrounds?: (IProfileItem[]|null);
+
+    /** CPlayer_GetProfileItemsOwned_Response avatarFrames */
+    avatarFrames?: (IProfileItem[]|null);
+
+    /** CPlayer_GetProfileItemsOwned_Response animatedAvatars */
+    animatedAvatars?: (IProfileItem[]|null);
+
+    /** CPlayer_GetProfileItemsOwned_Response profileModifiers */
+    profileModifiers?: (IProfileItem[]|null);
+
+    /** CPlayer_GetProfileItemsOwned_Response steamDeckKeyboardSkins */
+    steamDeckKeyboardSkins?: (IProfileItem[]|null);
+
+    /** CPlayer_GetProfileItemsOwned_Response steamDeckStartupMovies */
+    steamDeckStartupMovies?: (IProfileItem[]|null);
+}
+
+/** Represents a CPlayer_GetProfileItemsOwned_Response. */
+export class CPlayer_GetProfileItemsOwned_Response implements ICPlayer_GetProfileItemsOwned_Response {
+
+    /**
+     * Constructs a new CPlayer_GetProfileItemsOwned_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetProfileItemsOwned_Response);
+
+    /** CPlayer_GetProfileItemsOwned_Response profileBackgrounds. */
+    public profileBackgrounds: IProfileItem[];
+
+    /** CPlayer_GetProfileItemsOwned_Response miniProfileBackgrounds. */
+    public miniProfileBackgrounds: IProfileItem[];
+
+    /** CPlayer_GetProfileItemsOwned_Response avatarFrames. */
+    public avatarFrames: IProfileItem[];
+
+    /** CPlayer_GetProfileItemsOwned_Response animatedAvatars. */
+    public animatedAvatars: IProfileItem[];
+
+    /** CPlayer_GetProfileItemsOwned_Response profileModifiers. */
+    public profileModifiers: IProfileItem[];
+
+    /** CPlayer_GetProfileItemsOwned_Response steamDeckKeyboardSkins. */
+    public steamDeckKeyboardSkins: IProfileItem[];
+
+    /** CPlayer_GetProfileItemsOwned_Response steamDeckStartupMovies. */
+    public steamDeckStartupMovies: IProfileItem[];
+
+    /**
+     * Encodes the specified CPlayer_GetProfileItemsOwned_Response message. Does not implicitly {@link CPlayer_GetProfileItemsOwned_Response.verify|verify} messages.
+     * @param message CPlayer_GetProfileItemsOwned_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetProfileItemsOwned_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetProfileItemsOwned_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetProfileItemsOwned_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetProfileItemsOwned_Response;
+
+    /**
+     * Gets the default type url for CPlayer_GetProfileItemsOwned_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetProfileThemesAvailable_Request. */
+export interface ICPlayer_GetProfileThemesAvailable_Request {
+}
+
+/** Represents a CPlayer_GetProfileThemesAvailable_Request. */
+export class CPlayer_GetProfileThemesAvailable_Request implements ICPlayer_GetProfileThemesAvailable_Request {
+
+    /**
+     * Constructs a new CPlayer_GetProfileThemesAvailable_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetProfileThemesAvailable_Request);
+
+    /**
+     * Encodes the specified CPlayer_GetProfileThemesAvailable_Request message. Does not implicitly {@link CPlayer_GetProfileThemesAvailable_Request.verify|verify} messages.
+     * @param message CPlayer_GetProfileThemesAvailable_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetProfileThemesAvailable_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetProfileThemesAvailable_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetProfileThemesAvailable_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetProfileThemesAvailable_Request;
+
+    /**
+     * Gets the default type url for CPlayer_GetProfileThemesAvailable_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetProfileThemesAvailable_Response. */
+export interface ICPlayer_GetProfileThemesAvailable_Response {
+
+    /** CPlayer_GetProfileThemesAvailable_Response profileThemes */
+    profileThemes?: (IProfileTheme[]|null);
+}
+
+/** Represents a CPlayer_GetProfileThemesAvailable_Response. */
+export class CPlayer_GetProfileThemesAvailable_Response implements ICPlayer_GetProfileThemesAvailable_Response {
+
+    /**
+     * Constructs a new CPlayer_GetProfileThemesAvailable_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetProfileThemesAvailable_Response);
+
+    /** CPlayer_GetProfileThemesAvailable_Response profileThemes. */
+    public profileThemes: IProfileTheme[];
+
+    /**
+     * Encodes the specified CPlayer_GetProfileThemesAvailable_Response message. Does not implicitly {@link CPlayer_GetProfileThemesAvailable_Response.verify|verify} messages.
+     * @param message CPlayer_GetProfileThemesAvailable_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetProfileThemesAvailable_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetProfileThemesAvailable_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetProfileThemesAvailable_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetProfileThemesAvailable_Response;
+
+    /**
+     * Gets the default type url for CPlayer_GetProfileThemesAvailable_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Request. */
+export interface ICPlayer_GetPurchasedAndUpgradedProfileCustomizations_Request {
+
+    /** CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Request steamid */
+    steamid?: (number|Long|null);
+}
+
+/** Represents a CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Request. */
+export class CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Request implements ICPlayer_GetPurchasedAndUpgradedProfileCustomizations_Request {
+
+    /**
+     * Constructs a new CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetPurchasedAndUpgradedProfileCustomizations_Request);
+
+    /** CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Request steamid. */
+    public steamid: (number|Long);
+
+    /**
+     * Encodes the specified CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Request message. Does not implicitly {@link CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Request.verify|verify} messages.
+     * @param message CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetPurchasedAndUpgradedProfileCustomizations_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Request;
+
+    /**
+     * Gets the default type url for CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response. */
+export interface ICPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response {
+
+    /** CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response purchasedCustomizations */
+    purchasedCustomizations?: (ICPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_PurchasedCustomization[]|null);
+
+    /** CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response upgradedCustomizations */
+    upgradedCustomizations?: (ICPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_UpgradedCustomization[]|null);
+}
+
+/** Represents a CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response. */
+export class CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response implements ICPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response {
+
+    /**
+     * Constructs a new CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response);
+
+    /** CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response purchasedCustomizations. */
+    public purchasedCustomizations: ICPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_PurchasedCustomization[];
+
+    /** CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response upgradedCustomizations. */
+    public upgradedCustomizations: ICPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_UpgradedCustomization[];
+
+    /**
+     * Encodes the specified CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response message. Does not implicitly {@link CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response.verify|verify} messages.
+     * @param message CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response;
+
+    /**
+     * Gets the default type url for CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_PurchasedCustomization. */
+export interface ICPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_PurchasedCustomization {
+
+    /** CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_PurchasedCustomization customizationType */
+    customizationType?: (number|null);
+
+    /** CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_PurchasedCustomization count */
+    count?: (number|null);
+}
+
+/** Represents a CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_PurchasedCustomization. */
+export class CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_PurchasedCustomization implements ICPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_PurchasedCustomization {
+
+    /**
+     * Constructs a new CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_PurchasedCustomization.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_PurchasedCustomization);
+
+    /** CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_PurchasedCustomization customizationType. */
+    public customizationType: number;
+
+    /** CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_PurchasedCustomization count. */
+    public count: number;
+
+    /**
+     * Encodes the specified CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_PurchasedCustomization message. Does not implicitly {@link CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_PurchasedCustomization.verify|verify} messages.
+     * @param message CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_PurchasedCustomization message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_PurchasedCustomization, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_PurchasedCustomization message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_PurchasedCustomization
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_PurchasedCustomization;
+
+    /**
+     * Gets the default type url for CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_PurchasedCustomization
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_UpgradedCustomization. */
+export interface ICPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_UpgradedCustomization {
+
+    /** CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_UpgradedCustomization customizationType */
+    customizationType?: (number|null);
+
+    /** CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_UpgradedCustomization level */
+    level?: (number|null);
+}
+
+/** Represents a CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_UpgradedCustomization. */
+export class CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_UpgradedCustomization implements ICPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_UpgradedCustomization {
+
+    /**
+     * Constructs a new CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_UpgradedCustomization.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_UpgradedCustomization);
+
+    /** CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_UpgradedCustomization customizationType. */
+    public customizationType: number;
+
+    /** CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_UpgradedCustomization level. */
+    public level: number;
+
+    /**
+     * Encodes the specified CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_UpgradedCustomization message. Does not implicitly {@link CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_UpgradedCustomization.verify|verify} messages.
+     * @param message CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_UpgradedCustomization message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_UpgradedCustomization, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_UpgradedCustomization message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_UpgradedCustomization
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_UpgradedCustomization;
+
+    /**
+     * Gets the default type url for CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response_UpgradedCustomization
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetPurchasedProfileCustomizations_Request. */
+export interface ICPlayer_GetPurchasedProfileCustomizations_Request {
+
+    /** CPlayer_GetPurchasedProfileCustomizations_Request steamid */
+    steamid?: (number|Long|null);
+}
+
+/** Represents a CPlayer_GetPurchasedProfileCustomizations_Request. */
+export class CPlayer_GetPurchasedProfileCustomizations_Request implements ICPlayer_GetPurchasedProfileCustomizations_Request {
+
+    /**
+     * Constructs a new CPlayer_GetPurchasedProfileCustomizations_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetPurchasedProfileCustomizations_Request);
+
+    /** CPlayer_GetPurchasedProfileCustomizations_Request steamid. */
+    public steamid: (number|Long);
+
+    /**
+     * Encodes the specified CPlayer_GetPurchasedProfileCustomizations_Request message. Does not implicitly {@link CPlayer_GetPurchasedProfileCustomizations_Request.verify|verify} messages.
+     * @param message CPlayer_GetPurchasedProfileCustomizations_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetPurchasedProfileCustomizations_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetPurchasedProfileCustomizations_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetPurchasedProfileCustomizations_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetPurchasedProfileCustomizations_Request;
+
+    /**
+     * Gets the default type url for CPlayer_GetPurchasedProfileCustomizations_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetPurchasedProfileCustomizations_Response. */
+export interface ICPlayer_GetPurchasedProfileCustomizations_Response {
+
+    /** CPlayer_GetPurchasedProfileCustomizations_Response purchasedCustomizations */
+    purchasedCustomizations?: (ICPlayer_GetPurchasedProfileCustomizations_Response_PurchasedCustomization[]|null);
+}
+
+/** Represents a CPlayer_GetPurchasedProfileCustomizations_Response. */
+export class CPlayer_GetPurchasedProfileCustomizations_Response implements ICPlayer_GetPurchasedProfileCustomizations_Response {
+
+    /**
+     * Constructs a new CPlayer_GetPurchasedProfileCustomizations_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetPurchasedProfileCustomizations_Response);
+
+    /** CPlayer_GetPurchasedProfileCustomizations_Response purchasedCustomizations. */
+    public purchasedCustomizations: ICPlayer_GetPurchasedProfileCustomizations_Response_PurchasedCustomization[];
+
+    /**
+     * Encodes the specified CPlayer_GetPurchasedProfileCustomizations_Response message. Does not implicitly {@link CPlayer_GetPurchasedProfileCustomizations_Response.verify|verify} messages.
+     * @param message CPlayer_GetPurchasedProfileCustomizations_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetPurchasedProfileCustomizations_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetPurchasedProfileCustomizations_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetPurchasedProfileCustomizations_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetPurchasedProfileCustomizations_Response;
+
+    /**
+     * Gets the default type url for CPlayer_GetPurchasedProfileCustomizations_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetPurchasedProfileCustomizations_Response_PurchasedCustomization. */
+export interface ICPlayer_GetPurchasedProfileCustomizations_Response_PurchasedCustomization {
+
+    /** CPlayer_GetPurchasedProfileCustomizations_Response_PurchasedCustomization purchaseid */
+    purchaseid?: (number|Long|null);
+
+    /** CPlayer_GetPurchasedProfileCustomizations_Response_PurchasedCustomization customizationType */
+    customizationType?: (number|null);
+}
+
+/** Represents a CPlayer_GetPurchasedProfileCustomizations_Response_PurchasedCustomization. */
+export class CPlayer_GetPurchasedProfileCustomizations_Response_PurchasedCustomization implements ICPlayer_GetPurchasedProfileCustomizations_Response_PurchasedCustomization {
+
+    /**
+     * Constructs a new CPlayer_GetPurchasedProfileCustomizations_Response_PurchasedCustomization.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetPurchasedProfileCustomizations_Response_PurchasedCustomization);
+
+    /** CPlayer_GetPurchasedProfileCustomizations_Response_PurchasedCustomization purchaseid. */
+    public purchaseid: (number|Long);
+
+    /** CPlayer_GetPurchasedProfileCustomizations_Response_PurchasedCustomization customizationType. */
+    public customizationType: number;
+
+    /**
+     * Encodes the specified CPlayer_GetPurchasedProfileCustomizations_Response_PurchasedCustomization message. Does not implicitly {@link CPlayer_GetPurchasedProfileCustomizations_Response_PurchasedCustomization.verify|verify} messages.
+     * @param message CPlayer_GetPurchasedProfileCustomizations_Response_PurchasedCustomization message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetPurchasedProfileCustomizations_Response_PurchasedCustomization, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetPurchasedProfileCustomizations_Response_PurchasedCustomization message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetPurchasedProfileCustomizations_Response_PurchasedCustomization
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetPurchasedProfileCustomizations_Response_PurchasedCustomization;
+
+    /**
+     * Gets the default type url for CPlayer_GetPurchasedProfileCustomizations_Response_PurchasedCustomization
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetRecentPlaytimeSessionsForChild_Request. */
+export interface ICPlayer_GetRecentPlaytimeSessionsForChild_Request {
+
+    /** CPlayer_GetRecentPlaytimeSessionsForChild_Request steamid */
+    steamid?: (number|Long|null);
+}
+
+/** Represents a CPlayer_GetRecentPlaytimeSessionsForChild_Request. */
+export class CPlayer_GetRecentPlaytimeSessionsForChild_Request implements ICPlayer_GetRecentPlaytimeSessionsForChild_Request {
+
+    /**
+     * Constructs a new CPlayer_GetRecentPlaytimeSessionsForChild_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetRecentPlaytimeSessionsForChild_Request);
+
+    /** CPlayer_GetRecentPlaytimeSessionsForChild_Request steamid. */
+    public steamid: (number|Long);
+
+    /**
+     * Encodes the specified CPlayer_GetRecentPlaytimeSessionsForChild_Request message. Does not implicitly {@link CPlayer_GetRecentPlaytimeSessionsForChild_Request.verify|verify} messages.
+     * @param message CPlayer_GetRecentPlaytimeSessionsForChild_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetRecentPlaytimeSessionsForChild_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetRecentPlaytimeSessionsForChild_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetRecentPlaytimeSessionsForChild_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetRecentPlaytimeSessionsForChild_Request;
+
+    /**
+     * Gets the default type url for CPlayer_GetRecentPlaytimeSessionsForChild_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetRecentPlaytimeSessionsForChild_Response. */
+export interface ICPlayer_GetRecentPlaytimeSessionsForChild_Response {
+
+    /** CPlayer_GetRecentPlaytimeSessionsForChild_Response sessions */
+    sessions?: (ICPlayer_GetRecentPlaytimeSessionsForChild_Response_PlaytimeSession[]|null);
+}
+
+/** Represents a CPlayer_GetRecentPlaytimeSessionsForChild_Response. */
+export class CPlayer_GetRecentPlaytimeSessionsForChild_Response implements ICPlayer_GetRecentPlaytimeSessionsForChild_Response {
+
+    /**
+     * Constructs a new CPlayer_GetRecentPlaytimeSessionsForChild_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetRecentPlaytimeSessionsForChild_Response);
+
+    /** CPlayer_GetRecentPlaytimeSessionsForChild_Response sessions. */
+    public sessions: ICPlayer_GetRecentPlaytimeSessionsForChild_Response_PlaytimeSession[];
+
+    /**
+     * Encodes the specified CPlayer_GetRecentPlaytimeSessionsForChild_Response message. Does not implicitly {@link CPlayer_GetRecentPlaytimeSessionsForChild_Response.verify|verify} messages.
+     * @param message CPlayer_GetRecentPlaytimeSessionsForChild_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetRecentPlaytimeSessionsForChild_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetRecentPlaytimeSessionsForChild_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetRecentPlaytimeSessionsForChild_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetRecentPlaytimeSessionsForChild_Response;
+
+    /**
+     * Gets the default type url for CPlayer_GetRecentPlaytimeSessionsForChild_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetRecentPlaytimeSessionsForChild_Response_PlaytimeSession. */
+export interface ICPlayer_GetRecentPlaytimeSessionsForChild_Response_PlaytimeSession {
+
+    /** CPlayer_GetRecentPlaytimeSessionsForChild_Response_PlaytimeSession timeStart */
+    timeStart?: (number|null);
+
+    /** CPlayer_GetRecentPlaytimeSessionsForChild_Response_PlaytimeSession timeEnd */
+    timeEnd?: (number|null);
+
+    /** CPlayer_GetRecentPlaytimeSessionsForChild_Response_PlaytimeSession appid */
+    appid?: (number|null);
+
+    /** CPlayer_GetRecentPlaytimeSessionsForChild_Response_PlaytimeSession deviceType */
+    deviceType?: (number|null);
+
+    /** CPlayer_GetRecentPlaytimeSessionsForChild_Response_PlaytimeSession disconnected */
+    disconnected?: (boolean|null);
+}
+
+/** Represents a CPlayer_GetRecentPlaytimeSessionsForChild_Response_PlaytimeSession. */
+export class CPlayer_GetRecentPlaytimeSessionsForChild_Response_PlaytimeSession implements ICPlayer_GetRecentPlaytimeSessionsForChild_Response_PlaytimeSession {
+
+    /**
+     * Constructs a new CPlayer_GetRecentPlaytimeSessionsForChild_Response_PlaytimeSession.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetRecentPlaytimeSessionsForChild_Response_PlaytimeSession);
+
+    /** CPlayer_GetRecentPlaytimeSessionsForChild_Response_PlaytimeSession timeStart. */
+    public timeStart: number;
+
+    /** CPlayer_GetRecentPlaytimeSessionsForChild_Response_PlaytimeSession timeEnd. */
+    public timeEnd: number;
+
+    /** CPlayer_GetRecentPlaytimeSessionsForChild_Response_PlaytimeSession appid. */
+    public appid: number;
+
+    /** CPlayer_GetRecentPlaytimeSessionsForChild_Response_PlaytimeSession deviceType. */
+    public deviceType: number;
+
+    /** CPlayer_GetRecentPlaytimeSessionsForChild_Response_PlaytimeSession disconnected. */
+    public disconnected: boolean;
+
+    /**
+     * Encodes the specified CPlayer_GetRecentPlaytimeSessionsForChild_Response_PlaytimeSession message. Does not implicitly {@link CPlayer_GetRecentPlaytimeSessionsForChild_Response_PlaytimeSession.verify|verify} messages.
+     * @param message CPlayer_GetRecentPlaytimeSessionsForChild_Response_PlaytimeSession message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetRecentPlaytimeSessionsForChild_Response_PlaytimeSession, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetRecentPlaytimeSessionsForChild_Response_PlaytimeSession message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetRecentPlaytimeSessionsForChild_Response_PlaytimeSession
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetRecentPlaytimeSessionsForChild_Response_PlaytimeSession;
+
+    /**
+     * Gets the default type url for CPlayer_GetRecentPlaytimeSessionsForChild_Response_PlaytimeSession
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetSteamDeckKeyboardSkin_Request. */
+export interface ICPlayer_GetSteamDeckKeyboardSkin_Request {
+
+    /** CPlayer_GetSteamDeckKeyboardSkin_Request steamid */
+    steamid?: (number|Long|null);
+
+    /** CPlayer_GetSteamDeckKeyboardSkin_Request language */
+    language?: (string|null);
+}
+
+/** Represents a CPlayer_GetSteamDeckKeyboardSkin_Request. */
+export class CPlayer_GetSteamDeckKeyboardSkin_Request implements ICPlayer_GetSteamDeckKeyboardSkin_Request {
+
+    /**
+     * Constructs a new CPlayer_GetSteamDeckKeyboardSkin_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetSteamDeckKeyboardSkin_Request);
+
+    /** CPlayer_GetSteamDeckKeyboardSkin_Request steamid. */
+    public steamid: (number|Long);
+
+    /** CPlayer_GetSteamDeckKeyboardSkin_Request language. */
+    public language: string;
+
+    /**
+     * Encodes the specified CPlayer_GetSteamDeckKeyboardSkin_Request message. Does not implicitly {@link CPlayer_GetSteamDeckKeyboardSkin_Request.verify|verify} messages.
+     * @param message CPlayer_GetSteamDeckKeyboardSkin_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetSteamDeckKeyboardSkin_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetSteamDeckKeyboardSkin_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetSteamDeckKeyboardSkin_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetSteamDeckKeyboardSkin_Request;
+
+    /**
+     * Gets the default type url for CPlayer_GetSteamDeckKeyboardSkin_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetSteamDeckKeyboardSkin_Response. */
+export interface ICPlayer_GetSteamDeckKeyboardSkin_Response {
+
+    /** CPlayer_GetSteamDeckKeyboardSkin_Response steamDeckKeyboardSkin */
+    steamDeckKeyboardSkin?: (IProfileItem|null);
+}
+
+/** Represents a CPlayer_GetSteamDeckKeyboardSkin_Response. */
+export class CPlayer_GetSteamDeckKeyboardSkin_Response implements ICPlayer_GetSteamDeckKeyboardSkin_Response {
+
+    /**
+     * Constructs a new CPlayer_GetSteamDeckKeyboardSkin_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetSteamDeckKeyboardSkin_Response);
+
+    /** CPlayer_GetSteamDeckKeyboardSkin_Response steamDeckKeyboardSkin. */
+    public steamDeckKeyboardSkin?: (IProfileItem|null);
+
+    /**
+     * Encodes the specified CPlayer_GetSteamDeckKeyboardSkin_Response message. Does not implicitly {@link CPlayer_GetSteamDeckKeyboardSkin_Response.verify|verify} messages.
+     * @param message CPlayer_GetSteamDeckKeyboardSkin_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetSteamDeckKeyboardSkin_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetSteamDeckKeyboardSkin_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetSteamDeckKeyboardSkin_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetSteamDeckKeyboardSkin_Response;
+
+    /**
+     * Gets the default type url for CPlayer_GetSteamDeckKeyboardSkin_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetTextFilterWords_Request. */
+export interface ICPlayer_GetTextFilterWords_Request {
+}
+
+/** Represents a CPlayer_GetTextFilterWords_Request. */
+export class CPlayer_GetTextFilterWords_Request implements ICPlayer_GetTextFilterWords_Request {
+
+    /**
+     * Constructs a new CPlayer_GetTextFilterWords_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetTextFilterWords_Request);
+
+    /**
+     * Encodes the specified CPlayer_GetTextFilterWords_Request message. Does not implicitly {@link CPlayer_GetTextFilterWords_Request.verify|verify} messages.
+     * @param message CPlayer_GetTextFilterWords_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetTextFilterWords_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetTextFilterWords_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetTextFilterWords_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetTextFilterWords_Request;
+
+    /**
+     * Gets the default type url for CPlayer_GetTextFilterWords_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetTextFilterWords_Response. */
+export interface ICPlayer_GetTextFilterWords_Response {
+
+    /** CPlayer_GetTextFilterWords_Response words */
+    words?: (ICPlayer_TextFilterWords|null);
+}
+
+/** Represents a CPlayer_GetTextFilterWords_Response. */
+export class CPlayer_GetTextFilterWords_Response implements ICPlayer_GetTextFilterWords_Response {
+
+    /**
+     * Constructs a new CPlayer_GetTextFilterWords_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetTextFilterWords_Response);
+
+    /** CPlayer_GetTextFilterWords_Response words. */
+    public words?: (ICPlayer_TextFilterWords|null);
+
+    /**
+     * Encodes the specified CPlayer_GetTextFilterWords_Response message. Does not implicitly {@link CPlayer_GetTextFilterWords_Response.verify|verify} messages.
+     * @param message CPlayer_GetTextFilterWords_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetTextFilterWords_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetTextFilterWords_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetTextFilterWords_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetTextFilterWords_Response;
+
+    /**
+     * Gets the default type url for CPlayer_GetTextFilterWords_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetTimeSSAAccepted_Request. */
+export interface ICPlayer_GetTimeSSAAccepted_Request {
+}
+
+/** Represents a CPlayer_GetTimeSSAAccepted_Request. */
+export class CPlayer_GetTimeSSAAccepted_Request implements ICPlayer_GetTimeSSAAccepted_Request {
+
+    /**
+     * Constructs a new CPlayer_GetTimeSSAAccepted_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetTimeSSAAccepted_Request);
+
+    /**
+     * Encodes the specified CPlayer_GetTimeSSAAccepted_Request message. Does not implicitly {@link CPlayer_GetTimeSSAAccepted_Request.verify|verify} messages.
+     * @param message CPlayer_GetTimeSSAAccepted_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetTimeSSAAccepted_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetTimeSSAAccepted_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetTimeSSAAccepted_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetTimeSSAAccepted_Request;
+
+    /**
+     * Gets the default type url for CPlayer_GetTimeSSAAccepted_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetTimeSSAAccepted_Response. */
+export interface ICPlayer_GetTimeSSAAccepted_Response {
+
+    /** CPlayer_GetTimeSSAAccepted_Response timeSsaAccepted */
+    timeSsaAccepted?: (number|null);
+
+    /** CPlayer_GetTimeSSAAccepted_Response timeSsaUpdated */
+    timeSsaUpdated?: (number|null);
+
+    /** CPlayer_GetTimeSSAAccepted_Response timeChinassaAccepted */
+    timeChinassaAccepted?: (number|null);
+}
+
+/** Represents a CPlayer_GetTimeSSAAccepted_Response. */
+export class CPlayer_GetTimeSSAAccepted_Response implements ICPlayer_GetTimeSSAAccepted_Response {
+
+    /**
+     * Constructs a new CPlayer_GetTimeSSAAccepted_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetTimeSSAAccepted_Response);
+
+    /** CPlayer_GetTimeSSAAccepted_Response timeSsaAccepted. */
+    public timeSsaAccepted: number;
+
+    /** CPlayer_GetTimeSSAAccepted_Response timeSsaUpdated. */
+    public timeSsaUpdated: number;
+
+    /** CPlayer_GetTimeSSAAccepted_Response timeChinassaAccepted. */
+    public timeChinassaAccepted: number;
+
+    /**
+     * Encodes the specified CPlayer_GetTimeSSAAccepted_Response message. Does not implicitly {@link CPlayer_GetTimeSSAAccepted_Response.verify|verify} messages.
+     * @param message CPlayer_GetTimeSSAAccepted_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetTimeSSAAccepted_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetTimeSSAAccepted_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetTimeSSAAccepted_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetTimeSSAAccepted_Response;
+
+    /**
+     * Gets the default type url for CPlayer_GetTimeSSAAccepted_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetTopAchievementsForGames_Request. */
+export interface ICPlayer_GetTopAchievementsForGames_Request {
+
+    /** CPlayer_GetTopAchievementsForGames_Request steamid */
+    steamid?: (number|Long|null);
+
+    /** CPlayer_GetTopAchievementsForGames_Request language */
+    language?: (string|null);
+
+    /** CPlayer_GetTopAchievementsForGames_Request maxAchievements */
+    maxAchievements?: (number|null);
+
+    /** CPlayer_GetTopAchievementsForGames_Request appids */
+    appids?: (number[]|null);
+}
+
+/** Represents a CPlayer_GetTopAchievementsForGames_Request. */
+export class CPlayer_GetTopAchievementsForGames_Request implements ICPlayer_GetTopAchievementsForGames_Request {
+
+    /**
+     * Constructs a new CPlayer_GetTopAchievementsForGames_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetTopAchievementsForGames_Request);
+
+    /** CPlayer_GetTopAchievementsForGames_Request steamid. */
+    public steamid: (number|Long);
+
+    /** CPlayer_GetTopAchievementsForGames_Request language. */
+    public language: string;
+
+    /** CPlayer_GetTopAchievementsForGames_Request maxAchievements. */
+    public maxAchievements: number;
+
+    /** CPlayer_GetTopAchievementsForGames_Request appids. */
+    public appids: number[];
+
+    /**
+     * Encodes the specified CPlayer_GetTopAchievementsForGames_Request message. Does not implicitly {@link CPlayer_GetTopAchievementsForGames_Request.verify|verify} messages.
+     * @param message CPlayer_GetTopAchievementsForGames_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetTopAchievementsForGames_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetTopAchievementsForGames_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetTopAchievementsForGames_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetTopAchievementsForGames_Request;
+
+    /**
+     * Gets the default type url for CPlayer_GetTopAchievementsForGames_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetTopAchievementsForGames_Response. */
+export interface ICPlayer_GetTopAchievementsForGames_Response {
+
+    /** CPlayer_GetTopAchievementsForGames_Response games */
+    games?: (ICPlayer_GetTopAchievementsForGames_Response_Game[]|null);
+}
+
+/** Represents a CPlayer_GetTopAchievementsForGames_Response. */
+export class CPlayer_GetTopAchievementsForGames_Response implements ICPlayer_GetTopAchievementsForGames_Response {
+
+    /**
+     * Constructs a new CPlayer_GetTopAchievementsForGames_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetTopAchievementsForGames_Response);
+
+    /** CPlayer_GetTopAchievementsForGames_Response games. */
+    public games: ICPlayer_GetTopAchievementsForGames_Response_Game[];
+
+    /**
+     * Encodes the specified CPlayer_GetTopAchievementsForGames_Response message. Does not implicitly {@link CPlayer_GetTopAchievementsForGames_Response.verify|verify} messages.
+     * @param message CPlayer_GetTopAchievementsForGames_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetTopAchievementsForGames_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetTopAchievementsForGames_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetTopAchievementsForGames_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetTopAchievementsForGames_Response;
+
+    /**
+     * Gets the default type url for CPlayer_GetTopAchievementsForGames_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetTopAchievementsForGames_Response_Achievement. */
+export interface ICPlayer_GetTopAchievementsForGames_Response_Achievement {
+
+    /** CPlayer_GetTopAchievementsForGames_Response_Achievement statid */
+    statid?: (number|null);
+
+    /** CPlayer_GetTopAchievementsForGames_Response_Achievement bit */
+    bit?: (number|null);
+
+    /** CPlayer_GetTopAchievementsForGames_Response_Achievement name */
+    name?: (string|null);
+
+    /** CPlayer_GetTopAchievementsForGames_Response_Achievement desc */
+    desc?: (string|null);
+
+    /** CPlayer_GetTopAchievementsForGames_Response_Achievement icon */
+    icon?: (string|null);
+
+    /** CPlayer_GetTopAchievementsForGames_Response_Achievement iconGray */
+    iconGray?: (string|null);
+
+    /** CPlayer_GetTopAchievementsForGames_Response_Achievement hidden */
+    hidden?: (boolean|null);
+
+    /** CPlayer_GetTopAchievementsForGames_Response_Achievement playerPercentUnlocked */
+    playerPercentUnlocked?: (string|null);
+}
+
+/** Represents a CPlayer_GetTopAchievementsForGames_Response_Achievement. */
+export class CPlayer_GetTopAchievementsForGames_Response_Achievement implements ICPlayer_GetTopAchievementsForGames_Response_Achievement {
+
+    /**
+     * Constructs a new CPlayer_GetTopAchievementsForGames_Response_Achievement.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetTopAchievementsForGames_Response_Achievement);
+
+    /** CPlayer_GetTopAchievementsForGames_Response_Achievement statid. */
+    public statid: number;
+
+    /** CPlayer_GetTopAchievementsForGames_Response_Achievement bit. */
+    public bit: number;
+
+    /** CPlayer_GetTopAchievementsForGames_Response_Achievement name. */
+    public name: string;
+
+    /** CPlayer_GetTopAchievementsForGames_Response_Achievement desc. */
+    public desc: string;
+
+    /** CPlayer_GetTopAchievementsForGames_Response_Achievement icon. */
+    public icon: string;
+
+    /** CPlayer_GetTopAchievementsForGames_Response_Achievement iconGray. */
+    public iconGray: string;
+
+    /** CPlayer_GetTopAchievementsForGames_Response_Achievement hidden. */
+    public hidden: boolean;
+
+    /** CPlayer_GetTopAchievementsForGames_Response_Achievement playerPercentUnlocked. */
+    public playerPercentUnlocked: string;
+
+    /**
+     * Encodes the specified CPlayer_GetTopAchievementsForGames_Response_Achievement message. Does not implicitly {@link CPlayer_GetTopAchievementsForGames_Response_Achievement.verify|verify} messages.
+     * @param message CPlayer_GetTopAchievementsForGames_Response_Achievement message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetTopAchievementsForGames_Response_Achievement, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetTopAchievementsForGames_Response_Achievement message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetTopAchievementsForGames_Response_Achievement
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetTopAchievementsForGames_Response_Achievement;
+
+    /**
+     * Gets the default type url for CPlayer_GetTopAchievementsForGames_Response_Achievement
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_GetTopAchievementsForGames_Response_Game. */
+export interface ICPlayer_GetTopAchievementsForGames_Response_Game {
+
+    /** CPlayer_GetTopAchievementsForGames_Response_Game appid */
+    appid?: (number|null);
+
+    /** CPlayer_GetTopAchievementsForGames_Response_Game totalAchievements */
+    totalAchievements?: (number|null);
+
+    /** CPlayer_GetTopAchievementsForGames_Response_Game achievements */
+    achievements?: (ICPlayer_GetTopAchievementsForGames_Response_Achievement[]|null);
+}
+
+/** Represents a CPlayer_GetTopAchievementsForGames_Response_Game. */
+export class CPlayer_GetTopAchievementsForGames_Response_Game implements ICPlayer_GetTopAchievementsForGames_Response_Game {
+
+    /**
+     * Constructs a new CPlayer_GetTopAchievementsForGames_Response_Game.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_GetTopAchievementsForGames_Response_Game);
+
+    /** CPlayer_GetTopAchievementsForGames_Response_Game appid. */
+    public appid: number;
+
+    /** CPlayer_GetTopAchievementsForGames_Response_Game totalAchievements. */
+    public totalAchievements: number;
+
+    /** CPlayer_GetTopAchievementsForGames_Response_Game achievements. */
+    public achievements: ICPlayer_GetTopAchievementsForGames_Response_Achievement[];
+
+    /**
+     * Encodes the specified CPlayer_GetTopAchievementsForGames_Response_Game message. Does not implicitly {@link CPlayer_GetTopAchievementsForGames_Response_Game.verify|verify} messages.
+     * @param message CPlayer_GetTopAchievementsForGames_Response_Game message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_GetTopAchievementsForGames_Response_Game, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_GetTopAchievementsForGames_Response_Game message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_GetTopAchievementsForGames_Response_Game
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_GetTopAchievementsForGames_Response_Game;
+
+    /**
+     * Gets the default type url for CPlayer_GetTopAchievementsForGames_Response_Game
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_IgnoreFriend_Request. */
+export interface ICPlayer_IgnoreFriend_Request {
+
+    /** CPlayer_IgnoreFriend_Request steamid */
+    steamid?: (number|Long|null);
+
+    /** CPlayer_IgnoreFriend_Request unignore */
+    unignore?: (boolean|null);
+}
+
+/** Represents a CPlayer_IgnoreFriend_Request. */
+export class CPlayer_IgnoreFriend_Request implements ICPlayer_IgnoreFriend_Request {
+
+    /**
+     * Constructs a new CPlayer_IgnoreFriend_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_IgnoreFriend_Request);
+
+    /** CPlayer_IgnoreFriend_Request steamid. */
+    public steamid: (number|Long);
+
+    /** CPlayer_IgnoreFriend_Request unignore. */
+    public unignore: boolean;
+
+    /**
+     * Encodes the specified CPlayer_IgnoreFriend_Request message. Does not implicitly {@link CPlayer_IgnoreFriend_Request.verify|verify} messages.
+     * @param message CPlayer_IgnoreFriend_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_IgnoreFriend_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_IgnoreFriend_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_IgnoreFriend_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_IgnoreFriend_Request;
+
+    /**
+     * Gets the default type url for CPlayer_IgnoreFriend_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_IgnoreFriend_Response. */
+export interface ICPlayer_IgnoreFriend_Response {
+
+    /** CPlayer_IgnoreFriend_Response friendRelationship */
+    friendRelationship?: (number|null);
+}
+
+/** Represents a CPlayer_IgnoreFriend_Response. */
+export class CPlayer_IgnoreFriend_Response implements ICPlayer_IgnoreFriend_Response {
+
+    /**
+     * Constructs a new CPlayer_IgnoreFriend_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_IgnoreFriend_Response);
+
+    /** CPlayer_IgnoreFriend_Response friendRelationship. */
+    public friendRelationship: number;
+
+    /**
+     * Encodes the specified CPlayer_IgnoreFriend_Response message. Does not implicitly {@link CPlayer_IgnoreFriend_Response.verify|verify} messages.
+     * @param message CPlayer_IgnoreFriend_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_IgnoreFriend_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_IgnoreFriend_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_IgnoreFriend_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_IgnoreFriend_Response;
+
+    /**
+     * Gets the default type url for CPlayer_IgnoreFriend_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_IncomingInviteMutualFriendList. */
+export interface ICPlayer_IncomingInviteMutualFriendList {
+
+    /** CPlayer_IncomingInviteMutualFriendList steamid */
+    steamid?: (number|Long|null);
+
+    /** CPlayer_IncomingInviteMutualFriendList mutualFriendAccountIds */
+    mutualFriendAccountIds?: (number[]|null);
+}
+
+/** Represents a CPlayer_IncomingInviteMutualFriendList. */
+export class CPlayer_IncomingInviteMutualFriendList implements ICPlayer_IncomingInviteMutualFriendList {
+
+    /**
+     * Constructs a new CPlayer_IncomingInviteMutualFriendList.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_IncomingInviteMutualFriendList);
+
+    /** CPlayer_IncomingInviteMutualFriendList steamid. */
+    public steamid: (number|Long);
+
+    /** CPlayer_IncomingInviteMutualFriendList mutualFriendAccountIds. */
+    public mutualFriendAccountIds: number[];
+
+    /**
+     * Encodes the specified CPlayer_IncomingInviteMutualFriendList message. Does not implicitly {@link CPlayer_IncomingInviteMutualFriendList.verify|verify} messages.
+     * @param message CPlayer_IncomingInviteMutualFriendList message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_IncomingInviteMutualFriendList, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_IncomingInviteMutualFriendList message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_IncomingInviteMutualFriendList
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_IncomingInviteMutualFriendList;
+
+    /**
+     * Gets the default type url for CPlayer_IncomingInviteMutualFriendList
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_LastPlayedTimes_Notification. */
+export interface ICPlayer_LastPlayedTimes_Notification {
+
+    /** CPlayer_LastPlayedTimes_Notification games */
+    games?: (ICPlayer_GetLastPlayedTimes_Response_Game[]|null);
+}
+
+/** Represents a CPlayer_LastPlayedTimes_Notification. */
+export class CPlayer_LastPlayedTimes_Notification implements ICPlayer_LastPlayedTimes_Notification {
+
+    /**
+     * Constructs a new CPlayer_LastPlayedTimes_Notification.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_LastPlayedTimes_Notification);
+
+    /** CPlayer_LastPlayedTimes_Notification games. */
+    public games: ICPlayer_GetLastPlayedTimes_Response_Game[];
+
+    /**
+     * Encodes the specified CPlayer_LastPlayedTimes_Notification message. Does not implicitly {@link CPlayer_LastPlayedTimes_Notification.verify|verify} messages.
+     * @param message CPlayer_LastPlayedTimes_Notification message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_LastPlayedTimes_Notification, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_LastPlayedTimes_Notification message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_LastPlayedTimes_Notification
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_LastPlayedTimes_Notification;
+
+    /**
+     * Gets the default type url for CPlayer_LastPlayedTimes_Notification
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_NewSteamAnnouncementState_Notification. */
+export interface ICPlayer_NewSteamAnnouncementState_Notification {
+
+    /** CPlayer_NewSteamAnnouncementState_Notification state */
+    state?: (number|null);
+
+    /** CPlayer_NewSteamAnnouncementState_Notification announcementHeadline */
+    announcementHeadline?: (string|null);
+
+    /** CPlayer_NewSteamAnnouncementState_Notification announcementUrl */
+    announcementUrl?: (string|null);
+
+    /** CPlayer_NewSteamAnnouncementState_Notification timePosted */
+    timePosted?: (number|null);
+
+    /** CPlayer_NewSteamAnnouncementState_Notification announcementGid */
+    announcementGid?: (number|Long|null);
+}
+
+/** Represents a CPlayer_NewSteamAnnouncementState_Notification. */
+export class CPlayer_NewSteamAnnouncementState_Notification implements ICPlayer_NewSteamAnnouncementState_Notification {
+
+    /**
+     * Constructs a new CPlayer_NewSteamAnnouncementState_Notification.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_NewSteamAnnouncementState_Notification);
+
+    /** CPlayer_NewSteamAnnouncementState_Notification state. */
+    public state: number;
+
+    /** CPlayer_NewSteamAnnouncementState_Notification announcementHeadline. */
+    public announcementHeadline: string;
+
+    /** CPlayer_NewSteamAnnouncementState_Notification announcementUrl. */
+    public announcementUrl: string;
+
+    /** CPlayer_NewSteamAnnouncementState_Notification timePosted. */
+    public timePosted: number;
+
+    /** CPlayer_NewSteamAnnouncementState_Notification announcementGid. */
+    public announcementGid: (number|Long);
+
+    /**
+     * Encodes the specified CPlayer_NewSteamAnnouncementState_Notification message. Does not implicitly {@link CPlayer_NewSteamAnnouncementState_Notification.verify|verify} messages.
+     * @param message CPlayer_NewSteamAnnouncementState_Notification message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_NewSteamAnnouncementState_Notification, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_NewSteamAnnouncementState_Notification message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_NewSteamAnnouncementState_Notification
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_NewSteamAnnouncementState_Notification;
+
+    /**
+     * Gets the default type url for CPlayer_NewSteamAnnouncementState_Notification
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_PerFriendPreferencesChanged_Notification. */
+export interface ICPlayer_PerFriendPreferencesChanged_Notification {
+
+    /** CPlayer_PerFriendPreferencesChanged_Notification accountid */
+    accountid?: (number|null);
+
+    /** CPlayer_PerFriendPreferencesChanged_Notification preferences */
+    preferences?: (IPerFriendPreferences|null);
+}
+
+/** Represents a CPlayer_PerFriendPreferencesChanged_Notification. */
+export class CPlayer_PerFriendPreferencesChanged_Notification implements ICPlayer_PerFriendPreferencesChanged_Notification {
+
+    /**
+     * Constructs a new CPlayer_PerFriendPreferencesChanged_Notification.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_PerFriendPreferencesChanged_Notification);
+
+    /** CPlayer_PerFriendPreferencesChanged_Notification accountid. */
+    public accountid: number;
+
+    /** CPlayer_PerFriendPreferencesChanged_Notification preferences. */
+    public preferences?: (IPerFriendPreferences|null);
+
+    /**
+     * Encodes the specified CPlayer_PerFriendPreferencesChanged_Notification message. Does not implicitly {@link CPlayer_PerFriendPreferencesChanged_Notification.verify|verify} messages.
+     * @param message CPlayer_PerFriendPreferencesChanged_Notification message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_PerFriendPreferencesChanged_Notification, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_PerFriendPreferencesChanged_Notification message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_PerFriendPreferencesChanged_Notification
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_PerFriendPreferencesChanged_Notification;
+
+    /**
+     * Gets the default type url for CPlayer_PerFriendPreferencesChanged_Notification
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_PostStatusToFriends_Request. */
+export interface ICPlayer_PostStatusToFriends_Request {
+
+    /** CPlayer_PostStatusToFriends_Request appid */
+    appid?: (number|null);
+
+    /** CPlayer_PostStatusToFriends_Request statusText */
+    statusText?: (string|null);
+}
+
+/** Represents a CPlayer_PostStatusToFriends_Request. */
+export class CPlayer_PostStatusToFriends_Request implements ICPlayer_PostStatusToFriends_Request {
+
+    /**
+     * Constructs a new CPlayer_PostStatusToFriends_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_PostStatusToFriends_Request);
+
+    /** CPlayer_PostStatusToFriends_Request appid. */
+    public appid: number;
+
+    /** CPlayer_PostStatusToFriends_Request statusText. */
+    public statusText: string;
+
+    /**
+     * Encodes the specified CPlayer_PostStatusToFriends_Request message. Does not implicitly {@link CPlayer_PostStatusToFriends_Request.verify|verify} messages.
+     * @param message CPlayer_PostStatusToFriends_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_PostStatusToFriends_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_PostStatusToFriends_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_PostStatusToFriends_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_PostStatusToFriends_Request;
+
+    /**
+     * Gets the default type url for CPlayer_PostStatusToFriends_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_PostStatusToFriends_Response. */
+export interface ICPlayer_PostStatusToFriends_Response {
+}
+
+/** Represents a CPlayer_PostStatusToFriends_Response. */
+export class CPlayer_PostStatusToFriends_Response implements ICPlayer_PostStatusToFriends_Response {
+
+    /**
+     * Constructs a new CPlayer_PostStatusToFriends_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_PostStatusToFriends_Response);
+
+    /**
+     * Encodes the specified CPlayer_PostStatusToFriends_Response message. Does not implicitly {@link CPlayer_PostStatusToFriends_Response.verify|verify} messages.
+     * @param message CPlayer_PostStatusToFriends_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_PostStatusToFriends_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_PostStatusToFriends_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_PostStatusToFriends_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_PostStatusToFriends_Response;
+
+    /**
+     * Gets the default type url for CPlayer_PostStatusToFriends_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_PrivacySettingsChanged_Notification. */
+export interface ICPlayer_PrivacySettingsChanged_Notification {
+
+    /** CPlayer_PrivacySettingsChanged_Notification privacySettings */
+    privacySettings?: (ICPrivacySettings|null);
+}
+
+/** Represents a CPlayer_PrivacySettingsChanged_Notification. */
+export class CPlayer_PrivacySettingsChanged_Notification implements ICPlayer_PrivacySettingsChanged_Notification {
+
+    /**
+     * Constructs a new CPlayer_PrivacySettingsChanged_Notification.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_PrivacySettingsChanged_Notification);
+
+    /** CPlayer_PrivacySettingsChanged_Notification privacySettings. */
+    public privacySettings?: (ICPrivacySettings|null);
+
+    /**
+     * Encodes the specified CPlayer_PrivacySettingsChanged_Notification message. Does not implicitly {@link CPlayer_PrivacySettingsChanged_Notification.verify|verify} messages.
+     * @param message CPlayer_PrivacySettingsChanged_Notification message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_PrivacySettingsChanged_Notification, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_PrivacySettingsChanged_Notification message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_PrivacySettingsChanged_Notification
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_PrivacySettingsChanged_Notification;
+
+    /**
+     * Gets the default type url for CPlayer_PrivacySettingsChanged_Notification
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_RecordDisconnectedPlaytime_Request. */
+export interface ICPlayer_RecordDisconnectedPlaytime_Request {
+
+    /** CPlayer_RecordDisconnectedPlaytime_Request playSessions */
+    playSessions?: (ICPlayer_RecordDisconnectedPlaytime_Request_PlayHistory[]|null);
+}
+
+/** Represents a CPlayer_RecordDisconnectedPlaytime_Request. */
+export class CPlayer_RecordDisconnectedPlaytime_Request implements ICPlayer_RecordDisconnectedPlaytime_Request {
+
+    /**
+     * Constructs a new CPlayer_RecordDisconnectedPlaytime_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_RecordDisconnectedPlaytime_Request);
+
+    /** CPlayer_RecordDisconnectedPlaytime_Request playSessions. */
+    public playSessions: ICPlayer_RecordDisconnectedPlaytime_Request_PlayHistory[];
+
+    /**
+     * Encodes the specified CPlayer_RecordDisconnectedPlaytime_Request message. Does not implicitly {@link CPlayer_RecordDisconnectedPlaytime_Request.verify|verify} messages.
+     * @param message CPlayer_RecordDisconnectedPlaytime_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_RecordDisconnectedPlaytime_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_RecordDisconnectedPlaytime_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_RecordDisconnectedPlaytime_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_RecordDisconnectedPlaytime_Request;
+
+    /**
+     * Gets the default type url for CPlayer_RecordDisconnectedPlaytime_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_RecordDisconnectedPlaytime_Request_PlayHistory. */
+export interface ICPlayer_RecordDisconnectedPlaytime_Request_PlayHistory {
+
+    /** CPlayer_RecordDisconnectedPlaytime_Request_PlayHistory appid */
+    appid?: (number|null);
+
+    /** CPlayer_RecordDisconnectedPlaytime_Request_PlayHistory sessionTimeStart */
+    sessionTimeStart?: (number|null);
+
+    /** CPlayer_RecordDisconnectedPlaytime_Request_PlayHistory seconds */
+    seconds?: (number|null);
+
+    /** CPlayer_RecordDisconnectedPlaytime_Request_PlayHistory offline */
+    offline?: (boolean|null);
+
+    /** CPlayer_RecordDisconnectedPlaytime_Request_PlayHistory owner */
+    owner?: (number|null);
+}
+
+/** Represents a CPlayer_RecordDisconnectedPlaytime_Request_PlayHistory. */
+export class CPlayer_RecordDisconnectedPlaytime_Request_PlayHistory implements ICPlayer_RecordDisconnectedPlaytime_Request_PlayHistory {
+
+    /**
+     * Constructs a new CPlayer_RecordDisconnectedPlaytime_Request_PlayHistory.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_RecordDisconnectedPlaytime_Request_PlayHistory);
+
+    /** CPlayer_RecordDisconnectedPlaytime_Request_PlayHistory appid. */
+    public appid: number;
+
+    /** CPlayer_RecordDisconnectedPlaytime_Request_PlayHistory sessionTimeStart. */
+    public sessionTimeStart: number;
+
+    /** CPlayer_RecordDisconnectedPlaytime_Request_PlayHistory seconds. */
+    public seconds: number;
+
+    /** CPlayer_RecordDisconnectedPlaytime_Request_PlayHistory offline. */
+    public offline: boolean;
+
+    /** CPlayer_RecordDisconnectedPlaytime_Request_PlayHistory owner. */
+    public owner: number;
+
+    /**
+     * Encodes the specified CPlayer_RecordDisconnectedPlaytime_Request_PlayHistory message. Does not implicitly {@link CPlayer_RecordDisconnectedPlaytime_Request_PlayHistory.verify|verify} messages.
+     * @param message CPlayer_RecordDisconnectedPlaytime_Request_PlayHistory message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_RecordDisconnectedPlaytime_Request_PlayHistory, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_RecordDisconnectedPlaytime_Request_PlayHistory message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_RecordDisconnectedPlaytime_Request_PlayHistory
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_RecordDisconnectedPlaytime_Request_PlayHistory;
+
+    /**
+     * Gets the default type url for CPlayer_RecordDisconnectedPlaytime_Request_PlayHistory
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_RecordDisconnectedPlaytime_Response. */
+export interface ICPlayer_RecordDisconnectedPlaytime_Response {
+}
+
+/** Represents a CPlayer_RecordDisconnectedPlaytime_Response. */
+export class CPlayer_RecordDisconnectedPlaytime_Response implements ICPlayer_RecordDisconnectedPlaytime_Response {
+
+    /**
+     * Constructs a new CPlayer_RecordDisconnectedPlaytime_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_RecordDisconnectedPlaytime_Response);
+
+    /**
+     * Encodes the specified CPlayer_RecordDisconnectedPlaytime_Response message. Does not implicitly {@link CPlayer_RecordDisconnectedPlaytime_Response.verify|verify} messages.
+     * @param message CPlayer_RecordDisconnectedPlaytime_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_RecordDisconnectedPlaytime_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_RecordDisconnectedPlaytime_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_RecordDisconnectedPlaytime_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_RecordDisconnectedPlaytime_Response;
+
+    /**
+     * Gets the default type url for CPlayer_RecordDisconnectedPlaytime_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_RemoveFriend_Request. */
+export interface ICPlayer_RemoveFriend_Request {
+
+    /** CPlayer_RemoveFriend_Request steamid */
+    steamid?: (number|Long|null);
+}
+
+/** Represents a CPlayer_RemoveFriend_Request. */
+export class CPlayer_RemoveFriend_Request implements ICPlayer_RemoveFriend_Request {
+
+    /**
+     * Constructs a new CPlayer_RemoveFriend_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_RemoveFriend_Request);
+
+    /** CPlayer_RemoveFriend_Request steamid. */
+    public steamid: (number|Long);
+
+    /**
+     * Encodes the specified CPlayer_RemoveFriend_Request message. Does not implicitly {@link CPlayer_RemoveFriend_Request.verify|verify} messages.
+     * @param message CPlayer_RemoveFriend_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_RemoveFriend_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_RemoveFriend_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_RemoveFriend_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_RemoveFriend_Request;
+
+    /**
+     * Gets the default type url for CPlayer_RemoveFriend_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_RemoveFriend_Response. */
+export interface ICPlayer_RemoveFriend_Response {
+
+    /** CPlayer_RemoveFriend_Response friendRelationship */
+    friendRelationship?: (number|null);
+}
+
+/** Represents a CPlayer_RemoveFriend_Response. */
+export class CPlayer_RemoveFriend_Response implements ICPlayer_RemoveFriend_Response {
+
+    /**
+     * Constructs a new CPlayer_RemoveFriend_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_RemoveFriend_Response);
+
+    /** CPlayer_RemoveFriend_Response friendRelationship. */
+    public friendRelationship: number;
+
+    /**
+     * Encodes the specified CPlayer_RemoveFriend_Response message. Does not implicitly {@link CPlayer_RemoveFriend_Response.verify|verify} messages.
+     * @param message CPlayer_RemoveFriend_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_RemoveFriend_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_RemoveFriend_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_RemoveFriend_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_RemoveFriend_Response;
+
+    /**
+     * Gets the default type url for CPlayer_RemoveFriend_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_SetAnimatedAvatar_Request. */
+export interface ICPlayer_SetAnimatedAvatar_Request {
+
+    /** CPlayer_SetAnimatedAvatar_Request communityitemid */
+    communityitemid?: (number|Long|null);
+}
+
+/** Represents a CPlayer_SetAnimatedAvatar_Request. */
+export class CPlayer_SetAnimatedAvatar_Request implements ICPlayer_SetAnimatedAvatar_Request {
+
+    /**
+     * Constructs a new CPlayer_SetAnimatedAvatar_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_SetAnimatedAvatar_Request);
+
+    /** CPlayer_SetAnimatedAvatar_Request communityitemid. */
+    public communityitemid: (number|Long);
+
+    /**
+     * Encodes the specified CPlayer_SetAnimatedAvatar_Request message. Does not implicitly {@link CPlayer_SetAnimatedAvatar_Request.verify|verify} messages.
+     * @param message CPlayer_SetAnimatedAvatar_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_SetAnimatedAvatar_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_SetAnimatedAvatar_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_SetAnimatedAvatar_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_SetAnimatedAvatar_Request;
+
+    /**
+     * Gets the default type url for CPlayer_SetAnimatedAvatar_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_SetAnimatedAvatar_Response. */
+export interface ICPlayer_SetAnimatedAvatar_Response {
+}
+
+/** Represents a CPlayer_SetAnimatedAvatar_Response. */
+export class CPlayer_SetAnimatedAvatar_Response implements ICPlayer_SetAnimatedAvatar_Response {
+
+    /**
+     * Constructs a new CPlayer_SetAnimatedAvatar_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_SetAnimatedAvatar_Response);
+
+    /**
+     * Encodes the specified CPlayer_SetAnimatedAvatar_Response message. Does not implicitly {@link CPlayer_SetAnimatedAvatar_Response.verify|verify} messages.
+     * @param message CPlayer_SetAnimatedAvatar_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_SetAnimatedAvatar_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_SetAnimatedAvatar_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_SetAnimatedAvatar_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_SetAnimatedAvatar_Response;
+
+    /**
+     * Gets the default type url for CPlayer_SetAnimatedAvatar_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_SetAvatarFrame_Request. */
+export interface ICPlayer_SetAvatarFrame_Request {
+
+    /** CPlayer_SetAvatarFrame_Request communityitemid */
+    communityitemid?: (number|Long|null);
+}
+
+/** Represents a CPlayer_SetAvatarFrame_Request. */
+export class CPlayer_SetAvatarFrame_Request implements ICPlayer_SetAvatarFrame_Request {
+
+    /**
+     * Constructs a new CPlayer_SetAvatarFrame_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_SetAvatarFrame_Request);
+
+    /** CPlayer_SetAvatarFrame_Request communityitemid. */
+    public communityitemid: (number|Long);
+
+    /**
+     * Encodes the specified CPlayer_SetAvatarFrame_Request message. Does not implicitly {@link CPlayer_SetAvatarFrame_Request.verify|verify} messages.
+     * @param message CPlayer_SetAvatarFrame_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_SetAvatarFrame_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_SetAvatarFrame_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_SetAvatarFrame_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_SetAvatarFrame_Request;
+
+    /**
+     * Gets the default type url for CPlayer_SetAvatarFrame_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_SetAvatarFrame_Response. */
+export interface ICPlayer_SetAvatarFrame_Response {
+}
+
+/** Represents a CPlayer_SetAvatarFrame_Response. */
+export class CPlayer_SetAvatarFrame_Response implements ICPlayer_SetAvatarFrame_Response {
+
+    /**
+     * Constructs a new CPlayer_SetAvatarFrame_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_SetAvatarFrame_Response);
+
+    /**
+     * Encodes the specified CPlayer_SetAvatarFrame_Response message. Does not implicitly {@link CPlayer_SetAvatarFrame_Response.verify|verify} messages.
+     * @param message CPlayer_SetAvatarFrame_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_SetAvatarFrame_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_SetAvatarFrame_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_SetAvatarFrame_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_SetAvatarFrame_Response;
+
+    /**
+     * Gets the default type url for CPlayer_SetAvatarFrame_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_SetCommunityPreferences_Request. */
+export interface ICPlayer_SetCommunityPreferences_Request {
+
+    /** CPlayer_SetCommunityPreferences_Request preferences */
+    preferences?: (ICPlayer_CommunityPreferences|null);
+}
+
+/** Represents a CPlayer_SetCommunityPreferences_Request. */
+export class CPlayer_SetCommunityPreferences_Request implements ICPlayer_SetCommunityPreferences_Request {
+
+    /**
+     * Constructs a new CPlayer_SetCommunityPreferences_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_SetCommunityPreferences_Request);
+
+    /** CPlayer_SetCommunityPreferences_Request preferences. */
+    public preferences?: (ICPlayer_CommunityPreferences|null);
+
+    /**
+     * Encodes the specified CPlayer_SetCommunityPreferences_Request message. Does not implicitly {@link CPlayer_SetCommunityPreferences_Request.verify|verify} messages.
+     * @param message CPlayer_SetCommunityPreferences_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_SetCommunityPreferences_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_SetCommunityPreferences_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_SetCommunityPreferences_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_SetCommunityPreferences_Request;
+
+    /**
+     * Gets the default type url for CPlayer_SetCommunityPreferences_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_SetCommunityPreferences_Response. */
+export interface ICPlayer_SetCommunityPreferences_Response {
+}
+
+/** Represents a CPlayer_SetCommunityPreferences_Response. */
+export class CPlayer_SetCommunityPreferences_Response implements ICPlayer_SetCommunityPreferences_Response {
+
+    /**
+     * Constructs a new CPlayer_SetCommunityPreferences_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_SetCommunityPreferences_Response);
+
+    /**
+     * Encodes the specified CPlayer_SetCommunityPreferences_Response message. Does not implicitly {@link CPlayer_SetCommunityPreferences_Response.verify|verify} messages.
+     * @param message CPlayer_SetCommunityPreferences_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_SetCommunityPreferences_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_SetCommunityPreferences_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_SetCommunityPreferences_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_SetCommunityPreferences_Response;
+
+    /**
+     * Gets the default type url for CPlayer_SetCommunityPreferences_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_SetEquippedProfileItemFlags_Request. */
+export interface ICPlayer_SetEquippedProfileItemFlags_Request {
+
+    /** CPlayer_SetEquippedProfileItemFlags_Request communityitemid */
+    communityitemid?: (number|Long|null);
+
+    /** CPlayer_SetEquippedProfileItemFlags_Request flags */
+    flags?: (number|null);
+}
+
+/** Represents a CPlayer_SetEquippedProfileItemFlags_Request. */
+export class CPlayer_SetEquippedProfileItemFlags_Request implements ICPlayer_SetEquippedProfileItemFlags_Request {
+
+    /**
+     * Constructs a new CPlayer_SetEquippedProfileItemFlags_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_SetEquippedProfileItemFlags_Request);
+
+    /** CPlayer_SetEquippedProfileItemFlags_Request communityitemid. */
+    public communityitemid: (number|Long);
+
+    /** CPlayer_SetEquippedProfileItemFlags_Request flags. */
+    public flags: number;
+
+    /**
+     * Encodes the specified CPlayer_SetEquippedProfileItemFlags_Request message. Does not implicitly {@link CPlayer_SetEquippedProfileItemFlags_Request.verify|verify} messages.
+     * @param message CPlayer_SetEquippedProfileItemFlags_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_SetEquippedProfileItemFlags_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_SetEquippedProfileItemFlags_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_SetEquippedProfileItemFlags_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_SetEquippedProfileItemFlags_Request;
+
+    /**
+     * Gets the default type url for CPlayer_SetEquippedProfileItemFlags_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_SetEquippedProfileItemFlags_Response. */
+export interface ICPlayer_SetEquippedProfileItemFlags_Response {
+}
+
+/** Represents a CPlayer_SetEquippedProfileItemFlags_Response. */
+export class CPlayer_SetEquippedProfileItemFlags_Response implements ICPlayer_SetEquippedProfileItemFlags_Response {
+
+    /**
+     * Constructs a new CPlayer_SetEquippedProfileItemFlags_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_SetEquippedProfileItemFlags_Response);
+
+    /**
+     * Encodes the specified CPlayer_SetEquippedProfileItemFlags_Response message. Does not implicitly {@link CPlayer_SetEquippedProfileItemFlags_Response.verify|verify} messages.
+     * @param message CPlayer_SetEquippedProfileItemFlags_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_SetEquippedProfileItemFlags_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_SetEquippedProfileItemFlags_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_SetEquippedProfileItemFlags_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_SetEquippedProfileItemFlags_Response;
+
+    /**
+     * Gets the default type url for CPlayer_SetEquippedProfileItemFlags_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_SetFavoriteBadge_Request. */
+export interface ICPlayer_SetFavoriteBadge_Request {
+
+    /** CPlayer_SetFavoriteBadge_Request communityitemid */
+    communityitemid?: (number|Long|null);
+
+    /** CPlayer_SetFavoriteBadge_Request badgeid */
+    badgeid?: (number|null);
+}
+
+/** Represents a CPlayer_SetFavoriteBadge_Request. */
+export class CPlayer_SetFavoriteBadge_Request implements ICPlayer_SetFavoriteBadge_Request {
+
+    /**
+     * Constructs a new CPlayer_SetFavoriteBadge_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_SetFavoriteBadge_Request);
+
+    /** CPlayer_SetFavoriteBadge_Request communityitemid. */
+    public communityitemid: (number|Long);
+
+    /** CPlayer_SetFavoriteBadge_Request badgeid. */
+    public badgeid: number;
+
+    /**
+     * Encodes the specified CPlayer_SetFavoriteBadge_Request message. Does not implicitly {@link CPlayer_SetFavoriteBadge_Request.verify|verify} messages.
+     * @param message CPlayer_SetFavoriteBadge_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_SetFavoriteBadge_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_SetFavoriteBadge_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_SetFavoriteBadge_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_SetFavoriteBadge_Request;
+
+    /**
+     * Gets the default type url for CPlayer_SetFavoriteBadge_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_SetFavoriteBadge_Response. */
+export interface ICPlayer_SetFavoriteBadge_Response {
+}
+
+/** Represents a CPlayer_SetFavoriteBadge_Response. */
+export class CPlayer_SetFavoriteBadge_Response implements ICPlayer_SetFavoriteBadge_Response {
+
+    /**
+     * Constructs a new CPlayer_SetFavoriteBadge_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_SetFavoriteBadge_Response);
+
+    /**
+     * Encodes the specified CPlayer_SetFavoriteBadge_Response message. Does not implicitly {@link CPlayer_SetFavoriteBadge_Response.verify|verify} messages.
+     * @param message CPlayer_SetFavoriteBadge_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_SetFavoriteBadge_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_SetFavoriteBadge_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_SetFavoriteBadge_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_SetFavoriteBadge_Response;
+
+    /**
+     * Gets the default type url for CPlayer_SetFavoriteBadge_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_SetMiniProfileBackground_Request. */
+export interface ICPlayer_SetMiniProfileBackground_Request {
+
+    /** CPlayer_SetMiniProfileBackground_Request communityitemid */
+    communityitemid?: (number|Long|null);
+}
+
+/** Represents a CPlayer_SetMiniProfileBackground_Request. */
+export class CPlayer_SetMiniProfileBackground_Request implements ICPlayer_SetMiniProfileBackground_Request {
+
+    /**
+     * Constructs a new CPlayer_SetMiniProfileBackground_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_SetMiniProfileBackground_Request);
+
+    /** CPlayer_SetMiniProfileBackground_Request communityitemid. */
+    public communityitemid: (number|Long);
+
+    /**
+     * Encodes the specified CPlayer_SetMiniProfileBackground_Request message. Does not implicitly {@link CPlayer_SetMiniProfileBackground_Request.verify|verify} messages.
+     * @param message CPlayer_SetMiniProfileBackground_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_SetMiniProfileBackground_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_SetMiniProfileBackground_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_SetMiniProfileBackground_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_SetMiniProfileBackground_Request;
+
+    /**
+     * Gets the default type url for CPlayer_SetMiniProfileBackground_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_SetMiniProfileBackground_Response. */
+export interface ICPlayer_SetMiniProfileBackground_Response {
+}
+
+/** Represents a CPlayer_SetMiniProfileBackground_Response. */
+export class CPlayer_SetMiniProfileBackground_Response implements ICPlayer_SetMiniProfileBackground_Response {
+
+    /**
+     * Constructs a new CPlayer_SetMiniProfileBackground_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_SetMiniProfileBackground_Response);
+
+    /**
+     * Encodes the specified CPlayer_SetMiniProfileBackground_Response message. Does not implicitly {@link CPlayer_SetMiniProfileBackground_Response.verify|verify} messages.
+     * @param message CPlayer_SetMiniProfileBackground_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_SetMiniProfileBackground_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_SetMiniProfileBackground_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_SetMiniProfileBackground_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_SetMiniProfileBackground_Response;
+
+    /**
+     * Gets the default type url for CPlayer_SetMiniProfileBackground_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_SetPerFriendPreferences_Request. */
+export interface ICPlayer_SetPerFriendPreferences_Request {
+
+    /** CPlayer_SetPerFriendPreferences_Request preferences */
+    preferences?: (IPerFriendPreferences|null);
+}
+
+/** Represents a CPlayer_SetPerFriendPreferences_Request. */
+export class CPlayer_SetPerFriendPreferences_Request implements ICPlayer_SetPerFriendPreferences_Request {
+
+    /**
+     * Constructs a new CPlayer_SetPerFriendPreferences_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_SetPerFriendPreferences_Request);
+
+    /** CPlayer_SetPerFriendPreferences_Request preferences. */
+    public preferences?: (IPerFriendPreferences|null);
+
+    /**
+     * Encodes the specified CPlayer_SetPerFriendPreferences_Request message. Does not implicitly {@link CPlayer_SetPerFriendPreferences_Request.verify|verify} messages.
+     * @param message CPlayer_SetPerFriendPreferences_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_SetPerFriendPreferences_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_SetPerFriendPreferences_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_SetPerFriendPreferences_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_SetPerFriendPreferences_Request;
+
+    /**
+     * Gets the default type url for CPlayer_SetPerFriendPreferences_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_SetPerFriendPreferences_Response. */
+export interface ICPlayer_SetPerFriendPreferences_Response {
+}
+
+/** Represents a CPlayer_SetPerFriendPreferences_Response. */
+export class CPlayer_SetPerFriendPreferences_Response implements ICPlayer_SetPerFriendPreferences_Response {
+
+    /**
+     * Constructs a new CPlayer_SetPerFriendPreferences_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_SetPerFriendPreferences_Response);
+
+    /**
+     * Encodes the specified CPlayer_SetPerFriendPreferences_Response message. Does not implicitly {@link CPlayer_SetPerFriendPreferences_Response.verify|verify} messages.
+     * @param message CPlayer_SetPerFriendPreferences_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_SetPerFriendPreferences_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_SetPerFriendPreferences_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_SetPerFriendPreferences_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_SetPerFriendPreferences_Response;
+
+    /**
+     * Gets the default type url for CPlayer_SetPerFriendPreferences_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_SetProfileBackground_Request. */
+export interface ICPlayer_SetProfileBackground_Request {
+
+    /** CPlayer_SetProfileBackground_Request communityitemid */
+    communityitemid?: (number|Long|null);
+}
+
+/** Represents a CPlayer_SetProfileBackground_Request. */
+export class CPlayer_SetProfileBackground_Request implements ICPlayer_SetProfileBackground_Request {
+
+    /**
+     * Constructs a new CPlayer_SetProfileBackground_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_SetProfileBackground_Request);
+
+    /** CPlayer_SetProfileBackground_Request communityitemid. */
+    public communityitemid: (number|Long);
+
+    /**
+     * Encodes the specified CPlayer_SetProfileBackground_Request message. Does not implicitly {@link CPlayer_SetProfileBackground_Request.verify|verify} messages.
+     * @param message CPlayer_SetProfileBackground_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_SetProfileBackground_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_SetProfileBackground_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_SetProfileBackground_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_SetProfileBackground_Request;
+
+    /**
+     * Gets the default type url for CPlayer_SetProfileBackground_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_SetProfileBackground_Response. */
+export interface ICPlayer_SetProfileBackground_Response {
+}
+
+/** Represents a CPlayer_SetProfileBackground_Response. */
+export class CPlayer_SetProfileBackground_Response implements ICPlayer_SetProfileBackground_Response {
+
+    /**
+     * Constructs a new CPlayer_SetProfileBackground_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_SetProfileBackground_Response);
+
+    /**
+     * Encodes the specified CPlayer_SetProfileBackground_Response message. Does not implicitly {@link CPlayer_SetProfileBackground_Response.verify|verify} messages.
+     * @param message CPlayer_SetProfileBackground_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_SetProfileBackground_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_SetProfileBackground_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_SetProfileBackground_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_SetProfileBackground_Response;
+
+    /**
+     * Gets the default type url for CPlayer_SetProfileBackground_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_SetProfilePreferences_Request. */
+export interface ICPlayer_SetProfilePreferences_Request {
+
+    /** CPlayer_SetProfilePreferences_Request profilePreferences */
+    profilePreferences?: (IProfilePreferences|null);
+}
+
+/** Represents a CPlayer_SetProfilePreferences_Request. */
+export class CPlayer_SetProfilePreferences_Request implements ICPlayer_SetProfilePreferences_Request {
+
+    /**
+     * Constructs a new CPlayer_SetProfilePreferences_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_SetProfilePreferences_Request);
+
+    /** CPlayer_SetProfilePreferences_Request profilePreferences. */
+    public profilePreferences?: (IProfilePreferences|null);
+
+    /**
+     * Encodes the specified CPlayer_SetProfilePreferences_Request message. Does not implicitly {@link CPlayer_SetProfilePreferences_Request.verify|verify} messages.
+     * @param message CPlayer_SetProfilePreferences_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_SetProfilePreferences_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_SetProfilePreferences_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_SetProfilePreferences_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_SetProfilePreferences_Request;
+
+    /**
+     * Gets the default type url for CPlayer_SetProfilePreferences_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_SetProfilePreferences_Response. */
+export interface ICPlayer_SetProfilePreferences_Response {
+}
+
+/** Represents a CPlayer_SetProfilePreferences_Response. */
+export class CPlayer_SetProfilePreferences_Response implements ICPlayer_SetProfilePreferences_Response {
+
+    /**
+     * Constructs a new CPlayer_SetProfilePreferences_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_SetProfilePreferences_Response);
+
+    /**
+     * Encodes the specified CPlayer_SetProfilePreferences_Response message. Does not implicitly {@link CPlayer_SetProfilePreferences_Response.verify|verify} messages.
+     * @param message CPlayer_SetProfilePreferences_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_SetProfilePreferences_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_SetProfilePreferences_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_SetProfilePreferences_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_SetProfilePreferences_Response;
+
+    /**
+     * Gets the default type url for CPlayer_SetProfilePreferences_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_SetProfileTheme_Request. */
+export interface ICPlayer_SetProfileTheme_Request {
+
+    /** CPlayer_SetProfileTheme_Request themeId */
+    themeId?: (string|null);
+}
+
+/** Represents a CPlayer_SetProfileTheme_Request. */
+export class CPlayer_SetProfileTheme_Request implements ICPlayer_SetProfileTheme_Request {
+
+    /**
+     * Constructs a new CPlayer_SetProfileTheme_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_SetProfileTheme_Request);
+
+    /** CPlayer_SetProfileTheme_Request themeId. */
+    public themeId: string;
+
+    /**
+     * Encodes the specified CPlayer_SetProfileTheme_Request message. Does not implicitly {@link CPlayer_SetProfileTheme_Request.verify|verify} messages.
+     * @param message CPlayer_SetProfileTheme_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_SetProfileTheme_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_SetProfileTheme_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_SetProfileTheme_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_SetProfileTheme_Request;
+
+    /**
+     * Gets the default type url for CPlayer_SetProfileTheme_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_SetProfileTheme_Response. */
+export interface ICPlayer_SetProfileTheme_Response {
+}
+
+/** Represents a CPlayer_SetProfileTheme_Response. */
+export class CPlayer_SetProfileTheme_Response implements ICPlayer_SetProfileTheme_Response {
+
+    /**
+     * Constructs a new CPlayer_SetProfileTheme_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_SetProfileTheme_Response);
+
+    /**
+     * Encodes the specified CPlayer_SetProfileTheme_Response message. Does not implicitly {@link CPlayer_SetProfileTheme_Response.verify|verify} messages.
+     * @param message CPlayer_SetProfileTheme_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_SetProfileTheme_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_SetProfileTheme_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_SetProfileTheme_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_SetProfileTheme_Response;
+
+    /**
+     * Gets the default type url for CPlayer_SetProfileTheme_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_SetSteamDeckKeyboardSkin_Request. */
+export interface ICPlayer_SetSteamDeckKeyboardSkin_Request {
+
+    /** CPlayer_SetSteamDeckKeyboardSkin_Request communityitemid */
+    communityitemid?: (number|Long|null);
+}
+
+/** Represents a CPlayer_SetSteamDeckKeyboardSkin_Request. */
+export class CPlayer_SetSteamDeckKeyboardSkin_Request implements ICPlayer_SetSteamDeckKeyboardSkin_Request {
+
+    /**
+     * Constructs a new CPlayer_SetSteamDeckKeyboardSkin_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_SetSteamDeckKeyboardSkin_Request);
+
+    /** CPlayer_SetSteamDeckKeyboardSkin_Request communityitemid. */
+    public communityitemid: (number|Long);
+
+    /**
+     * Encodes the specified CPlayer_SetSteamDeckKeyboardSkin_Request message. Does not implicitly {@link CPlayer_SetSteamDeckKeyboardSkin_Request.verify|verify} messages.
+     * @param message CPlayer_SetSteamDeckKeyboardSkin_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_SetSteamDeckKeyboardSkin_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_SetSteamDeckKeyboardSkin_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_SetSteamDeckKeyboardSkin_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_SetSteamDeckKeyboardSkin_Request;
+
+    /**
+     * Gets the default type url for CPlayer_SetSteamDeckKeyboardSkin_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_SetSteamDeckKeyboardSkin_Response. */
+export interface ICPlayer_SetSteamDeckKeyboardSkin_Response {
+}
+
+/** Represents a CPlayer_SetSteamDeckKeyboardSkin_Response. */
+export class CPlayer_SetSteamDeckKeyboardSkin_Response implements ICPlayer_SetSteamDeckKeyboardSkin_Response {
+
+    /**
+     * Constructs a new CPlayer_SetSteamDeckKeyboardSkin_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_SetSteamDeckKeyboardSkin_Response);
+
+    /**
+     * Encodes the specified CPlayer_SetSteamDeckKeyboardSkin_Response message. Does not implicitly {@link CPlayer_SetSteamDeckKeyboardSkin_Response.verify|verify} messages.
+     * @param message CPlayer_SetSteamDeckKeyboardSkin_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_SetSteamDeckKeyboardSkin_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_SetSteamDeckKeyboardSkin_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_SetSteamDeckKeyboardSkin_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_SetSteamDeckKeyboardSkin_Response;
+
+    /**
+     * Gets the default type url for CPlayer_SetSteamDeckKeyboardSkin_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_TextFilterWords. */
+export interface ICPlayer_TextFilterWords {
+
+    /** CPlayer_TextFilterWords textFilterCustomBannedWords */
+    textFilterCustomBannedWords?: (string[]|null);
+
+    /** CPlayer_TextFilterWords textFilterCustomCleanWords */
+    textFilterCustomCleanWords?: (string[]|null);
+
+    /** CPlayer_TextFilterWords textFilterWordsRevision */
+    textFilterWordsRevision?: (number|null);
+}
+
+/** Represents a CPlayer_TextFilterWords. */
+export class CPlayer_TextFilterWords implements ICPlayer_TextFilterWords {
+
+    /**
+     * Constructs a new CPlayer_TextFilterWords.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_TextFilterWords);
+
+    /** CPlayer_TextFilterWords textFilterCustomBannedWords. */
+    public textFilterCustomBannedWords: string[];
+
+    /** CPlayer_TextFilterWords textFilterCustomCleanWords. */
+    public textFilterCustomCleanWords: string[];
+
+    /** CPlayer_TextFilterWords textFilterWordsRevision. */
+    public textFilterWordsRevision: number;
+
+    /**
+     * Encodes the specified CPlayer_TextFilterWords message. Does not implicitly {@link CPlayer_TextFilterWords.verify|verify} messages.
+     * @param message CPlayer_TextFilterWords message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_TextFilterWords, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_TextFilterWords message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_TextFilterWords
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_TextFilterWords;
+
+    /**
+     * Gets the default type url for CPlayer_TextFilterWords
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_TextFilterWordsChanged_Notification. */
+export interface ICPlayer_TextFilterWordsChanged_Notification {
+
+    /** CPlayer_TextFilterWordsChanged_Notification words */
+    words?: (ICPlayer_TextFilterWords|null);
+}
+
+/** Represents a CPlayer_TextFilterWordsChanged_Notification. */
+export class CPlayer_TextFilterWordsChanged_Notification implements ICPlayer_TextFilterWordsChanged_Notification {
+
+    /**
+     * Constructs a new CPlayer_TextFilterWordsChanged_Notification.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_TextFilterWordsChanged_Notification);
+
+    /** CPlayer_TextFilterWordsChanged_Notification words. */
+    public words?: (ICPlayer_TextFilterWords|null);
+
+    /**
+     * Encodes the specified CPlayer_TextFilterWordsChanged_Notification message. Does not implicitly {@link CPlayer_TextFilterWordsChanged_Notification.verify|verify} messages.
+     * @param message CPlayer_TextFilterWordsChanged_Notification message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_TextFilterWordsChanged_Notification, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_TextFilterWordsChanged_Notification message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_TextFilterWordsChanged_Notification
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_TextFilterWordsChanged_Notification;
+
+    /**
+     * Gets the default type url for CPlayer_TextFilterWordsChanged_Notification
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_UpdateSteamAnnouncementLastRead_Request. */
+export interface ICPlayer_UpdateSteamAnnouncementLastRead_Request {
+
+    /** CPlayer_UpdateSteamAnnouncementLastRead_Request announcementGid */
+    announcementGid?: (number|Long|null);
+
+    /** CPlayer_UpdateSteamAnnouncementLastRead_Request timePosted */
+    timePosted?: (number|null);
+}
+
+/** Represents a CPlayer_UpdateSteamAnnouncementLastRead_Request. */
+export class CPlayer_UpdateSteamAnnouncementLastRead_Request implements ICPlayer_UpdateSteamAnnouncementLastRead_Request {
+
+    /**
+     * Constructs a new CPlayer_UpdateSteamAnnouncementLastRead_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_UpdateSteamAnnouncementLastRead_Request);
+
+    /** CPlayer_UpdateSteamAnnouncementLastRead_Request announcementGid. */
+    public announcementGid: (number|Long);
+
+    /** CPlayer_UpdateSteamAnnouncementLastRead_Request timePosted. */
+    public timePosted: number;
+
+    /**
+     * Encodes the specified CPlayer_UpdateSteamAnnouncementLastRead_Request message. Does not implicitly {@link CPlayer_UpdateSteamAnnouncementLastRead_Request.verify|verify} messages.
+     * @param message CPlayer_UpdateSteamAnnouncementLastRead_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_UpdateSteamAnnouncementLastRead_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_UpdateSteamAnnouncementLastRead_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_UpdateSteamAnnouncementLastRead_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_UpdateSteamAnnouncementLastRead_Request;
+
+    /**
+     * Gets the default type url for CPlayer_UpdateSteamAnnouncementLastRead_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPlayer_UpdateSteamAnnouncementLastRead_Response. */
+export interface ICPlayer_UpdateSteamAnnouncementLastRead_Response {
+}
+
+/** Represents a CPlayer_UpdateSteamAnnouncementLastRead_Response. */
+export class CPlayer_UpdateSteamAnnouncementLastRead_Response implements ICPlayer_UpdateSteamAnnouncementLastRead_Response {
+
+    /**
+     * Constructs a new CPlayer_UpdateSteamAnnouncementLastRead_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPlayer_UpdateSteamAnnouncementLastRead_Response);
+
+    /**
+     * Encodes the specified CPlayer_UpdateSteamAnnouncementLastRead_Response message. Does not implicitly {@link CPlayer_UpdateSteamAnnouncementLastRead_Response.verify|verify} messages.
+     * @param message CPlayer_UpdateSteamAnnouncementLastRead_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPlayer_UpdateSteamAnnouncementLastRead_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPlayer_UpdateSteamAnnouncementLastRead_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPlayer_UpdateSteamAnnouncementLastRead_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPlayer_UpdateSteamAnnouncementLastRead_Response;
+
+    /**
+     * Gets the default type url for CPlayer_UpdateSteamAnnouncementLastRead_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CPrivacySettings. */
+export interface ICPrivacySettings {
+
+    /** CPrivacySettings privacyState */
+    privacyState?: (number|null);
+
+    /** CPrivacySettings privacyStateInventory */
+    privacyStateInventory?: (number|null);
+
+    /** CPrivacySettings privacyStateGifts */
+    privacyStateGifts?: (number|null);
+
+    /** CPrivacySettings privacyStateOwnedgames */
+    privacyStateOwnedgames?: (number|null);
+
+    /** CPrivacySettings privacyStatePlaytime */
+    privacyStatePlaytime?: (number|null);
+
+    /** CPrivacySettings privacyStateFriendslist */
+    privacyStateFriendslist?: (number|null);
+}
+
+/** Represents a CPrivacySettings. */
+export class CPrivacySettings implements ICPrivacySettings {
+
+    /**
+     * Constructs a new CPrivacySettings.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICPrivacySettings);
+
+    /** CPrivacySettings privacyState. */
+    public privacyState: number;
+
+    /** CPrivacySettings privacyStateInventory. */
+    public privacyStateInventory: number;
+
+    /** CPrivacySettings privacyStateGifts. */
+    public privacyStateGifts: number;
+
+    /** CPrivacySettings privacyStateOwnedgames. */
+    public privacyStateOwnedgames: number;
+
+    /** CPrivacySettings privacyStatePlaytime. */
+    public privacyStatePlaytime: number;
+
+    /** CPrivacySettings privacyStateFriendslist. */
+    public privacyStateFriendslist: number;
+
+    /**
+     * Encodes the specified CPrivacySettings message. Does not implicitly {@link CPrivacySettings.verify|verify} messages.
+     * @param message CPrivacySettings message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICPrivacySettings, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CPrivacySettings message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CPrivacySettings
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CPrivacySettings;
+
+    /**
+     * Gets the default type url for CPrivacySettings
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a PerFriendPreferences. */
+export interface IPerFriendPreferences {
+
+    /** PerFriendPreferences accountid */
+    accountid?: (number|null);
+
+    /** PerFriendPreferences nickname */
+    nickname?: (string|null);
+
+    /** PerFriendPreferences notificationsShowingame */
+    notificationsShowingame?: (number|null);
+
+    /** PerFriendPreferences notificationsShowonline */
+    notificationsShowonline?: (number|null);
+
+    /** PerFriendPreferences notificationsShowmessages */
+    notificationsShowmessages?: (number|null);
+
+    /** PerFriendPreferences soundsShowingame */
+    soundsShowingame?: (number|null);
+
+    /** PerFriendPreferences soundsShowonline */
+    soundsShowonline?: (number|null);
+
+    /** PerFriendPreferences soundsShowmessages */
+    soundsShowmessages?: (number|null);
+
+    /** PerFriendPreferences notificationsSendmobile */
+    notificationsSendmobile?: (number|null);
+}
+
+/** Represents a PerFriendPreferences. */
+export class PerFriendPreferences implements IPerFriendPreferences {
+
+    /**
+     * Constructs a new PerFriendPreferences.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: IPerFriendPreferences);
+
+    /** PerFriendPreferences accountid. */
+    public accountid: number;
+
+    /** PerFriendPreferences nickname. */
+    public nickname: string;
+
+    /** PerFriendPreferences notificationsShowingame. */
+    public notificationsShowingame: number;
+
+    /** PerFriendPreferences notificationsShowonline. */
+    public notificationsShowonline: number;
+
+    /** PerFriendPreferences notificationsShowmessages. */
+    public notificationsShowmessages: number;
+
+    /** PerFriendPreferences soundsShowingame. */
+    public soundsShowingame: number;
+
+    /** PerFriendPreferences soundsShowonline. */
+    public soundsShowonline: number;
+
+    /** PerFriendPreferences soundsShowmessages. */
+    public soundsShowmessages: number;
+
+    /** PerFriendPreferences notificationsSendmobile. */
+    public notificationsSendmobile: number;
+
+    /**
+     * Encodes the specified PerFriendPreferences message. Does not implicitly {@link PerFriendPreferences.verify|verify} messages.
+     * @param message PerFriendPreferences message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: IPerFriendPreferences, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a PerFriendPreferences message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns PerFriendPreferences
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): PerFriendPreferences;
+
+    /**
+     * Gets the default type url for PerFriendPreferences
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a ProfileCustomization. */
+export interface IProfileCustomization {
+
+    /** ProfileCustomization customizationType */
+    customizationType?: (number|null);
+
+    /** ProfileCustomization large */
+    large?: (boolean|null);
+
+    /** ProfileCustomization slots */
+    slots?: (IProfileCustomizationSlot[]|null);
+
+    /** ProfileCustomization active */
+    active?: (boolean|null);
+
+    /** ProfileCustomization customizationStyle */
+    customizationStyle?: (number|null);
+
+    /** ProfileCustomization purchaseid */
+    purchaseid?: (number|Long|null);
+
+    /** ProfileCustomization level */
+    level?: (number|null);
+}
+
+/** Represents a ProfileCustomization. */
+export class ProfileCustomization implements IProfileCustomization {
+
+    /**
+     * Constructs a new ProfileCustomization.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: IProfileCustomization);
+
+    /** ProfileCustomization customizationType. */
+    public customizationType: number;
+
+    /** ProfileCustomization large. */
+    public large: boolean;
+
+    /** ProfileCustomization slots. */
+    public slots: IProfileCustomizationSlot[];
+
+    /** ProfileCustomization active. */
+    public active: boolean;
+
+    /** ProfileCustomization customizationStyle. */
+    public customizationStyle: number;
+
+    /** ProfileCustomization purchaseid. */
+    public purchaseid: (number|Long);
+
+    /** ProfileCustomization level. */
+    public level: number;
+
+    /**
+     * Encodes the specified ProfileCustomization message. Does not implicitly {@link ProfileCustomization.verify|verify} messages.
+     * @param message ProfileCustomization message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: IProfileCustomization, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a ProfileCustomization message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns ProfileCustomization
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): ProfileCustomization;
+
+    /**
+     * Gets the default type url for ProfileCustomization
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a ProfileCustomizationSlot. */
+export interface IProfileCustomizationSlot {
+
+    /** ProfileCustomizationSlot slot */
+    slot?: (number|null);
+
+    /** ProfileCustomizationSlot appid */
+    appid?: (number|null);
+
+    /** ProfileCustomizationSlot publishedfileid */
+    publishedfileid?: (number|Long|null);
+
+    /** ProfileCustomizationSlot itemAssetid */
+    itemAssetid?: (number|Long|null);
+
+    /** ProfileCustomizationSlot itemContextid */
+    itemContextid?: (number|Long|null);
+
+    /** ProfileCustomizationSlot notes */
+    notes?: (string|null);
+
+    /** ProfileCustomizationSlot title */
+    title?: (string|null);
+
+    /** ProfileCustomizationSlot accountid */
+    accountid?: (number|null);
+
+    /** ProfileCustomizationSlot badgeid */
+    badgeid?: (number|null);
+
+    /** ProfileCustomizationSlot borderColor */
+    borderColor?: (number|null);
+
+    /** ProfileCustomizationSlot itemClassid */
+    itemClassid?: (number|Long|null);
+
+    /** ProfileCustomizationSlot itemInstanceid */
+    itemInstanceid?: (number|Long|null);
+
+    /** ProfileCustomizationSlot banCheckResult */
+    banCheckResult?: (number|null);
+
+    /** ProfileCustomizationSlot replayYear */
+    replayYear?: (number|null);
+}
+
+/** Represents a ProfileCustomizationSlot. */
+export class ProfileCustomizationSlot implements IProfileCustomizationSlot {
+
+    /**
+     * Constructs a new ProfileCustomizationSlot.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: IProfileCustomizationSlot);
+
+    /** ProfileCustomizationSlot slot. */
+    public slot: number;
+
+    /** ProfileCustomizationSlot appid. */
+    public appid: number;
+
+    /** ProfileCustomizationSlot publishedfileid. */
+    public publishedfileid: (number|Long);
+
+    /** ProfileCustomizationSlot itemAssetid. */
+    public itemAssetid: (number|Long);
+
+    /** ProfileCustomizationSlot itemContextid. */
+    public itemContextid: (number|Long);
+
+    /** ProfileCustomizationSlot notes. */
+    public notes: string;
+
+    /** ProfileCustomizationSlot title. */
+    public title: string;
+
+    /** ProfileCustomizationSlot accountid. */
+    public accountid: number;
+
+    /** ProfileCustomizationSlot badgeid. */
+    public badgeid: number;
+
+    /** ProfileCustomizationSlot borderColor. */
+    public borderColor: number;
+
+    /** ProfileCustomizationSlot itemClassid. */
+    public itemClassid: (number|Long);
+
+    /** ProfileCustomizationSlot itemInstanceid. */
+    public itemInstanceid: (number|Long);
+
+    /** ProfileCustomizationSlot banCheckResult. */
+    public banCheckResult: number;
+
+    /** ProfileCustomizationSlot replayYear. */
+    public replayYear: number;
+
+    /**
+     * Encodes the specified ProfileCustomizationSlot message. Does not implicitly {@link ProfileCustomizationSlot.verify|verify} messages.
+     * @param message ProfileCustomizationSlot message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: IProfileCustomizationSlot, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a ProfileCustomizationSlot message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns ProfileCustomizationSlot
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): ProfileCustomizationSlot;
+
+    /**
+     * Gets the default type url for ProfileCustomizationSlot
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a ProfileItem. */
+export interface IProfileItem {
+
+    /** ProfileItem communityitemid */
+    communityitemid?: (number|Long|null);
+
+    /** ProfileItem imageSmall */
+    imageSmall?: (string|null);
+
+    /** ProfileItem imageLarge */
+    imageLarge?: (string|null);
+
+    /** ProfileItem name */
+    name?: (string|null);
+
+    /** ProfileItem itemTitle */
+    itemTitle?: (string|null);
+
+    /** ProfileItem itemDescription */
+    itemDescription?: (string|null);
+
+    /** ProfileItem appid */
+    appid?: (number|null);
+
+    /** ProfileItem itemType */
+    itemType?: (number|null);
+
+    /** ProfileItem itemClass */
+    itemClass?: (number|null);
+
+    /** ProfileItem movieWebm */
+    movieWebm?: (string|null);
+
+    /** ProfileItem movieMp4 */
+    movieMp4?: (string|null);
+
+    /** ProfileItem equippedFlags */
+    equippedFlags?: (number|null);
+
+    /** ProfileItem movieWebmSmall */
+    movieWebmSmall?: (string|null);
+
+    /** ProfileItem movieMp4Small */
+    movieMp4Small?: (string|null);
+
+    /** ProfileItem profileColors */
+    profileColors?: (IProfileItem_ProfileColor[]|null);
+
+    /** ProfileItem tiled */
+    tiled?: (boolean|null);
+}
+
+/** Represents a ProfileItem. */
+export class ProfileItem implements IProfileItem {
+
+    /**
+     * Constructs a new ProfileItem.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: IProfileItem);
+
+    /** ProfileItem communityitemid. */
+    public communityitemid: (number|Long);
+
+    /** ProfileItem imageSmall. */
+    public imageSmall: string;
+
+    /** ProfileItem imageLarge. */
+    public imageLarge: string;
+
+    /** ProfileItem name. */
+    public name: string;
+
+    /** ProfileItem itemTitle. */
+    public itemTitle: string;
+
+    /** ProfileItem itemDescription. */
+    public itemDescription: string;
+
+    /** ProfileItem appid. */
+    public appid: number;
+
+    /** ProfileItem itemType. */
+    public itemType: number;
+
+    /** ProfileItem itemClass. */
+    public itemClass: number;
+
+    /** ProfileItem movieWebm. */
+    public movieWebm: string;
+
+    /** ProfileItem movieMp4. */
+    public movieMp4: string;
+
+    /** ProfileItem equippedFlags. */
+    public equippedFlags: number;
+
+    /** ProfileItem movieWebmSmall. */
+    public movieWebmSmall: string;
+
+    /** ProfileItem movieMp4Small. */
+    public movieMp4Small: string;
+
+    /** ProfileItem profileColors. */
+    public profileColors: IProfileItem_ProfileColor[];
+
+    /** ProfileItem tiled. */
+    public tiled: boolean;
+
+    /**
+     * Encodes the specified ProfileItem message. Does not implicitly {@link ProfileItem.verify|verify} messages.
+     * @param message ProfileItem message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: IProfileItem, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a ProfileItem message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns ProfileItem
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): ProfileItem;
+
+    /**
+     * Gets the default type url for ProfileItem
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a ProfileItem_ProfileColor. */
+export interface IProfileItem_ProfileColor {
+
+    /** ProfileItem_ProfileColor styleName */
+    styleName?: (string|null);
+
+    /** ProfileItem_ProfileColor color */
+    color?: (string|null);
+}
+
+/** Represents a ProfileItem_ProfileColor. */
+export class ProfileItem_ProfileColor implements IProfileItem_ProfileColor {
+
+    /**
+     * Constructs a new ProfileItem_ProfileColor.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: IProfileItem_ProfileColor);
+
+    /** ProfileItem_ProfileColor styleName. */
+    public styleName: string;
+
+    /** ProfileItem_ProfileColor color. */
+    public color: string;
+
+    /**
+     * Encodes the specified ProfileItem_ProfileColor message. Does not implicitly {@link ProfileItem_ProfileColor.verify|verify} messages.
+     * @param message ProfileItem_ProfileColor message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: IProfileItem_ProfileColor, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a ProfileItem_ProfileColor message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns ProfileItem_ProfileColor
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): ProfileItem_ProfileColor;
+
+    /**
+     * Gets the default type url for ProfileItem_ProfileColor
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a ProfilePreferences. */
+export interface IProfilePreferences {
+
+    /** ProfilePreferences hideProfileAwards */
+    hideProfileAwards?: (boolean|null);
+}
+
+/** Represents a ProfilePreferences. */
+export class ProfilePreferences implements IProfilePreferences {
+
+    /**
+     * Constructs a new ProfilePreferences.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: IProfilePreferences);
+
+    /** ProfilePreferences hideProfileAwards. */
+    public hideProfileAwards: boolean;
+
+    /**
+     * Encodes the specified ProfilePreferences message. Does not implicitly {@link ProfilePreferences.verify|verify} messages.
+     * @param message ProfilePreferences message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: IProfilePreferences, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a ProfilePreferences message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns ProfilePreferences
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): ProfilePreferences;
+
+    /**
+     * Gets the default type url for ProfilePreferences
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a ProfileTheme. */
+export interface IProfileTheme {
+
+    /** ProfileTheme themeId */
+    themeId?: (string|null);
+
+    /** ProfileTheme title */
+    title?: (string|null);
+}
+
+/** Represents a ProfileTheme. */
+export class ProfileTheme implements IProfileTheme {
+
+    /**
+     * Constructs a new ProfileTheme.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: IProfileTheme);
+
+    /** ProfileTheme themeId. */
+    public themeId: string;
+
+    /** ProfileTheme title. */
+    public title: string;
+
+    /**
+     * Encodes the specified ProfileTheme message. Does not implicitly {@link ProfileTheme.verify|verify} messages.
+     * @param message ProfileTheme message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: IProfileTheme, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a ProfileTheme message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns ProfileTheme
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): ProfileTheme;
+
+    /**
+     * Gets the default type url for ProfileTheme
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Represents a Player */
+export class Player extends $protobuf.rpc.Service {
+
+    /**
+     * Constructs a new Player service.
+     * @param rpcImpl RPC implementation
+     * @param [requestDelimited=false] Whether requests are length-delimited
+     * @param [responseDelimited=false] Whether responses are length-delimited
+     */
+    constructor(rpcImpl: $protobuf.RPCImpl, requestDelimited?: boolean, responseDelimited?: boolean);
+
+    /**
+     * Calls AcceptSSA.
+     * @param request CPlayer_AcceptSSA_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_AcceptSSA_Response
+     */
+    public acceptSSA(request: ICPlayer_AcceptSSA_Request, callback: Player.AcceptSSACallback): void;
+
+    /**
+     * Calls AcceptSSA.
+     * @param request CPlayer_AcceptSSA_Request message or plain object
+     * @returns Promise
+     */
+    public acceptSSA(request: ICPlayer_AcceptSSA_Request): Promise<CPlayer_AcceptSSA_Response>;
+
+    /**
+     * Calls AddFriend.
+     * @param request CPlayer_AddFriend_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_AddFriend_Response
+     */
+    public addFriend(request: ICPlayer_AddFriend_Request, callback: Player.AddFriendCallback): void;
+
+    /**
+     * Calls AddFriend.
+     * @param request CPlayer_AddFriend_Request message or plain object
+     * @returns Promise
+     */
+    public addFriend(request: ICPlayer_AddFriend_Request): Promise<CPlayer_AddFriend_Response>;
+
+    /**
+     * Calls ClientGetLastPlayedTimes.
+     * @param request CPlayer_GetLastPlayedTimes_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_GetLastPlayedTimes_Response
+     */
+    public clientGetLastPlayedTimes(request: ICPlayer_GetLastPlayedTimes_Request, callback: Player.ClientGetLastPlayedTimesCallback): void;
+
+    /**
+     * Calls ClientGetLastPlayedTimes.
+     * @param request CPlayer_GetLastPlayedTimes_Request message or plain object
+     * @returns Promise
+     */
+    public clientGetLastPlayedTimes(request: ICPlayer_GetLastPlayedTimes_Request): Promise<CPlayer_GetLastPlayedTimes_Response>;
+
+    /**
+     * Calls DeletePostedStatus.
+     * @param request CPlayer_DeletePostedStatus_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_DeletePostedStatus_Response
+     */
+    public deletePostedStatus(request: ICPlayer_DeletePostedStatus_Request, callback: Player.DeletePostedStatusCallback): void;
+
+    /**
+     * Calls DeletePostedStatus.
+     * @param request CPlayer_DeletePostedStatus_Request message or plain object
+     * @returns Promise
+     */
+    public deletePostedStatus(request: ICPlayer_DeletePostedStatus_Request): Promise<CPlayer_DeletePostedStatus_Response>;
+
+    /**
+     * Calls GetAchievementsProgress.
+     * @param request CPlayer_GetAchievementsProgress_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_GetAchievementsProgress_Response
+     */
+    public getAchievementsProgress(request: ICPlayer_GetAchievementsProgress_Request, callback: Player.GetAchievementsProgressCallback): void;
+
+    /**
+     * Calls GetAchievementsProgress.
+     * @param request CPlayer_GetAchievementsProgress_Request message or plain object
+     * @returns Promise
+     */
+    public getAchievementsProgress(request: ICPlayer_GetAchievementsProgress_Request): Promise<CPlayer_GetAchievementsProgress_Response>;
+
+    /**
+     * Calls GetAnimatedAvatar.
+     * @param request CPlayer_GetAnimatedAvatar_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_GetAnimatedAvatar_Response
+     */
+    public getAnimatedAvatar(request: ICPlayer_GetAnimatedAvatar_Request, callback: Player.GetAnimatedAvatarCallback): void;
+
+    /**
+     * Calls GetAnimatedAvatar.
+     * @param request CPlayer_GetAnimatedAvatar_Request message or plain object
+     * @returns Promise
+     */
+    public getAnimatedAvatar(request: ICPlayer_GetAnimatedAvatar_Request): Promise<CPlayer_GetAnimatedAvatar_Response>;
+
+    /**
+     * Calls GetAvatarFrame.
+     * @param request CPlayer_GetAvatarFrame_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_GetAvatarFrame_Response
+     */
+    public getAvatarFrame(request: ICPlayer_GetAvatarFrame_Request, callback: Player.GetAvatarFrameCallback): void;
+
+    /**
+     * Calls GetAvatarFrame.
+     * @param request CPlayer_GetAvatarFrame_Request message or plain object
+     * @returns Promise
+     */
+    public getAvatarFrame(request: ICPlayer_GetAvatarFrame_Request): Promise<CPlayer_GetAvatarFrame_Response>;
+
+    /**
+     * Calls GetCommunityBadgeProgress.
+     * @param request CPlayer_GetCommunityBadgeProgress_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_GetCommunityBadgeProgress_Response
+     */
+    public getCommunityBadgeProgress(request: ICPlayer_GetCommunityBadgeProgress_Request, callback: Player.GetCommunityBadgeProgressCallback): void;
+
+    /**
+     * Calls GetCommunityBadgeProgress.
+     * @param request CPlayer_GetCommunityBadgeProgress_Request message or plain object
+     * @returns Promise
+     */
+    public getCommunityBadgeProgress(request: ICPlayer_GetCommunityBadgeProgress_Request): Promise<CPlayer_GetCommunityBadgeProgress_Response>;
+
+    /**
+     * Calls GetCommunityPreferences.
+     * @param request CPlayer_GetCommunityPreferences_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_GetCommunityPreferences_Response
+     */
+    public getCommunityPreferences(request: ICPlayer_GetCommunityPreferences_Request, callback: Player.GetCommunityPreferencesCallback): void;
+
+    /**
+     * Calls GetCommunityPreferences.
+     * @param request CPlayer_GetCommunityPreferences_Request message or plain object
+     * @returns Promise
+     */
+    public getCommunityPreferences(request: ICPlayer_GetCommunityPreferences_Request): Promise<CPlayer_GetCommunityPreferences_Response>;
+
+    /**
+     * Calls GetDurationControl.
+     * @param request CPlayer_GetDurationControl_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_GetDurationControl_Response
+     */
+    public getDurationControl(request: ICPlayer_GetDurationControl_Request, callback: Player.GetDurationControlCallback): void;
+
+    /**
+     * Calls GetDurationControl.
+     * @param request CPlayer_GetDurationControl_Request message or plain object
+     * @returns Promise
+     */
+    public getDurationControl(request: ICPlayer_GetDurationControl_Request): Promise<CPlayer_GetDurationControl_Response>;
+
+    /**
+     * Calls GetEmoticonList.
+     * @param request CPlayer_GetEmoticonList_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_GetEmoticonList_Response
+     */
+    public getEmoticonList(request: ICPlayer_GetEmoticonList_Request, callback: Player.GetEmoticonListCallback): void;
+
+    /**
+     * Calls GetEmoticonList.
+     * @param request CPlayer_GetEmoticonList_Request message or plain object
+     * @returns Promise
+     */
+    public getEmoticonList(request: ICPlayer_GetEmoticonList_Request): Promise<CPlayer_GetEmoticonList_Response>;
+
+    /**
+     * Calls GetFavoriteBadge.
+     * @param request CPlayer_GetFavoriteBadge_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_GetFavoriteBadge_Response
+     */
+    public getFavoriteBadge(request: ICPlayer_GetFavoriteBadge_Request, callback: Player.GetFavoriteBadgeCallback): void;
+
+    /**
+     * Calls GetFavoriteBadge.
+     * @param request CPlayer_GetFavoriteBadge_Request message or plain object
+     * @returns Promise
+     */
+    public getFavoriteBadge(request: ICPlayer_GetFavoriteBadge_Request): Promise<CPlayer_GetFavoriteBadge_Response>;
+
+    /**
+     * Calls GetFriendsGameplayInfo.
+     * @param request CPlayer_GetFriendsGameplayInfo_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_GetFriendsGameplayInfo_Response
+     */
+    public getFriendsGameplayInfo(request: ICPlayer_GetFriendsGameplayInfo_Request, callback: Player.GetFriendsGameplayInfoCallback): void;
+
+    /**
+     * Calls GetFriendsGameplayInfo.
+     * @param request CPlayer_GetFriendsGameplayInfo_Request message or plain object
+     * @returns Promise
+     */
+    public getFriendsGameplayInfo(request: ICPlayer_GetFriendsGameplayInfo_Request): Promise<CPlayer_GetFriendsGameplayInfo_Response>;
+
+    /**
+     * Calls GetGameAchievements.
+     * @param request CPlayer_GetGameAchievements_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_GetGameAchievements_Response
+     */
+    public getGameAchievements(request: ICPlayer_GetGameAchievements_Request, callback: Player.GetGameAchievementsCallback): void;
+
+    /**
+     * Calls GetGameAchievements.
+     * @param request CPlayer_GetGameAchievements_Request message or plain object
+     * @returns Promise
+     */
+    public getGameAchievements(request: ICPlayer_GetGameAchievements_Request): Promise<CPlayer_GetGameAchievements_Response>;
+
+    /**
+     * Calls GetGameBadgeLevels.
+     * @param request CPlayer_GetGameBadgeLevels_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_GetGameBadgeLevels_Response
+     */
+    public getGameBadgeLevels(request: ICPlayer_GetGameBadgeLevels_Request, callback: Player.GetGameBadgeLevelsCallback): void;
+
+    /**
+     * Calls GetGameBadgeLevels.
+     * @param request CPlayer_GetGameBadgeLevels_Request message or plain object
+     * @returns Promise
+     */
+    public getGameBadgeLevels(request: ICPlayer_GetGameBadgeLevels_Request): Promise<CPlayer_GetGameBadgeLevels_Response>;
+
+    /**
+     * Calls GetMiniProfileBackground.
+     * @param request CPlayer_GetMiniProfileBackground_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_GetMiniProfileBackground_Response
+     */
+    public getMiniProfileBackground(request: ICPlayer_GetMiniProfileBackground_Request, callback: Player.GetMiniProfileBackgroundCallback): void;
+
+    /**
+     * Calls GetMiniProfileBackground.
+     * @param request CPlayer_GetMiniProfileBackground_Request message or plain object
+     * @returns Promise
+     */
+    public getMiniProfileBackground(request: ICPlayer_GetMiniProfileBackground_Request): Promise<CPlayer_GetMiniProfileBackground_Response>;
+
+    /**
+     * Calls GetMutualFriendsForIncomingInvites.
+     * @param request CPlayer_GetMutualFriendsForIncomingInvites_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_GetMutualFriendsForIncomingInvites_Response
+     */
+    public getMutualFriendsForIncomingInvites(request: ICPlayer_GetMutualFriendsForIncomingInvites_Request, callback: Player.GetMutualFriendsForIncomingInvitesCallback): void;
+
+    /**
+     * Calls GetMutualFriendsForIncomingInvites.
+     * @param request CPlayer_GetMutualFriendsForIncomingInvites_Request message or plain object
+     * @returns Promise
+     */
+    public getMutualFriendsForIncomingInvites(request: ICPlayer_GetMutualFriendsForIncomingInvites_Request): Promise<CPlayer_GetMutualFriendsForIncomingInvites_Response>;
+
+    /**
+     * Calls GetNewSteamAnnouncementState.
+     * @param request CPlayer_GetNewSteamAnnouncementState_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_GetNewSteamAnnouncementState_Response
+     */
+    public getNewSteamAnnouncementState(request: ICPlayer_GetNewSteamAnnouncementState_Request, callback: Player.GetNewSteamAnnouncementStateCallback): void;
+
+    /**
+     * Calls GetNewSteamAnnouncementState.
+     * @param request CPlayer_GetNewSteamAnnouncementState_Request message or plain object
+     * @returns Promise
+     */
+    public getNewSteamAnnouncementState(request: ICPlayer_GetNewSteamAnnouncementState_Request): Promise<CPlayer_GetNewSteamAnnouncementState_Response>;
+
+    /**
+     * Calls GetNicknameList.
+     * @param request CPlayer_GetNicknameList_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_GetNicknameList_Response
+     */
+    public getNicknameList(request: ICPlayer_GetNicknameList_Request, callback: Player.GetNicknameListCallback): void;
+
+    /**
+     * Calls GetNicknameList.
+     * @param request CPlayer_GetNicknameList_Request message or plain object
+     * @returns Promise
+     */
+    public getNicknameList(request: ICPlayer_GetNicknameList_Request): Promise<CPlayer_GetNicknameList_Response>;
+
+    /**
+     * Calls GetOwnedGames.
+     * @param request CPlayer_GetOwnedGames_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_GetOwnedGames_Response
+     */
+    public getOwnedGames(request: ICPlayer_GetOwnedGames_Request, callback: Player.GetOwnedGamesCallback): void;
+
+    /**
+     * Calls GetOwnedGames.
+     * @param request CPlayer_GetOwnedGames_Request message or plain object
+     * @returns Promise
+     */
+    public getOwnedGames(request: ICPlayer_GetOwnedGames_Request): Promise<CPlayer_GetOwnedGames_Response>;
+
+    /**
+     * Calls GetPerFriendPreferences.
+     * @param request CPlayer_GetPerFriendPreferences_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_GetPerFriendPreferences_Response
+     */
+    public getPerFriendPreferences(request: ICPlayer_GetPerFriendPreferences_Request, callback: Player.GetPerFriendPreferencesCallback): void;
+
+    /**
+     * Calls GetPerFriendPreferences.
+     * @param request CPlayer_GetPerFriendPreferences_Request message or plain object
+     * @returns Promise
+     */
+    public getPerFriendPreferences(request: ICPlayer_GetPerFriendPreferences_Request): Promise<CPlayer_GetPerFriendPreferences_Response>;
+
+    /**
+     * Calls GetPlayerLinkDetails.
+     * @param request CPlayer_GetPlayerLinkDetails_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_GetPlayerLinkDetails_Response
+     */
+    public getPlayerLinkDetails(request: ICPlayer_GetPlayerLinkDetails_Request, callback: Player.GetPlayerLinkDetailsCallback): void;
+
+    /**
+     * Calls GetPlayerLinkDetails.
+     * @param request CPlayer_GetPlayerLinkDetails_Request message or plain object
+     * @returns Promise
+     */
+    public getPlayerLinkDetails(request: ICPlayer_GetPlayerLinkDetails_Request): Promise<CPlayer_GetPlayerLinkDetails_Response>;
+
+    /**
+     * Calls GetPlayNext.
+     * @param request CPlayer_GetPlayNext_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_GetPlayNext_Response
+     */
+    public getPlayNext(request: ICPlayer_GetPlayNext_Request, callback: Player.GetPlayNextCallback): void;
+
+    /**
+     * Calls GetPlayNext.
+     * @param request CPlayer_GetPlayNext_Request message or plain object
+     * @returns Promise
+     */
+    public getPlayNext(request: ICPlayer_GetPlayNext_Request): Promise<CPlayer_GetPlayNext_Response>;
+
+    /**
+     * Calls GetPostedStatus.
+     * @param request CPlayer_GetPostedStatus_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_GetPostedStatus_Response
+     */
+    public getPostedStatus(request: ICPlayer_GetPostedStatus_Request, callback: Player.GetPostedStatusCallback): void;
+
+    /**
+     * Calls GetPostedStatus.
+     * @param request CPlayer_GetPostedStatus_Request message or plain object
+     * @returns Promise
+     */
+    public getPostedStatus(request: ICPlayer_GetPostedStatus_Request): Promise<CPlayer_GetPostedStatus_Response>;
+
+    /**
+     * Calls GetPrivacySettings.
+     * @param request CPlayer_GetPrivacySettings_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_GetPrivacySettings_Response
+     */
+    public getPrivacySettings(request: ICPlayer_GetPrivacySettings_Request, callback: Player.GetPrivacySettingsCallback): void;
+
+    /**
+     * Calls GetPrivacySettings.
+     * @param request CPlayer_GetPrivacySettings_Request message or plain object
+     * @returns Promise
+     */
+    public getPrivacySettings(request: ICPlayer_GetPrivacySettings_Request): Promise<CPlayer_GetPrivacySettings_Response>;
+
+    /**
+     * Calls GetProfileBackground.
+     * @param request CPlayer_GetProfileBackground_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_GetProfileBackground_Response
+     */
+    public getProfileBackground(request: ICPlayer_GetProfileBackground_Request, callback: Player.GetProfileBackgroundCallback): void;
+
+    /**
+     * Calls GetProfileBackground.
+     * @param request CPlayer_GetProfileBackground_Request message or plain object
+     * @returns Promise
+     */
+    public getProfileBackground(request: ICPlayer_GetProfileBackground_Request): Promise<CPlayer_GetProfileBackground_Response>;
+
+    /**
+     * Calls GetProfileCustomization.
+     * @param request CPlayer_GetProfileCustomization_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_GetProfileCustomization_Response
+     */
+    public getProfileCustomization(request: ICPlayer_GetProfileCustomization_Request, callback: Player.GetProfileCustomizationCallback): void;
+
+    /**
+     * Calls GetProfileCustomization.
+     * @param request CPlayer_GetProfileCustomization_Request message or plain object
+     * @returns Promise
+     */
+    public getProfileCustomization(request: ICPlayer_GetProfileCustomization_Request): Promise<CPlayer_GetProfileCustomization_Response>;
+
+    /**
+     * Calls GetProfileItemsEquipped.
+     * @param request CPlayer_GetProfileItemsEquipped_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_GetProfileItemsEquipped_Response
+     */
+    public getProfileItemsEquipped(request: ICPlayer_GetProfileItemsEquipped_Request, callback: Player.GetProfileItemsEquippedCallback): void;
+
+    /**
+     * Calls GetProfileItemsEquipped.
+     * @param request CPlayer_GetProfileItemsEquipped_Request message or plain object
+     * @returns Promise
+     */
+    public getProfileItemsEquipped(request: ICPlayer_GetProfileItemsEquipped_Request): Promise<CPlayer_GetProfileItemsEquipped_Response>;
+
+    /**
+     * Calls GetProfileItemsOwned.
+     * @param request CPlayer_GetProfileItemsOwned_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_GetProfileItemsOwned_Response
+     */
+    public getProfileItemsOwned(request: ICPlayer_GetProfileItemsOwned_Request, callback: Player.GetProfileItemsOwnedCallback): void;
+
+    /**
+     * Calls GetProfileItemsOwned.
+     * @param request CPlayer_GetProfileItemsOwned_Request message or plain object
+     * @returns Promise
+     */
+    public getProfileItemsOwned(request: ICPlayer_GetProfileItemsOwned_Request): Promise<CPlayer_GetProfileItemsOwned_Response>;
+
+    /**
+     * Calls GetProfileThemesAvailable.
+     * @param request CPlayer_GetProfileThemesAvailable_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_GetProfileThemesAvailable_Response
+     */
+    public getProfileThemesAvailable(request: ICPlayer_GetProfileThemesAvailable_Request, callback: Player.GetProfileThemesAvailableCallback): void;
+
+    /**
+     * Calls GetProfileThemesAvailable.
+     * @param request CPlayer_GetProfileThemesAvailable_Request message or plain object
+     * @returns Promise
+     */
+    public getProfileThemesAvailable(request: ICPlayer_GetProfileThemesAvailable_Request): Promise<CPlayer_GetProfileThemesAvailable_Response>;
+
+    /**
+     * Calls GetPurchasedAndUpgradedProfileCustomizations.
+     * @param request CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response
+     */
+    public getPurchasedAndUpgradedProfileCustomizations(request: ICPlayer_GetPurchasedAndUpgradedProfileCustomizations_Request, callback: Player.GetPurchasedAndUpgradedProfileCustomizationsCallback): void;
+
+    /**
+     * Calls GetPurchasedAndUpgradedProfileCustomizations.
+     * @param request CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Request message or plain object
+     * @returns Promise
+     */
+    public getPurchasedAndUpgradedProfileCustomizations(request: ICPlayer_GetPurchasedAndUpgradedProfileCustomizations_Request): Promise<CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response>;
+
+    /**
+     * Calls GetPurchasedProfileCustomizations.
+     * @param request CPlayer_GetPurchasedProfileCustomizations_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_GetPurchasedProfileCustomizations_Response
+     */
+    public getPurchasedProfileCustomizations(request: ICPlayer_GetPurchasedProfileCustomizations_Request, callback: Player.GetPurchasedProfileCustomizationsCallback): void;
+
+    /**
+     * Calls GetPurchasedProfileCustomizations.
+     * @param request CPlayer_GetPurchasedProfileCustomizations_Request message or plain object
+     * @returns Promise
+     */
+    public getPurchasedProfileCustomizations(request: ICPlayer_GetPurchasedProfileCustomizations_Request): Promise<CPlayer_GetPurchasedProfileCustomizations_Response>;
+
+    /**
+     * Calls GetRecentPlaytimeSessionsForChild.
+     * @param request CPlayer_GetRecentPlaytimeSessionsForChild_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_GetRecentPlaytimeSessionsForChild_Response
+     */
+    public getRecentPlaytimeSessionsForChild(request: ICPlayer_GetRecentPlaytimeSessionsForChild_Request, callback: Player.GetRecentPlaytimeSessionsForChildCallback): void;
+
+    /**
+     * Calls GetRecentPlaytimeSessionsForChild.
+     * @param request CPlayer_GetRecentPlaytimeSessionsForChild_Request message or plain object
+     * @returns Promise
+     */
+    public getRecentPlaytimeSessionsForChild(request: ICPlayer_GetRecentPlaytimeSessionsForChild_Request): Promise<CPlayer_GetRecentPlaytimeSessionsForChild_Response>;
+
+    /**
+     * Calls GetSteamDeckKeyboardSkin.
+     * @param request CPlayer_GetSteamDeckKeyboardSkin_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_GetSteamDeckKeyboardSkin_Response
+     */
+    public getSteamDeckKeyboardSkin(request: ICPlayer_GetSteamDeckKeyboardSkin_Request, callback: Player.GetSteamDeckKeyboardSkinCallback): void;
+
+    /**
+     * Calls GetSteamDeckKeyboardSkin.
+     * @param request CPlayer_GetSteamDeckKeyboardSkin_Request message or plain object
+     * @returns Promise
+     */
+    public getSteamDeckKeyboardSkin(request: ICPlayer_GetSteamDeckKeyboardSkin_Request): Promise<CPlayer_GetSteamDeckKeyboardSkin_Response>;
+
+    /**
+     * Calls GetTextFilterWords.
+     * @param request CPlayer_GetTextFilterWords_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_GetTextFilterWords_Response
+     */
+    public getTextFilterWords(request: ICPlayer_GetTextFilterWords_Request, callback: Player.GetTextFilterWordsCallback): void;
+
+    /**
+     * Calls GetTextFilterWords.
+     * @param request CPlayer_GetTextFilterWords_Request message or plain object
+     * @returns Promise
+     */
+    public getTextFilterWords(request: ICPlayer_GetTextFilterWords_Request): Promise<CPlayer_GetTextFilterWords_Response>;
+
+    /**
+     * Calls GetTimeSSAAccepted.
+     * @param request CPlayer_GetTimeSSAAccepted_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_GetTimeSSAAccepted_Response
+     */
+    public getTimeSSAAccepted(request: ICPlayer_GetTimeSSAAccepted_Request, callback: Player.GetTimeSSAAcceptedCallback): void;
+
+    /**
+     * Calls GetTimeSSAAccepted.
+     * @param request CPlayer_GetTimeSSAAccepted_Request message or plain object
+     * @returns Promise
+     */
+    public getTimeSSAAccepted(request: ICPlayer_GetTimeSSAAccepted_Request): Promise<CPlayer_GetTimeSSAAccepted_Response>;
+
+    /**
+     * Calls GetTopAchievementsForGames.
+     * @param request CPlayer_GetTopAchievementsForGames_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_GetTopAchievementsForGames_Response
+     */
+    public getTopAchievementsForGames(request: ICPlayer_GetTopAchievementsForGames_Request, callback: Player.GetTopAchievementsForGamesCallback): void;
+
+    /**
+     * Calls GetTopAchievementsForGames.
+     * @param request CPlayer_GetTopAchievementsForGames_Request message or plain object
+     * @returns Promise
+     */
+    public getTopAchievementsForGames(request: ICPlayer_GetTopAchievementsForGames_Request): Promise<CPlayer_GetTopAchievementsForGames_Response>;
+
+    /**
+     * Calls IgnoreFriend.
+     * @param request CPlayer_IgnoreFriend_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_IgnoreFriend_Response
+     */
+    public ignoreFriend(request: ICPlayer_IgnoreFriend_Request, callback: Player.IgnoreFriendCallback): void;
+
+    /**
+     * Calls IgnoreFriend.
+     * @param request CPlayer_IgnoreFriend_Request message or plain object
+     * @returns Promise
+     */
+    public ignoreFriend(request: ICPlayer_IgnoreFriend_Request): Promise<CPlayer_IgnoreFriend_Response>;
+
+    /**
+     * Calls PostStatusToFriends.
+     * @param request CPlayer_PostStatusToFriends_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_PostStatusToFriends_Response
+     */
+    public postStatusToFriends(request: ICPlayer_PostStatusToFriends_Request, callback: Player.PostStatusToFriendsCallback): void;
+
+    /**
+     * Calls PostStatusToFriends.
+     * @param request CPlayer_PostStatusToFriends_Request message or plain object
+     * @returns Promise
+     */
+    public postStatusToFriends(request: ICPlayer_PostStatusToFriends_Request): Promise<CPlayer_PostStatusToFriends_Response>;
+
+    /**
+     * Calls RecordDisconnectedPlaytime.
+     * @param request CPlayer_RecordDisconnectedPlaytime_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_RecordDisconnectedPlaytime_Response
+     */
+    public recordDisconnectedPlaytime(request: ICPlayer_RecordDisconnectedPlaytime_Request, callback: Player.RecordDisconnectedPlaytimeCallback): void;
+
+    /**
+     * Calls RecordDisconnectedPlaytime.
+     * @param request CPlayer_RecordDisconnectedPlaytime_Request message or plain object
+     * @returns Promise
+     */
+    public recordDisconnectedPlaytime(request: ICPlayer_RecordDisconnectedPlaytime_Request): Promise<CPlayer_RecordDisconnectedPlaytime_Response>;
+
+    /**
+     * Calls RemoveFriend.
+     * @param request CPlayer_RemoveFriend_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_RemoveFriend_Response
+     */
+    public removeFriend(request: ICPlayer_RemoveFriend_Request, callback: Player.RemoveFriendCallback): void;
+
+    /**
+     * Calls RemoveFriend.
+     * @param request CPlayer_RemoveFriend_Request message or plain object
+     * @returns Promise
+     */
+    public removeFriend(request: ICPlayer_RemoveFriend_Request): Promise<CPlayer_RemoveFriend_Response>;
+
+    /**
+     * Calls SetAnimatedAvatar.
+     * @param request CPlayer_SetAnimatedAvatar_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_SetAnimatedAvatar_Response
+     */
+    public setAnimatedAvatar(request: ICPlayer_SetAnimatedAvatar_Request, callback: Player.SetAnimatedAvatarCallback): void;
+
+    /**
+     * Calls SetAnimatedAvatar.
+     * @param request CPlayer_SetAnimatedAvatar_Request message or plain object
+     * @returns Promise
+     */
+    public setAnimatedAvatar(request: ICPlayer_SetAnimatedAvatar_Request): Promise<CPlayer_SetAnimatedAvatar_Response>;
+
+    /**
+     * Calls SetAvatarFrame.
+     * @param request CPlayer_SetAvatarFrame_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_SetAvatarFrame_Response
+     */
+    public setAvatarFrame(request: ICPlayer_SetAvatarFrame_Request, callback: Player.SetAvatarFrameCallback): void;
+
+    /**
+     * Calls SetAvatarFrame.
+     * @param request CPlayer_SetAvatarFrame_Request message or plain object
+     * @returns Promise
+     */
+    public setAvatarFrame(request: ICPlayer_SetAvatarFrame_Request): Promise<CPlayer_SetAvatarFrame_Response>;
+
+    /**
+     * Calls SetCommunityPreferences.
+     * @param request CPlayer_SetCommunityPreferences_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_SetCommunityPreferences_Response
+     */
+    public setCommunityPreferences(request: ICPlayer_SetCommunityPreferences_Request, callback: Player.SetCommunityPreferencesCallback): void;
+
+    /**
+     * Calls SetCommunityPreferences.
+     * @param request CPlayer_SetCommunityPreferences_Request message or plain object
+     * @returns Promise
+     */
+    public setCommunityPreferences(request: ICPlayer_SetCommunityPreferences_Request): Promise<CPlayer_SetCommunityPreferences_Response>;
+
+    /**
+     * Calls SetEquippedProfileItemFlags.
+     * @param request CPlayer_SetEquippedProfileItemFlags_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_SetEquippedProfileItemFlags_Response
+     */
+    public setEquippedProfileItemFlags(request: ICPlayer_SetEquippedProfileItemFlags_Request, callback: Player.SetEquippedProfileItemFlagsCallback): void;
+
+    /**
+     * Calls SetEquippedProfileItemFlags.
+     * @param request CPlayer_SetEquippedProfileItemFlags_Request message or plain object
+     * @returns Promise
+     */
+    public setEquippedProfileItemFlags(request: ICPlayer_SetEquippedProfileItemFlags_Request): Promise<CPlayer_SetEquippedProfileItemFlags_Response>;
+
+    /**
+     * Calls SetFavoriteBadge.
+     * @param request CPlayer_SetFavoriteBadge_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_SetFavoriteBadge_Response
+     */
+    public setFavoriteBadge(request: ICPlayer_SetFavoriteBadge_Request, callback: Player.SetFavoriteBadgeCallback): void;
+
+    /**
+     * Calls SetFavoriteBadge.
+     * @param request CPlayer_SetFavoriteBadge_Request message or plain object
+     * @returns Promise
+     */
+    public setFavoriteBadge(request: ICPlayer_SetFavoriteBadge_Request): Promise<CPlayer_SetFavoriteBadge_Response>;
+
+    /**
+     * Calls SetMiniProfileBackground.
+     * @param request CPlayer_SetMiniProfileBackground_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_SetMiniProfileBackground_Response
+     */
+    public setMiniProfileBackground(request: ICPlayer_SetMiniProfileBackground_Request, callback: Player.SetMiniProfileBackgroundCallback): void;
+
+    /**
+     * Calls SetMiniProfileBackground.
+     * @param request CPlayer_SetMiniProfileBackground_Request message or plain object
+     * @returns Promise
+     */
+    public setMiniProfileBackground(request: ICPlayer_SetMiniProfileBackground_Request): Promise<CPlayer_SetMiniProfileBackground_Response>;
+
+    /**
+     * Calls SetPerFriendPreferences.
+     * @param request CPlayer_SetPerFriendPreferences_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_SetPerFriendPreferences_Response
+     */
+    public setPerFriendPreferences(request: ICPlayer_SetPerFriendPreferences_Request, callback: Player.SetPerFriendPreferencesCallback): void;
+
+    /**
+     * Calls SetPerFriendPreferences.
+     * @param request CPlayer_SetPerFriendPreferences_Request message or plain object
+     * @returns Promise
+     */
+    public setPerFriendPreferences(request: ICPlayer_SetPerFriendPreferences_Request): Promise<CPlayer_SetPerFriendPreferences_Response>;
+
+    /**
+     * Calls SetProfileBackground.
+     * @param request CPlayer_SetProfileBackground_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_SetProfileBackground_Response
+     */
+    public setProfileBackground(request: ICPlayer_SetProfileBackground_Request, callback: Player.SetProfileBackgroundCallback): void;
+
+    /**
+     * Calls SetProfileBackground.
+     * @param request CPlayer_SetProfileBackground_Request message or plain object
+     * @returns Promise
+     */
+    public setProfileBackground(request: ICPlayer_SetProfileBackground_Request): Promise<CPlayer_SetProfileBackground_Response>;
+
+    /**
+     * Calls SetProfilePreferences.
+     * @param request CPlayer_SetProfilePreferences_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_SetProfilePreferences_Response
+     */
+    public setProfilePreferences(request: ICPlayer_SetProfilePreferences_Request, callback: Player.SetProfilePreferencesCallback): void;
+
+    /**
+     * Calls SetProfilePreferences.
+     * @param request CPlayer_SetProfilePreferences_Request message or plain object
+     * @returns Promise
+     */
+    public setProfilePreferences(request: ICPlayer_SetProfilePreferences_Request): Promise<CPlayer_SetProfilePreferences_Response>;
+
+    /**
+     * Calls SetProfileTheme.
+     * @param request CPlayer_SetProfileTheme_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_SetProfileTheme_Response
+     */
+    public setProfileTheme(request: ICPlayer_SetProfileTheme_Request, callback: Player.SetProfileThemeCallback): void;
+
+    /**
+     * Calls SetProfileTheme.
+     * @param request CPlayer_SetProfileTheme_Request message or plain object
+     * @returns Promise
+     */
+    public setProfileTheme(request: ICPlayer_SetProfileTheme_Request): Promise<CPlayer_SetProfileTheme_Response>;
+
+    /**
+     * Calls SetSteamDeckKeyboardSkin.
+     * @param request CPlayer_SetSteamDeckKeyboardSkin_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_SetSteamDeckKeyboardSkin_Response
+     */
+    public setSteamDeckKeyboardSkin(request: ICPlayer_SetSteamDeckKeyboardSkin_Request, callback: Player.SetSteamDeckKeyboardSkinCallback): void;
+
+    /**
+     * Calls SetSteamDeckKeyboardSkin.
+     * @param request CPlayer_SetSteamDeckKeyboardSkin_Request message or plain object
+     * @returns Promise
+     */
+    public setSteamDeckKeyboardSkin(request: ICPlayer_SetSteamDeckKeyboardSkin_Request): Promise<CPlayer_SetSteamDeckKeyboardSkin_Response>;
+
+    /**
+     * Calls UpdateSteamAnnouncementLastRead.
+     * @param request CPlayer_UpdateSteamAnnouncementLastRead_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CPlayer_UpdateSteamAnnouncementLastRead_Response
+     */
+    public updateSteamAnnouncementLastRead(request: ICPlayer_UpdateSteamAnnouncementLastRead_Request, callback: Player.UpdateSteamAnnouncementLastReadCallback): void;
+
+    /**
+     * Calls UpdateSteamAnnouncementLastRead.
+     * @param request CPlayer_UpdateSteamAnnouncementLastRead_Request message or plain object
+     * @returns Promise
+     */
+    public updateSteamAnnouncementLastRead(request: ICPlayer_UpdateSteamAnnouncementLastRead_Request): Promise<CPlayer_UpdateSteamAnnouncementLastRead_Response>;
+}
+
+export namespace Player {
+
+    /**
+     * Callback as used by {@link Player#acceptSSA}.
+     * @param error Error, if any
+     * @param [response] CPlayer_AcceptSSA_Response
+     */
+    type AcceptSSACallback = (error: (Error|null), response?: CPlayer_AcceptSSA_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#addFriend}.
+     * @param error Error, if any
+     * @param [response] CPlayer_AddFriend_Response
+     */
+    type AddFriendCallback = (error: (Error|null), response?: CPlayer_AddFriend_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#clientGetLastPlayedTimes}.
+     * @param error Error, if any
+     * @param [response] CPlayer_GetLastPlayedTimes_Response
+     */
+    type ClientGetLastPlayedTimesCallback = (error: (Error|null), response?: CPlayer_GetLastPlayedTimes_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#deletePostedStatus}.
+     * @param error Error, if any
+     * @param [response] CPlayer_DeletePostedStatus_Response
+     */
+    type DeletePostedStatusCallback = (error: (Error|null), response?: CPlayer_DeletePostedStatus_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#getAchievementsProgress}.
+     * @param error Error, if any
+     * @param [response] CPlayer_GetAchievementsProgress_Response
+     */
+    type GetAchievementsProgressCallback = (error: (Error|null), response?: CPlayer_GetAchievementsProgress_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#getAnimatedAvatar}.
+     * @param error Error, if any
+     * @param [response] CPlayer_GetAnimatedAvatar_Response
+     */
+    type GetAnimatedAvatarCallback = (error: (Error|null), response?: CPlayer_GetAnimatedAvatar_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#getAvatarFrame}.
+     * @param error Error, if any
+     * @param [response] CPlayer_GetAvatarFrame_Response
+     */
+    type GetAvatarFrameCallback = (error: (Error|null), response?: CPlayer_GetAvatarFrame_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#getCommunityBadgeProgress}.
+     * @param error Error, if any
+     * @param [response] CPlayer_GetCommunityBadgeProgress_Response
+     */
+    type GetCommunityBadgeProgressCallback = (error: (Error|null), response?: CPlayer_GetCommunityBadgeProgress_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#getCommunityPreferences}.
+     * @param error Error, if any
+     * @param [response] CPlayer_GetCommunityPreferences_Response
+     */
+    type GetCommunityPreferencesCallback = (error: (Error|null), response?: CPlayer_GetCommunityPreferences_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#getDurationControl}.
+     * @param error Error, if any
+     * @param [response] CPlayer_GetDurationControl_Response
+     */
+    type GetDurationControlCallback = (error: (Error|null), response?: CPlayer_GetDurationControl_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#getEmoticonList}.
+     * @param error Error, if any
+     * @param [response] CPlayer_GetEmoticonList_Response
+     */
+    type GetEmoticonListCallback = (error: (Error|null), response?: CPlayer_GetEmoticonList_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#getFavoriteBadge}.
+     * @param error Error, if any
+     * @param [response] CPlayer_GetFavoriteBadge_Response
+     */
+    type GetFavoriteBadgeCallback = (error: (Error|null), response?: CPlayer_GetFavoriteBadge_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#getFriendsGameplayInfo}.
+     * @param error Error, if any
+     * @param [response] CPlayer_GetFriendsGameplayInfo_Response
+     */
+    type GetFriendsGameplayInfoCallback = (error: (Error|null), response?: CPlayer_GetFriendsGameplayInfo_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#getGameAchievements}.
+     * @param error Error, if any
+     * @param [response] CPlayer_GetGameAchievements_Response
+     */
+    type GetGameAchievementsCallback = (error: (Error|null), response?: CPlayer_GetGameAchievements_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#getGameBadgeLevels}.
+     * @param error Error, if any
+     * @param [response] CPlayer_GetGameBadgeLevels_Response
+     */
+    type GetGameBadgeLevelsCallback = (error: (Error|null), response?: CPlayer_GetGameBadgeLevels_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#getMiniProfileBackground}.
+     * @param error Error, if any
+     * @param [response] CPlayer_GetMiniProfileBackground_Response
+     */
+    type GetMiniProfileBackgroundCallback = (error: (Error|null), response?: CPlayer_GetMiniProfileBackground_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#getMutualFriendsForIncomingInvites}.
+     * @param error Error, if any
+     * @param [response] CPlayer_GetMutualFriendsForIncomingInvites_Response
+     */
+    type GetMutualFriendsForIncomingInvitesCallback = (error: (Error|null), response?: CPlayer_GetMutualFriendsForIncomingInvites_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#getNewSteamAnnouncementState}.
+     * @param error Error, if any
+     * @param [response] CPlayer_GetNewSteamAnnouncementState_Response
+     */
+    type GetNewSteamAnnouncementStateCallback = (error: (Error|null), response?: CPlayer_GetNewSteamAnnouncementState_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#getNicknameList}.
+     * @param error Error, if any
+     * @param [response] CPlayer_GetNicknameList_Response
+     */
+    type GetNicknameListCallback = (error: (Error|null), response?: CPlayer_GetNicknameList_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#getOwnedGames}.
+     * @param error Error, if any
+     * @param [response] CPlayer_GetOwnedGames_Response
+     */
+    type GetOwnedGamesCallback = (error: (Error|null), response?: CPlayer_GetOwnedGames_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#getPerFriendPreferences}.
+     * @param error Error, if any
+     * @param [response] CPlayer_GetPerFriendPreferences_Response
+     */
+    type GetPerFriendPreferencesCallback = (error: (Error|null), response?: CPlayer_GetPerFriendPreferences_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#getPlayerLinkDetails}.
+     * @param error Error, if any
+     * @param [response] CPlayer_GetPlayerLinkDetails_Response
+     */
+    type GetPlayerLinkDetailsCallback = (error: (Error|null), response?: CPlayer_GetPlayerLinkDetails_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#getPlayNext}.
+     * @param error Error, if any
+     * @param [response] CPlayer_GetPlayNext_Response
+     */
+    type GetPlayNextCallback = (error: (Error|null), response?: CPlayer_GetPlayNext_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#getPostedStatus}.
+     * @param error Error, if any
+     * @param [response] CPlayer_GetPostedStatus_Response
+     */
+    type GetPostedStatusCallback = (error: (Error|null), response?: CPlayer_GetPostedStatus_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#getPrivacySettings}.
+     * @param error Error, if any
+     * @param [response] CPlayer_GetPrivacySettings_Response
+     */
+    type GetPrivacySettingsCallback = (error: (Error|null), response?: CPlayer_GetPrivacySettings_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#getProfileBackground}.
+     * @param error Error, if any
+     * @param [response] CPlayer_GetProfileBackground_Response
+     */
+    type GetProfileBackgroundCallback = (error: (Error|null), response?: CPlayer_GetProfileBackground_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#getProfileCustomization}.
+     * @param error Error, if any
+     * @param [response] CPlayer_GetProfileCustomization_Response
+     */
+    type GetProfileCustomizationCallback = (error: (Error|null), response?: CPlayer_GetProfileCustomization_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#getProfileItemsEquipped}.
+     * @param error Error, if any
+     * @param [response] CPlayer_GetProfileItemsEquipped_Response
+     */
+    type GetProfileItemsEquippedCallback = (error: (Error|null), response?: CPlayer_GetProfileItemsEquipped_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#getProfileItemsOwned}.
+     * @param error Error, if any
+     * @param [response] CPlayer_GetProfileItemsOwned_Response
+     */
+    type GetProfileItemsOwnedCallback = (error: (Error|null), response?: CPlayer_GetProfileItemsOwned_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#getProfileThemesAvailable}.
+     * @param error Error, if any
+     * @param [response] CPlayer_GetProfileThemesAvailable_Response
+     */
+    type GetProfileThemesAvailableCallback = (error: (Error|null), response?: CPlayer_GetProfileThemesAvailable_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#getPurchasedAndUpgradedProfileCustomizations}.
+     * @param error Error, if any
+     * @param [response] CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response
+     */
+    type GetPurchasedAndUpgradedProfileCustomizationsCallback = (error: (Error|null), response?: CPlayer_GetPurchasedAndUpgradedProfileCustomizations_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#getPurchasedProfileCustomizations}.
+     * @param error Error, if any
+     * @param [response] CPlayer_GetPurchasedProfileCustomizations_Response
+     */
+    type GetPurchasedProfileCustomizationsCallback = (error: (Error|null), response?: CPlayer_GetPurchasedProfileCustomizations_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#getRecentPlaytimeSessionsForChild}.
+     * @param error Error, if any
+     * @param [response] CPlayer_GetRecentPlaytimeSessionsForChild_Response
+     */
+    type GetRecentPlaytimeSessionsForChildCallback = (error: (Error|null), response?: CPlayer_GetRecentPlaytimeSessionsForChild_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#getSteamDeckKeyboardSkin}.
+     * @param error Error, if any
+     * @param [response] CPlayer_GetSteamDeckKeyboardSkin_Response
+     */
+    type GetSteamDeckKeyboardSkinCallback = (error: (Error|null), response?: CPlayer_GetSteamDeckKeyboardSkin_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#getTextFilterWords}.
+     * @param error Error, if any
+     * @param [response] CPlayer_GetTextFilterWords_Response
+     */
+    type GetTextFilterWordsCallback = (error: (Error|null), response?: CPlayer_GetTextFilterWords_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#getTimeSSAAccepted}.
+     * @param error Error, if any
+     * @param [response] CPlayer_GetTimeSSAAccepted_Response
+     */
+    type GetTimeSSAAcceptedCallback = (error: (Error|null), response?: CPlayer_GetTimeSSAAccepted_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#getTopAchievementsForGames}.
+     * @param error Error, if any
+     * @param [response] CPlayer_GetTopAchievementsForGames_Response
+     */
+    type GetTopAchievementsForGamesCallback = (error: (Error|null), response?: CPlayer_GetTopAchievementsForGames_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#ignoreFriend}.
+     * @param error Error, if any
+     * @param [response] CPlayer_IgnoreFriend_Response
+     */
+    type IgnoreFriendCallback = (error: (Error|null), response?: CPlayer_IgnoreFriend_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#postStatusToFriends}.
+     * @param error Error, if any
+     * @param [response] CPlayer_PostStatusToFriends_Response
+     */
+    type PostStatusToFriendsCallback = (error: (Error|null), response?: CPlayer_PostStatusToFriends_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#recordDisconnectedPlaytime}.
+     * @param error Error, if any
+     * @param [response] CPlayer_RecordDisconnectedPlaytime_Response
+     */
+    type RecordDisconnectedPlaytimeCallback = (error: (Error|null), response?: CPlayer_RecordDisconnectedPlaytime_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#removeFriend}.
+     * @param error Error, if any
+     * @param [response] CPlayer_RemoveFriend_Response
+     */
+    type RemoveFriendCallback = (error: (Error|null), response?: CPlayer_RemoveFriend_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#setAnimatedAvatar}.
+     * @param error Error, if any
+     * @param [response] CPlayer_SetAnimatedAvatar_Response
+     */
+    type SetAnimatedAvatarCallback = (error: (Error|null), response?: CPlayer_SetAnimatedAvatar_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#setAvatarFrame}.
+     * @param error Error, if any
+     * @param [response] CPlayer_SetAvatarFrame_Response
+     */
+    type SetAvatarFrameCallback = (error: (Error|null), response?: CPlayer_SetAvatarFrame_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#setCommunityPreferences}.
+     * @param error Error, if any
+     * @param [response] CPlayer_SetCommunityPreferences_Response
+     */
+    type SetCommunityPreferencesCallback = (error: (Error|null), response?: CPlayer_SetCommunityPreferences_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#setEquippedProfileItemFlags}.
+     * @param error Error, if any
+     * @param [response] CPlayer_SetEquippedProfileItemFlags_Response
+     */
+    type SetEquippedProfileItemFlagsCallback = (error: (Error|null), response?: CPlayer_SetEquippedProfileItemFlags_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#setFavoriteBadge}.
+     * @param error Error, if any
+     * @param [response] CPlayer_SetFavoriteBadge_Response
+     */
+    type SetFavoriteBadgeCallback = (error: (Error|null), response?: CPlayer_SetFavoriteBadge_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#setMiniProfileBackground}.
+     * @param error Error, if any
+     * @param [response] CPlayer_SetMiniProfileBackground_Response
+     */
+    type SetMiniProfileBackgroundCallback = (error: (Error|null), response?: CPlayer_SetMiniProfileBackground_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#setPerFriendPreferences}.
+     * @param error Error, if any
+     * @param [response] CPlayer_SetPerFriendPreferences_Response
+     */
+    type SetPerFriendPreferencesCallback = (error: (Error|null), response?: CPlayer_SetPerFriendPreferences_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#setProfileBackground}.
+     * @param error Error, if any
+     * @param [response] CPlayer_SetProfileBackground_Response
+     */
+    type SetProfileBackgroundCallback = (error: (Error|null), response?: CPlayer_SetProfileBackground_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#setProfilePreferences}.
+     * @param error Error, if any
+     * @param [response] CPlayer_SetProfilePreferences_Response
+     */
+    type SetProfilePreferencesCallback = (error: (Error|null), response?: CPlayer_SetProfilePreferences_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#setProfileTheme}.
+     * @param error Error, if any
+     * @param [response] CPlayer_SetProfileTheme_Response
+     */
+    type SetProfileThemeCallback = (error: (Error|null), response?: CPlayer_SetProfileTheme_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#setSteamDeckKeyboardSkin}.
+     * @param error Error, if any
+     * @param [response] CPlayer_SetSteamDeckKeyboardSkin_Response
+     */
+    type SetSteamDeckKeyboardSkinCallback = (error: (Error|null), response?: CPlayer_SetSteamDeckKeyboardSkin_Response) => void;
+
+    /**
+     * Callback as used by {@link Player#updateSteamAnnouncementLastRead}.
+     * @param error Error, if any
+     * @param [response] CPlayer_UpdateSteamAnnouncementLastRead_Response
+     */
+    type UpdateSteamAnnouncementLastReadCallback = (error: (Error|null), response?: CPlayer_UpdateSteamAnnouncementLastRead_Response) => void;
+}
+
+/** Represents a PlayerClient */
+export class PlayerClient extends $protobuf.rpc.Service {
+
+    /**
+     * Constructs a new PlayerClient service.
+     * @param rpcImpl RPC implementation
+     * @param [requestDelimited=false] Whether requests are length-delimited
+     * @param [responseDelimited=false] Whether responses are length-delimited
+     */
+    constructor(rpcImpl: $protobuf.RPCImpl, requestDelimited?: boolean, responseDelimited?: boolean);
+
+    /**
+     * Calls NotifyCommunityPreferencesChanged.
+     * @param request CPlayer_CommunityPreferencesChanged_Notification message or plain object
+     * @param callback Node-style callback called with the error, if any, and NoResponse
+     */
+    public notifyCommunityPreferencesChanged(request: ICPlayer_CommunityPreferencesChanged_Notification, callback: PlayerClient.NotifyCommunityPreferencesChangedCallback): void;
+
+    /**
+     * Calls NotifyCommunityPreferencesChanged.
+     * @param request CPlayer_CommunityPreferencesChanged_Notification message or plain object
+     * @returns Promise
+     */
+    public notifyCommunityPreferencesChanged(request: ICPlayer_CommunityPreferencesChanged_Notification): Promise<NoResponse>;
+
+    /**
+     * Calls NotifyFriendEquippedProfileItemsChanged.
+     * @param request CPlayer_FriendEquippedProfileItemsChanged_Notification message or plain object
+     * @param callback Node-style callback called with the error, if any, and NoResponse
+     */
+    public notifyFriendEquippedProfileItemsChanged(request: ICPlayer_FriendEquippedProfileItemsChanged_Notification, callback: PlayerClient.NotifyFriendEquippedProfileItemsChangedCallback): void;
+
+    /**
+     * Calls NotifyFriendEquippedProfileItemsChanged.
+     * @param request CPlayer_FriendEquippedProfileItemsChanged_Notification message or plain object
+     * @returns Promise
+     */
+    public notifyFriendEquippedProfileItemsChanged(request: ICPlayer_FriendEquippedProfileItemsChanged_Notification): Promise<NoResponse>;
+
+    /**
+     * Calls NotifyFriendNicknameChanged.
+     * @param request CPlayer_FriendNicknameChanged_Notification message or plain object
+     * @param callback Node-style callback called with the error, if any, and NoResponse
+     */
+    public notifyFriendNicknameChanged(request: ICPlayer_FriendNicknameChanged_Notification, callback: PlayerClient.NotifyFriendNicknameChangedCallback): void;
+
+    /**
+     * Calls NotifyFriendNicknameChanged.
+     * @param request CPlayer_FriendNicknameChanged_Notification message or plain object
+     * @returns Promise
+     */
+    public notifyFriendNicknameChanged(request: ICPlayer_FriendNicknameChanged_Notification): Promise<NoResponse>;
+
+    /**
+     * Calls NotifyLastPlayedTimes.
+     * @param request CPlayer_LastPlayedTimes_Notification message or plain object
+     * @param callback Node-style callback called with the error, if any, and NoResponse
+     */
+    public notifyLastPlayedTimes(request: ICPlayer_LastPlayedTimes_Notification, callback: PlayerClient.NotifyLastPlayedTimesCallback): void;
+
+    /**
+     * Calls NotifyLastPlayedTimes.
+     * @param request CPlayer_LastPlayedTimes_Notification message or plain object
+     * @returns Promise
+     */
+    public notifyLastPlayedTimes(request: ICPlayer_LastPlayedTimes_Notification): Promise<NoResponse>;
+
+    /**
+     * Calls NotifyNewSteamAnnouncementState.
+     * @param request CPlayer_NewSteamAnnouncementState_Notification message or plain object
+     * @param callback Node-style callback called with the error, if any, and NoResponse
+     */
+    public notifyNewSteamAnnouncementState(request: ICPlayer_NewSteamAnnouncementState_Notification, callback: PlayerClient.NotifyNewSteamAnnouncementStateCallback): void;
+
+    /**
+     * Calls NotifyNewSteamAnnouncementState.
+     * @param request CPlayer_NewSteamAnnouncementState_Notification message or plain object
+     * @returns Promise
+     */
+    public notifyNewSteamAnnouncementState(request: ICPlayer_NewSteamAnnouncementState_Notification): Promise<NoResponse>;
+
+    /**
+     * Calls NotifyPerFriendPreferencesChanged.
+     * @param request CPlayer_PerFriendPreferencesChanged_Notification message or plain object
+     * @param callback Node-style callback called with the error, if any, and NoResponse
+     */
+    public notifyPerFriendPreferencesChanged(request: ICPlayer_PerFriendPreferencesChanged_Notification, callback: PlayerClient.NotifyPerFriendPreferencesChangedCallback): void;
+
+    /**
+     * Calls NotifyPerFriendPreferencesChanged.
+     * @param request CPlayer_PerFriendPreferencesChanged_Notification message or plain object
+     * @returns Promise
+     */
+    public notifyPerFriendPreferencesChanged(request: ICPlayer_PerFriendPreferencesChanged_Notification): Promise<NoResponse>;
+
+    /**
+     * Calls NotifyPrivacyPrivacySettingsChanged.
+     * @param request CPlayer_PrivacySettingsChanged_Notification message or plain object
+     * @param callback Node-style callback called with the error, if any, and NoResponse
+     */
+    public notifyPrivacyPrivacySettingsChanged(request: ICPlayer_PrivacySettingsChanged_Notification, callback: PlayerClient.NotifyPrivacyPrivacySettingsChangedCallback): void;
+
+    /**
+     * Calls NotifyPrivacyPrivacySettingsChanged.
+     * @param request CPlayer_PrivacySettingsChanged_Notification message or plain object
+     * @returns Promise
+     */
+    public notifyPrivacyPrivacySettingsChanged(request: ICPlayer_PrivacySettingsChanged_Notification): Promise<NoResponse>;
+
+    /**
+     * Calls NotifyTextFilterWordsChanged.
+     * @param request CPlayer_TextFilterWordsChanged_Notification message or plain object
+     * @param callback Node-style callback called with the error, if any, and NoResponse
+     */
+    public notifyTextFilterWordsChanged(request: ICPlayer_TextFilterWordsChanged_Notification, callback: PlayerClient.NotifyTextFilterWordsChangedCallback): void;
+
+    /**
+     * Calls NotifyTextFilterWordsChanged.
+     * @param request CPlayer_TextFilterWordsChanged_Notification message or plain object
+     * @returns Promise
+     */
+    public notifyTextFilterWordsChanged(request: ICPlayer_TextFilterWordsChanged_Notification): Promise<NoResponse>;
+}
+
+export namespace PlayerClient {
+
+    /**
+     * Callback as used by {@link PlayerClient#notifyCommunityPreferencesChanged}.
+     * @param error Error, if any
+     * @param [response] NoResponse
+     */
+    type NotifyCommunityPreferencesChangedCallback = (error: (Error|null), response?: NoResponse) => void;
+
+    /**
+     * Callback as used by {@link PlayerClient#notifyFriendEquippedProfileItemsChanged}.
+     * @param error Error, if any
+     * @param [response] NoResponse
+     */
+    type NotifyFriendEquippedProfileItemsChangedCallback = (error: (Error|null), response?: NoResponse) => void;
+
+    /**
+     * Callback as used by {@link PlayerClient#notifyFriendNicknameChanged}.
+     * @param error Error, if any
+     * @param [response] NoResponse
+     */
+    type NotifyFriendNicknameChangedCallback = (error: (Error|null), response?: NoResponse) => void;
+
+    /**
+     * Callback as used by {@link PlayerClient#notifyLastPlayedTimes}.
+     * @param error Error, if any
+     * @param [response] NoResponse
+     */
+    type NotifyLastPlayedTimesCallback = (error: (Error|null), response?: NoResponse) => void;
+
+    /**
+     * Callback as used by {@link PlayerClient#notifyNewSteamAnnouncementState}.
+     * @param error Error, if any
+     * @param [response] NoResponse
+     */
+    type NotifyNewSteamAnnouncementStateCallback = (error: (Error|null), response?: NoResponse) => void;
+
+    /**
+     * Callback as used by {@link PlayerClient#notifyPerFriendPreferencesChanged}.
+     * @param error Error, if any
+     * @param [response] NoResponse
+     */
+    type NotifyPerFriendPreferencesChangedCallback = (error: (Error|null), response?: NoResponse) => void;
+
+    /**
+     * Callback as used by {@link PlayerClient#notifyPrivacyPrivacySettingsChanged}.
+     * @param error Error, if any
+     * @param [response] NoResponse
+     */
+    type NotifyPrivacyPrivacySettingsChangedCallback = (error: (Error|null), response?: NoResponse) => void;
+
+    /**
+     * Callback as used by {@link PlayerClient#notifyTextFilterWordsChanged}.
+     * @param error Error, if any
+     * @param [response] NoResponse
+     */
+    type NotifyTextFilterWordsChangedCallback = (error: (Error|null), response?: NoResponse) => void;
+}
+
+/** Properties of a CQuest_ActivateProfileModifierItem_Request. */
+export interface ICQuest_ActivateProfileModifierItem_Request {
+
+    /** CQuest_ActivateProfileModifierItem_Request appid */
+    appid?: (number|null);
+
+    /** CQuest_ActivateProfileModifierItem_Request communityitemid */
+    communityitemid?: (number|Long|null);
+
+    /** CQuest_ActivateProfileModifierItem_Request activate */
+    activate?: (boolean|null);
+}
+
+/** Represents a CQuest_ActivateProfileModifierItem_Request. */
+export class CQuest_ActivateProfileModifierItem_Request implements ICQuest_ActivateProfileModifierItem_Request {
+
+    /**
+     * Constructs a new CQuest_ActivateProfileModifierItem_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICQuest_ActivateProfileModifierItem_Request);
+
+    /** CQuest_ActivateProfileModifierItem_Request appid. */
+    public appid: number;
+
+    /** CQuest_ActivateProfileModifierItem_Request communityitemid. */
+    public communityitemid: (number|Long);
+
+    /** CQuest_ActivateProfileModifierItem_Request activate. */
+    public activate: boolean;
+
+    /**
+     * Encodes the specified CQuest_ActivateProfileModifierItem_Request message. Does not implicitly {@link CQuest_ActivateProfileModifierItem_Request.verify|verify} messages.
+     * @param message CQuest_ActivateProfileModifierItem_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICQuest_ActivateProfileModifierItem_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CQuest_ActivateProfileModifierItem_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CQuest_ActivateProfileModifierItem_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CQuest_ActivateProfileModifierItem_Request;
+
+    /**
+     * Gets the default type url for CQuest_ActivateProfileModifierItem_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CQuest_ActivateProfileModifierItem_Response. */
+export interface ICQuest_ActivateProfileModifierItem_Response {
+}
+
+/** Represents a CQuest_ActivateProfileModifierItem_Response. */
+export class CQuest_ActivateProfileModifierItem_Response implements ICQuest_ActivateProfileModifierItem_Response {
+
+    /**
+     * Constructs a new CQuest_ActivateProfileModifierItem_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICQuest_ActivateProfileModifierItem_Response);
+
+    /**
+     * Encodes the specified CQuest_ActivateProfileModifierItem_Response message. Does not implicitly {@link CQuest_ActivateProfileModifierItem_Response.verify|verify} messages.
+     * @param message CQuest_ActivateProfileModifierItem_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICQuest_ActivateProfileModifierItem_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CQuest_ActivateProfileModifierItem_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CQuest_ActivateProfileModifierItem_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CQuest_ActivateProfileModifierItem_Response;
+
+    /**
+     * Gets the default type url for CQuest_ActivateProfileModifierItem_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CQuest_CommunityItem. */
+export interface ICQuest_CommunityItem {
+
+    /** CQuest_CommunityItem communityitemid */
+    communityitemid?: (number|Long|null);
+
+    /** CQuest_CommunityItem itemType */
+    itemType?: (number|null);
+
+    /** CQuest_CommunityItem appid */
+    appid?: (number|null);
+
+    /** CQuest_CommunityItem owner */
+    owner?: (number|null);
+
+    /** CQuest_CommunityItem attributes */
+    attributes?: (ICQuest_CommunityItem_Attribute[]|null);
+
+    /** CQuest_CommunityItem used */
+    used?: (boolean|null);
+
+    /** CQuest_CommunityItem ownerOrigin */
+    ownerOrigin?: (number|null);
+
+    /** CQuest_CommunityItem amount */
+    amount?: (number|Long|null);
+}
+
+/** Represents a CQuest_CommunityItem. */
+export class CQuest_CommunityItem implements ICQuest_CommunityItem {
+
+    /**
+     * Constructs a new CQuest_CommunityItem.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICQuest_CommunityItem);
+
+    /** CQuest_CommunityItem communityitemid. */
+    public communityitemid: (number|Long);
+
+    /** CQuest_CommunityItem itemType. */
+    public itemType: number;
+
+    /** CQuest_CommunityItem appid. */
+    public appid: number;
+
+    /** CQuest_CommunityItem owner. */
+    public owner: number;
+
+    /** CQuest_CommunityItem attributes. */
+    public attributes: ICQuest_CommunityItem_Attribute[];
+
+    /** CQuest_CommunityItem used. */
+    public used: boolean;
+
+    /** CQuest_CommunityItem ownerOrigin. */
+    public ownerOrigin: number;
+
+    /** CQuest_CommunityItem amount. */
+    public amount: (number|Long);
+
+    /**
+     * Encodes the specified CQuest_CommunityItem message. Does not implicitly {@link CQuest_CommunityItem.verify|verify} messages.
+     * @param message CQuest_CommunityItem message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICQuest_CommunityItem, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CQuest_CommunityItem message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CQuest_CommunityItem
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CQuest_CommunityItem;
+
+    /**
+     * Gets the default type url for CQuest_CommunityItem
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CQuest_CommunityItem_Attribute. */
+export interface ICQuest_CommunityItem_Attribute {
+
+    /** CQuest_CommunityItem_Attribute attributeid */
+    attributeid?: (number|null);
+
+    /** CQuest_CommunityItem_Attribute value */
+    value?: (number|Long|null);
+}
+
+/** Represents a CQuest_CommunityItem_Attribute. */
+export class CQuest_CommunityItem_Attribute implements ICQuest_CommunityItem_Attribute {
+
+    /**
+     * Constructs a new CQuest_CommunityItem_Attribute.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICQuest_CommunityItem_Attribute);
+
+    /** CQuest_CommunityItem_Attribute attributeid. */
+    public attributeid: number;
+
+    /** CQuest_CommunityItem_Attribute value. */
+    public value: (number|Long);
+
+    /**
+     * Encodes the specified CQuest_CommunityItem_Attribute message. Does not implicitly {@link CQuest_CommunityItem_Attribute.verify|verify} messages.
+     * @param message CQuest_CommunityItem_Attribute message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICQuest_CommunityItem_Attribute, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CQuest_CommunityItem_Attribute message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CQuest_CommunityItem_Attribute
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CQuest_CommunityItem_Attribute;
+
+    /**
+     * Gets the default type url for CQuest_CommunityItem_Attribute
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CQuest_GetCommunityInventory_Request. */
+export interface ICQuest_GetCommunityInventory_Request {
+
+    /** CQuest_GetCommunityInventory_Request filterAppids */
+    filterAppids?: (number[]|null);
+}
+
+/** Represents a CQuest_GetCommunityInventory_Request. */
+export class CQuest_GetCommunityInventory_Request implements ICQuest_GetCommunityInventory_Request {
+
+    /**
+     * Constructs a new CQuest_GetCommunityInventory_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICQuest_GetCommunityInventory_Request);
+
+    /** CQuest_GetCommunityInventory_Request filterAppids. */
+    public filterAppids: number[];
+
+    /**
+     * Encodes the specified CQuest_GetCommunityInventory_Request message. Does not implicitly {@link CQuest_GetCommunityInventory_Request.verify|verify} messages.
+     * @param message CQuest_GetCommunityInventory_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICQuest_GetCommunityInventory_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CQuest_GetCommunityInventory_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CQuest_GetCommunityInventory_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CQuest_GetCommunityInventory_Request;
+
+    /**
+     * Gets the default type url for CQuest_GetCommunityInventory_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CQuest_GetCommunityInventory_Response. */
+export interface ICQuest_GetCommunityInventory_Response {
+
+    /** CQuest_GetCommunityInventory_Response items */
+    items?: (ICQuest_CommunityItem[]|null);
+}
+
+/** Represents a CQuest_GetCommunityInventory_Response. */
+export class CQuest_GetCommunityInventory_Response implements ICQuest_GetCommunityInventory_Response {
+
+    /**
+     * Constructs a new CQuest_GetCommunityInventory_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICQuest_GetCommunityInventory_Response);
+
+    /** CQuest_GetCommunityInventory_Response items. */
+    public items: ICQuest_CommunityItem[];
+
+    /**
+     * Encodes the specified CQuest_GetCommunityInventory_Response message. Does not implicitly {@link CQuest_GetCommunityInventory_Response.verify|verify} messages.
+     * @param message CQuest_GetCommunityInventory_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICQuest_GetCommunityInventory_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CQuest_GetCommunityInventory_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CQuest_GetCommunityInventory_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CQuest_GetCommunityInventory_Response;
+
+    /**
+     * Gets the default type url for CQuest_GetCommunityInventory_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CQuest_GetCommunityItemDefinitions_Request. */
+export interface ICQuest_GetCommunityItemDefinitions_Request {
+
+    /** CQuest_GetCommunityItemDefinitions_Request appid */
+    appid?: (number|null);
+
+    /** CQuest_GetCommunityItemDefinitions_Request itemType */
+    itemType?: (number|null);
+
+    /** CQuest_GetCommunityItemDefinitions_Request language */
+    language?: (string|null);
+
+    /** CQuest_GetCommunityItemDefinitions_Request broadcastChannelId */
+    broadcastChannelId?: (number|Long|null);
+
+    /** CQuest_GetCommunityItemDefinitions_Request keyvaluesAsJson */
+    keyvaluesAsJson?: (boolean|null);
+}
+
+/** Represents a CQuest_GetCommunityItemDefinitions_Request. */
+export class CQuest_GetCommunityItemDefinitions_Request implements ICQuest_GetCommunityItemDefinitions_Request {
+
+    /**
+     * Constructs a new CQuest_GetCommunityItemDefinitions_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICQuest_GetCommunityItemDefinitions_Request);
+
+    /** CQuest_GetCommunityItemDefinitions_Request appid. */
+    public appid: number;
+
+    /** CQuest_GetCommunityItemDefinitions_Request itemType. */
+    public itemType: number;
+
+    /** CQuest_GetCommunityItemDefinitions_Request language. */
+    public language: string;
+
+    /** CQuest_GetCommunityItemDefinitions_Request broadcastChannelId. */
+    public broadcastChannelId: (number|Long);
+
+    /** CQuest_GetCommunityItemDefinitions_Request keyvaluesAsJson. */
+    public keyvaluesAsJson: boolean;
+
+    /**
+     * Encodes the specified CQuest_GetCommunityItemDefinitions_Request message. Does not implicitly {@link CQuest_GetCommunityItemDefinitions_Request.verify|verify} messages.
+     * @param message CQuest_GetCommunityItemDefinitions_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICQuest_GetCommunityItemDefinitions_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CQuest_GetCommunityItemDefinitions_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CQuest_GetCommunityItemDefinitions_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CQuest_GetCommunityItemDefinitions_Request;
+
+    /**
+     * Gets the default type url for CQuest_GetCommunityItemDefinitions_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CQuest_GetCommunityItemDefinitions_Response. */
+export interface ICQuest_GetCommunityItemDefinitions_Response {
+
+    /** CQuest_GetCommunityItemDefinitions_Response itemDefinitions */
+    itemDefinitions?: (ICQuest_GetCommunityItemDefinitions_Response_ItemDefinition[]|null);
+}
+
+/** Represents a CQuest_GetCommunityItemDefinitions_Response. */
+export class CQuest_GetCommunityItemDefinitions_Response implements ICQuest_GetCommunityItemDefinitions_Response {
+
+    /**
+     * Constructs a new CQuest_GetCommunityItemDefinitions_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICQuest_GetCommunityItemDefinitions_Response);
+
+    /** CQuest_GetCommunityItemDefinitions_Response itemDefinitions. */
+    public itemDefinitions: ICQuest_GetCommunityItemDefinitions_Response_ItemDefinition[];
+
+    /**
+     * Encodes the specified CQuest_GetCommunityItemDefinitions_Response message. Does not implicitly {@link CQuest_GetCommunityItemDefinitions_Response.verify|verify} messages.
+     * @param message CQuest_GetCommunityItemDefinitions_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICQuest_GetCommunityItemDefinitions_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CQuest_GetCommunityItemDefinitions_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CQuest_GetCommunityItemDefinitions_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CQuest_GetCommunityItemDefinitions_Response;
+
+    /**
+     * Gets the default type url for CQuest_GetCommunityItemDefinitions_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CQuest_GetCommunityItemDefinitions_Response_ItemDefinition. */
+export interface ICQuest_GetCommunityItemDefinitions_Response_ItemDefinition {
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition itemType */
+    itemType?: (number|null);
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition appid */
+    appid?: (number|null);
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition itemName */
+    itemName?: (string|null);
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition itemTitle */
+    itemTitle?: (string|null);
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition itemDescription */
+    itemDescription?: (string|null);
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition itemImageSmall */
+    itemImageSmall?: (string|null);
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition itemImageLarge */
+    itemImageLarge?: (string|null);
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition itemKeyValues */
+    itemKeyValues?: (string|null);
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition itemSeries */
+    itemSeries?: (number|null);
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition itemClass */
+    itemClass?: (number|null);
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition editorAccountid */
+    editorAccountid?: (number|null);
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition active */
+    active?: (boolean|null);
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition itemImageComposed */
+    itemImageComposed?: (string|null);
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition itemImageComposedFoil */
+    itemImageComposedFoil?: (string|null);
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition deleted */
+    deleted?: (boolean|null);
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition itemLastChanged */
+    itemLastChanged?: (number|null);
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition broadcastChannelId */
+    broadcastChannelId?: (number|Long|null);
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition itemMovieWebm */
+    itemMovieWebm?: (string|null);
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition itemMovieMp4 */
+    itemMovieMp4?: (string|null);
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition itemMovieWebmSmall */
+    itemMovieWebmSmall?: (string|null);
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition itemMovieMp4Small */
+    itemMovieMp4Small?: (string|null);
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition itemInternalName */
+    itemInternalName?: (string|null);
+}
+
+/** Represents a CQuest_GetCommunityItemDefinitions_Response_ItemDefinition. */
+export class CQuest_GetCommunityItemDefinitions_Response_ItemDefinition implements ICQuest_GetCommunityItemDefinitions_Response_ItemDefinition {
+
+    /**
+     * Constructs a new CQuest_GetCommunityItemDefinitions_Response_ItemDefinition.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICQuest_GetCommunityItemDefinitions_Response_ItemDefinition);
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition itemType. */
+    public itemType: number;
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition appid. */
+    public appid: number;
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition itemName. */
+    public itemName: string;
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition itemTitle. */
+    public itemTitle: string;
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition itemDescription. */
+    public itemDescription: string;
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition itemImageSmall. */
+    public itemImageSmall: string;
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition itemImageLarge. */
+    public itemImageLarge: string;
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition itemKeyValues. */
+    public itemKeyValues: string;
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition itemSeries. */
+    public itemSeries: number;
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition itemClass. */
+    public itemClass: number;
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition editorAccountid. */
+    public editorAccountid: number;
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition active. */
+    public active: boolean;
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition itemImageComposed. */
+    public itemImageComposed: string;
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition itemImageComposedFoil. */
+    public itemImageComposedFoil: string;
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition deleted. */
+    public deleted: boolean;
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition itemLastChanged. */
+    public itemLastChanged: number;
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition broadcastChannelId. */
+    public broadcastChannelId: (number|Long);
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition itemMovieWebm. */
+    public itemMovieWebm: string;
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition itemMovieMp4. */
+    public itemMovieMp4: string;
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition itemMovieWebmSmall. */
+    public itemMovieWebmSmall: string;
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition itemMovieMp4Small. */
+    public itemMovieMp4Small: string;
+
+    /** CQuest_GetCommunityItemDefinitions_Response_ItemDefinition itemInternalName. */
+    public itemInternalName: string;
+
+    /**
+     * Encodes the specified CQuest_GetCommunityItemDefinitions_Response_ItemDefinition message. Does not implicitly {@link CQuest_GetCommunityItemDefinitions_Response_ItemDefinition.verify|verify} messages.
+     * @param message CQuest_GetCommunityItemDefinitions_Response_ItemDefinition message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICQuest_GetCommunityItemDefinitions_Response_ItemDefinition, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CQuest_GetCommunityItemDefinitions_Response_ItemDefinition message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CQuest_GetCommunityItemDefinitions_Response_ItemDefinition
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CQuest_GetCommunityItemDefinitions_Response_ItemDefinition;
+
+    /**
+     * Gets the default type url for CQuest_GetCommunityItemDefinitions_Response_ItemDefinition
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CQuest_GetNumTradingCardsEarned_Request. */
+export interface ICQuest_GetNumTradingCardsEarned_Request {
+
+    /** CQuest_GetNumTradingCardsEarned_Request timestampStart */
+    timestampStart?: (number|null);
+
+    /** CQuest_GetNumTradingCardsEarned_Request timestampEnd */
+    timestampEnd?: (number|null);
+}
+
+/** Represents a CQuest_GetNumTradingCardsEarned_Request. */
+export class CQuest_GetNumTradingCardsEarned_Request implements ICQuest_GetNumTradingCardsEarned_Request {
+
+    /**
+     * Constructs a new CQuest_GetNumTradingCardsEarned_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICQuest_GetNumTradingCardsEarned_Request);
+
+    /** CQuest_GetNumTradingCardsEarned_Request timestampStart. */
+    public timestampStart: number;
+
+    /** CQuest_GetNumTradingCardsEarned_Request timestampEnd. */
+    public timestampEnd: number;
+
+    /**
+     * Encodes the specified CQuest_GetNumTradingCardsEarned_Request message. Does not implicitly {@link CQuest_GetNumTradingCardsEarned_Request.verify|verify} messages.
+     * @param message CQuest_GetNumTradingCardsEarned_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICQuest_GetNumTradingCardsEarned_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CQuest_GetNumTradingCardsEarned_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CQuest_GetNumTradingCardsEarned_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CQuest_GetNumTradingCardsEarned_Request;
+
+    /**
+     * Gets the default type url for CQuest_GetNumTradingCardsEarned_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CQuest_GetNumTradingCardsEarned_Response. */
+export interface ICQuest_GetNumTradingCardsEarned_Response {
+
+    /** CQuest_GetNumTradingCardsEarned_Response numTradingCards */
+    numTradingCards?: (number|null);
+}
+
+/** Represents a CQuest_GetNumTradingCardsEarned_Response. */
+export class CQuest_GetNumTradingCardsEarned_Response implements ICQuest_GetNumTradingCardsEarned_Response {
+
+    /**
+     * Constructs a new CQuest_GetNumTradingCardsEarned_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICQuest_GetNumTradingCardsEarned_Response);
+
+    /** CQuest_GetNumTradingCardsEarned_Response numTradingCards. */
+    public numTradingCards: number;
+
+    /**
+     * Encodes the specified CQuest_GetNumTradingCardsEarned_Response message. Does not implicitly {@link CQuest_GetNumTradingCardsEarned_Response.verify|verify} messages.
+     * @param message CQuest_GetNumTradingCardsEarned_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICQuest_GetNumTradingCardsEarned_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CQuest_GetNumTradingCardsEarned_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CQuest_GetNumTradingCardsEarned_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CQuest_GetNumTradingCardsEarned_Response;
+
+    /**
+     * Gets the default type url for CQuest_GetNumTradingCardsEarned_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CQuest_SetVirtualItemRewardDefinition_Request. */
+export interface ICQuest_SetVirtualItemRewardDefinition_Request {
+
+    /** CQuest_SetVirtualItemRewardDefinition_Request eventid */
+    eventid?: (number|null);
+
+    /** CQuest_SetVirtualItemRewardDefinition_Request itemsdefs */
+    itemsdefs?: (ICVirtualItemRewardDefinition[]|null);
+
+    /** CQuest_SetVirtualItemRewardDefinition_Request action */
+    action?: (number|null);
+}
+
+/** Represents a CQuest_SetVirtualItemRewardDefinition_Request. */
+export class CQuest_SetVirtualItemRewardDefinition_Request implements ICQuest_SetVirtualItemRewardDefinition_Request {
+
+    /**
+     * Constructs a new CQuest_SetVirtualItemRewardDefinition_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICQuest_SetVirtualItemRewardDefinition_Request);
+
+    /** CQuest_SetVirtualItemRewardDefinition_Request eventid. */
+    public eventid: number;
+
+    /** CQuest_SetVirtualItemRewardDefinition_Request itemsdefs. */
+    public itemsdefs: ICVirtualItemRewardDefinition[];
+
+    /** CQuest_SetVirtualItemRewardDefinition_Request action. */
+    public action: number;
+
+    /**
+     * Encodes the specified CQuest_SetVirtualItemRewardDefinition_Request message. Does not implicitly {@link CQuest_SetVirtualItemRewardDefinition_Request.verify|verify} messages.
+     * @param message CQuest_SetVirtualItemRewardDefinition_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICQuest_SetVirtualItemRewardDefinition_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CQuest_SetVirtualItemRewardDefinition_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CQuest_SetVirtualItemRewardDefinition_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CQuest_SetVirtualItemRewardDefinition_Request;
+
+    /**
+     * Gets the default type url for CQuest_SetVirtualItemRewardDefinition_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CQuest_SetVirtualItemRewardDefinition_Response. */
+export interface ICQuest_SetVirtualItemRewardDefinition_Response {
+}
+
+/** Represents a CQuest_SetVirtualItemRewardDefinition_Response. */
+export class CQuest_SetVirtualItemRewardDefinition_Response implements ICQuest_SetVirtualItemRewardDefinition_Response {
+
+    /**
+     * Constructs a new CQuest_SetVirtualItemRewardDefinition_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICQuest_SetVirtualItemRewardDefinition_Response);
+
+    /**
+     * Encodes the specified CQuest_SetVirtualItemRewardDefinition_Response message. Does not implicitly {@link CQuest_SetVirtualItemRewardDefinition_Response.verify|verify} messages.
+     * @param message CQuest_SetVirtualItemRewardDefinition_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICQuest_SetVirtualItemRewardDefinition_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CQuest_SetVirtualItemRewardDefinition_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CQuest_SetVirtualItemRewardDefinition_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CQuest_SetVirtualItemRewardDefinition_Response;
+
+    /**
+     * Gets the default type url for CQuest_SetVirtualItemRewardDefinition_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CQuest_VirtualItemRewardDefinition_Request. */
+export interface ICQuest_VirtualItemRewardDefinition_Request {
+
+    /** CQuest_VirtualItemRewardDefinition_Request eventid */
+    eventid?: (number|null);
+
+    /** CQuest_VirtualItemRewardDefinition_Request includeInactive */
+    includeInactive?: (boolean|null);
+}
+
+/** Represents a CQuest_VirtualItemRewardDefinition_Request. */
+export class CQuest_VirtualItemRewardDefinition_Request implements ICQuest_VirtualItemRewardDefinition_Request {
+
+    /**
+     * Constructs a new CQuest_VirtualItemRewardDefinition_Request.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICQuest_VirtualItemRewardDefinition_Request);
+
+    /** CQuest_VirtualItemRewardDefinition_Request eventid. */
+    public eventid: number;
+
+    /** CQuest_VirtualItemRewardDefinition_Request includeInactive. */
+    public includeInactive: boolean;
+
+    /**
+     * Encodes the specified CQuest_VirtualItemRewardDefinition_Request message. Does not implicitly {@link CQuest_VirtualItemRewardDefinition_Request.verify|verify} messages.
+     * @param message CQuest_VirtualItemRewardDefinition_Request message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICQuest_VirtualItemRewardDefinition_Request, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CQuest_VirtualItemRewardDefinition_Request message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CQuest_VirtualItemRewardDefinition_Request
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CQuest_VirtualItemRewardDefinition_Request;
+
+    /**
+     * Gets the default type url for CQuest_VirtualItemRewardDefinition_Request
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CQuest_VirtualItemRewardDefinition_Response. */
+export interface ICQuest_VirtualItemRewardDefinition_Response {
+
+    /** CQuest_VirtualItemRewardDefinition_Response rewards */
+    rewards?: (ICVirtualItemRewardDefinition[]|null);
+}
+
+/** Represents a CQuest_VirtualItemRewardDefinition_Response. */
+export class CQuest_VirtualItemRewardDefinition_Response implements ICQuest_VirtualItemRewardDefinition_Response {
+
+    /**
+     * Constructs a new CQuest_VirtualItemRewardDefinition_Response.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICQuest_VirtualItemRewardDefinition_Response);
+
+    /** CQuest_VirtualItemRewardDefinition_Response rewards. */
+    public rewards: ICVirtualItemRewardDefinition[];
+
+    /**
+     * Encodes the specified CQuest_VirtualItemRewardDefinition_Response message. Does not implicitly {@link CQuest_VirtualItemRewardDefinition_Response.verify|verify} messages.
+     * @param message CQuest_VirtualItemRewardDefinition_Response message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICQuest_VirtualItemRewardDefinition_Response, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CQuest_VirtualItemRewardDefinition_Response message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CQuest_VirtualItemRewardDefinition_Response
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CQuest_VirtualItemRewardDefinition_Response;
+
+    /**
+     * Gets the default type url for CQuest_VirtualItemRewardDefinition_Response
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a CVirtualItemRewardDefinition. */
+export interface ICVirtualItemRewardDefinition {
+
+    /** CVirtualItemRewardDefinition eventid */
+    eventid?: (number|null);
+
+    /** CVirtualItemRewardDefinition itemBucket */
+    itemBucket?: (number|null);
+
+    /** CVirtualItemRewardDefinition appid */
+    appid?: (number|null);
+
+    /** CVirtualItemRewardDefinition active */
+    active?: (boolean|null);
+
+    /** CVirtualItemRewardDefinition rarity */
+    rarity?: (number|null);
+
+    /** CVirtualItemRewardDefinition packageToGrant */
+    packageToGrant?: (number|null);
+
+    /** CVirtualItemRewardDefinition gameItemId */
+    gameItemId?: (number|Long|null);
+
+    /** CVirtualItemRewardDefinition communityItemClass */
+    communityItemClass?: (number|null);
+
+    /** CVirtualItemRewardDefinition communityItemType */
+    communityItemType?: (number|null);
+
+    /** CVirtualItemRewardDefinition loyaltyPointType */
+    loyaltyPointType?: (number|null);
+
+    /** CVirtualItemRewardDefinition amount */
+    amount?: (number|Long|null);
+
+    /** CVirtualItemRewardDefinition rtimeTimeActive */
+    rtimeTimeActive?: (number|null);
+
+    /** CVirtualItemRewardDefinition loyaltyRewardDefid */
+    loyaltyRewardDefid?: (number|null);
+
+    /** CVirtualItemRewardDefinition userBadgeToGrant */
+    userBadgeToGrant?: (number|null);
+
+    /** CVirtualItemRewardDefinition userBadgeLevel */
+    userBadgeLevel?: (number|null);
+
+    /** CVirtualItemRewardDefinition virtualItemDefId */
+    virtualItemDefId?: (number|null);
+}
+
+/** Represents a CVirtualItemRewardDefinition. */
+export class CVirtualItemRewardDefinition implements ICVirtualItemRewardDefinition {
+
+    /**
+     * Constructs a new CVirtualItemRewardDefinition.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ICVirtualItemRewardDefinition);
+
+    /** CVirtualItemRewardDefinition eventid. */
+    public eventid: number;
+
+    /** CVirtualItemRewardDefinition itemBucket. */
+    public itemBucket: number;
+
+    /** CVirtualItemRewardDefinition appid. */
+    public appid: number;
+
+    /** CVirtualItemRewardDefinition active. */
+    public active: boolean;
+
+    /** CVirtualItemRewardDefinition rarity. */
+    public rarity: number;
+
+    /** CVirtualItemRewardDefinition packageToGrant. */
+    public packageToGrant: number;
+
+    /** CVirtualItemRewardDefinition gameItemId. */
+    public gameItemId: (number|Long);
+
+    /** CVirtualItemRewardDefinition communityItemClass. */
+    public communityItemClass: number;
+
+    /** CVirtualItemRewardDefinition communityItemType. */
+    public communityItemType: number;
+
+    /** CVirtualItemRewardDefinition loyaltyPointType. */
+    public loyaltyPointType: number;
+
+    /** CVirtualItemRewardDefinition amount. */
+    public amount: (number|Long);
+
+    /** CVirtualItemRewardDefinition rtimeTimeActive. */
+    public rtimeTimeActive: number;
+
+    /** CVirtualItemRewardDefinition loyaltyRewardDefid. */
+    public loyaltyRewardDefid: number;
+
+    /** CVirtualItemRewardDefinition userBadgeToGrant. */
+    public userBadgeToGrant: number;
+
+    /** CVirtualItemRewardDefinition userBadgeLevel. */
+    public userBadgeLevel: number;
+
+    /** CVirtualItemRewardDefinition virtualItemDefId. */
+    public virtualItemDefId: number;
+
+    /**
+     * Encodes the specified CVirtualItemRewardDefinition message. Does not implicitly {@link CVirtualItemRewardDefinition.verify|verify} messages.
+     * @param message CVirtualItemRewardDefinition message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ICVirtualItemRewardDefinition, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a CVirtualItemRewardDefinition message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns CVirtualItemRewardDefinition
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CVirtualItemRewardDefinition;
+
+    /**
+     * Gets the default type url for CVirtualItemRewardDefinition
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Represents a Quest */
+export class Quest extends $protobuf.rpc.Service {
+
+    /**
+     * Constructs a new Quest service.
+     * @param rpcImpl RPC implementation
+     * @param [requestDelimited=false] Whether requests are length-delimited
+     * @param [responseDelimited=false] Whether responses are length-delimited
+     */
+    constructor(rpcImpl: $protobuf.RPCImpl, requestDelimited?: boolean, responseDelimited?: boolean);
+
+    /**
+     * Calls ActivateProfileModifierItem.
+     * @param request CQuest_ActivateProfileModifierItem_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CQuest_ActivateProfileModifierItem_Response
+     */
+    public activateProfileModifierItem(request: ICQuest_ActivateProfileModifierItem_Request, callback: Quest.ActivateProfileModifierItemCallback): void;
+
+    /**
+     * Calls ActivateProfileModifierItem.
+     * @param request CQuest_ActivateProfileModifierItem_Request message or plain object
+     * @returns Promise
+     */
+    public activateProfileModifierItem(request: ICQuest_ActivateProfileModifierItem_Request): Promise<CQuest_ActivateProfileModifierItem_Response>;
+
+    /**
+     * Calls GetCommunityInventory.
+     * @param request CQuest_GetCommunityInventory_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CQuest_GetCommunityInventory_Response
+     */
+    public getCommunityInventory(request: ICQuest_GetCommunityInventory_Request, callback: Quest.GetCommunityInventoryCallback): void;
+
+    /**
+     * Calls GetCommunityInventory.
+     * @param request CQuest_GetCommunityInventory_Request message or plain object
+     * @returns Promise
+     */
+    public getCommunityInventory(request: ICQuest_GetCommunityInventory_Request): Promise<CQuest_GetCommunityInventory_Response>;
+
+    /**
+     * Calls GetCommunityItemDefinitions.
+     * @param request CQuest_GetCommunityItemDefinitions_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CQuest_GetCommunityItemDefinitions_Response
+     */
+    public getCommunityItemDefinitions(request: ICQuest_GetCommunityItemDefinitions_Request, callback: Quest.GetCommunityItemDefinitionsCallback): void;
+
+    /**
+     * Calls GetCommunityItemDefinitions.
+     * @param request CQuest_GetCommunityItemDefinitions_Request message or plain object
+     * @returns Promise
+     */
+    public getCommunityItemDefinitions(request: ICQuest_GetCommunityItemDefinitions_Request): Promise<CQuest_GetCommunityItemDefinitions_Response>;
+
+    /**
+     * Calls GetNumTradingCardsEarned.
+     * @param request CQuest_GetNumTradingCardsEarned_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CQuest_GetNumTradingCardsEarned_Response
+     */
+    public getNumTradingCardsEarned(request: ICQuest_GetNumTradingCardsEarned_Request, callback: Quest.GetNumTradingCardsEarnedCallback): void;
+
+    /**
+     * Calls GetNumTradingCardsEarned.
+     * @param request CQuest_GetNumTradingCardsEarned_Request message or plain object
+     * @returns Promise
+     */
+    public getNumTradingCardsEarned(request: ICQuest_GetNumTradingCardsEarned_Request): Promise<CQuest_GetNumTradingCardsEarned_Response>;
+
+    /**
+     * Calls GetVirtualItemRewardDefinition.
+     * @param request CQuest_VirtualItemRewardDefinition_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CQuest_VirtualItemRewardDefinition_Response
+     */
+    public getVirtualItemRewardDefinition(request: ICQuest_VirtualItemRewardDefinition_Request, callback: Quest.GetVirtualItemRewardDefinitionCallback): void;
+
+    /**
+     * Calls GetVirtualItemRewardDefinition.
+     * @param request CQuest_VirtualItemRewardDefinition_Request message or plain object
+     * @returns Promise
+     */
+    public getVirtualItemRewardDefinition(request: ICQuest_VirtualItemRewardDefinition_Request): Promise<CQuest_VirtualItemRewardDefinition_Response>;
+
+    /**
+     * Calls SetVirtualItemRewardDefinition.
+     * @param request CQuest_SetVirtualItemRewardDefinition_Request message or plain object
+     * @param callback Node-style callback called with the error, if any, and CQuest_SetVirtualItemRewardDefinition_Response
+     */
+    public setVirtualItemRewardDefinition(request: ICQuest_SetVirtualItemRewardDefinition_Request, callback: Quest.SetVirtualItemRewardDefinitionCallback): void;
+
+    /**
+     * Calls SetVirtualItemRewardDefinition.
+     * @param request CQuest_SetVirtualItemRewardDefinition_Request message or plain object
+     * @returns Promise
+     */
+    public setVirtualItemRewardDefinition(request: ICQuest_SetVirtualItemRewardDefinition_Request): Promise<CQuest_SetVirtualItemRewardDefinition_Response>;
+}
+
+export namespace Quest {
+
+    /**
+     * Callback as used by {@link Quest#activateProfileModifierItem}.
+     * @param error Error, if any
+     * @param [response] CQuest_ActivateProfileModifierItem_Response
+     */
+    type ActivateProfileModifierItemCallback = (error: (Error|null), response?: CQuest_ActivateProfileModifierItem_Response) => void;
+
+    /**
+     * Callback as used by {@link Quest#getCommunityInventory}.
+     * @param error Error, if any
+     * @param [response] CQuest_GetCommunityInventory_Response
+     */
+    type GetCommunityInventoryCallback = (error: (Error|null), response?: CQuest_GetCommunityInventory_Response) => void;
+
+    /**
+     * Callback as used by {@link Quest#getCommunityItemDefinitions}.
+     * @param error Error, if any
+     * @param [response] CQuest_GetCommunityItemDefinitions_Response
+     */
+    type GetCommunityItemDefinitionsCallback = (error: (Error|null), response?: CQuest_GetCommunityItemDefinitions_Response) => void;
+
+    /**
+     * Callback as used by {@link Quest#getNumTradingCardsEarned}.
+     * @param error Error, if any
+     * @param [response] CQuest_GetNumTradingCardsEarned_Response
+     */
+    type GetNumTradingCardsEarnedCallback = (error: (Error|null), response?: CQuest_GetNumTradingCardsEarned_Response) => void;
+
+    /**
+     * Callback as used by {@link Quest#getVirtualItemRewardDefinition}.
+     * @param error Error, if any
+     * @param [response] CQuest_VirtualItemRewardDefinition_Response
+     */
+    type GetVirtualItemRewardDefinitionCallback = (error: (Error|null), response?: CQuest_VirtualItemRewardDefinition_Response) => void;
+
+    /**
+     * Callback as used by {@link Quest#setVirtualItemRewardDefinition}.
+     * @param error Error, if any
+     * @param [response] CQuest_SetVirtualItemRewardDefinition_Response
+     */
+    type SetVirtualItemRewardDefinitionCallback = (error: (Error|null), response?: CQuest_SetVirtualItemRewardDefinition_Response) => void;
+}
