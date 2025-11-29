@@ -484,7 +484,8 @@
     "update": {
         "dont_show": "Ne plus afficher",
         "updated": "Augmented Steam a été mis à jour à la version __version__",
-        "changes": "Afficher tous les changements sur GitHub"
+        "changes": "Afficher tous les changements sur GitHub",
+        "updated_no_version": "Augmented Steam a été mis à jour"
     },
     "register": {
         "success": "__gamename__ activé avec succès",

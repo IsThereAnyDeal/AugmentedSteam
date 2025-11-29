@@ -418,7 +418,8 @@
             "itad_price_info": "Информация о ценах от IsThereAnyDeal"
         },
         "followed": "Игры в подписках",
-        "prevent_video_pause": "Не приостанавливать видео при потере фокуса на вкладке (экспериментально)"
+        "prevent_video_pause": "Не приостанавливать видео при потере фокуса на вкладке (экспериментально)",
+        "tabtitle_appname_first": "Имя вкладки всегда начинается с названия игры"
     },
     "ready": {
         "loading": "Augmented Steam загружается...",
@@ -479,7 +480,8 @@
     "update": {
         "dont_show": "Больше не показывать",
         "updated": "Augmented Steam был обновлён до версии __version__",
-        "changes": "Просмотр изменений на GitHub"
+        "changes": "Просмотр изменений на GitHub",
+        "updated_no_version": "Augmented Steam был обновлен"
     },
     "register": {
         "success": "__gamename__ успешно активирована",

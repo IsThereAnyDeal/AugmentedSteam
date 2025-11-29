@@ -416,7 +416,9 @@
         "homepage_default_tab_free": "Tendência gratuitos",
         "headers": {
             "itad_price_info": "Informações de preços por isThereAnyDeal"
-        }
+        },
+        "prevent_video_pause": "Impedir vídeos de pausarem quando a aba estiver inativa (experimental)",
+        "tabtitle_appname_first": "Forçar título da aba a sempre começar com o nome do jogo"
     },
     "ready": {
         "loading": "Carregando dados do Augmented Steam...",
@@ -479,7 +481,8 @@
     "update": {
         "dont_show": "Não exibir novamente",
         "updated": "O Augmented Steam foi atualizado para a versão __version__",
-        "changes": "Ver todas as alterações no GitHub"
+        "changes": "Ver todas as alterações no GitHub",
+        "updated_no_version": "Augmented Steam foi atualizada"
     },
     "register": {
         "success": "__gamename__ ativado com sucesso",
@@ -889,5 +892,6 @@
     "remove_fullgame_from_waitlist_tooltip": "Remover o jogo da sua lista de espera",
     "remove_fullgame_from_wishlist_and_waitlist_tooltip": "Remover o jogo da sua lista de desejos e espera",
     "ok": "Ok",
-    "launch_random_game_error": "Falha ao encontrar um jogo jogável"
+    "launch_random_game_error": "Falha ao encontrar um jogo jogável",
+    "retry": "Tentar novamente"
 }
