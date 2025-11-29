@@ -67,7 +67,7 @@
     .note {
         display: inline-block;
         font-size: 1.1em;
-        line-height: 0.9;
+        line-height: 1.2;
         white-space: pre-line;
     }
 </style>
