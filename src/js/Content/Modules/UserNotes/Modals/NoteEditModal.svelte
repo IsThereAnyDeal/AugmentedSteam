@@ -3,7 +3,7 @@
     import {__cancel, __save, __userNote_addForGame} from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
     import {EModalAction} from "@Core/Modals/Contained/EModalAction";
-    import {createEventDispatcher} from "svelte";
+    import {createEventDispatcher, onMount} from "svelte";
 
     const dispatch = createEventDispatcher<{
         save: string,
@@ -22,6 +22,20 @@
             dispatch("cancel");
         }
     }
+
+    function escapeListener(e: KeyboardEvent) {
+        if (e.code === "Escape") {
+            dispatch("cancel");
+        }
+    }
+
+    onMount(() => {
+        document.addEventListener("keyup", escapeListener);
+
+        return () => {
+            document.removeEventListener("keyup", escapeListener);
+        };
+    });
 </script>
 
 
