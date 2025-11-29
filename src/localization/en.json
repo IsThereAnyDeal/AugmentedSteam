@@ -435,7 +435,8 @@
             "wishlist": "On my wishlist",
             "loc": "Storage location",
             "synced_storage": "Synced/Local storage",
-            "local": "Local database"
+            "local": "Local database",
+            "save_with_enter": "Save with Enter"
         },
         "inventory_nav_text": "Show advanced navigation on inventory page",
         "market_total": "Automatically load transaction summary on Market",

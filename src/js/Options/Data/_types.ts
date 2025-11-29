@@ -108,6 +108,7 @@ export interface SettingsSchema {
     showemptywishlist: boolean,
     user_notes_app: boolean,
     user_notes_wishlist: boolean,
+    user_notes_simple: boolean,
     showwishliststats: boolean,
     oneclickremovewl: boolean,
     user_notes_adapter: "synced_storage"|"idb",

@@ -397,6 +397,7 @@ export const __options_userNotes_wishlist = "options_userNotes_wishlist";
 export const __options_userNotes_loc = "options_userNotes_loc";
 export const __options_userNotes_syncedStorage = "options_userNotes_syncedStorage";
 export const __options_userNotes_local = "options_userNotes_local";
+export const __options_userNotes_saveWithEnter = "options_userNotes_saveWithEnter";
 export const __options_inventoryNavText = "options_inventoryNavText";
 export const __options_marketTotal = "options_marketTotal";
 export const __options_lowestpriceCoupon = "options_lowestpriceCoupon";
