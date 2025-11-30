@@ -36,20 +36,20 @@
     });
 </script>
 
-<div class="block responsive_apppage_reviewblock es-vaporlens">
-    <div class="es-vaporlens__header">
+<div class="block responsive_apppage_reviewblock vaporlens">
+    <div class="header">
         <div>
-            <div class="es-vaporlens__eyebrow">VaporLens Highlights</div>
+            <div class="eyebrow">VaporLens Highlights</div>
         </div>
-        <a class="es-vaporlens__cta" href={sourceUrl} target="_blank" rel="noopener noreferrer">
+        <a class="cta" href={sourceUrl} target="_blank" rel="noopener noreferrer">
             View on VaporLens
         </a>
     </div>
 
     {#if summary.length || categories.length}
-        <div class="es-vaporlens__intro">
+        <div class="intro">
             {#if summary.length}
-                <section class="es-vaporlens__section es-vaporlens__section--summary">
+                <section class="section summary-section">
                     <header>Summary</header>
                     <ul>
                         {#each summary as line, index}
@@ -60,9 +60,9 @@
             {/if}
 
             {#if categories.length}
-                <div class="es-vaporlens__tags">
+                <div class="tags">
                     <header>Tags</header>
-                    <ul class="es-vaporlens__categories">
+                    <ul class="categories">
                         {#each categories as category (category)}
                             <li>{category}</li>
                         {/each}
@@ -73,37 +73,37 @@
     {/if}
 
     {#if sections.length}
-        <div class="es-vaporlens__sections-grid">
+        <div class="sections-grid">
             {#each sections as section (section.key)}
-                <section class="es-vaporlens__section es-vaporlens__section--category">
+                <section class="section category-section">
                     <header>{section.label}</header>
                     <ul>
                         {#if !section.entries.length}
-                            <li class="es-vaporlens__empty">
+                            <li class="empty">
                                 No {section.label.toLowerCase()} insights yet.
                             </li>
                         {:else}
                             {#each section.entries as entry, index}
                                 <li data-index={index}>
                                     {#if entry.explanation}
-                                            <button
-                                                type="button"
-                                                class="es-vaporlens__point-button"
-                                                on:click|stopPropagation={() => togglePopover(getEntryId(section.key, index))}
-                                                aria-expanded={openPopover === getEntryId(section.key, index)}
-                                                aria-controls={`es-vaporlens-popover-${getEntryId(section.key, index)}`}
-                                            >
-                                                {#if typeof entry.importance === "number"}
-                                                    <span class="es-vaporlens__importance-badge">
-                                                        {importanceFormatter.format(entry.importance)}
-                                                    </span>
-                                                {/if}
-                                                <span class="es-vaporlens__point-text">{entry.point}</span>
-                                            </button>
+                                        <button
+                                            type="button"
+                                            class="point-button"
+                                            on:click|stopPropagation={() => togglePopover(getEntryId(section.key, index))}
+                                            aria-expanded={openPopover === getEntryId(section.key, index)}
+                                            aria-controls={`vaporlens-popover-${getEntryId(section.key, index)}`}
+                                        >
+                                            {#if typeof entry.importance === "number"}
+                                                <span class="importance-badge">
+                                                    {importanceFormatter.format(entry.importance)}
+                                                </span>
+                                            {/if}
+                                            <span class="point-text">{entry.point}</span>
+                                        </button>
                                         {#if openPopover === getEntryId(section.key, index)}
                                             <div
-                                                class="es-vaporlens__popover"
-                                                id={`es-vaporlens-popover-${getEntryId(section.key, index)}`}
+                                                class="popover"
+                                                id={`vaporlens-popover-${getEntryId(section.key, index)}`}
                                                 role="dialog"
                                                 aria-label={`${entry.point} details`}
                                                 on:click|stopPropagation
@@ -112,13 +112,13 @@
                                             </div>
                                         {/if}
                                     {:else}
-                                        <div class="es-vaporlens__point-static">
+                                        <div class="point-static">
                                             {#if typeof entry.importance === "number"}
-                                                <span class="es-vaporlens__importance-badge">
+                                                <span class="importance-badge">
                                                     {importanceFormatter.format(entry.importance)}
                                                 </span>
                                             {/if}
-                                            <span class="es-vaporlens__point-text">{entry.point}</span>
+                                            <span class="point-text">{entry.point}</span>
                                         </div>
                                     {/if}
                                 </li>
@@ -132,11 +132,11 @@
 </div>
 
 <style>
-    :global(.es-vaporlens.block) {
+    :global(.vaporlens.block) {
         margin-top: 10px;
     }
 
-    .es-vaporlens {
+    .vaporlens {
         padding: 16px 20px 20px;
         background: linear-gradient(135deg, rgba(24, 40, 55, 0.94), rgba(15, 26, 39, 0.94));
         border-radius: 6px;
@@ -145,7 +145,7 @@
         box-shadow: 0 8px 22px rgba(0, 0, 0, 0.3);
     }
 
-    .es-vaporlens__header {
+    .header {
         display: flex;
         justify-content: space-between;
         gap: 16px;
@@ -156,14 +156,14 @@
         flex-wrap: wrap;
     }
 
-    .es-vaporlens__eyebrow {
+    .eyebrow {
         font-size: 12px;
         text-transform: uppercase;
         letter-spacing: 0.12em;
         color: #a8cfee;
     }
 
-    .es-vaporlens__cta {
+    .cta {
         color: #dfeeff;
         background: #1a3b56;
         padding: 4px 10px;
@@ -175,12 +175,12 @@
         border: 1px solid rgba(255, 255, 255, 0.18);
     }
 
-    .es-vaporlens__cta:hover,
-    .es-vaporlens__cta:focus-visible {
+    .cta:hover,
+    .cta:focus-visible {
         background: #214b6e;
     }
 
-    .es-vaporlens__intro {
+    .intro {
         display: grid;
         grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
         gap: 18px;
@@ -188,7 +188,7 @@
         margin-bottom: 16px;
     }
 
-    .es-vaporlens__categories {
+    .categories {
         list-style: none;
         padding: 0;
         margin: 0;
@@ -197,7 +197,7 @@
         gap: 8px;
     }
 
-    .es-vaporlens__categories li {
+    .categories li {
         background: rgba(14, 28, 40, 0.7);
         border: 1px solid rgba(161, 200, 234, 0.35);
         border-radius: 999px;
@@ -207,15 +207,15 @@
         font-weight: 400;
     }
 
-    .es-vaporlens__section {
+    .section {
         margin-top: 18px;
     }
 
-    .es-vaporlens__section--summary {
+    .summary-section {
         margin-top: 0;
     }
 
-    .es-vaporlens__tags header {
+    .tags header {
         font-size: 13px;
         text-transform: uppercase;
         color: #a8ceea;
@@ -223,18 +223,18 @@
         letter-spacing: 0.08em;
     }
 
-    .es-vaporlens__sections-grid {
+    .sections-grid {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 18px;
         margin-top: 12px;
     }
 
-    .es-vaporlens__sections-grid .es-vaporlens__section {
+    .sections-grid .section {
         margin-top: 0;
     }
 
-    .es-vaporlens__section header {
+    .section header {
         font-size: 13px;
         text-transform: uppercase;
         color: #a8ceea;
@@ -242,37 +242,37 @@
         letter-spacing: 0.08em;
     }
 
-    .es-vaporlens__section ul {
+    .section ul {
         list-style: none;
         padding: 0;
         margin: 0;
     }
 
-    .es-vaporlens__section--summary ul {
+    .summary-section ul {
         list-style: disc;
         padding-left: 20px;
         margin: 0;
     }
 
-    .es-vaporlens__section--summary li {
+    .summary-section li {
         padding: 2px 0;
         font-size: 13px;
         line-height: 1.5;
         color: #dbeaf8;
     }
 
-    .es-vaporlens__section--category ul {
+    .category-section ul {
         display: flex;
         flex-direction: column;
         gap: 4px;
     }
 
-    .es-vaporlens__section--category li {
+    .category-section li {
         position: relative;
     }
 
-    .es-vaporlens__point-button,
-    .es-vaporlens__point-static {
+    .point-button,
+    .point-static {
         width: 100%;
         text-align: left;
         background: transparent;
@@ -288,25 +288,25 @@
         gap: 6px;
     }
 
-    .es-vaporlens__point-button {
+    .point-button {
         cursor: pointer;
         transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
-    .es-vaporlens__point-button:hover,
-    .es-vaporlens__point-button:focus-visible,
-    .es-vaporlens__point-button[aria-expanded="true"] {
+    .point-button:hover,
+    .point-button:focus-visible,
+    .point-button[aria-expanded="true"] {
         color: #b3dcf7;
         outline: none;
     }
 
-    .es-vaporlens__point-text {
+    .point-text {
         flex: 1;
         min-width: 0;
         color: inherit;
     }
 
-    .es-vaporlens__importance-badge {
+    .importance-badge {
         font-size: 10px;
         color: #5c7084;
         background: rgba(18, 32, 43, 0.35);
@@ -318,7 +318,7 @@
         text-align: center;
     }
 
-    .es-vaporlens__empty {
+    .empty {
         padding: 4px 0;
         border-radius: 0;
         background: transparent;
@@ -329,7 +329,7 @@
         text-align: left;
     }
 
-    .es-vaporlens__popover {
+    .popover {
         position: absolute;
         left: 0;
         right: 0;
@@ -342,7 +342,7 @@
         z-index: 5;
     }
 
-    .es-vaporlens__popover p {
+    .popover p {
         margin: 0;
         font-size: 13px;
         color: #c7d5e0;
@@ -350,35 +350,35 @@
     }
 
     @media (max-width: 700px) {
-        .es-vaporlens__header {
+        .header {
             flex-direction: column;
             align-items: flex-start;
         }
 
-        .es-vaporlens__cta {
+        .cta {
             width: 100%;
             text-align: center;
         }
     }
 
     @media (max-width: 1100px) {
-        .es-vaporlens__sections-grid {
+        .sections-grid {
             grid-template-columns: repeat(2, minmax(0, 1fr));
         }
     }
 
     @media (max-width: 960px) {
-        .es-vaporlens__intro {
+        .intro {
             grid-template-columns: minmax(0, 1fr);
         }
 
-        .es-vaporlens__section--summary ul {
+        .summary-section ul {
             grid-template-columns: minmax(0, 1fr);
         }
     }
 
     @media (max-width: 640px) {
-        .es-vaporlens__sections-grid {
+        .sections-grid {
             grid-template-columns: minmax(0, 1fr);
         }
     }
