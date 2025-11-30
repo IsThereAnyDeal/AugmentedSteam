@@ -1,7 +1,7 @@
 export interface VaporLensEntry {
     point: string;
-    explanation?: string|null;
-    importance?: number|null;
+    explanation?: string | null;
+    importance?: number | null;
 }
 
 export interface VaporLensSection {
