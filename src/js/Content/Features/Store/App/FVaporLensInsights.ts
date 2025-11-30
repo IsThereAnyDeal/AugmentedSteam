@@ -1,6 +1,7 @@
 import type CApp from "@Content/Features/Store/App/CApp";
 import Feature from "@Content/Modules/Context/Feature";
 import SessionCacheApiFacade from "@Content/Modules/Facades/SessionCacheApiFacade";
+import VaporLensApiFacade from "@Content/Modules/Facades/VaporLensApiFacade";
 import Settings from "@Options/Data/Settings";
 import self_ from "./FVaporLensInsights.svelte";
 import type {
@@ -70,21 +71,9 @@ export default class FVaporLensInsights extends Feature<CApp> {
         }
 
         try {
-            const response = await fetch(
-                `https://vaporlens.app/api/app/${this.context.appid}`,
-                {
-                    credentials: "omit",
-                    headers: {
-                        Accept: "application/json",
-                    },
-                }
+            const payload = await VaporLensApiFacade.fetchInsights(
+                this.context.appid
             );
-
-            if (!response.ok) {
-                return false;
-            }
-
-            const payload = (await response.json()) as VaporLensResponse;
             if (!payload || typeof payload !== "object") {
                 return false;
             }
@@ -92,18 +81,13 @@ export default class FVaporLensInsights extends Feature<CApp> {
             const summary = this._sanitizeStringArray(payload.summary);
             const sections = this._buildSections(payload);
 
-            if (
-                !categories.length &&
-                !summary.length &&
-                sections.length === 0
-            ) {
+            if (!categories.length && !summary.length && sections.length === 0) {
                 await this._saveToCache(null, []);
                 return false;
             }
 
             this._viewModel = {
-                name:
-                    typeof payload.name === "string" ? payload.name : undefined,
+                name: typeof payload.name === "string" ? payload.name : undefined,
                 categories,
                 summary,
             };
@@ -210,8 +194,7 @@ export default class FVaporLensInsights extends Feature<CApp> {
                 ...sectionsMap[normalizedKey].entries,
                 ...entries,
             ];
-            sectionsMap[normalizedKey].entries =
-                this._sortEntries(mergedEntries);
+            sectionsMap[normalizedKey].entries = this._sortEntries(mergedEntries);
         }
 
         return SECTION_ORDER.map((key) => sectionsMap[key]);
@@ -237,10 +220,7 @@ export default class FVaporLensInsights extends Feature<CApp> {
                 ? Number((item as Record<string, unknown>).importance)
                 : null;
         let importance: number | null = null;
-        if (
-            typeof rawImportance === "number" &&
-            Number.isFinite(rawImportance)
-        ) {
+        if (typeof rawImportance === "number" && Number.isFinite(rawImportance)) {
             importance = this._clampImportance(rawImportance);
         }
 
@@ -249,8 +229,7 @@ export default class FVaporLensInsights extends Feature<CApp> {
         }
 
         return {
-            point:
-                point || (explanation ? explanation.slice(0, 64) : "Insight"),
+            point: point || (explanation ? explanation.slice(0, 64) : "Insight"),
             explanation: explanation || null,
             importance,
         };
