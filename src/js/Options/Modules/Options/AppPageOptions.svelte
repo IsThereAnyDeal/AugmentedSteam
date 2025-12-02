@@ -22,6 +22,7 @@
         __options_showCoupon,
         __options_showPackageInfo,
         __options_showPlayersInfo,
+        __options_showVaporlensSummary,
         __options_showViewInLibrary,
         __options_showYoutubegameplay,
         __options_showYoutubereviews,
@@ -74,6 +75,7 @@
     <Toggle bind:value={$settings.showhltb}>{L(__options_hltb)}</Toggle>
     <Toggle bind:value={$settings.showwsgf}>{L(__options_wsgf)}</Toggle>
     <Toggle bind:value={$settings.show_players_info}>{L(__options_showPlayersInfo)}</Toggle>
+    <Toggle bind:value={$settings.showvaporlenssummary}>{L(__options_showVaporlensSummary)}</Toggle>
     <Toggle bind:value={$settings.showitadlinks}>{L(__options_itadlinks)}</Toggle>
     <Toggle bind:value={$settings.showsteamdb}>{L(__options_steamdb)}</Toggle>
     <Toggle bind:value={$settings.showbartervg}>{L(__options_showbartervg)}</Toggle>

@@ -13,6 +13,7 @@ export const enum EAction {
     Market_CardPrices = "market.cardprices",
     Market_AverageCardPrices = "market.averagecardprices",
     SteamPeek = "steampeek",
+    VaporLens = "vaporlens",
     Profile = "profile",
     Profile_Clear = "clearownprofile",
 

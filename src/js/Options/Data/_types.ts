@@ -97,6 +97,7 @@ export interface SettingsSchema {
 
     show_package_info: boolean,
     show_players_info: boolean,
+    showvaporlenssummary: boolean,
     show_early_access: boolean,
     show_alternative_linux_icon: boolean,
     show_itad_button: boolean,
