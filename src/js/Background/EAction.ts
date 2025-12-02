@@ -13,7 +13,6 @@ export const enum EAction {
     Market_CardPrices = "market.cardprices",
     Market_AverageCardPrices = "market.averagecardprices",
     SteamPeek = "steampeek",
-    VaporLens = "vaporlens",
     Profile = "profile",
     Profile_Clear = "clearownprofile",
 
@@ -72,5 +71,7 @@ export const enum EAction {
     Notes_SetAll = "notes.setall",
     Notes_Clear = "notes.clear",
 
-    Listener_Register = "listener.register"
+    Listener_Register = "listener.register",
+
+    VaporLens_FetchInsights = "vaporlens.fetch"
 }

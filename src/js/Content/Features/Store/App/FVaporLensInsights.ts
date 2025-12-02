@@ -8,7 +8,7 @@ import type {
     VaporLensEntry,
     VaporLensResponse,
     VaporLensSection,
-} from "./VaporLens.types";
+} from "./FVaporLensInsights.types";
 
 interface VaporLensViewModel {
     name?: string;
@@ -51,7 +51,7 @@ export default class FVaporLensInsights extends Feature<CApp> {
     private _insertAfter: Element | null = null;
 
     override async checkPrerequisites(): Promise<boolean> {
-        if (!Settings.showvaporlenssummary) {
+        if (!Settings.show_vaporlens_summary) {
             return false;
         }
 

@@ -2,7 +2,7 @@ import { EAction } from "@Background/EAction";
 import type MessageHandlerInterface from "@Background/MessageHandlerInterface";
 import Api from "@Background/Modules/Api";
 import { Unrecognized } from "@Background/background";
-import type { VaporLensResponse } from "@Content/Features/Store/App/VaporLens.types";
+import type { VaporLensResponse } from "@Content/Features/Store/App/FVaporLensInsights.types";
 
 export default class VaporLensApi extends Api implements MessageHandlerInterface {
     constructor() {
@@ -21,7 +21,7 @@ export default class VaporLensApi extends Api implements MessageHandlerInterface
 
     handle(message: any): typeof Unrecognized | Promise<any> {
         switch (message.action) {
-            case EAction.VaporLens:
+            case EAction.VaporLens_FetchInsights:
                 return this.fetchInsights(message.params.appid);
         }
 

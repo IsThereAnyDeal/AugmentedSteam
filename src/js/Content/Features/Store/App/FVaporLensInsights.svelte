@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import type { VaporLensSection } from "./VaporLens.types";
+    import type { VaporLensSection } from "./FVaporLensInsights.types";
 
     export let appName: string|undefined;
     export let categories: string[] = [];

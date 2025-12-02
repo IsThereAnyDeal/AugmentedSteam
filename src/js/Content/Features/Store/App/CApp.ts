@@ -101,7 +101,6 @@ export default class CApp extends CStoreBase {
                 FAchievementBar,
                 FRegionalPricing,
                 FReviewToggleButton,
-                FVaporLensInsights,
                 FOwnedActionsButtons,
                 FSupportInfo,
                 FRemoveBroadcasts,
@@ -113,7 +112,8 @@ export default class CApp extends CStoreBase {
                 FRemoveDupeScreenshots,
                 FHighlightTitle,
                 FAppTitle,
-                FHorizontalScrolling
+                FHorizontalScrolling,
+                FVaporLensInsights
             ]);
 
         this.appid = AppId.fromUrl(window.location.host + window.location.pathname)!;
