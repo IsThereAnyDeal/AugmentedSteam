@@ -426,6 +426,7 @@ export const __options_skipGotSteam = "options_skipGotSteam";
 export const __options_storeGeneralThirdparty = "options_storeGeneralThirdparty";
 export const __options_purchaseDates = "options_purchaseDates";
 export const __options_showBadgeProgress = "options_showBadgeProgress";
+export const __options_showVaporlensSummary = "options_showVaporlensSummary";
 export const __options_showCoupon = "options_showCoupon";
 export const __options_showWishlistLink = "options_showWishlistLink";
 export const __options_showWishlistCount = "options_showWishlistCount";
