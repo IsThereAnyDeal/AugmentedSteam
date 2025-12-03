@@ -2,7 +2,8 @@ import { EAction } from "@Background/EAction";
 import type MessageHandlerInterface from "@Background/MessageHandlerInterface";
 import Api from "@Background/Modules/Api";
 import { Unrecognized } from "@Background/background";
-import type { TVaporLensResponse } from "@Background/Modules/VaporLens/_types";
+import type {TVaporLensEntry, TVaporLensResponse} from "@Background/Modules/VaporLens/_types";
+import {z} from "zod";
 
 export default class VaporLensApi extends Api implements MessageHandlerInterface {
 
@@ -25,23 +26,45 @@ export default class VaporLensApi extends Api implements MessageHandlerInterface
             }
         }
 
-        let response: TVaporLensResponse|null;
+        let data: TVaporLensResponse|null;
         try {
-            response = await this.fetchJson<TVaporLensResponse>(url, {
+            const response = await this.fetchJson<TVaporLensResponse>(url, {
                 credentials: "omit",
                 headers: {
                     Accept: "application/json",
                 },
             });
-        } catch {
-            response = null;
+
+            const entrySchema = z.object({
+                point: z.string(),
+                explanation: z.union([z.string(), z.null()]).optional(),
+                importance: z.union([z.number().min(0).max(1), z.null()]).optional()
+            });
+
+            const schema = z.object({
+                name: z.string().optional(),
+                categories: z.array(z.string()).optional(),
+                summary: z.array(z.string()).optional(),
+                positives: z.array(entrySchema).optional(),
+                negatives: z.array(entrySchema).optional(),
+                gameplay: z.array(entrySchema).optional(),
+                performance: z.array(entrySchema).optional(),
+                recommendations: z.array(entrySchema).optional(),
+                general: z.array(entrySchema).optional(),
+                misc: z.array(entrySchema).optional()
+            });
+
+            data = schema.parse(response) as TVaporLensResponse;
+        } catch (e) {
+            console.error(e);
+            data = null;
         }
         this.cache.set(appid, {
             timestamp: Date.now(),
-            data: response
+            data
         });
 
-        return response;
+        return data;
     }
 
     handle(message: any): typeof Unrecognized | Promise<any> {

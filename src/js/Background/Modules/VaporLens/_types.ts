@@ -15,5 +15,4 @@ export interface TVaporLensResponse {
     recommendations?: TVaporLensEntry[];
     general?: TVaporLensEntry[];
     misc?: TVaporLensEntry[];
-    [key: string]: unknown;
 }
