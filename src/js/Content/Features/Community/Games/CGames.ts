@@ -1,15 +1,15 @@
 import ContextType from "@Content/Modules/Context/ContextType";
-import CCommunityBase from "../CCommunityBase";
 import FGamesStats from "./FGamesStats";
 import type {ContextParams} from "@Content/Modules/Context/Context";
 import SteamFacade from "@Content/Modules/Facades/SteamFacade";
 import type {TReactQueryData} from "@Content/Features/_types";
+import CBase from "@Content/Features/Common/CBase";
 
 export interface TGame {
     playtime_forever: number
 }
 
-export default class CGames extends CCommunityBase {
+export default class CGames extends CBase {
 
     public readonly games: TGame[];
 
