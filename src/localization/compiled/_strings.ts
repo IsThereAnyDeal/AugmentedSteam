@@ -327,7 +327,6 @@ export const __options_name = "options_name";
 export const __options_showAlternativeLinuxIcon = "options_showAlternativeLinuxIcon";
 export const __options_replacecommunityhublinks = "options_replacecommunityhublinks";
 export const __options_hideannouncementcomments = "options_hideannouncementcomments";
-export const __options_hidetmsymbols = "options_hidetmsymbols";
 export const __options_metacritic = "options_metacritic";
 export const __options_opencritic = "options_opencritic";
 export const __options_hideactivelistings = "options_hideactivelistings";

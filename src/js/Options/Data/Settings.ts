@@ -55,8 +55,6 @@ export const DefaultSettings: Readonly<SettingsSchema> = {
     tag_waitlist: false,
     tag_short: false,
 
-    hidetmsymbols: false,
-
     showlowestprice: true,
     showlowestprice_onwishlist: true,
     showlowestpricecoupon: true,

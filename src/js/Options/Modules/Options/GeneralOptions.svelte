@@ -7,7 +7,6 @@
         __options_contextMenu,
         __options_disablelinkfilter,
         __options_general,
-        __options_hidetmsymbols,
         __options_installSteamButton,
         __options_openinnewtab,
         __options_replaceViewClient,
@@ -37,10 +36,6 @@
             <Toggle bind:value={$settings.show_progressbar}>{L(__showProgressbar)}</Toggle>
             <Toggle bind:value={$settings.version_show}>{L(__options_versionShow)}</Toggle>
             <Toggle bind:value={$settings.show_backtotop}>{L(__options_showBacktotop)}</Toggle>
-        </OptionGroup>
-
-        <OptionGroup>
-            <Toggle bind:value={$settings.hidetmsymbols}>{L(__options_hidetmsymbols)}</Toggle>
         </OptionGroup>
 
         <OptionGroup>
