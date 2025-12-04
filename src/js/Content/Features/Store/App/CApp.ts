@@ -26,6 +26,7 @@ import FRemoveBroadcasts from "./FRemoveBroadcasts";
 import FRemoveDupeScreenshots from "./FRemoveDupeScreenshots";
 import FReplaceDevPubLinks from "./FReplaceDevPubLinks";
 import FReviewToggleButton from "./FReviewToggleButton";
+import FVaporLensInsights from "./FVaporLensInsights";
 import FSaveReviewFilters from "./FSaveReviewFilters";
 import FShowCoupon from "./FShowCoupon";
 import FSteamPeek from "./FSteamPeek";
@@ -111,7 +112,8 @@ export default class CApp extends CStoreBase {
                 FRemoveDupeScreenshots,
                 FHighlightTitle,
                 FAppTitle,
-                FHorizontalScrolling
+                FHorizontalScrolling,
+                FVaporLensInsights
             ]);
 
         this.appid = AppId.fromUrl(window.location.host + window.location.pathname)!;

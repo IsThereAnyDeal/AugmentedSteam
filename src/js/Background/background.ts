@@ -14,6 +14,7 @@ import Environment, {ContextType} from "@Core/Environment";
 import SettingsMigration from "@Core/Update/SettingsMigration";
 import Version from "@Core/Version";
 import {EAction} from "@Background/EAction";
+import VaporLensApi from "@Background/Modules/VaporLens/VaporLensApi";
 import Storage from "@Core/Storage/Storage";
 import WebRequestHandler from "@Background/Modules/WebRequest/WebRequestHandler";
 import SessionCacheApi from "@Background/Modules/Cache/SessionCacheApi";
@@ -60,6 +61,7 @@ const messageHandlers: MessageHandlerInterface[] = [
     new ITADApi(),
     new SteamStoreApi(),
     new UserNotesApi(),
+    new VaporLensApi(),
     new WebRequestHandler(),
     new CacheApi(),
     new SessionCacheApi()

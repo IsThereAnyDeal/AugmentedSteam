@@ -465,6 +465,7 @@
         "store_general_thirdparty": "Options for information from 3rd-party sites",
         "purchase_dates": "Show purchase date",
         "show_badge_progress": "Show badge progress",
+        "show_vaporlens_summary": "Show VaporLens summary",
         "show_coupon": "Show applicable Steam coupon",
         "show_wishlist_link": "Show a wishlist link on the right-hand column",
         "show_wishlist_count": "Show the number of wishlisted items",
