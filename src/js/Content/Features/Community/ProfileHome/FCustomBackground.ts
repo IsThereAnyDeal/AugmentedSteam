@@ -7,12 +7,23 @@ export default class FCustomBackground extends Feature<CProfileHome> {
     private _bg: string = "";
 
     override async checkPrerequisites(): Promise<boolean> {
-        const prevHash = window.location.hash.match(/#previewBackground\/(\d+)\/([a-z0-9.]+)/i);
-        if (prevHash) {
-            const src = `//cdn.cloudflare.steamstatic.com/steamcommunity/public/images/items/${prevHash[1]}/${prevHash[2]}`;
-            this._setProfileBg(src);
 
-            return false;
+        if (window.location.hash.startsWith("#previewBackground")) {
+            let hash: RegExpMatchArray|null = window.location.hash.match(/#previewBackground\/(\d+)\/([a-z0-9.]+)/i);
+            let preview: string|null = null;
+            if (hash) {
+                preview = `https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/items/${hash[1]}/${hash[2]}`;
+            } else {
+                hash = window.location.hash.match(/#previewBackground\/(economy\/image\/.+)/);
+                if (hash) {
+                    preview = `https://community.fastly.steamstatic.com/${hash[1]}`;
+                }
+            }
+
+            if (preview) {
+                this._setProfileBg(preview);
+                return false;
+            }
         }
 
         if (this.context.isPrivateProfile) {
