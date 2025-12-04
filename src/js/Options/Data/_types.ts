@@ -60,8 +60,6 @@ export interface SettingsSchema {
     tag_waitlist: boolean,
     tag_short: boolean,
 
-    hidetmsymbols: boolean,
-
     showlowestprice: boolean,
     showlowestprice_onwishlist: boolean,
     showlowestpricecoupon: boolean,
