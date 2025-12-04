@@ -23,59 +23,51 @@
 </script>
 
 
-<div class="stats">
-    <h3>
-        {L(__wl_label)}
-        <SmallSteamButton on:click={() => (isOpen = !isOpen)}>
-            {L(isOpen ? __hide : __show)}
-            <ToggleIcon down={!isOpen} />
-        </SmallSteamButton>
-    </h3>
+<ul>
+    <li>
+        <div>{L(__coll_totalTime)}</div>
+        {L(__hoursShort, {"hours": totalTime})}
+    </li>
 
-    {#if isOpen}
-        <div class="stats_content" transition:slide={{axis: "y", duration: 200}}>
-            <div class="stat"><span>{L(__hoursShort, {"hours": totalTime})}</span>{L(__coll_totalTime)}</div>
-            <div class="stat"><span>{countTotal}</span>{L(__coll_inCollection)}</div>
-            <div class="stat"><span>{countPlayed}</span>{L(__coll_played)}</div>
-            <div class="stat"><span>{countNeverPlayed}</span>{L(__coll_neverPlayed)}</div>
-        </div>
-    {/if}
-</div>
+    <li>
+        <div>{L(__coll_inCollection)}</div>
+        {countTotal}
+    </li>
+
+    <li>
+        <div>{L(__coll_played)}</div>
+        {countPlayed}
+    </li>
+
+    <li>
+        <div>{L(__coll_neverPlayed)}</div>
+        {countNeverPlayed}
+    </li>
+</ul>
 
 
 <style>
-    .stats {
-        margin: 0 auto 20px auto;
-        max-width: 936px;
-    }
-
-    h3 {
-        color: #ffffff;
-        font-size: 22px;
-        font-family: "Motiva Sans", Sans-serif;
-        font-weight: normal;
-        text-transform: uppercase;
+    ul {
+        margin-bottom: 10px;
         display: flex;
-        gap: 5px;
-        justify-content: flex-start;
-        align-items: baseline;
-    }
-
-    .stats_content {
-        display: flex;
-        padding: 25px;
+        gap: 50px;
+        padding: 12px;
         overflow: hidden;
-        justify-content: space-evenly;
+        justify-content: flex-start;
         align-items: center;
-        font-size: 1.6em;
-        text-align: center;
+        background: #19212d;
+        color: #b8bcbfcc;
+        font-size: 12px;
+        line-height: 1.2;
     }
-    .stat {
-        display: flex;
-        flex-direction: column;
+    li {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
     }
-    .stat > span {
-        font-size: 1.8em;
-        font-weight: 300;
+    div {
+        color: #b8bcbf;
+        font-weight: 700;
+        text-transform: uppercase;
     }
 </style>

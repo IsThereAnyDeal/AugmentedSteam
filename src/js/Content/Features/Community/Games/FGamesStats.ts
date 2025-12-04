@@ -5,28 +5,18 @@ import Settings from "@Options/Data/Settings";
 
 export default class FGamesStats extends Feature<CGames> {
 
-    private games: Array<{
-        playtime_forever: number
-    }> = [];
-
-    override checkPrerequisites(): boolean {
-        if (!Settings.showallstats) { return false; }
-
-        const config = document.querySelector<HTMLElement>("#gameslist_config")?.dataset.profileGameslist;
-        if (!config) { return false; }
-
-        this.games = JSON.parse(config).rgGames;
-        return this.games.length > 0;
+    override async checkPrerequisites(): Promise<boolean> {
+        return Settings.showallstats
+            && this.context.games.length > 0;
     }
 
-    override apply(): void {
-
-        const countTotal = this.games.length;
+    override async apply(): Promise<void> {
+        const countTotal = this.context.games.length;
         let countPlayed = 0;
         let countNeverPlayed = 0;
         let time = 0;
 
-        for (const game of this.games) {
+        for (const game of this.context.games) {
             if (!game.playtime_forever) {
                 countNeverPlayed++;
                 continue;
@@ -36,14 +26,14 @@ export default class FGamesStats extends Feature<CGames> {
             time += game.playtime_forever;
         }
 
-        const target = document.querySelector('[data-featuretarget="gameslist-root"]');
-        if (!target) {
-            throw new Error("Node not found");
+        const anchor = document.querySelector('#tabs_baseline')?.nextElementSibling;
+        if (!anchor) {
+            throw new Error("[FGamesStats] Node not found");
         }
 
         (new self_({
-            target,
-            anchor: target.firstElementChild ?? undefined, // Potential race condition with React
+            target: anchor.parentElement!,
+            anchor,
             props: {
                 countTotal: String(countTotal),
                 countPlayed: String(countPlayed),
