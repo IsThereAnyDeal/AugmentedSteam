@@ -15,6 +15,7 @@ import {WishlistDOM} from "@Content/Features/Store/Wishlist/Utils/WishlistDOM";
 import WebRequestListener from "@Content/Modules/WebRequest/WebRequestListener";
 import ServiceFactory from "@Protobufs/ServiceFactory";
 import Long from "long";
+import type {TReactQueryData} from "@Content/Features/_types";
 
 export interface WishlistEntry {
     appid: number,
@@ -33,12 +34,7 @@ export default class CWishlist extends Context {
 
     static override async create(params: ContextParams): Promise<CWishlist> {
 
-        const queryData: {
-            queries: Array<{
-                state: Record<string, any>,
-                queryKey: Array<any>
-            }>
-        } = JSON.parse(await SteamFacade.global("SSR.renderContext.queryData"));
+        const queryData: TReactQueryData = JSON.parse(await SteamFacade.global("SSR.renderContext.queryData"));
 
         let ownerId: string|null = null;
         let wishlistData: WishlistEntry[]|null = null;

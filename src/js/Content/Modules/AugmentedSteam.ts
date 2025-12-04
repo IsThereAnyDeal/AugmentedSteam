@@ -47,7 +47,7 @@ export default class AugmentedSteam {
         if (!Settings.show_backtotop) { return; }
 
         const scrollTarget = this.react
-            ? document.querySelector<HTMLElement>("#StoreTemplate")
+            ? document.querySelector<HTMLElement>("#StoreTemplate,#CommunityTemplate")
             : null;
 
         (new BackToTop({
@@ -110,25 +110,29 @@ export default class AugmentedSteam {
 
     private addWarnings(): void {
 
-        let target: Element;
-        let anchor: Element|undefined;
+        let target: Element|null;
+        let anchor: Element|null;
         if (this.react) {
-            target = document.querySelector("header ~ section")!;
-            anchor = target.firstElementChild!;
+            target = document.querySelector("header ~ section");
+            anchor = target?.firstElementChild ?? null;
         } else {
             const header = document.querySelector("#global_header")!
             target = header.parentElement!;
             anchor = header.nextElementSibling!;
         }
 
-        new AugmentedSteamWarnings({
-            target,
-            anchor,
-            props: {
-                react: this.react,
-                language: this.language
-            }
-        });
+        if (target && anchor) {
+            new AugmentedSteamWarnings({
+                target,
+                anchor,
+                props: {
+                    react: this.react,
+                    language: this.language
+                }
+            });
+        } else {
+            console.error("Did not find element for warnings");
+        }
     }
 
     private handleInstallSteamButton(): void {
