@@ -9,7 +9,8 @@
     type TSimilarGames = Array<{
         appid: number,
         title: string,
-        asset: string|null
+        asset: string|null,
+        purchase: string|null
     }>;
 
     export let user: UserInterface;
@@ -30,24 +31,29 @@
                 },
                 dataRequest: {
                     includeBasicInfo: false,
-                    includeAssets: true
+                    includeAssets: true,
                 },
                 ids: steampeek.map(item => { return {
                     appid: item.appid
                 }})
             });
 
-            const assets = new Map(
+            const steamMap = new Map(
                 steamResponse.storeItems.map(item => {
-                    return [item.appid, item.assets?.header ?? null]
+                    return [item.appid, {
+                        asset: item.assets?.header ?? null,
+                        purchase: item.bestPurchaseOption?.formattedFinalPrice ?? null
+                    }]
                 })
             );
 
             return steampeek.map(item => {
+                const steam = steamMap.get(item.appid);
                 return {
                     appid: item.appid,
                     title: item.title,
-                    asset: assets.get(item.appid) ?? null
+                    asset: steam?.asset ?? null,
+                    purchase: steam?.purchase ?? null,
                 }
             });
         })();
@@ -68,9 +74,7 @@
                 <li>
                     <a href="/app/{item.appid}/" data-ds-appid={appid}>
                         <img src="https://shared.fastly.steamstatic.com//store_item_assets/steam/apps/{item.appid}/{item.asset}" alt="{item.title} banner" />
-                        <div class="title">
-                            <span>{item.title}</span>
-                        </div>
+                        <div class="buy">{item.purchase ?? "--"}</div>
                     </a>
                 </li>
             {/each}
@@ -143,8 +147,7 @@
         }
     }
 
-    .title {
-        position: relative;
+    .buy {
         background-color: #000;
         font-family: "Motiva Sans",Arial,Helvetica,sans-serif;
         color: #fff;
@@ -152,13 +155,8 @@
         box-sizing: border-box;
         display: flex;
         align-items: center;
+        justify-content: flex-end;
         white-space: nowrap;
         padding: 5px 8px;
-
-        & span {
-            display: block;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
     }
 </style>
