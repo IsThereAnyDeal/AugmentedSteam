@@ -58,9 +58,7 @@
 {#await promise then data}
     <section id="steampeek">
         <header>
-            <div>
-                Steampeek
-            </div>
+            <div>Steampeek</div>
 
             <a href="https://steampeek.hu/app/{appid}">{L(__moreOnSteampeek)}</a>
         </header>
@@ -71,7 +69,7 @@
                     <a href="/app/{item.appid}/" data-ds-appid={appid}>
                         <img src="https://shared.fastly.steamstatic.com//store_item_assets/steam/apps/{item.appid}/{item.asset}" alt="{item.title} banner" />
                         <div class="title">
-                            {item.title}
+                            <span>{item.title}</span>
                         </div>
                     </a>
                 </li>
@@ -154,9 +152,13 @@
         box-sizing: border-box;
         display: flex;
         align-items: center;
-        overflow: hidden;
-        text-overflow: ellipsis;
         white-space: nowrap;
         padding: 5px 8px;
+
+        & span {
+            display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     }
 </style>
