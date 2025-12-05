@@ -4,7 +4,9 @@
  * @match *://steamcommunity.com/(id|profiles)/*\/followedgames
  */
 
-import CommunityPage from "../../CommunityPage";
 import CGames from "./CGames";
+import ReactPage from "@Content/Features/ReactPage";
 
-(new CommunityPage(CGames)).run();
+(new ReactPage(CGames))
+    .hydration()
+    .then(page => page.run());

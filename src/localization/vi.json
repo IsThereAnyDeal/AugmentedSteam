@@ -297,7 +297,7 @@
         "show_astatslink": "Hiển thị liên kết AStats",
         "show_youtubegameplay": "Hiển thị liên kết \"Lối chơi trên YouTube\"",
         "show_youtubereviews": "Hiển thị liên kết \"Đánh giá trên YouTube\"",
-        "openinnewtab": "Mở liên kết ngoài trong một tab mới",
+        "openinnewtab": "Mở liên kết ngoài trong một thẻ mới",
         "showbartervg": "Hiển thị liên kết Barter.vg",
         "guest": "Sản phẩm mà bạn có vé khách",
         "collection": "Vật phẩm nằm trong Bộ sưu tập ITAD của bạn",
@@ -419,7 +419,8 @@
             "itad_price_info": "Thông tin Giá từ IsThereAnyDeal"
         },
         "followed": "Các trò chơi đã theo dõi",
-        "prevent_video_pause": "Ngăn video tạm dừng khi thẻ không còn được chọn (thử nghiệm)"
+        "prevent_video_pause": "Ngăn video tạm dừng khi thẻ không còn được chọn (thử nghiệm)",
+        "tabtitle_appname_first": "Luôn bắt đầu tiêu đề thẻ bằng tên trò chơi"
     },
     "ready": {
         "loading": "Augmented Steam đang tải dữ liệu...",

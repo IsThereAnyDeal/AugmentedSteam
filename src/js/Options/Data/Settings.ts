@@ -55,8 +55,6 @@ export const DefaultSettings: Readonly<SettingsSchema> = {
     tag_waitlist: false,
     tag_short: false,
 
-    hidetmsymbols: false,
-
     showlowestprice: true,
     showlowestprice_onwishlist: true,
     showlowestpricecoupon: true,
@@ -99,6 +97,7 @@ export const DefaultSettings: Readonly<SettingsSchema> = {
 
     show_package_info: false,
     show_players_info: true,
+    show_vaporlens_summary: true,
     show_early_access: true,
     show_alternative_linux_icon: false,
     show_itad_button: false,
@@ -110,6 +109,7 @@ export const DefaultSettings: Readonly<SettingsSchema> = {
     showemptywishlist: true,
     user_notes_app: true,
     user_notes_wishlist: true,
+    user_notes_simple: true,
     showwishliststats: true,
     oneclickremovewl: false,
     user_notes_adapter: "synced_storage",
@@ -181,6 +181,7 @@ export const DefaultSettings: Readonly<SettingsSchema> = {
     itad_sync_notes: false,
 
     context_steam_store: false,
+    context_steam_lucky: false,
     context_steam_market: false,
     context_itad: false,
     context_bartervg: false,

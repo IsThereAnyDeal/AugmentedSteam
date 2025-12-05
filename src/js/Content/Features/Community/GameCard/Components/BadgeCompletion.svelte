@@ -8,6 +8,7 @@
 
     export function update(costMap: Map<string, Price|null>) {
         full = true;
+        cost = 0;
         for (const price of costMap.values()) {
             if (price === null) {
                 full = false;

@@ -60,8 +60,6 @@ export interface SettingsSchema {
     tag_waitlist: boolean,
     tag_short: boolean,
 
-    hidetmsymbols: boolean,
-
     showlowestprice: boolean,
     showlowestprice_onwishlist: boolean,
     showlowestpricecoupon: boolean,
@@ -97,6 +95,7 @@ export interface SettingsSchema {
 
     show_package_info: boolean,
     show_players_info: boolean,
+    show_vaporlens_summary: boolean,
     show_early_access: boolean,
     show_alternative_linux_icon: boolean,
     show_itad_button: boolean,
@@ -108,6 +107,7 @@ export interface SettingsSchema {
     showemptywishlist: boolean,
     user_notes_app: boolean,
     user_notes_wishlist: boolean,
+    user_notes_simple: boolean,
     showwishliststats: boolean,
     oneclickremovewl: boolean,
     user_notes_adapter: "synced_storage"|"idb",
@@ -188,6 +188,7 @@ export interface SettingsSchema {
     itad_sync_notes: boolean,
 
     context_steam_store: boolean,
+    context_steam_lucky: boolean,
     context_steam_market: boolean,
     context_itad: boolean,
     context_bartervg: boolean,

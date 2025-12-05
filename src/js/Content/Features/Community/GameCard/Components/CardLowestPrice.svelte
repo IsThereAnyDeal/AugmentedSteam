@@ -17,6 +17,10 @@
         url: string
     }
     const CachePrefix = "market:card";
+    const CardSuffixes = [
+        ["", " (Foil)"],
+        [" (Trading Card)", " (Foil Trading Card)"]
+    ] as const;
 
     interface Props {
         country: string;
@@ -61,21 +65,30 @@
 
     async function loadMarketCardPrices(): Promise<string|null> {
         const marketHashName = `${appid}-${cardName}`;
-        const cacheName = marketHashName + (foil ? "-foil" : "")
+        const cacheName = marketHashName + (foil ? "-foil" : "");
         const cached = await SessionCacheApiFacade.get<TCacheData>(CachePrefix, cacheName);
         if (cached && cached.success) {
             uriPath = cached.url;
             return cached.lowest_price ?? null;
         }
 
-        let data = await fetchCardPrices(marketHashName);
-        if (data.success && !data.lowest_price) {
-            const suffix = (foil ? " (Foil Trading Card)" : " (Trading Card)");
+        let data: TMarketPriceOverview = {success: false};
+        let fetched = false;
+        for (const [sb, sf] of CardSuffixes) {
+            const suffix = foil ? sf : sb;
             data = await fetchCardPrices(marketHashName + suffix);
             if (data.success && data.lowest_price) {
+                fetched = true;
                 uriPath += suffix;
+                break;
             }
         }
+
+        // Apply default suffix
+        if (!fetched) {
+            uriPath += CardSuffixes[0][foil ? 1 : 0];
+        }
+
         if (data.success) {
             await SessionCacheApiFacade.set(CachePrefix, cacheName, Object.assign(data, {url: uriPath}));
         }
@@ -103,14 +116,14 @@
 </script>
 
 
-<a class="es_card_search" href="https://steamcommunity.com/market/listings/753/{uriPath}">
-    {L(__lowestPrice)}
-</a>
 
 <span>
     {#await promise}
         {L(__loading)}
     {:then price}
+        <a class="es_card_search" href="https://steamcommunity.com/market/listings/753/{uriPath}">
+            {L(__lowestPrice)}
+        </a>
         {price ?? "N/A"}
     {:catch e}
         <button type="button" onclick={load}>
@@ -126,11 +139,16 @@
 
 
 <style>
+    span {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        font-size: 12px;
+    }
+
     a {
         padding: 0 2px;
         margin-top: 2px;
-        display: block;
-        width: 220px;
 
         &:hover {
             text-decoration: underline;

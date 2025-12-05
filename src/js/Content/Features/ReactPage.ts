@@ -31,8 +31,16 @@ export default class ReactPage extends Page {
 
                 const root = await SteamFacade.globalExists("SSR.reactRoot._internalRoot");
                 if (root) {
-                    resolve(that);
+                    /**
+                     * Current solution is apparently not enough. Looks like hydration has not yet necessarily
+                     * finished when we detect _internalRoot.
+                     *
+                     * In Wishlist, I noticed that in page features stayed, but header was still _sometimes_ overwritten
+                     * by hydration. I'm adding arbitrary timeout for now, but this is not a great solution;
+                     */
+                    await TimeUtils.timer(100);
                     console.log("Hydration complete");
+                    resolve(that);
                     console.groupEnd();
                     break;
                 }

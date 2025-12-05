@@ -1,9 +1,10 @@
 <script lang="ts">
     import Modal from "@Core/Modals/Contained/Modal.svelte";
-    import {__cancel, __save, __userNote_addForGame} from "@Strings/_strings";
+    import {__cancel, __options_userNotes_saveWithEnter, __save, __userNote_addForGame} from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
     import {EModalAction} from "@Core/Modals/Contained/EModalAction";
-    import {createEventDispatcher} from "svelte";
+    import {createEventDispatcher, onMount, tick} from "svelte";
+    import Settings from "@Options/Data/Settings";
 
     const dispatch = createEventDispatcher<{
         save: string,
@@ -17,6 +18,8 @@
 
     let { appName, note = $bindable() }: Props = $props();
 
+    let textareaNode: HTMLTextAreaElement;
+
     async function handleButton(e: CustomEvent<EModalAction>): Promise<void> {
         const action = e.detail;
 
@@ -26,6 +29,53 @@
             dispatch("cancel");
         }
     }
+
+    function escapeListener(e: KeyboardEvent) {
+        if (e.code === "Escape") {
+            dispatch("cancel");
+        }
+    }
+
+    function textareaListener(e: KeyboardEvent) {
+        if (e.code !== "Enter") {
+            return;
+        }
+
+        if (Settings.user_notes_simple) {
+            e.preventDefault();
+            if (e.shiftKey) {
+                const cursor = textareaNode.selectionEnd;
+                note = note.substring(0, cursor) + "\n" + note.substring(cursor);
+                tick().then(() => {
+                    textareaNode.selectionEnd = cursor+1;
+                });
+            } else {
+                dispatch("save", note);
+            }
+        } else {
+            if (e.shiftKey) {
+                e.preventDefault();
+                dispatch("save", note);
+            }
+        }
+    }
+
+    function onfocus(): void {
+        textareaNode.addEventListener("keypress", textareaListener);
+    }
+
+    function onblur(): void {
+        textareaNode.removeEventListener("keypress", textareaListener);
+    }
+
+    onMount(() => {
+        textareaNode.focus();
+        document.addEventListener("keyup", escapeListener);
+
+        return () => {
+            document.removeEventListener("keyup", escapeListener);
+        };
+    });
 </script>
 
 
@@ -34,8 +84,10 @@
     cancel: L(__cancel)
 }} on:button={handleButton}>
     <div>
-        <textarea bind:value={note}></textarea>
+        <textarea bind:this={textareaNode} bind:value={note} on:focus={onfocus} on:blur={onblur} />
     </div>
+
+    <label><input type="checkbox" bind:checked={Settings.user_notes_simple}> {L(__options_userNotes_saveWithEnter)}</label>
 </Modal>
 
 
@@ -60,6 +112,10 @@
         box-shadow: none;
         width: 100%;
         height: 112px;
+        font-size: 14px;
+    }
+
+    label {
         font-size: 14px;
     }
 </style>

@@ -71,5 +71,7 @@ export const enum EAction {
     Notes_SetAll = "notes.setall",
     Notes_Clear = "notes.clear",
 
-    Listener_Register = "listener.register"
+    Listener_Register = "listener.register",
+
+    VaporLens_FetchInsights = "vaporlens.fetch"
 }

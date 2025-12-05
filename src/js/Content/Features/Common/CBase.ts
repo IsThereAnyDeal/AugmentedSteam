@@ -1,4 +1,3 @@
-import FHideTrademarks from "./FHideTrademarks";
 import FDisableLinkFilter from "./FDisableLinkFilter";
 import FKeepSSACheckboxState from "./FKeepSSACheckboxState";
 import FDefaultCommunityTab from "./FDefaultCommunityTab";
@@ -17,7 +16,6 @@ export default class CBase extends Context {
 
         features.push(
             FEarlyAccess,
-            FHideTrademarks,
             FDisableLinkFilter,
             FKeepSSACheckboxState,
             FDefaultCommunityTab,

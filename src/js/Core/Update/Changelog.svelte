@@ -2,39 +2,48 @@
     import ExtensionResources from "@Core/ExtensionResources";
     import Info from "@Core/Info";
     import {L} from "@Core/Localization/Localization";
-    import {__update_changes, __update_updated} from "@Strings/_strings";
+    import {__update_changes, __update_updatedNoVersion} from "@Strings/_strings";
     import Modal from "@Core/Modals/Contained/Modal.svelte";
     import {createEventDispatcher, onMount} from "svelte";
-    import type Version from "@Core/Version";
+    import Version from "@Core/Version";
 
     const dispatch = createEventDispatcher<{
         close: void
     }>();
 
-    interface Props {
-        lastVersion: Version;
-    }
+    export let lastVersion: Version;
 
-    let { lastVersion }: Props = $props();
-
-    let promise: Promise<string> = $state()
+    let promise: Promise<[string, string][]>
 
     onMount(() => {
         promise = (async () => {
             const changelog = await ExtensionResources.getJSON<Record<string, string>>("changelog.json");
-            const html = changelog[Info.version];
-            if (!html) {
+
+            let result: Array<[string, string]> = [];
+            if (!changelog[Info.version]) {
                 throw new Error(`Can't find changelog for version ${Info.version}`);
             }
-            return html;
+
+            result.push([Info.version, changelog[Info.version]!]);
+
+            for (const [version, changes] of Object.entries(changelog)) {
+                const changeVersion = Version.fromString(version);
+                if (changeVersion.isBefore(Info.version) && changeVersion.isAfter(lastVersion)) {
+                    result.push([version, changes]);
+                } else if (changeVersion.isSameOrBefore(lastVersion)) {
+                    break;
+                }
+            }
+
+            return result.reverse();
         })();
     });
 </script>
 
 
 {#if promise}
-    {#await promise then html}
-        <Modal title={L(__update_updated, {"version": Info.version})}
+    {#await promise then data}
+        <Modal title={L(__update_updatedNoVersion, {"version": Info.version})}
                showClose
                buttons={{cancel: "OK"}}
                on:button={() => dispatch("close")}
@@ -42,7 +51,10 @@
             <div class="changelog">
                 <img src={ExtensionResources.getURL("img/logo/as128.png")} alt="Logo">
                 <div>
-                    {@html html}
+                    {#each data as [version, html]}
+                        <h3>{version}</h3>
+                        {@html html}
+                    {/each}
                     <p>
                         <a href={`https://github.com/IsThereAnyDeal/AugmentedSteam/compare/v${lastVersion}...v${Info.version}`} target="_blank">
                             {L(__update_changes)}
@@ -59,10 +71,11 @@
     .changelog {
         height: 100%;
         display: flex;
-        flex-direction: row;
+        flex-direction: row-reverse;
         align-items: flex-start;
         max-width: 800px;
         font-size: 14px;
+        gap: 20px;
     }
     .changelog :global(h1) {
         font-size: 18px;
@@ -71,9 +84,6 @@
     .changelog :global(p) {
         margin-bottom: 0.4em;
         font-size: 14px !important;
-    }
-    .changelog :global(img) {
-        margin-right: 21px;
     }
     .changelog :global(ul) {
         list-style-position: outside;

@@ -105,5 +105,9 @@ export default class SettingsMigration {
         if (oldVersion.isSameOrBefore("4.1.2")) {
             await storage.remove("showdeckcompat");
         }
+
+        if (oldVersion.isSameOrBefore("4.5.0")) {
+            await storage.remove("hidetmsymbols");
+        }
     }
 }

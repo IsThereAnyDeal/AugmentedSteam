@@ -419,7 +419,8 @@
             "itad_price_info": "Πληροφορίες τιμών από το IsThereAnyDeal"
         },
         "followed": "Ακολουθούμενα παιχνίδια",
-        "prevent_video_pause": "Αποτροπή παύσης των βίντεο όταν η καρτέλα χάνει την εστίαση (πειραματικό)"
+        "prevent_video_pause": "Αποτροπή παύσης των βίντεο όταν η καρτέλα χάνει την εστίαση (πειραματικό)",
+        "tabtitle_appname_first": "Βεβαιωθείτε ότι ο τίτλος της καρτέλας ξεκινά πάντα με το όνομα του παιχνιδιού"
     },
     "ready": {
         "loading": "Φόρτωση δεδομένων Augmented Steam...",
@@ -483,7 +484,8 @@
     "update": {
         "dont_show": "Να μην εμφανιστεί ξανά",
         "updated": "Το Augmented Steam έχει ενημερωθεί στην έκδοση __version__",
-        "changes": "Προβολή όλων των αλλαγών στο GitHub"
+        "changes": "Προβολή όλων των αλλαγών στο GitHub",
+        "updated_no_version": "Το Augmented Steam έχει ενημερωθεί"
     },
     "register": {
         "success": "Επιτυχής ενεργοποίηση του __gamename__",

@@ -51,7 +51,7 @@
         padding: 6px 16px;
         background: linear-gradient(to right, rgba(48, 144, 206, 0.6) 0%, transparent 60%);
         display: flex;
-        align-items: flex-start;
+        align-items: baseline;
         gap: 10px;
     }
 
@@ -71,6 +71,7 @@
     .note {
         display: inline-block;
         font-size: 1.1em;
+        line-height: 1.2;
         white-space: pre-line;
     }
 </style>

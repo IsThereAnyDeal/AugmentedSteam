@@ -1,10 +1,20 @@
 (function() {
-    document.addEventListener("click", ({target}) => {
-        if (!target.closest("a.inventory_item_link, a.newitem")) { return; }
+    let lastItem = null;
 
+    function dispatchMarketInfo() {
         const inv = window.g_ActiveInventory;
         const wallet = window.g_rgWalletInfo;
         const item = inv.selectedItem;
+
+        if (item === lastItem) {
+            return;
+        }
+        lastItem = item;
+
+        if (!item) {
+            document.dispatchEvent(new CustomEvent("as_marketInfo", {detail: null}));
+            return;
+        }
 
         // https://github.com/SteamDatabase/SteamTracking/blob/b3abe9c82f9e9d260265591320cac6304e500e58/steamcommunity.com/public/javascript/economy_common.js#L161
         const hashName = GetMarketHashName(item.description);
@@ -85,6 +95,14 @@
             }
         }
 
+        let hasGooOption = false;
+        const ownerActions = item.description.owner_actions ?? [];
+        for (const action of ownerActions) {
+            if (/GetGooValue/.test(action.link)) {
+                hasGooOption = true;
+            }
+        }
+
         document.dispatchEvent(new CustomEvent("as_marketInfo", {
             detail: {
                 view: window.iActiveSelectView,
@@ -102,7 +120,18 @@
                 restriction,
                 appid,
                 itemType,
+                hasGooOption
             }
         }));
+    }
+
+    const observer = new MutationObserver(() => {
+        dispatchMarketInfo();
     });
+    observer.observe(
+        document.querySelector("#iteminfo0"), {attributes: true}
+    )
+    observer.observe(
+        document.querySelector("#iteminfo1"), {attributes: true}
+    )
 }());

@@ -79,6 +79,7 @@ export default async function(options) {
     let manifestPlugin = manifestPreprocess();
 
     let result = await esbuild.build({
+        target: ["es2023", "firefox115"],
         entryPoints: [
             // stylesheets - NOTE, in: main stylesheet added during build, based on browser
             {out: "augmentedsteam", in: `${srcDir}/css/augmentedsteam.css`},

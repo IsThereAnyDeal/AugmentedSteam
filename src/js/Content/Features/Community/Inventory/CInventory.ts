@@ -1,10 +1,4 @@
 import CCommunityBase from "../CCommunityBase";
-import FAddPriceToGifts from "./FAddPriceToGifts";
-import FEquipProfileItems from "./FEquipProfileItems";
-import FBadgeProgressLink from "./FBadgeProgressLink";
-import FOneClickGemsOption from "./FOneClickGemsOption";
-import FQuickSellOptions from "./FQuickSellOptions";
-import FShowMarketOverview from "./FShowMarketOverview";
 import FInventoryGoTo from "./FInventoryGoTo";
 import FPriceHistoryZoomYear from "../FPriceHistoryZoomYear";
 import ContextType from "@Content/Modules/Context/ContextType";
@@ -12,6 +6,7 @@ import CommunityUtils from "@Content/Modules/Community/CommunityUtils";
 import DOMHelper from "@Content/Modules/DOMHelper";
 import ASEventHandler from "@Content/Modules/ASEventHandler";
 import type {ContextParams} from "@Content/Modules/Context/Context";
+import FInventoryFeatures from "@Content/Features/Community/Inventory/FInventoryFeatures";
 
 export interface MarketInfo {
     view: number,
@@ -29,12 +24,13 @@ export interface MarketInfo {
     restriction: boolean,
     appid: number,
     itemType: string,
+    hasGooOption: boolean
 }
 
 export default class CInventory extends CCommunityBase {
 
     public readonly myInventory: boolean = false;
-    public readonly onMarketInfo: ASEventHandler<MarketInfo> = new ASEventHandler<MarketInfo>();
+    public readonly onMarketInfo: ASEventHandler<MarketInfo|null> = new ASEventHandler<MarketInfo|null>();
 
     constructor(params: ContextParams) {
 
@@ -42,14 +38,9 @@ export default class CInventory extends CCommunityBase {
         const hasFeatures = document.getElementById("no_inventories") === null;
 
         super(params, ContextType.INVENTORY, hasFeatures ? [
-                FAddPriceToGifts,
-                FEquipProfileItems,
-                FBadgeProgressLink,
-                FOneClickGemsOption,
-                FQuickSellOptions,
-                FShowMarketOverview,
                 FInventoryGoTo,
                 FPriceHistoryZoomYear,
+                FInventoryFeatures
             ] : []);
 
         if (!hasFeatures) {
@@ -59,7 +50,7 @@ export default class CInventory extends CCommunityBase {
         this.myInventory = CommunityUtils.userIsOwner(this.user);
 
         // @ts-ignore
-        document.addEventListener("as_marketInfo", (e: CustomEvent<MarketInfo>) => {
+        document.addEventListener("as_marketInfo", (e: CustomEvent<MarketInfo|null>) => {
             this.onMarketInfo.dispatch(e.detail);
         });
 

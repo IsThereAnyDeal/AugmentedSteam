@@ -11,7 +11,9 @@ const bundleName = "proto.bundle";
 
 const protos = [
     "webui/service_storebrowse",
-    "webui/service_wishlist"
+    "webui/service_wishlist",
+    "webui/service_player",
+    "webui/service_quest"
 ];
 
 const program = new Command()

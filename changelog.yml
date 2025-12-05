@@ -1,3 +1,35 @@
+4.4.2: |
+  - fixed quick sell and install sell in inventory
+  - fixed 1 click turn into gems - now as a separate button instead of replacing native Steam one
+  - fixed equip item from inventory
+  - fixed incorrect "Drops remaining" count
+  - fixed incorrect foil cards links (thanks MinetaS)
+  - fixed badge completion cost
+  - increase notes line spacing
+  - notes modal now autofocuses the note so you don't have to click before writing note
+  - you can now close notes modal with Escape
+  - added option to toggle Enter/Shift+Enter behavior in notes
+  - returned horizontal scrolling support for media on app pages (we'll see how long will this work, with Steam now using react)
+  - added "I feel lucky" search option for context menu
+  - fixed wishlist button with Waitlist support enabled
+  - fixed new queue/finish queue styling
+  - show support links in user language (thanks przemo20) 
+  
+  Side note:
+  I never really used much of Steam's market and inventory features, so maintaining this side of AS is especially tricky for me.
+  I tried my best with the inventory after the latest Steam changes. I noticed some of the features are now native,
+  like the Starting at and Volume stats, which we were handling before, so I assume Steam just added those, which is nice.
+  
+  Unless I'm missing something ':)
+  
+  I have also decided to not inline our features like we used to do before, just so it's hopefully more future proof
+  and not as volatile to changes.
+  
+
+4.4.1: |
+  - tweak formatting of notes
+  - fix ITAD, SteamDb links not showing up on /sub/ pages (thanks przemo20)
+
 4.4.0: |
   - update user notes on app pages after latest Steam change.
      The visual style has changed but notes now also have rudimentary URL handling, so your links will be clickable,

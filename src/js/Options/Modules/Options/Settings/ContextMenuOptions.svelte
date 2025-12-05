@@ -9,6 +9,7 @@
         __options_contextSteamdb,
         __options_contextSteamdbInstant,
         __options_contextSteamKeys,
+        __options_contextSteamLucky,
         __options_contextSteamMarket,
         __options_contextSteamStore
     } from "@Strings/_strings";
@@ -31,6 +32,11 @@
 <Toggle value={$settings.context_steam_store}
         on:toggle={async (e) => handleChange("context_steam_store", e.detail)}>
     {L(__options_contextSteamStore, {query: "..."})}
+</Toggle>
+
+<Toggle value={$settings.context_steam_lucky}
+        on:toggle={async (e) => handleChange("context_steam_lucky", e.detail)}>
+    {L(__options_contextSteamLucky, {query: "..."})}
 </Toggle>
 
 <Toggle value={$settings.context_steam_market}

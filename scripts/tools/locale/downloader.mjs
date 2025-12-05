@@ -127,7 +127,7 @@ export default class Downloader {
                 for (const poeLang of perm.languages ?? []) {
                     const lang = LANGUAGE_MAP[poeLang];
                     map[lang] ??= [];
-                    map[lang].push(user.name);
+                    map[lang] = [...(new Set(map[lang])).add(user.name)];
                 }
             }
         }

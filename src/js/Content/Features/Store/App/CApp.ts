@@ -26,6 +26,7 @@ import FRemoveBroadcasts from "./FRemoveBroadcasts";
 import FRemoveDupeScreenshots from "./FRemoveDupeScreenshots";
 import FReplaceDevPubLinks from "./FReplaceDevPubLinks";
 import FReviewToggleButton from "./FReviewToggleButton";
+import FVaporLensInsights from "./FVaporLensInsights";
 import FSaveReviewFilters from "./FSaveReviewFilters";
 import FShowCoupon from "./FShowCoupon";
 import FSteamPeek from "./FSteamPeek";
@@ -43,6 +44,7 @@ import FHighlightTitle from "@Content/Features/Store/App/FHighlightTitle";
 import type {ContextParams} from "@Content/Modules/Context/Context";
 import FPreventVideoPause from "@Content/Features/Store/App/FPreventVideoPause";
 import FAppTitle from "@Content/Features/Store/App/FAppTitle";
+import FHorizontalScrolling from "@Content/Features/Store/App/FHorizontalScrolling";
 
 export default class CApp extends CStoreBase {
 
@@ -101,7 +103,6 @@ export default class CApp extends CStoreBase {
                 FReviewToggleButton,
                 FOwnedActionsButtons,
                 FSupportInfo,
-                FMediaExpander,
                 FRemoveBroadcasts,
                 FPreventVideoPause,
                 FDemoAbovePurchase,
@@ -110,7 +111,9 @@ export default class CApp extends CStoreBase {
                 FPatchHighlightPlayer,
                 FRemoveDupeScreenshots,
                 FHighlightTitle,
-                FAppTitle
+                FAppTitle,
+                FHorizontalScrolling,
+                FVaporLensInsights
             ]);
 
         this.appid = AppId.fromUrl(window.location.host + window.location.pathname)!;

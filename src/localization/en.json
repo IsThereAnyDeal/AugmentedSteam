@@ -91,6 +91,8 @@
     "badge_completion_cost": "Cost of completing badge: __cost__",
     "loading": "Loading...",
     "selling": "Selling...",
+    "saving": "Saving...",
+    "saved": "Saved",
     "quick_sell": "Quick Sell for __amount__",
     "quick_sell_desc": "Price difference of __modifier__ compared to the price of the cheapest offer currently listed on the Steam Market",
     "instant_sell": "Instant Sell for __amount__",
@@ -343,6 +345,7 @@
         "show_backtotop": "Show back to top button on long pages",
         "context_menu": "Context Menu",
         "context_steam_store": "Search Steam Store for '__query__'",
+        "context_steam_lucky": "Search Steam for '__query__' (I feel lucky)",
         "context_steam_market": "Search Steam Market for '__query__'",
         "context_itad": "Search IsThereAnyDeal for '__query__'",
         "context_bartervg": "Search Barter.vg for '__query__'",
@@ -362,7 +365,6 @@
         "show_alternative_linux_icon": "Show alternative Linux icon",
         "replacecommunityhublinks": "Replace community hub links with store page links",
         "hideannouncementcomments": "Hide comments under all group announcements by default",
-        "hidetmsymbols": "Hide trademark and copyright symbols in game titles",
         "metacritic": "Show Metacritic user scores",
         "opencritic": "Show Opencritic ratings and reviews",
         "hideactivelistings": "Hide all active listings on Market homepage by default",
@@ -433,7 +435,8 @@
             "wishlist": "On my wishlist",
             "loc": "Storage location",
             "synced_storage": "Synced/Local storage",
-            "local": "Local database"
+            "local": "Local database",
+            "save_with_enter": "Save with Enter"
         },
         "inventory_nav_text": "Show advanced navigation on inventory page",
         "market_total": "Automatically load transaction summary on Market",
@@ -462,6 +465,7 @@
         "store_general_thirdparty": "Options for information from 3rd-party sites",
         "purchase_dates": "Show purchase date",
         "show_badge_progress": "Show badge progress",
+        "show_vaporlens_summary": "Show VaporLens summary",
         "show_coupon": "Show applicable Steam coupon",
         "show_wishlist_link": "Show a wishlist link on the right-hand column",
         "show_wishlist_count": "Show the number of wishlisted items",
@@ -576,6 +580,7 @@
     "update": {
         "dont_show": "Don't Show Again",
         "updated": "Augmented Steam has been updated to __version__",
+        "updated_no_version": "Augmented Steam has been updated",
         "changes": "View all changes on GitHub"
     },
     "register": {

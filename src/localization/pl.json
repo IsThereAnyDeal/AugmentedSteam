@@ -419,7 +419,8 @@
             "itad_price_info": "Informacje o cenach z IsThereAnyDeal"
         },
         "followed": "Obserwowane gry",
-        "prevent_video_pause": "Nie zatrzymuj filmów przy przełączaniu karty (eksperymentalne)"
+        "prevent_video_pause": "Nie zatrzymuj filmów przy przełączaniu karty (eksperymentalne)",
+        "tabtitle_appname_first": "Zawsze zaczynaj tytuł karty przeglądarki od nazwy gry"
     },
     "ready": {
         "loading": "Wczytywanie danych Augmented Steam...",

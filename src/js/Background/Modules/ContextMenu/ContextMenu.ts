@@ -3,7 +3,7 @@ import {
     __options_contextItad,
     __options_contextSteamdb,
     __options_contextSteamdbInstant,
-    __options_contextSteamKeys,
+    __options_contextSteamKeys, __options_contextSteamLucky,
     __options_contextSteamMarket,
     __options_contextSteamStore,
 } from "@Strings/_strings";
@@ -14,6 +14,7 @@ import type {SettingsSchema} from "@Options/Data/_types";
 
 export type ContextMenuKeys = keyof SettingsSchema & (
       "context_steam_store"
+    | "context_steam_lucky"
     | "context_steam_market"
     | "context_itad"
     | "context_bartervg"
@@ -28,6 +29,10 @@ export default class ContextMenu {
         "context_steam_store": [
             __options_contextSteamStore, "https://store.steampowered.com/search/?term=__query__",
             () => Settings.context_steam_store,
+        ],
+        "context_steam_lucky": [
+            __options_contextSteamLucky, "https://store.steampowered.com/search/?term=__query__&ifeellucky",
+            () => Settings.context_steam_lucky,
         ],
         "context_steam_market": [
             __options_contextSteamMarket, "https://steamcommunity.com/market/search?q=__query__",

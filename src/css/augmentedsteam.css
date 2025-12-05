@@ -344,6 +344,44 @@ img.astats_icon {
 
 /***************************************
  * User Inventory
+ **************************************/
+.as-inv-btn {
+  display: inline-block;
+  border: 0;
+  outline: 0;
+  height: 24px;
+  line-height: 24px;
+  padding: 0 12px;
+  border-radius: 2px;
+  background: #80a006;
+  transition: background-color 0.2s ease-out;
+  font-family: "Motiva Sans";
+  font-size: 12px;
+  color: white;
+  cursor: pointer;
+
+  &:hover {
+    background: #a5cb00;
+  }
+
+  &.as-dull {
+    background: #3d4450;
+  }
+  &.as-dull:hover {
+    background: #67707b
+  }
+
+  &.as-blue {
+    background: #1a9fff;
+  }
+  &.as-blue:hover {
+    background: #56abff;
+  }
+}
+
+
+/***************************************
+ * User Inventory
  * FInventoryGoTo
  **************************************/
 #pagebtn_first,
@@ -362,24 +400,6 @@ img.astats_icon {
   margin: 0 6px;
   text-align: center;
   display: inline-table; /** https://github.com/jshackles/Enhanced_Steam/pull/1624 */
-}
-
-/***************************************
- * User Inventory
- * FQuickSellOptions
- **************************************/
-.es_qsell_ctn .btn_small {
-  margin-bottom: 4px;
-  overflow: hidden;
-  width: max-content;
-}
-.es_qsell_ctn .btn_small,
-.es_qsell_loading {
-  display: none;
-}
-.view_inventory_page .item.btn_disabled,
-.item_market_actions .item_market_action_button.btn_disabled {
-  pointer-events: none;
 }
 
 /***************************************
@@ -1089,11 +1109,6 @@ video.highlight_movie:hover + .html5_video_overlay {
   margin-top: 32px;
 }
 
-
-#es_new_queue {
-  width: 150px;
-  margin-right: -10px;
-}
 
 
 /** spam comments */
