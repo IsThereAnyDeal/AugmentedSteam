@@ -13,7 +13,7 @@
     let { notes, appName, appid }: Props = $props();
 
     let note: string|null = $state(null);
-    let el: HTMLElement = $state();
+    let el = $state() as HTMLElement;
 
     async function handleEdit(): Promise<void> {
         let newNote: string|null = await notes.showModalDialog2(appName, appid,);

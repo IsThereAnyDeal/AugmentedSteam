@@ -26,7 +26,7 @@
 <div class="stats">
     <h3>
         {L(__wl_label)}
-        <SmallSteamButton on:click={() => (isOpen = !isOpen)}>
+        <SmallSteamButton onclick={() => (isOpen = !isOpen)}>
             {L(isOpen ? __hide : __show)}
             <ToggleIcon down={!isOpen} />
         </SmallSteamButton>

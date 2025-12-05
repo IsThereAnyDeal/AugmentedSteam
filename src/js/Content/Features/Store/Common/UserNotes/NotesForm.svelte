@@ -1,16 +1,18 @@
 <script lang="ts">
-    import { createBubbler } from 'svelte/legacy';
-
-    const bubble = createBubbler();
     import {onMount} from "svelte";
 
     interface Props {
         note: string;
+        onchange: (note: string) => void
     }
 
-    let { note = $bindable() }: Props = $props();
+    let {
+        note: note_,
+        onchange
+    }: Props = $props();
 
-    let input: HTMLTextAreaElement = $state();
+    let note: string = $state(note_);
+    let input = $state() as HTMLTextAreaElement;
 
     onMount(() => {
         input.focus();
@@ -27,13 +29,9 @@
             }
         });
     });
-
-    export {
-    	note,
-    }
 </script>
 
 
 <div class="newmodal_prompt_with_textarea gray_bevel fullwidth">
-    <textarea rows="6" cols="12" bind:this={input} bind:value={note} onchange={bubble('change')}></textarea>
+    <textarea rows="6" cols="12" bind:this={input} bind:value={note} onchange={() => onchange(note)}></textarea>
 </div>

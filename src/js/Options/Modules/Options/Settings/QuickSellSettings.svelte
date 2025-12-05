@@ -1,5 +1,3 @@
-<svelte:options immutable={false} />
-
 <script lang="ts">
     import {L} from "@Core/Localization/Localization";
     import {__options_quickinv, __options_quickinvDiff, __theworddefault} from "@Strings/_strings";

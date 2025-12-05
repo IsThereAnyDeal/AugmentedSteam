@@ -2,7 +2,7 @@ import esbuild from "esbuild"
 import pluginSvelte from "esbuild-svelte";
 import {marked} from "marked";
 import path from "path";
-import sveltePreprocess from "svelte-preprocess";
+import {sveltePreprocess} from "svelte-preprocess";
 import fs from "node:fs/promises";
 import YAML from "yaml";
 import ManifestBuilder from "./manifestBuilder.mjs";
@@ -158,6 +158,7 @@ export default async function(options) {
                     sourceMap: true
                 }),
                 compilerOptions: {
+                    runes: true,
                     hydratable: false,
                     css: "external",
                     dev: options.dev

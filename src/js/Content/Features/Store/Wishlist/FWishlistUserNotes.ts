@@ -3,7 +3,7 @@ import type CWishlist from "@Content/Features/Store/Wishlist/CWishlist";
 import Settings from "@Options/Data/Settings";
 import UserNotes from "@Content/Features/Store/Common/UserNotes/UserNotes";
 import UserNote from "@Content/Features/Store/Wishlist/Components/WishlistUserNote.svelte";
-import { mount } from "svelte";
+import {mount, unmount} from "svelte";
 
 export default class FWishlistUserNotes extends Feature<CWishlist> {
 
@@ -60,11 +60,11 @@ export default class FWishlistUserNotes extends Feature<CWishlist> {
         }
 
         let stillConnected: UserNote[] = [];
-        for (let component of this.components) {
+        for (const component of this.components) {
             if (component.isConnected()) {
                 stillConnected.push(component);
             } else {
-                component.$destroy();
+                unmount(component);
             }
         }
         this.components = stillConnected;

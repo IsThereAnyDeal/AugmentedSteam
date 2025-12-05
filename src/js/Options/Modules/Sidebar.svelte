@@ -1,5 +1,3 @@
-<svelte:options immutable={false} />
-
 <script lang="ts">
     import {L} from "@Core/Localization/Localization";
     import {
@@ -43,9 +41,8 @@
     {#each setup as group}
         <div class="sidebar__group">
             {#each group as [value, locale]}
-                <button type="button"
-                        class:is-selected={selected === value}
-                        onclick={() => select(value)}>{locale}</button>
+                <button type="button" class={{"is-selected": selected === value}}
+                    onclick={() => select(value)}>{locale}</button>
             {/each}
         </div>
     {/each}

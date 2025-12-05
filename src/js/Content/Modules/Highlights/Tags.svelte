@@ -34,7 +34,7 @@
 
     let { options }: Props = $props();
 
-    let node: HTMLElement = $state();
+    let node = $state() as HTMLElement;
 
     export function isConnected(): boolean {
         return node.isConnected;

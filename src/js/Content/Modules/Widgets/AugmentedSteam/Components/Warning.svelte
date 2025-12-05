@@ -1,28 +1,25 @@
 <script lang="ts">
     import {L} from "@Core/Localization/Localization";
     import {__hide, __update_dontShow} from "@Strings/_strings";
-    import {createEventDispatcher} from "svelte";
+    import {type Snippet} from "svelte";
 
     interface Props {
         react: boolean;
-        children?: import('svelte').Snippet;
+        onhide: () => void;
+        onclose: () => void;
+        children: Snippet;
     }
 
-    let { react, children }: Props = $props();
-
-    const dispatch = createEventDispatcher<{
-        close: void,
-        hide: void
-    }>();
+    let { react, onhide, onclose, children }: Props = $props();
 </script>
 
 
 <div class="es_warn" class:is-react={react}>
     <div class="es_warn__cnt">
-        <div>{@render children?.()}</div>
+        <div>{@render children()}</div>
         <div class="es_warn__control">
-            <button type="button" class="es_warn__btn" onclick={() => dispatch("close")}>{L(__update_dontShow)}</button>
-            <button type="button" class="es_warn__btn" onclick={() => dispatch("hide")}>{L(__hide)}</button>
+            <button type="button" class="es_warn__btn" onclick={onclose}>{L(__update_dontShow)}</button>
+            <button type="button" class="es_warn__btn" onclick={onhide}>{L(__hide)}</button>
         </div>
     </div>
 </div>

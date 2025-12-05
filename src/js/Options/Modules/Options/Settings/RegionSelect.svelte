@@ -1,8 +1,4 @@
-<svelte:options immutable={false} />
-
 <script lang="ts">
-    import { run } from 'svelte/legacy';
-
     import {
         __always, __never,
         __options_addAnotherRegion,
@@ -31,9 +27,6 @@
 
     let localizedCountries: [string, string][] = $state([]);
     let selection: string[] = $state([]);
-    run(() => {
-        selection = $settings.regional_countries;
-    });
 
     function add() {
         selection.push("us");
@@ -66,6 +59,10 @@
         localizedCountries = LocalizedCountryList()
             .sort(([, a], [, b]) => a.localeCompare(b));
     });
+
+    $effect(() => {
+        selection = $settings.regional_countries;
+    });
 </script>
 
 
@@ -92,7 +89,7 @@
                 {#each selection as country, index}
                     <div class="option">
                         <FlagIcon {country} />
-                        <Select value={country} options={localizedCountries} on:change={e => handleChange(index, e)} />
+                        <Select value={country} options={localizedCountries} onchange={e => handleChange(index, e)} />
                         <button type="button" onclick={() => handleRemove(index)}>
                             <DeleteIcon />
                         </button>

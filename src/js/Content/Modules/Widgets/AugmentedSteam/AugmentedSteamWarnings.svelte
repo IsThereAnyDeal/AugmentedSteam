@@ -50,13 +50,13 @@
     <LanguageWarning {react}
             currentLanguage={language}
             warningLanguage={languageWarning}
-            on:close={() => languageWarning = null}
+            onclose={() => languageWarning = null}
     />
 {/if}
 
 {#if loginWarning}
     <LoginWarning {react}
             page={loginWarning}
-            on:close={() => loginWarning = null}
+            onclose={() => loginWarning = null}
     />
 {/if}

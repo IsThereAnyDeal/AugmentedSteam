@@ -1,30 +1,23 @@
 <script lang="ts">
-    import { run } from 'svelte/legacy';
-
     import {L} from "@Core/Localization/Localization";
     import {__loginWarning} from "@Strings/_strings";
     import Warning from "@Content/Modules/Widgets/AugmentedSteam/Components/Warning.svelte";
     import LocalStorage from "@Core/Storage/LocalStorage";
-    import {createEventDispatcher} from "svelte";
-
-    const dispatch = createEventDispatcher<{
-        close: void
-    }>();
 
     interface Props {
         react: boolean;
         page: "store"|"community";
+        onclose: () => void;
     }
 
-    let { react, page }: Props = $props();
+    let { react, page, onclose }: Props = $props();
 
-    let host: string = $state();
-    run(() => {
+    let host: string = $derived.by(() => {
         switch(page) {
-              case "store": host = "store.steampowered.com"; break;
-              case "community": host = "steamcommunity.com"; break;
-              default: throw new Error();
-          }
+            case "store": return "store.steampowered.com";
+            case "community": return "steamcommunity.com";
+            default: throw new Error();
+        }
     });
 
     function handleClose(): void {
@@ -33,12 +26,12 @@
         } else if (page === "community") {
             LocalStorage.set(`hide_login_warn_community`, true);
         }
-        dispatch("close");
+        onclose();
     }
 </script>
 
 
-<Warning {react} on:close={handleClose} on:hide={() => dispatch("close")}>
+<Warning {react} onclose={handleClose} onhide={onclose}>
     {@html L(__loginWarning, {"link": `<a href="https://${host}/login/">${host}</a>`})}
 </Warning>
 

@@ -10,7 +10,7 @@
 
     let { imageUrl, imgHeader }: Props = $props();
 
-    let container: HTMLSpanElement = $state();
+    let container = $state() as HTMLSpanElement;
 
     onMount(() => {
         container.append(imgHeader);

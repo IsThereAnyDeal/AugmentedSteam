@@ -1,36 +1,39 @@
 <script lang="ts">
-    import { preventDefault } from 'svelte/legacy';
+    import {preventDefault} from 'svelte/legacy';
 
     import Localization, {type TLocale} from "@Core/Localization/Localization";
     import {__usingLanguage, __usingLanguageReturn} from "@Strings/_strings";
-    import {createEventDispatcher, onMount} from "svelte";
+    import {onMount} from "svelte";
     import Warning from "@Content/Modules/Widgets/AugmentedSteam/Components/Warning.svelte";
     import SteamFacade from "@Content/Modules/Facades/SteamFacade";
     import Settings from "@Options/Data/Settings";
     import Language from "@Core/Localization/Language";
 
-    const dispatch = createEventDispatcher<{
-        close: void
-    }>();
-
-    let promise: Promise<TLocale> = $state();
-
     interface Props {
         react: boolean;
         currentLanguage: Language;
         warningLanguage: Language;
+        onclose: () => void
     }
 
-    let { react, currentLanguage, warningLanguage }: Props = $props();
+    let {
+        react,
+        currentLanguage,
+        warningLanguage,
+        onclose
+    }: Props = $props();
 
-    function resetLanguageCode(): void {
+    let promise: Promise<TLocale> = $state(new Promise(() => {}));
+
+    function resetLanguageCode(e: Event): void {
+        e.preventDefault();
         // TODO find a way to change language for user in React pages
         SteamFacade.changeLanguage(warningLanguage.name, true);
     }
 
     function handleClose(): void {
         Settings.showlanguagewarning = false;
-        dispatch("close");
+        onclose();
     }
 
     async function handleSetLanguage(): Promise<void> {
@@ -62,7 +65,7 @@
 
 {#if promise}
     {#await promise then locale}
-        <Warning {react} on:close={handleClose} on:hide={() => dispatch("close")}>
+        <Warning {react} onclose={handleClose} onhide={onclose}>
             {str__usingLanguage(locale)}
 
             {#if react}
@@ -70,7 +73,7 @@
                     {str__usingLanguageReturn(locale)}
                 </button>
             {:else}
-                <button type="button" onclick={preventDefault(resetLanguageCode)}>
+                <button type="button" onclick={resetLanguageCode}>
                     {str__usingLanguageReturn(locale)}
                 </button>
             {/if}

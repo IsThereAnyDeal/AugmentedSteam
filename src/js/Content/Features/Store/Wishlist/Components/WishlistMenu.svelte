@@ -1,5 +1,5 @@
 <script lang="ts">
-    let node: HTMLElement = $state();
+    let node = $state() as HTMLElement;
     let itemNodes: Array<[number, HTMLElement]> = [];
 
     export function getTarget(targetPosition: number): HTMLElement {
@@ -25,7 +25,6 @@
         itemNodes.sort((a, b) => a[0]-b[0]);
         return newItem;
     }
-
 </script>
 
 

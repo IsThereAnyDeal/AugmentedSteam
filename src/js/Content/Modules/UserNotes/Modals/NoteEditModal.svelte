@@ -3,36 +3,36 @@
     import {__cancel, __options_userNotes_saveWithEnter, __save, __userNote_addForGame} from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
     import {EModalAction} from "@Core/Modals/Contained/EModalAction";
-    import {createEventDispatcher, onMount, tick} from "svelte";
+    import {onMount, tick} from "svelte";
     import Settings from "@Options/Data/Settings";
-
-    const dispatch = createEventDispatcher<{
-        save: string,
-        cancel: void
-    }>();
 
     interface Props {
         appName: string;
         note: string;
+        onsave: (note: string) => void;
+        oncancel: () => void;
     }
 
-    let { appName, note = $bindable() }: Props = $props();
+    let {
+        appName,
+        note = $bindable(),
+        onsave,
+        oncancel
+    }: Props = $props();
 
     let textareaNode: HTMLTextAreaElement;
 
-    async function handleButton(e: CustomEvent<EModalAction>): Promise<void> {
-        const action = e.detail;
-
+    async function handleButton(action: EModalAction): Promise<void> {
         if (action === EModalAction.OK) {
-            dispatch("save", note);
+            onsave(note);
         } else {
-            dispatch("cancel");
+            oncancel();
         }
     }
 
     function escapeListener(e: KeyboardEvent) {
         if (e.code === "Escape") {
-            dispatch("cancel");
+            oncancel();
         }
     }
 
@@ -50,12 +50,12 @@
                     textareaNode.selectionEnd = cursor+1;
                 });
             } else {
-                dispatch("save", note);
+                onsave(note);
             }
         } else {
             if (e.shiftKey) {
                 e.preventDefault();
-                dispatch("save", note);
+                onsave(note);
             }
         }
     }
@@ -82,9 +82,9 @@
 <Modal title={L(__userNote_addForGame, {"gamename": appName})} buttons={{
     primary: L(__save),
     cancel: L(__cancel)
-}} on:button={handleButton}>
+}} onbutton={handleButton}>
     <div>
-        <textarea bind:this={textareaNode} bind:value={note} on:focus={onfocus} on:blur={onblur} />
+        <textarea bind:this={textareaNode} bind:value={note} {onfocus} {onblur}></textarea>
     </div>
 
     <label><input type="checkbox" bind:checked={Settings.user_notes_simple}> {L(__options_userNotes_saveWithEnter)}</label>

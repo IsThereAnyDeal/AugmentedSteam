@@ -4,7 +4,7 @@ import Prices from "@Content/Modules/Prices/Prices";
 import PriceOverview from "@Content/Modules/Prices/PriceOverview.svelte";
 import Settings from "@Options/Data/Settings";
 import type {TPriceOverview} from "@Background/Modules/AugmentedSteam/_types";
-import { mount } from "svelte";
+import {mount, unmount} from "svelte";
 
 export default class FWishlistITADPrices extends Feature<CWishlist> {
 
@@ -72,6 +72,8 @@ export default class FWishlistITADPrices extends Feature<CWishlist> {
     }
 
     private detachPrice(): void {
-        this.currentElement?.$destroy();
+        if (this.currentElement) {
+            unmount(this.currentElement);
+        }
     }
 }

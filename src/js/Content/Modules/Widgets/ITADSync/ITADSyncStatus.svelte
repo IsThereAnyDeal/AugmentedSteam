@@ -5,17 +5,20 @@
     import ESyncStatus from "@Core/Sync/ESyncStatus";
     import SyncIndicator from "@Core/Sync/SyncIndicator.svelte";
     import {fade} from "svelte/transition";
-    import {createEventDispatcher} from "svelte";
-
-    const dispatch = createEventDispatcher<{syncEvent: void}>();
 
     interface Props {
         isConnected: boolean;
         enableSync: boolean;
         status?: ESyncStatus;
+        onsyncevent: () => void;
     }
 
-    let { isConnected, enableSync, status = $bindable(ESyncStatus.OK) }: Props = $props();
+    let {
+        isConnected,
+        enableSync,
+        status = $bindable(ESyncStatus.OK),
+        onsyncevent
+    }: Props = $props();
 
     let from: number|null = $state(null);
     let to: number|null = $state(null);
@@ -33,7 +36,7 @@
             await ITADApiFacade.sync(true);
             status = ESyncStatus.OK;
             await updateLastImport();
-            dispatch("syncEvent");
+            onsyncevent();
         } catch (e) {
             status = ESyncStatus.Error;
 

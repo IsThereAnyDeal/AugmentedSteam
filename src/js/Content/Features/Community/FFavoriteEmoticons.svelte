@@ -1,5 +1,3 @@
-<svelte:options immutable={false} />
-
 <script lang="ts">
     import { preventDefault } from 'svelte/legacy';
 
@@ -18,7 +16,7 @@
     let promise: Promise<void> = $state(Promise.resolve());
     let favs: string[] = $state([]);
 
-    let favBox: HTMLDivElement = $state();
+    let favBox = $state() as HTMLDivElement;
     let overBox: boolean = $state(false);
     let overRemove: boolean = $state(false);
 

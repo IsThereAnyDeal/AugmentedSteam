@@ -7,7 +7,7 @@
 
     const itadLogo = ExtensionResources.getURL("img/itad.png");
 
-    let statusComponent: ITADSyncStatus = $state();
+    let statusComponent = $state() as ITADSyncStatus;
     let status: ESyncStatus|undefined = $state(undefined);
 </script>
 

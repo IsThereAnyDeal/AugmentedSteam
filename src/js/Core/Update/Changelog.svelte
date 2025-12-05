@@ -4,16 +4,20 @@
     import {L} from "@Core/Localization/Localization";
     import {__update_changes, __update_updatedNoVersion} from "@Strings/_strings";
     import Modal from "@Core/Modals/Contained/Modal.svelte";
-    import {createEventDispatcher, onMount} from "svelte";
+    import {onMount} from "svelte";
     import Version from "@Core/Version";
 
-    const dispatch = createEventDispatcher<{
-        close: void
-    }>();
+    interface Props {
+        lastVersion: Version,
+        onclose: () => void
+    }
 
-    export let lastVersion: Version;
+    let {
+        lastVersion,
+        onclose
+    }: Props = $props();
 
-    let promise: Promise<[string, string][]>
+    let promise: Promise<[string, string][]> = $state(new Promise(() => {}));
 
     onMount(() => {
         promise = (async () => {
@@ -46,7 +50,7 @@
         <Modal title={L(__update_updatedNoVersion, {"version": Info.version})}
                showClose
                buttons={{cancel: "OK"}}
-               on:button={() => dispatch("close")}
+               onbutton={onclose}
         >
             <div class="changelog">
                 <img src={ExtensionResources.getURL("img/logo/as128.png")} alt="Logo">

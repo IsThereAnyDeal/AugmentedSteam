@@ -26,16 +26,16 @@ export default class FEmptyWishlist extends Feature<CWishlist> {
 
     override apply(): void {
 
-        const button = mount(WishlistButton, {
-                    target: getMenuNode().getTarget(1),
-                    props: {
-                        label: L(__emptyWishlist_title),
-                        destructive: true
+        mount(WishlistButton, {
+                target: getMenuNode().getTarget(1),
+                props: {
+                    label: L(__emptyWishlist_title),
+                    destructive: true,
+                    onclick: () => {
+                        this.handleClick()
                     }
-                });
-        button.$on("click", () => {
-            this.handleClick()
-        });
+                }
+            });
     }
 
     private async handleClick(): Promise<void> {

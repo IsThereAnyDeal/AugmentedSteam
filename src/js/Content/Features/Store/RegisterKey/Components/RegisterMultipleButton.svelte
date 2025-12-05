@@ -16,12 +16,10 @@ import { mount, unmount } from "svelte";
                     target: document.body,
                     props: {
                         user,
-                        value: document.querySelector<HTMLInputElement>("#product_key")!.value.replace(/,/g, "\n")
+                        value: document.querySelector<HTMLInputElement>("#product_key")!.value.replace(/,/g, "\n"),
+                        onclose: () => unmount(dialog)
                     }
                 });
-        dialog.$on("close", () => {
-            unmount(dialog);
-        });
     }
 </script>
 

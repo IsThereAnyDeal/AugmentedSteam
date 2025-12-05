@@ -1,14 +1,13 @@
-<svelte:options immutable={false} />
-
 <script lang="ts">
     import ColorPicker from "./ColorPicker.svelte";
     import Toggle from "./Toggle.svelte";
+    import type {Snippet} from "svelte";
 
     interface Props {
         enabled: boolean;
         color: string;
         defaultColor: string;
-        children?: import('svelte').Snippet;
+        children: Snippet;
     }
 
     let {
@@ -24,7 +23,7 @@
     <ColorPicker bind:value={color} {defaultColor} />
 
     <span class="option">
-        <Toggle bind:value={enabled}>{@render children?.()}</Toggle>
+        <Toggle bind:value={enabled}>{@render children()}</Toggle>
     </span>
 </div>
 

@@ -1,7 +1,7 @@
 import type CWishlist from "@Content/Features/Store/Wishlist/CWishlist";
 import Feature from "@Content/Modules/Context/Feature";
 import RankInput from "@Content/Features/Store/Wishlist/Components/RankInput.svelte";
-import { mount } from "svelte";
+import {mount, unmount} from "svelte";
 
 export default class FKeepEditableRanking extends Feature<CWishlist> {
 
@@ -34,9 +34,7 @@ export default class FKeepEditableRanking extends Feature<CWishlist> {
         this.addInputs();
     }
 
-    private async handleReposition(e: CustomEvent<{appid: number, position: number}>): Promise<void> {
-        const {appid, position} = e.detail;
-
+    private async handleReposition(appid: number, position: number): Promise<void> {
         let data = structuredClone(this.context.wishlistData!)
             .sort((a, b) => a.priority - b.priority);
         const index = data.findIndex(item => item.appid === appid);
@@ -100,10 +98,10 @@ export default class FKeepEditableRanking extends Feature<CWishlist> {
                             anchor: game.node.firstElementChild!,
                             props: {
                                 appid,
-                                position: this.positions.get(appid)
+                                position: this.positions.get(appid),
+                                onreposition: (appid: number, position: number) => this.handleReposition(appid, position)
                             }
                         });
-            component.$on("reposition", e => this.handleReposition(e));
 
             this.inputComponents.push(component);
         }
@@ -111,7 +109,7 @@ export default class FKeepEditableRanking extends Feature<CWishlist> {
         this.inputComponents = this.inputComponents.filter(c => {
             const connected = c.isConnected();
             if (!connected) {
-                c.$destroy();
+                unmount(c);
             }
             return connected;
         })

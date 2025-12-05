@@ -1,23 +1,19 @@
 <script lang="ts">
-    import {createEventDispatcher} from "svelte";
-
-    const dispatch = createEventDispatcher<{
-        reposition: {appid: number, position: number};
-    }>();
 
     interface Props {
         appid: number;
-        position: number|undefined;
+        position?: number;
+        onreposition: (appid: number, position: number) => void;
     }
 
-    let { appid, position }: Props = $props();
+    let { appid, position, onreposition }: Props = $props();
 
-    let node: HTMLElement = $state();
+    let node = $state() as HTMLElement;
 
     function reposition(e: Event): void {
         const newPosition = (e.target! as HTMLInputElement).value.trim();
         if (/^\d+$/.test(newPosition)) {
-            dispatch("reposition", {appid, position: Number(newPosition)});
+            onreposition(appid, Number(newPosition));
         }
     }
 

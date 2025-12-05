@@ -1,4 +1,4 @@
-import type {SvelteComponent, mount } from "svelte";
+import {type SvelteComponent, mount, unmount} from "svelte";
 import BlockingWaitModal from "./Contained/BlockingWaitModal.svelte";
 
 export default class BlockingWaitDialog {
@@ -27,7 +27,7 @@ export default class BlockingWaitDialog {
 
     dismiss(): void {
         if (this.modalComponent) {
-            this.modalComponent.$destroy();
+            unmount(this.modalComponent);
         }
     }
 }

@@ -1,18 +1,18 @@
-<svelte:options immutable={false} />
-
 <script lang="ts">
+    import type {Snippet} from "svelte";
+
     interface Props {
-        title?: string|undefined;
-        children?: import('svelte').Snippet;
+        title?: string;
+        children: Snippet;
     }
 
-    let { title = undefined, children }: Props = $props();
+    let { title, children }: Props = $props();
 </script>
 
 
 <section>
     {#if title}<h2>{title}</h2>{/if}
-    {@render children?.()}
+    {@render children()}
 </section>
 
 

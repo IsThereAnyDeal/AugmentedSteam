@@ -17,7 +17,7 @@
 </script>
 
 
-<Modal {title}>
+<Modal {title} onbutton={() => {}}>
     <div>
         <i></i>
         {#if typeof status === "string"}

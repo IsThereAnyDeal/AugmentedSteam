@@ -16,7 +16,6 @@
         __register_toomany,
         __register_wallet
     } from "@Strings/_strings";
-    import {createEventDispatcher} from "svelte";
     import Modal from "@Core/Modals/Contained/Modal.svelte";
     import type UserInterface from "@Core/User/UserInterface";
     import {EModalAction} from "@Core/Modals/Contained/EModalAction";
@@ -32,16 +31,13 @@
         }
     }
 
-    const dispatch = createEventDispatcher<{
-        close: void
-    }>();
-
     interface Props {
         value: string;
         user: UserInterface;
+        onclose: () => void;
     }
 
-    let { value = $bindable(), user }: Props = $props();
+    let { value = $bindable(), user, onclose }: Props = $props();
 
     let keys: [string, Promise<TActivationResult>][] = $state([]);
     let buttons: {
@@ -85,13 +81,11 @@
         }
     }
 
-    async function handleButton(e: CustomEvent<EModalAction>): Promise<void> {
-        const response = e.detail;
+    async function handleButton(response: EModalAction): Promise<void> {
         if (response === EModalAction.OK) {
             activate();
         } else if (response === EModalAction.Cancel) {
-            dispatch("close");
-            return;
+            onclose();
         }
     }
 
@@ -101,7 +95,7 @@
 </script>
 
 
-<Modal title={L(__activateMultipleHeader)} {buttons} on:button={handleButton}>
+<Modal title={L(__activateMultipleHeader)} {buttons} onbutton={handleButton}>
     {#if keys.length > 0}
         <ul>
             {#each keys as [key, promise]}

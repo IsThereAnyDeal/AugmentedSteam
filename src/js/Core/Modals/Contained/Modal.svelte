@@ -1,30 +1,28 @@
 <script lang="ts">
-    import {createEventDispatcher} from "svelte";
+    import {type Snippet} from "svelte";
     import {fade} from "svelte/transition";
     import ModalButton from "@Core/Modals/Contained/ModalButton.svelte";
     import {EModalAction} from "@Core/Modals/Contained/EModalAction";
-
-    const dispatch = createEventDispatcher<{
-        button: EModalAction
-    }>();
 
     interface Props {
         title: string;
         body?: string;
         showClose?: boolean;
         buttons?: {
-        primary?: string,
-        secondary?: string,
-        cancel?: string
-    }|undefined;
-        children?: import('svelte').Snippet;
+            primary?: string,
+            secondary?: string,
+            cancel?: string
+        };
+        onbutton: (action: EModalAction) => void;
+        children?: Snippet;
     }
 
     let {
         title,
         body = "",
         showClose = false,
-        buttons = undefined,
+        buttons,
+        onbutton,
         children
     }: Props = $props();
 </script>
@@ -36,7 +34,7 @@
         <div>
             <div class="header">
                 {#if showClose}
-                    <button type="button" onclick={() => dispatch("button", EModalAction.Cancel)}></button>
+                    <button type="button" onclick={() => onbutton(EModalAction.Cancel)}></button>
                 {/if}
                 <div class="title">{title}</div>
             </div>
@@ -47,13 +45,13 @@
             {#if buttons && (buttons?.primary || buttons?.secondary || buttons?.cancel)}
                 <div class="buttons">
                     {#if buttons?.primary}
-                        <ModalButton type="primary" on:click={() => dispatch("button", EModalAction.OK)}>{buttons.primary}</ModalButton>
+                        <ModalButton type="primary" onclick={() => onbutton(EModalAction.OK)}>{buttons.primary}</ModalButton>
                     {/if}
                     {#if buttons?.secondary}
-                        <ModalButton type="secondary" on:click={() => dispatch("button", EModalAction.Secondary)}>{buttons.secondary}</ModalButton>
+                        <ModalButton type="secondary" onclick={() => onbutton(EModalAction.Secondary)}>{buttons.secondary}</ModalButton>
                     {/if}
                     {#if buttons?.cancel}
-                        <ModalButton type="cancel" on:click={() => dispatch("button", EModalAction.Cancel)}>{buttons.cancel}</ModalButton>
+                        <ModalButton type="cancel" onclick={() => onbutton(EModalAction.Cancel)}>{buttons.cancel}</ModalButton>
                     {/if}
                 </div>
             {/if}

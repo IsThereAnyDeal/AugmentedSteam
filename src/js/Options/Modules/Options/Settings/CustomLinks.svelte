@@ -1,5 +1,3 @@
-<svelte:options immutable={false} />
-
 <script lang="ts">
     import {__options_addCustomLink, __options_icon, __options_name} from "@Strings/_strings";
     import {onMount} from "svelte";

@@ -18,23 +18,23 @@ export default class FWishlistStats extends Feature<CWishlist> {
     override async apply(): Promise<void> {
 
         mount(WishlistStats, {
-                    target: document.body,
-                    props: {
-                        user: this.context.user,
-                        language: this.context.language ?? new Language("english"),
-                        wishlistData: this.context.wishlistData ?? [],
-                        canEdit: this.context.user.steamId === this.context.ownerId
-                    }
-                });
+                target: document.body,
+                props: {
+                    user: this.context.user,
+                    language: this.context.language ?? new Language("english"),
+                    wishlistData: this.context.wishlistData ?? [],
+                    canEdit: this.context.user.steamId === this.context.ownerId
+                }
+            });
 
-        const button = mount(WishlistButton, {
-                    target: getMenuNode().getTarget(3),
-                    props: {
-                        label: L(__wl_label)
+        mount(WishlistButton, {
+                target: getMenuNode().getTarget(3),
+                props: {
+                    label: L(__wl_label),
+                    onclick: () => {
+                        document.dispatchEvent(new CustomEvent("as:openStats"))
                     }
-                });
-        button.$on("click", () => {
-            document.dispatchEvent(new CustomEvent("as:openStats"))
-        });
+                }
+            });
     }
 }

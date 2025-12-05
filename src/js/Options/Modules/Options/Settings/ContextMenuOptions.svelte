@@ -1,5 +1,3 @@
-<svelte:options immutable={false} />
-
 <script lang="ts">
     import type {Writable} from "svelte/store";
     import type {SettingsSchema} from "../../../Data/_types";
@@ -30,41 +28,41 @@
 </script>
 
 <Toggle value={$settings.context_steam_store}
-        on:toggle={async (e) => handleChange("context_steam_store", e.detail)}>
+        ontoggle={value => handleChange("context_steam_store", value)}>
     {L(__options_contextSteamStore, {query: "..."})}
 </Toggle>
 
 <Toggle value={$settings.context_steam_lucky}
-        on:toggle={async (e) => handleChange("context_steam_lucky", e.detail)}>
+        ontoggle={value => handleChange("context_steam_lucky", value)}>
     {L(__options_contextSteamLucky, {query: "..."})}
 </Toggle>
 
 <Toggle value={$settings.context_steam_market}
-        on:toggle={async (e) => handleChange("context_steam_market", e.detail)}>
+        ontoggle={value => handleChange("context_steam_market", value)}>
     {L(__options_contextSteamMarket, {query: "..."})}
 </Toggle>
 
 <Toggle value={$settings.context_itad}
-        on:toggle={async (e) => handleChange("context_itad", e.detail)}>
+        ontoggle={value => handleChange("context_itad", value)}>
     {L(__options_contextItad, {query: "..."})}
 </Toggle>
 
 <Toggle value={$settings.context_bartervg}
-        on:toggle={async (e) => handleChange("context_bartervg", e.detail)}>
+        ontoggle={value => handleChange("context_bartervg", value)}>
     {L(__options_contextBartervg, {query: "..."})}
 </Toggle>
 
 <Toggle value={$settings.context_steamdb}
-        on:toggle={async (e) => handleChange("context_steamdb", e.detail)}>
+        ontoggle={value => handleChange("context_steamdb", value)}>
     {L(__options_contextSteamdb, {query: "..."})}
 </Toggle>
 
 <Toggle value={$settings.context_steamdb_instant}
-        on:toggle={async (e) => handleChange("context_steamdb_instant", e.detail)}>
+        ontoggle={value => handleChange("context_steamdb_instant", value)}>
     {L(__options_contextSteamdbInstant, {query: "..."})}
 </Toggle>
 
 <Toggle value={$settings.context_steam_keys}
-        on:toggle={async (e) => handleChange("context_steam_keys", e.detail)}>
+        ontoggle={value => handleChange("context_steam_keys", value)}>
     {L(__options_contextSteamKeys)}
 </Toggle>

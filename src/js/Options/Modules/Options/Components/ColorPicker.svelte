@@ -1,5 +1,3 @@
-<svelte:options immutable={false} />
-
 <script lang="ts" module>
     import "@melloware/coloris/dist/coloris.css";
     import Coloris from "@melloware/coloris";
@@ -23,7 +21,7 @@
 
     let { value = $bindable(), defaultColor }: Props = $props();
 
-    let node: HTMLInputElement = $state();
+    let node = $state() as HTMLInputElement;
 
     onMount(() => {
         Coloris.coloris({

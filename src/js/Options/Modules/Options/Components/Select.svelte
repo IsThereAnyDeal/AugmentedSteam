@@ -1,16 +1,17 @@
-<svelte:options immutable={false} />
-
 <script lang="ts">
-    import { createBubbler } from 'svelte/legacy';
-
-    const bubble = createBubbler();
     interface Props {
-        label?: string|undefined;
+        label?: string;
         options: Array<[string, string]>;
         value: string;
+        onchange?: (e: Event) => void
     }
 
-    let { label = undefined, options, value = $bindable() }: Props = $props();
+    let {
+        label,
+        options,
+        value = $bindable(),
+        onchange
+    }: Props = $props();
 </script>
 
 
@@ -19,7 +20,7 @@
         <div class="label">{label}</div>
     {/if}
 
-    <select class="inpt" bind:value onchange={bubble('change')}>
+    <select class="inpt" bind:value {onchange}>
         {#each options as [option, label](option)}
             <option value={option}>{label}</option>
         {/each}

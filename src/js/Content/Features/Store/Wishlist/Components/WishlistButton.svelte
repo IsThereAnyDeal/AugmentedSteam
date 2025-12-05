@@ -1,18 +1,19 @@
 <script lang="ts">
-    import { createBubbler } from 'svelte/legacy';
-
-    const bubble = createBubbler();
-
     interface Props {
         label: string;
         destructive?: boolean;
+        onclick: () => void
     }
 
-    let { label, destructive = false }: Props = $props();
+    let {
+        label,
+        destructive = false,
+        onclick
+    }: Props = $props();
 </script>
 
 
-<button type="button" class:destructive onclick={bubble('click')}>{label}</button>
+<button type="button" class={{destructive}} {onclick}>{label}</button>
 
 
 <style>

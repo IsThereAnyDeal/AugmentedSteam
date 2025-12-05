@@ -1,5 +1,4 @@
 <script lang="ts">
-
     import {L} from "@Core/Localization/Localization";
     import {
         __error,

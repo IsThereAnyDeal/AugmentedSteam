@@ -1,5 +1,3 @@
-<svelte:options immutable={false} />
-
 <script lang="ts">
     import {
         __connected,
@@ -11,32 +9,37 @@
         __status
     } from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
-    import {createEventDispatcher, onMount} from "svelte";
+    import {onMount} from "svelte";
     import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";
     import ITADSyncStatus from "@Content/Modules/Widgets/ITADSync/ITADSyncStatus.svelte";
     import ESyncStatus from "@Core/Sync/ESyncStatus";
     import {type Writable} from "svelte/store";
     import type {SettingsSchema} from "@Options/Data/_types";
 
-    const dispatch = createEventDispatcher<{connection: void}>();
-
     interface Props {
         settings: Writable<SettingsSchema>;
-        isConnected?: boolean;
+        isConnected: boolean;
+        onconnection: () => void,
+        onsyncevent: () => void
     }
 
-    let { settings, isConnected = $bindable(false) }: Props = $props();
+    let {
+        settings,
+        isConnected = $bindable(),
+        onconnection,
+        onsyncevent
+    }: Props = $props();
 
-    let promise: Promise<void> = $state();
+    let promise: Promise<void> = $state(new Promise(() => {}));
 
-    let statusComponent: ITADSyncStatus = $state();
+    let statusComponent = $state() as ITADSyncStatus;
     let status: ESyncStatus|undefined = $state(undefined);
 
     function handleAuthorize(): void {
         promise = (async () => {
             await ITADApiFacade.authorize();
             isConnected = true;
-            dispatch("connection");
+            onconnection();
         })();
         statusComponent.updateLastImport();
     }
@@ -45,7 +48,7 @@
         promise = (async () => {
             await ITADApiFacade.disconnect();
             isConnected = false;
-            dispatch("connection");
+            onconnection();
         })();
         statusComponent.updateLastImport();
     }
@@ -86,7 +89,7 @@
     <div class="sync box box--text">
         <ITADSyncStatus {isConnected}
                         enableSync={$settings.itad_sync_library || $settings.itad_sync_wishlist}
-                        bind:status bind:this={statusComponent} on:syncEvent />
+                        bind:status bind:this={statusComponent} {onsyncevent} />
     </div>
 </div>
 

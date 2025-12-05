@@ -48,7 +48,7 @@
     let noPriceCount: number = $state(0);
     let unlistedApps: IStoreItemID[] = $state([]);
 
-    let promise: Promise<void> = $state();
+    let promise: Promise<void>|undefined = $state();
 
     let isOpen: boolean = $state(false);
     let isHiddenOpen: boolean = $state(false);
@@ -141,7 +141,7 @@
 </script>
 
 {#if isOpen}
-    <Modal title={L(__wl_label).toUpperCase()} showClose on:button={() => isOpen = false}>
+    <Modal title={L(__wl_label).toUpperCase()} showClose onbutton={() => isOpen = false}>
         {#if !promise}
             {L(__loading)}
         {:else}
@@ -188,7 +188,7 @@
 
     {#key unlistedApps}
         {#if isHiddenOpen && unlistedApps && unlistedApps.length > 0}
-            <Modal title="Hidden apps" showClose on:button={() => isHiddenOpen = false}>
+            <Modal title="Hidden apps" showClose onbutton={() => isHiddenOpen = false}>
                 {#each unlistedApps as app (app.appid)}
                     {@const appid = app.appid}
                     <div class="unlisted">

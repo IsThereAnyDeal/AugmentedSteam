@@ -24,7 +24,7 @@ import CustomModal from "@Core/Modals/CustomModal";
 import NoteEditModal from "@Content/Modules/UserNotes/Modals/NoteEditModal.svelte";
 import ConfirmDialog from "@Core/Modals/ConfirmDialog";
 import {EModalAction} from "@Core/Modals/Contained/EModalAction";
-import { mount, unmount } from "svelte";
+import {mount, type SvelteComponent, unmount} from "svelte";
 
 export default class UserNotes {
 
@@ -126,14 +126,15 @@ export default class UserNotes {
                 explicitDismissal: true
             },
             modalFn: (target) => {
-                form = mount(NotesForm, {
-                                    target,
-                                    props: {note}
-                                });
-                form.$on("change", () => {
-                    note = form!.note;
-                });
-                return form;
+                return <NotesForm>mount(NotesForm, {
+                        target,
+                        props: {
+                            note,
+                            onchange: (newNote: string) => {
+                                note = newNote;
+                            }
+                        }
+                    });
             }
         });
 
@@ -168,30 +169,30 @@ export default class UserNotes {
 
         return new Promise(resolve => {
             const modal = mount(NoteEditModal, {
-                            target: document.body,
-                            props: {
-                                appName,
-                                note: savedNote
-                            }
-                        });
-            modal.$on("save", (e) => {
-                let note: string|null = e.detail.trim();
-                if (note === "") {
-                    note = null;
-                }
+                target: document.body,
+                props: {
+                    appName,
+                    note: savedNote,
+                    onsave: (newNote: string) => {
+                        let note: string|null = newNote.trim();
+                        if (note === "") {
+                            note = null;
+                        }
 
-                if (!note) {
-                    this.delete(appid);
-                } else {
-                    this.set(appid, note);
-                }
+                        if (!note) {
+                            this.delete(appid);
+                        } else {
+                            this.set(appid, note);
+                        }
 
-                resolve(note);
-                unmount(modal);
-            });
-            modal.$on("cancel", () => {
-                resolve(savedNote);
-                unmount(modal);
+                        resolve(note);
+                        unmount(modal);
+                    },
+                    oncancel: () => {
+                        resolve(savedNote);
+                        unmount(modal);
+                    }
+                }
             });
         });
     }

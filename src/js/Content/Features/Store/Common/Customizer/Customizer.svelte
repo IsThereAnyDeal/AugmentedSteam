@@ -1,5 +1,3 @@
-<svelte:options immutable={false} />
-
 <script lang="ts">
     import { createBubbler, stopPropagation } from 'svelte/legacy';
 
@@ -13,10 +11,10 @@
     interface Props {
         type: "app"|"frontpage";
         setup?: CustomizerSetup;
-        dynamicSelector?: string|undefined;
+        dynamicSelector?: string;
     }
 
-    let { type, setup = [], dynamicSelector = undefined }: Props = $props();
+    let { type, setup = [], dynamicSelector }: Props = $props();
 
     let entries: Map<string, [string, boolean]> = $state(new Map());
     let isActive: boolean = $state(false);

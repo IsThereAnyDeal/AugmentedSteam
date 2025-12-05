@@ -1,5 +1,3 @@
-<svelte:options immutable={false} />
-
 <script lang="ts">
     import {__addTag, __customTags} from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
@@ -47,12 +45,14 @@
             title: L(__customTags),
             modalFn: (target) => {
                 form = mount(AddTagForm, {
-                                    target,
-                                    props: {tag}
-                                });
-                form.$on("change", () => {
-                    tag = form!.tag;
-                });
+                        target,
+                        props: {
+                            tag,
+                            onchange: () => {
+                                tag = form!.tag;
+                            }
+                        }
+                    });
                 return form;
             }
         });

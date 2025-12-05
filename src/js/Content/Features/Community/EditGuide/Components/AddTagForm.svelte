@@ -1,15 +1,16 @@
 <script lang="ts">
-    import { createBubbler } from 'svelte/legacy';
-
-    const bubble = createBubbler();
     import {__enterTag} from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
 
     interface Props {
         tag: string;
+        onchange: (e: Event) => void
     }
 
-    let { tag = $bindable() }: Props = $props();
+    let {
+        tag = $bindable(),
+        onchange
+    }: Props = $props();
 
     export {
     	tag,
@@ -17,7 +18,7 @@
 </script>
 
 
-<input placeholder="{L(__enterTag)}" bind:value={tag} onchange={bubble('change')}>
+<input placeholder="{L(__enterTag)}" bind:value={tag} {onchange}>
 
 
 <style>

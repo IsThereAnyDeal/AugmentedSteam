@@ -2,6 +2,7 @@ import self_ from "./FGamesStats.svelte";
 import Feature from "@Content/Modules/Context/Feature";
 import type CGames from "@Content/Features/Community/Games/CGames";
 import Settings from "@Options/Data/Settings";
+import {mount} from "svelte";
 
 export default class FGamesStats extends Feature<CGames> {
 
@@ -31,7 +32,7 @@ export default class FGamesStats extends Feature<CGames> {
             throw new Error("[FGamesStats] Node not found");
         }
 
-        (new self_({
+        mount(self_, {
             target: anchor.parentElement!,
             anchor,
             props: {
@@ -40,6 +41,6 @@ export default class FGamesStats extends Feature<CGames> {
                 countNeverPlayed: String(countNeverPlayed),
                 totalTime: String((time / 60).toFixed(1))
             }
-        }));
+        });
     }
 }

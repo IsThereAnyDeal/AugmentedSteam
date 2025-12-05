@@ -11,19 +11,19 @@ export default class AlertDialog {
     show(): Promise<void> {
         return new Promise(resolve => {
             const modal = mount(Modal, {
-                            target: document.body,
-                            props: {
-                                title: this.title,
-                                body: this.body,
-                                showClose: true,
-                                buttons: {
-                                    cancel: "OK"
-                                }
-                            }
-                        });
-            modal.$on("button", () => {
-                resolve();
-                unmount(modal);
+                target: document.body,
+                props: {
+                    title: this.title,
+                    body: this.body,
+                    showClose: true,
+                    buttons: {
+                        cancel: "OK"
+                    },
+                    onbutton: () => {
+                        resolve();
+                        unmount(modal);
+                    }
+                }
             });
         });
     }

@@ -1,5 +1,3 @@
-<svelte:options immutable={false} />
-
 <script lang="ts">
     import {L} from "@Core/Localization/Localization";
     import {
@@ -27,9 +25,9 @@
     import type {TSyncEvent} from "@Background/Modules/IsThereAnyDeal/_types";
 
     let settings: Writable<SettingsSchema> = writable(Settings);
-    let isConnected: boolean = $state(false);
 
-    let events: TSyncEvent[] = $state();
+    let isConnected: boolean = $state(false);
+    let events: TSyncEvent[] = $state([]);
 
     async function loadSyncEvents(): Promise<void> {
         events = await ITADApiFacade.getSyncEvents();
@@ -45,8 +43,8 @@
     <Section title="IsThereAnyDeal">
         <OptionGroup>
             <ITADConnection {settings} bind:isConnected
-                            on:syncEvent={loadSyncEvents}
-                            on:connection={loadSyncEvents}
+                            onsyncevent={loadSyncEvents}
+                            onconnection={loadSyncEvents}
             />
         </OptionGroup>
     </Section>

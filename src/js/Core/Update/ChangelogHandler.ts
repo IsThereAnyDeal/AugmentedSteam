@@ -12,10 +12,12 @@ export default class ChangelogHandler {
 
         if (currentVersion.isAfter(lastVersion) && Settings.version_show) {
             const changelog = mount(Changelog, {
-                            target: document.body,
-                            props: {lastVersion}
-                        });
-            changelog.$on("close", () => unmount(changelog));
+                    target: document.body,
+                    props: {
+                        lastVersion,
+                        onclose: () => unmount(changelog)
+                    }
+                });
         }
 
         Settings.version = Info.version;

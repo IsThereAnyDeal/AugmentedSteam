@@ -1,13 +1,13 @@
 <script lang="ts">
-    import { createBubbler } from 'svelte/legacy';
+    import type {Snippet} from "svelte";
 
-    const bubble = createBubbler();
     interface Props {
         type: "primary"|"secondary"|"cancel";
-        children?: import('svelte').Snippet;
+        children: Snippet;
+        onclick: (e: Event) => void;
     }
 
-    let { type, children }: Props = $props();
+    let { type, children, onclick }: Props = $props();
 </script>
 
 
@@ -15,7 +15,7 @@
         class:primary={type === "primary"}
         class:secondary={type === "secondary"}
         class:cancel={type === "cancel"}
-        onclick={bubble('click')}>
+        {onclick}>
     <span>{@render children?.()}</span>
 </button>
 

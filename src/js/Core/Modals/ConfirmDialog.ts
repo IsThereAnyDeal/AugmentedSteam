@@ -22,17 +22,17 @@ export default class ConfirmDialog {
     show(): Promise<EModalAction> {
         return new Promise(resolve => {
             const modal = mount(Modal, {
-                            target: document.body,
-                            props: {
-                                title: this.title,
-                                body: this.body,
-                                buttons: this.buttons
-                            }
-                        });
-            modal.$on("button", (e: CustomEvent<EModalAction>) => {
-                resolve(e.detail);
-                unmount(modal);
-            });
+                    target: document.body,
+                    props: {
+                        title: this.title,
+                        body: this.body,
+                        buttons: this.buttons,
+                        onbutton: (action: EModalAction) => {
+                            resolve(action);
+                            unmount(modal);
+                        }
+                    }
+                });
         });
     }
 }

@@ -1,7 +1,4 @@
 <script lang="ts">
-    import { createBubbler } from 'svelte/legacy';
-
-    const bubble = createBubbler();
     import {L} from "@Core/Localization/Localization";
     import {
         __cancel,
@@ -15,7 +12,6 @@
         __wait
     } from "@Strings/_strings";
     import {slide} from "svelte/transition";
-    import {createEventDispatcher} from "svelte";
     import Modal from "@Core/Modals/Contained/Modal.svelte";
     import Clipboard from "@Content/Modules/Clipboard";
     import Downloader from "@Core/Downloader";
@@ -31,27 +27,25 @@
     import Long from "long";
     import {StoreItemID} from "@Protobufs/Compiled/proto.bundle";
     import type Language from "@Core/Localization/Language";
-    import ProtobufUtils from  "@Protobufs/ProtobufUtils";
-
-    const dispatch = createEventDispatcher<{
-        close: void
-    }>();
+    import ProtobufUtils from "@Protobufs/ProtobufUtils";
 
     interface Props {
         language: Language;
         user: UserInterface;
         type?: "text"|"json";
         format?: string;
+        onclose: () => void
     }
 
     let {
         language,
         user,
         type = $bindable("text"),
-        format = $bindable("%title%")
+        format = $bindable("%title%"),
+        onclose
     }: Props = $props();
 
-    let input: HTMLInputElement = $state();
+    let input = $state() as HTMLInputElement;
 
     function add(value: string): void {
         if (!input) { return; }
@@ -124,14 +118,13 @@
         return data;
     }
 
-    async function handleButton(e: CustomEvent<EModalAction>): Promise<void> {
-        const response = e.detail;
-        if (response === EModalAction.Cancel) {
-            dispatch("close");
+    async function handleButton(action: EModalAction): Promise<void> {
+        if (action === EModalAction.Cancel) {
+            onclose();
             return;
         }
 
-        const method = response === EModalAction.OK
+        const method = action === EModalAction.OK
             ? ExportMethod.download
             : ExportMethod.copy;
 
@@ -170,14 +163,14 @@
            secondary: L(__export_copyClipboard),
            cancel: L(__cancel)
        }}
-       on:button={handleButton}>
+       onbutton={handleButton}>
 
     <div class="as_wexport_container">
         <div class="as_wexport">
             <h2>{L(__export_type)}</h2>
             <div class="as_wexport_buttons">
-                <label><input type="radio" value="text" bind:group={type} onchange={bubble('change')}> {L(__export_text)}</label>
-                <label><input type="radio" value="json" bind:group={type} onchange={bubble('change')}> JSON</label>
+                <label><input type="radio" value="text" bind:group={type}> {L(__export_text)}</label>
+                <label><input type="radio" value="json" bind:group={type}> JSON</label>
             </div>
         </div>
 
@@ -185,7 +178,7 @@
             <div class="as_wexport" transition:slide={{axis: "y", duration: 200}}>
                 <h2>{L(__export_format)}</h2>
                 <div>
-                    <input type="text" bind:value={format} bind:this={input} onchange={bubble('change')}>
+                    <input type="text" bind:value={format} bind:this={input}>
                     <div class="as_wexport_symbols">
                         {#each ["%title%", "%id%", "%appid%", "%url%", "%added_date%", "%release_date%", "%price%", "%discount%", "%base_price%", "%note%"] as str, index}
                             {#if index > 0}, {/if}

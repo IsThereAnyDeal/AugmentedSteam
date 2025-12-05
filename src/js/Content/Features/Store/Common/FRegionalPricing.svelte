@@ -57,7 +57,7 @@
         }
     }
 
-    let container: HTMLElement = $state();
+    let container = $state() as HTMLElement;
 
     if (Settings.showregionalprice === "mouse") {
         priceNode!.classList.add("es_regional_onmouse");

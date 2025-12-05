@@ -206,7 +206,7 @@
             <Select value={$settings.user_notes_adapter} label={L(__options_userNotes_loc)} options={[
                 ["idb", L(__options_userNotes_local)],
                 ["synced_storage", L(__options_userNotes_syncedStorage)]
-            ]} on:change={handleUserNotesAdapterChange} />
+            ]} onchange={handleUserNotesAdapterChange} />
         </OptionGroup>
     </Section>
 

@@ -11,21 +11,23 @@ import { mount, unmount } from "svelte";
 export default class FExportWishlist extends Feature<CWishlist> {
 
     override apply(): void {
-        const button = mount(WishlistButton, {
-                    target: getMenuNode().getTarget(2),
-                    props: {
-                        label: L(__export_wishlist)
-                    }
-                });
-        button.$on("click", () => {
-            const form = mount(ExportWishlistForm, {
+        mount(WishlistButton, {
+                target: getMenuNode().getTarget(2),
+                props: {
+                    label: L(__export_wishlist),
+                    onclick: () => {
+                        const form = mount(ExportWishlistForm, {
                             target: document.body,
                             props: {
                                 language: this.context.language ?? new Language("english"),
-                                user: this.context.user
+                                user: this.context.user,
+                                onclose: () => {
+                                    unmount(form)
+                                }
                             }
                         });
-            form.$on("close", () => unmount(form));
-        });
+                    }
+                }
+            });
     }
 }

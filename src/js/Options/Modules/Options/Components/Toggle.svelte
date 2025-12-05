@@ -1,20 +1,21 @@
-<svelte:options immutable={false} />
-
 <script lang="ts">
     import ToggleIcon from "../../Icons/ToggleIcon.svelte";
-    import {createEventDispatcher} from "svelte";
-
-    const dispatch = createEventDispatcher<{toggle: boolean}>();
+    import {type Snippet} from "svelte";
 
     interface Props {
         value: boolean;
-        children?: import('svelte').Snippet;
+        ontoggle?: (toggle: boolean) => void;
+        children: Snippet;
     }
 
-    let { value = $bindable(), children }: Props = $props();
+    let {
+        value = $bindable(),
+        ontoggle,
+        children
+    }: Props = $props();
 
     function dispatchChange(): void {
-        dispatch("toggle", value);
+        ontoggle?.(value);
     }
 </script>
 
@@ -26,7 +27,7 @@
     </span>
 
     <span>
-        {@render children?.()}
+        {@render children()}
     </span>
 </label>
 

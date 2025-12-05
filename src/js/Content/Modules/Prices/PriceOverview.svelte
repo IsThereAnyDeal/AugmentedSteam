@@ -15,14 +15,13 @@
 
     interface Props {
         data: TPriceOverview;
-        marginTop?: string|undefined;
-        marginBottom?: string|undefined;
+        marginTop?: string;
+        marginBottom?: string;
     }
 
-    let { data, marginTop = undefined, marginBottom = undefined }: Props = $props();
+    let { data, marginTop, marginBottom }: Props = $props();
 
-    let node: HTMLElement = $state();
-    let currentDrms: string[] = $state();
+    let currentDrms: string[] = $state([]);
 
     if (data.current) {
         currentDrms = data.current.drm
@@ -38,7 +37,7 @@
 </script>
 
 
-<div class="itad-pricing" bind:this={node} style:margin-top={marginTop} style:margin-bottom={marginBottom}>
+<div class="itad-pricing" style:margin-top={marginTop} style:margin-bottom={marginBottom}>
     {#if data.current}
         <a href={data.urls.info} use:external>{L(__pricing_lowestPrice)}</a>
 
