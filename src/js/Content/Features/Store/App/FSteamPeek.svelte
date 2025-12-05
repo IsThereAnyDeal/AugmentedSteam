@@ -5,6 +5,8 @@
     import type UserInterface from "@Core/User/UserInterface";
     import {__moreOnSteampeek} from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
+    import SessionCacheApiFacade from "@Content/Modules/Facades/SessionCacheApiFacade";
+    import type {TSimilarResponse} from "@Background/Modules/AugmentedSteam/_types";
 
     type TSimilarGames = Array<{
         appid: number,
@@ -21,8 +23,12 @@
 
     onMount(() => {
         promise = (async () => {
-            let steampeek = await AugmentedSteamApiFacade.fetchSteamPeek(appid);
-            steampeek = steampeek.slice(0, 8);
+            let steampeek: TSimilarResponse|null = await SessionCacheApiFacade.get<TSimilarResponse>("steampeek", String(appid));
+            if (!steampeek) {
+                const response = await AugmentedSteamApiFacade.fetchSteamPeek(appid);
+                steampeek = response.slice(0, 8);
+                SessionCacheApiFacade.set("steampeek", String(appid), steampeek);
+            }
 
             const steamResponse = await ServiceFactory.StoreBrowseService(user).getItems({
                 context: {
