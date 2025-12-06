@@ -41,10 +41,13 @@
     div {
         font-size: 11px;
         justify-self: flex-end;
-        flex-grow: 1;
         text-align: right;
         cursor: pointer;
         color: #5fafdd;
+        max-width: 400px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
     div.is-empty {
         font-style: italic;

@@ -7,9 +7,6 @@ interface TDOMGame {
     title?: {
         node: HTMLElement,
         value: string|null,
-    },
-    platforms?: {
-        node: HTMLElement
     }
 }
 
@@ -52,13 +49,6 @@ export class WishlistDOM {
                 if (appid) {
                     game.appid = appid;
                 }
-            }
-
-            const platformsNode = gameNode.querySelector<HTMLElement>(".vdNOP82JYX8-._-6uwAFLL9K0-");
-            if (platformsNode) {
-                game.platforms = {
-                    node: platformsNode
-                };
             }
 
             games.push(game);
