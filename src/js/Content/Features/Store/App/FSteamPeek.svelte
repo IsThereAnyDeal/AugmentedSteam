@@ -72,7 +72,7 @@
         <header>
             <div>Steampeek</div>
 
-            <a href="https://steampeek.hu/app/{appid}">{L(__moreOnSteampeek)}</a>
+            <a href="https://steampeek.hu/?appid={appid}">{L(__moreOnSteampeek)}</a>
         </header>
 
         <ul>
