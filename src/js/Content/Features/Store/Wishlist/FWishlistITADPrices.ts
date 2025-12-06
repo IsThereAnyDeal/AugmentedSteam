@@ -9,6 +9,8 @@ export default class FWishlistITADPrices extends Feature<CWishlist> {
 
     private loader: Prices|undefined;
     private cached: Map<number, TPriceOverview|null> = new Map();
+    private chunks: Array<number[]> = [];
+    private promises: Map<number, Promise<void>> = new Map();
 
     private currentHoverNode: Element|null = null;
     private currentHoverAppid: number|null = null;
@@ -20,6 +22,13 @@ export default class FWishlistITADPrices extends Feature<CWishlist> {
 
     override apply(): void | Promise<void> {
         this.loader = new Prices(this.context.user);
+
+        const ChunkSize = 40;
+        const appids = this.context.wishlistData.map(({appid})=> appid);
+        this.chunks = [];
+        for (let i=0; i<appids.length; i += ChunkSize) {
+            this.chunks.push(appids.slice(i, i + ChunkSize));
+        }
 
         document.body.addEventListener("mouseover", e => {
             const dom = this.context.dom;
@@ -48,8 +57,33 @@ export default class FWishlistITADPrices extends Feature<CWishlist> {
 
     private async attachPrice(node: HTMLElement, appid: number): Promise<void> {
         if (!this.cached.has(appid)) {
-            const {prices} = await this.loader!.load({apps: [appid]});
-            this.cached.set(appid, prices.length > 0 ? prices[0]!.data : null);
+            for (let i=0; i<this.chunks.length; i++) {
+                const chunk = this.chunks[i]!;
+                if (chunk.includes(appid)) {
+                    let promise: Promise<void>|undefined = this.promises.get(i);
+
+                    if (!promise) {
+                        promise = (async () => {
+                            const {prices} = await this.loader!.load({apps: chunk});
+                            for (const {id, data} of prices) {
+                                this.cached.set(id, data);
+                            }
+                            for (const appid of chunk) {
+                                if (!this.cached.has(appid)) {
+                                    this.cached.set(appid, null);
+                                }
+                            }
+                        })();
+                        this.promises.set(i, promise);
+                    }
+                    await promise;
+                    break;
+                }
+            }
+
+            if (appid !== this.currentHoverAppid) {
+                return;
+            }
         }
 
         this.detachPrice();
