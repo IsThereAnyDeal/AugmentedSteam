@@ -28,7 +28,6 @@ import FReplaceDevPubLinks from "./FReplaceDevPubLinks";
 import FReviewToggleButton from "./FReviewToggleButton";
 import FVaporLensInsights from "./FVaporLensInsights";
 import FSaveReviewFilters from "./FSaveReviewFilters";
-import FShowCoupon from "./FShowCoupon";
 import FSteamPeek from "./FSteamPeek";
 import FSupportInfo from "./FSupportInfo";
 import FUserNotes from "./FUserNotes";
@@ -80,7 +79,6 @@ export default class CApp extends CStoreBase {
                 FWaitlistDropdown,
                 FNewQueue,
                 FFullscreenScreenshotView,
-                FShowCoupon,
                 FITADPrices,
                 FDLCInfo,
                 FDRMWarnings,

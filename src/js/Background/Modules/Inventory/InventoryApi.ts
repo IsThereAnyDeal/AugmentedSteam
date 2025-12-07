@@ -219,11 +219,6 @@ export default class InventoryApi extends Api implements MessageHandlerInterface
         return this.refreshCouponsPromise;
     }
 
-    private async getCoupon(appid: number): Promise<TCoupon|undefined> {
-        await this.refreshCoupons();
-        return IndexedDB.getFromIndex("coupons", "idx_appid", appid);
-    }
-
     private async getCouponsAppids(appids: number[]): Promise<string[]> {
         await this.refreshCoupons();
 
@@ -315,9 +310,6 @@ export default class InventoryApi extends Api implements MessageHandlerInterface
     handle(message: any): typeof Unrecognized|Promise<any> {
 
         switch(message.action) {
-            case EAction.Inventory_GetCoupon:
-                return this.getCoupon(message.params.appid);
-
             case EAction.Inventory_GetCouponsAppids:
                 return this.getCouponsAppids(message.params.appids);
 

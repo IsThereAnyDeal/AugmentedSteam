@@ -171,7 +171,6 @@ export interface SettingsSchema {
     steamcardexchange: boolean,
     purchase_dates: boolean,
     show_badge_progress: boolean,
-    show_coupon: boolean,
     show_wishlist_link: boolean,
     show_wishlist_count: boolean,
     show_progressbar: boolean,
