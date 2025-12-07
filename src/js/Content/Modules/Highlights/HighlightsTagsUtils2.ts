@@ -1,7 +1,6 @@
 import Settings from "@Options/Data/Settings";
 import DynamicStore from "@Content/Modules/Data/DynamicStore";
 import ITAD from "@Content/Modules/ITAD";
-import InventoryApiFacade from "@Content/Modules/Facades/InventoryApiFacade";
 import DOMHelper from "@Content/Modules/DOMHelper";
 import Tags from "@Content/Modules/Highlights/Tags.svelte";
 import type GameId from "@Core/GameId/GameId";
@@ -20,8 +19,6 @@ export interface Options {
     ignoredOwned: boolean,
     collected: boolean,
     waitlisted: boolean,
-    gift: boolean,
-    guestPass: boolean
 }
 
 export type ItemSetup = {
@@ -45,8 +42,6 @@ export default class HighlightsTagsUtils2 {
             ignoredOwned: Settings.highlight_ignored_owned || Settings.tag_ignored_owned,
             collected:    Settings.highlight_collection    || Settings.tag_collection,
             waitlisted:   Settings.highlight_waitlist      || Settings.tag_waitlist,
-            gift:         Settings.highlight_inv_gift      || Settings.tag_inv_gift,
-            guestPass:    Settings.highlight_inv_guestpass || Settings.tag_inv_guestpass,
         }
 
         for (let [key, value] of Object.entries(options) as Array<[keyof Options, boolean]>) {
@@ -75,8 +70,6 @@ export default class HighlightsTagsUtils2 {
             wishlisted:   Settings.highlight_wishlist_color,
             collected:    Settings.highlight_collection_color,
             owned:        Settings.highlight_owned_color,
-            guestPass:    Settings.highlight_inv_guestpass_color,
-            gift:         Settings.highlight_inv_gift_color,
         };
 
         const css = [];
@@ -139,19 +132,6 @@ export default class HighlightsTagsUtils2 {
                     : Promise.resolve(new Set<string>())
             ]);
 
-            const [
-                invGiftAppids,
-                invPassAppids
-            ] = await Promise.all([
-                settings.gift
-                    ? InventoryApiFacade.getGiftsAppids(appids)
-                    : Promise.resolve(new Set<string>()),
-                settings.guestPass
-                    ? InventoryApiFacade.getPassesAppids(appids)
-                    : Promise.resolve(new Set<string>())
-            ]);
-
-
             for (const id of ids) {
                 const storeId = id.string;
                 let high: Array<keyof Options> = [];
@@ -190,16 +170,6 @@ export default class HighlightsTagsUtils2 {
                 if (inWaitlist.has(storeId)) {
                     if (Settings.highlight_waitlist) { high.push("waitlisted"); }
                     if (Settings.tag_waitlist)       { tags.push("waitlisted"); }
-                }
-
-                if (invGiftAppids.has(storeId)) {
-                    if (Settings.highlight_inv_gift) { high.push("gift"); }
-                    if (Settings.tag_inv_gift)       { tags.push("gift"); }
-                }
-
-                if (invPassAppids.has(storeId)) {
-                    if (Settings.highlight_inv_guestpass) { high.push("guestPass"); }
-                    if (Settings.tag_inv_guestpass)       { tags.push("guestPass"); }
                 }
 
                 let setup: ItemSetup = null;

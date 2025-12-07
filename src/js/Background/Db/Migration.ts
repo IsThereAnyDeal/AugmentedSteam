@@ -91,6 +91,7 @@ async function upgrade(
 
     if (oldVersion < 7) {
         db.deleteObjectStore("coupons");
+        db.deleteObjectStore("giftsAndPasses");
     }
 
     console.log(`DB migrated, ${oldVersion} -> ${newVersion}`);

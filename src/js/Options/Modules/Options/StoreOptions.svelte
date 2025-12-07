@@ -9,8 +9,6 @@
         __options_collection,
         __options_excludef2p, __options_followed,
         __options_general,
-        __options_gift,
-        __options_guest,
         __options_homepageDefaultTab,
         __options_homepageDefaultTabFree,
         __options_homepageDefaultTabNewreleases,
@@ -80,18 +78,6 @@
                 {L(__options_followed)}
             </ColorToggle>
 
-            <ColorToggle bind:enabled={$settings.highlight_inv_gift}
-                         bind:color={$settings.highlight_inv_gift_color}
-                         defaultColor={SettingsStore.getDefault("highlight_inv_gift_color")}>
-                {L(__options_gift)}
-            </ColorToggle>
-
-            <ColorToggle bind:enabled={$settings.highlight_inv_guestpass}
-                         bind:color={$settings.highlight_inv_guestpass_color}
-                         defaultColor={SettingsStore.getDefault("highlight_inv_guestpass_color")}>
-                {L(__options_guest)}
-            </ColorToggle>
-
             <ColorToggle bind:enabled={$settings.highlight_notinterested}
                          bind:color={$settings.highlight_notinterested_color}
                          defaultColor={SettingsStore.getDefault("highlight_notinterested_color")}>
@@ -140,18 +126,6 @@
                          bind:color={$settings.tag_followed_color}
                          defaultColor={SettingsStore.getDefault("tag_followed_color")}>
                 {L(__options_followed)}
-            </ColorToggle>
-
-            <ColorToggle bind:enabled={$settings.tag_inv_gift}
-                         bind:color={$settings.tag_inv_gift_color}
-                         defaultColor={SettingsStore.getDefault("tag_inv_gift_color")}>
-                {L(__options_gift)}
-            </ColorToggle>
-
-            <ColorToggle bind:enabled={$settings.tag_inv_guestpass}
-                         bind:color={$settings.tag_inv_guestpass_color}
-                         defaultColor={SettingsStore.getDefault("tag_inv_guestpass_color")}>
-                {L(__options_guest)}
             </ColorToggle>
 
             <ColorToggle bind:enabled={$settings.tag_notinterested}

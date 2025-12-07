@@ -1,13 +1,6 @@
 import type {DBSchema, StoreNames} from "idb";
 
 export default interface ADB7 extends DBSchema {
-    giftsAndPasses: {
-        key: "gifts"|"passes",
-        value: number[],
-        indexes: {
-            "idx_appid": number
-        }
-    },
     items: {
         key: string,
         value: string

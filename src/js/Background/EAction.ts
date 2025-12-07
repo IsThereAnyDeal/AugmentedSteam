@@ -30,8 +30,6 @@ export const enum EAction {
     StoreCountry_Get = "community.storecountry.get",
     Cards = "community.cards",
 
-    Inventory_GetGiftsAppids = "inventory.getGiftsAppids",
-    Inventory_GetPassesAppids = "inventory.getPassesAppids",
     Inventory_HasItem = "inventory.hasItem",
 
     Wishlist_Add = "wishlist.add",

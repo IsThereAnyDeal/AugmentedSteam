@@ -6,8 +6,6 @@ import {
     __tag_collection,
     __tag_followed,
     __tag_ignoredOwned,
-    __tag_invGift,
-    __tag_invGuestpass,
     __tag_notinterested,
     __tag_owned,
     __tag_waitlist,
@@ -19,7 +17,6 @@ import DynamicStore from "@Content/Modules/Data/DynamicStore";
 import ITAD from "@Content/Modules/ITAD";
 import HTML from "@Core/Html/Html";
 import DOMHelper from "../DOMHelper";
-import InventoryApiFacade from "@Content/Modules/Facades/InventoryApiFacade";
 
 type Options = {
     owned: boolean,
@@ -29,8 +26,6 @@ type Options = {
     ignoredOwned: boolean,
     collected: boolean,
     waitlisted: boolean,
-    gift: boolean,
-    guestPass: boolean,
 }
 
 /**
@@ -107,8 +102,6 @@ export default class HighlightsTagsUtils {
             ignoredOwned: Settings.highlight_ignored_owned || Settings.tag_ignored_owned,
             collected:    Settings.highlight_collection    || Settings.tag_collection,
             waitlisted:   Settings.highlight_waitlist      || Settings.tag_waitlist,
-            gift:         Settings.highlight_inv_gift      || Settings.tag_inv_gift,
-            guestPass:    Settings.highlight_inv_guestpass || Settings.tag_inv_guestpass,
         }
         for (let [key, value] of Object.entries(options) as Array<[keyof Options, boolean]>) {
             settings[key] &&= value;
@@ -180,19 +173,6 @@ export default class HighlightsTagsUtils {
                 : Promise.resolve(new Set<string>())
         ]);
 
-        const [
-            invGiftAppids,
-            invPassAppids
-        ] = await Promise.all([
-            settings.gift
-                ? InventoryApiFacade.getGiftsAppids(appids)
-                : Promise.resolve(new Set<string>()),
-            settings.guestPass
-                ? InventoryApiFacade.getPassesAppids(appids)
-                : Promise.resolve(new Set<string>())
-        ]);
-
-
         const actions = {
             owned: <HTMLElement[]>[],
             wishlist: <HTMLElement[]>[],
@@ -213,8 +193,6 @@ export default class HighlightsTagsUtils {
             if (settings.ignoredOwned && dsStatus.ignoredOwned.has(storeId)) { actions.ignoredOwned.push(...nodes); }
             if (inCollection.has(storeId))    { actions.collection.push(...nodes); }
             if (inWaitlist.has(storeId))      { actions.waitlist.push(...nodes); }
-            if (invGiftAppids.has(storeId))   { actions.gifts.push(...nodes); }
-            if (invPassAppids.has(storeId))   { actions.passes.push(...nodes); }
         }
 
         this.highlightOwned(actions.owned);
@@ -224,8 +202,6 @@ export default class HighlightsTagsUtils {
         this.highlightIgnoredOwnedElsewhere(actions.ignoredOwned);
         this.highlightCollection(actions.collection);
         this.highlightWaitlist(actions.waitlist);
-        this.highlightInvGift(actions.gifts);
-        this.highlightInvGuestpass(actions.passes);
     }
 
     static _addTag(node: HTMLElement, tag: string): void {
@@ -234,8 +210,6 @@ export default class HighlightsTagsUtils {
             owned:         __tag_owned,
             wishlist:      __tag_wishlist,
             followed:      __tag_followed,
-            inv_gift:      __tag_invGift,
-            inv_guestpass: __tag_invGuestpass,
             notinterested: __tag_notinterested,
             ignored_owned: __tag_ignoredOwned,
             waitlist:      __tag_waitlist,
@@ -250,8 +224,6 @@ export default class HighlightsTagsUtils {
                 owned:         Settings.tag_owned_color,
                 wishlist:      Settings.tag_wishlist_color,
                 followed:      Settings.tag_followed_color,
-                inv_gift:      Settings.tag_inv_gift_color,
-                inv_guestpass: Settings.tag_inv_guestpass_color,
                 notinterested: Settings.tag_notinterested_color,
                 ignored_owned: Settings.tag_ignored_owned_color,
                 waitlist:      Settings.tag_waitlist_color,
@@ -334,8 +306,6 @@ export default class HighlightsTagsUtils {
                 followed:      Settings.highlight_followed_color,
                 collection:    Settings.highlight_collection_color,
                 owned:         Settings.highlight_owned_color,
-                inv_guestpass: Settings.highlight_inv_guestpass_color,
-                inv_gift:      Settings.highlight_inv_gift_color,
             };
 
             for (const [name, color] of Object.entries(colors)) {
@@ -434,20 +404,6 @@ export default class HighlightsTagsUtils {
         this._highlightItems(nodes, "followed",
             Settings.tag_followed,
             Settings.highlight_followed
-        );
-    }
-
-    private static highlightInvGift(nodes: Iterable<HTMLElement>): void {
-        this._highlightItems(nodes, "inv_gift",
-            Settings.tag_inv_gift,
-            Settings.highlight_inv_gift
-        );
-    }
-
-    private static highlightInvGuestpass(nodes: Iterable<HTMLElement>): void {
-        this._highlightItems(nodes, "inv_guestpass",
-            Settings.tag_inv_guestpass,
-            Settings.highlight_inv_guestpass
         );
     }
 
