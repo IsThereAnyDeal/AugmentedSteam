@@ -21,8 +21,7 @@ export interface Options {
     collected: boolean,
     waitlisted: boolean,
     gift: boolean,
-    guestPass: boolean,
-    coupon: boolean,
+    guestPass: boolean
 }
 
 export type ItemSetup = {
@@ -48,7 +47,6 @@ export default class HighlightsTagsUtils2 {
             waitlisted:   Settings.highlight_waitlist      || Settings.tag_waitlist,
             gift:         Settings.highlight_inv_gift      || Settings.tag_inv_gift,
             guestPass:    Settings.highlight_inv_guestpass || Settings.tag_inv_guestpass,
-            coupon:       Settings.highlight_coupon        || Settings.tag_coupon,
         }
 
         for (let [key, value] of Object.entries(options) as Array<[keyof Options, boolean]>) {
@@ -77,7 +75,6 @@ export default class HighlightsTagsUtils2 {
             wishlisted:   Settings.highlight_wishlist_color,
             collected:    Settings.highlight_collection_color,
             owned:        Settings.highlight_owned_color,
-            coupon:       Settings.highlight_coupon_color,
             guestPass:    Settings.highlight_inv_guestpass_color,
             gift:         Settings.highlight_inv_gift_color,
         };
@@ -144,17 +141,13 @@ export default class HighlightsTagsUtils2 {
 
             const [
                 invGiftAppids,
-                invPassAppids,
-                invCouponAppids
+                invPassAppids
             ] = await Promise.all([
                 settings.gift
                     ? InventoryApiFacade.getGiftsAppids(appids)
                     : Promise.resolve(new Set<string>()),
                 settings.guestPass
                     ? InventoryApiFacade.getPassesAppids(appids)
-                    : Promise.resolve(new Set<string>()),
-                settings.coupon
-                    ? InventoryApiFacade.getCouponsAppids(appids)
                     : Promise.resolve(new Set<string>())
             ]);
 
@@ -207,11 +200,6 @@ export default class HighlightsTagsUtils2 {
                 if (invPassAppids.has(storeId)) {
                     if (Settings.highlight_inv_guestpass) { high.push("guestPass"); }
                     if (Settings.tag_inv_guestpass)       { tags.push("guestPass"); }
-                }
-
-                if (invCouponAppids.has(storeId)) {
-                    if (Settings.highlight_coupon) { high.push("coupon"); }
-                    if (Settings.tag_coupon)       { tags.push("coupon"); }
                 }
 
                 let setup: ItemSetup = null;

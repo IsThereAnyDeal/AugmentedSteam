@@ -11,9 +11,9 @@ import {
 import Migration from "@Background/Db/Migration";
 import LocalStorage from "@Core/Storage/LocalStorage";
 import TimeUtils from "@Core/Utils/TimeUtils";
-import type ADB6 from "@Background/Db/Schemas/ADB6";
+import type ADB7 from "@Background/Db/Schemas/ADB7";
 
-type Schema = ADB6;
+type Schema = ADB7;
 
 export default class IndexedDB {
 
@@ -25,6 +25,7 @@ export default class IndexedDB {
         if (!this.promise) {
             this.promise = (async () => {
                 this.db = await openDB<Schema>("Augmented Steam", Info.db_version, {
+                    // @ts-expect-error
                     upgrade: Migration.upgrade,
                     blocked() {
                         console.error("Failed to upgrade database, there is already an open connection");

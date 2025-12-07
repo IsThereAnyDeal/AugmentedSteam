@@ -1,4 +1,3 @@
-import type {TCoupon} from "@Background/Modules/Community/_types";
 import IndexedDB from "@Background/Db/IndexedDB";
 import Api from "@Background/Modules/Api";
 import type MessageHandlerInterface from "@Background/MessageHandlerInterface";
@@ -8,7 +7,6 @@ import {
     type InventoryData,
     type InventoryResponse
 } from "@Background/Modules/Inventory/_types";
-import SteamStoreApi from "@Background/Modules/Store/SteamStoreApi";
 import {EAction} from "@Background/EAction";
 import LocalStorage from "@Core/Storage/LocalStorage";
 import Errors from "@Core/Errors/Errors";
@@ -18,7 +16,6 @@ import {Unrecognized} from "@Background/background";
 
 export default class InventoryApi extends Api implements MessageHandlerInterface {
 
-    private refreshCouponsPromise: Promise<void>|undefined;
     private refreshGiftsPromise: Promise<void>|undefined;
 
     constructor() {
@@ -86,65 +83,6 @@ export default class InventoryApi extends Api implements MessageHandlerInterface
         return data;
     }
 
-    private async fetchCoupons() {
-        const data = await this.loadInventory(ContextId.Coupons);
-        if (!data) {
-            return null;
-        }
-
-        const coupons: Map<number, TCoupon> = new Map();
-
-        for (const description of data.descriptions) {
-            if (!description.type || description.type !== "Coupon") {
-                continue;
-            }
-            if (!description.actions) {
-                continue;
-            }
-
-            const coupon: TCoupon = {
-                appids: [],
-                image_url: description.icon_url,
-                title: description.name,
-                discount: Number(description.name.match(/([1-9][0-9])%/)![1]),
-                id: `${description.classid}_${description.instanceid}`
-            };
-            description.descriptions.forEach((desc, i) => {
-                const value = desc.value;
-                if (value.startsWith("Can't be applied with other discounts.")) {
-                    coupon.discount_note = value;
-                    coupon.discount_note_id = i;
-                    coupon.discount_doesnt_stack = true;
-                } else if (value.startsWith("(Valid")) {
-                    coupon.valid_id = i;
-                    coupon.valid = value;
-                }
-            });
-
-            for (const action of description.actions) {
-                const match = action.link.match(/[1-9][0-9]*(?:,[1-9][0-9]*)*/);
-                if (!match) {
-                    console.warn("Couldn't find packageid(s) for link %s", action.link);
-                    continue;
-                }
-
-                for (let packageidStr of match[0].split(",")) {
-                    let packageid = Number(packageidStr);
-                    if (!coupons.has(packageid) || coupons.get(packageid)!.discount < coupon.discount) {
-                        coupons.set(packageid, coupon);
-                    }
-                }
-            }
-        }
-
-        const packages = await (new SteamStoreApi()).getPackageApps([...coupons.keys()]);
-        for (const [subid, coupon] of coupons.entries()) {
-            coupon.appids = packages.get(subid) ?? [];
-        }
-
-        return coupons;
-    }
-
     private async fetchGiftsAndPasses() { // context#1, gifts and guest passes
         const data = await this.loadInventory(ContextId.GiftsAndPasses);
         if (!data) {
@@ -198,42 +136,6 @@ export default class InventoryApi extends Api implements MessageHandlerInterface
         }
 
         return data.descriptions.map(item => item.market_hash_name);
-    }
-
-
-    private async refreshCoupons(): Promise<void> {
-        if (!this.refreshCouponsPromise) {
-            this.refreshCouponsPromise = (async() => {
-                const isExpired = await IndexedDB.isStoreExpired("coupons");
-                if (isExpired) {
-                    let coupons = await this.fetchCoupons();
-                    if (coupons === null) {
-                        await IndexedDB.clear("coupons");
-                    } else {
-                        await IndexedDB.replaceAll("coupons", [...coupons.entries()])
-                        await IndexedDB.setStoreExpiry("coupons", 60*60);
-                    }
-                }
-            })();
-        }
-        return this.refreshCouponsPromise;
-    }
-
-    private async getCouponsAppids(appids: number[]): Promise<string[]> {
-        await this.refreshCoupons();
-
-        const tx = IndexedDB.db.transaction("coupons");
-        const couponsSet = new Set(await tx.store.index("idx_appid").getAllKeys());
-
-        const result: string[] = [];
-        for (let appid of appids) {
-            if (couponsSet.has(appid)) {
-                result.push("app/"+appid);
-            }
-        }
-
-        await tx.done;
-        return result;
     }
 
     private async refreshGiftsAndPasses(): Promise<void> {
@@ -310,9 +212,6 @@ export default class InventoryApi extends Api implements MessageHandlerInterface
     handle(message: any): typeof Unrecognized|Promise<any> {
 
         switch(message.action) {
-            case EAction.Inventory_GetCouponsAppids:
-                return this.getCouponsAppids(message.params.appids);
-
             case EAction.Inventory_GetGiftsAppids:
                 return this.getGiftsAppids(message.params.appids);
 

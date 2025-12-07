@@ -370,7 +370,6 @@
         "hideactivelistings": "Hide all active listings on Market homepage by default",
         "showlowestmarketprice": "Show the lowest market price for your listings",
         "clear": "Are you sure you wish to reset all options? This cannot be undone.",
-        "coupon": "Items you have a coupon for",
         "show_package_info": "Show \"Package info\" button for all packages",
         "wlbuttoncommunityapp": "Show \"Add to Wishlist\" button on community hubs",
         "removeguideslanguagefilter": "Don't automatically filter guides by user language",
@@ -535,7 +534,6 @@
     "tag": {
         "wishlist": "Wishlist",
         "followed": "Followed",
-        "coupon": "Coupon",
         "inv_gift": "Gift",
         "inv_guestpass": "Guestpass",
         "owned": "Owned",

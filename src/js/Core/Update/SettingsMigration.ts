@@ -109,6 +109,10 @@ export default class SettingsMigration {
         if (oldVersion.isSameOrBefore("4.5.0")) {
             await storage.remove("hidetmsymbols");
             await storage.remove("show_coupon");
+            await storage.remove("highlight_coupon");
+            await storage.remove("highlight_coupon_color");
+            await storage.remove("tag_coupon");
+            await storage.remove("tag_coupon_color");
         }
     }
 }

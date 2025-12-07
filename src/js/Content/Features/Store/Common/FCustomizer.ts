@@ -65,7 +65,6 @@ export default class FCustomizer extends Feature<CApp|CStoreFront> {
 
         return [
             ["franchisenotice", ".franchise_notice", L(__apppageFranchise)],
-            ["eaheader", ".early_access_header:not(.es_coupon_info)", L(__apppageEaheader)],
             ["eabanner", ".early_access_banner", L(__apppageEabanner)],
             ["recentupdates", "[data-featuretarget=events-row]", L(__apppageRecentupdates)],
             ["reviews", "#game_area_reviews"],

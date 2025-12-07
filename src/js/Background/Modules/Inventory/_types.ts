@@ -1,7 +1,6 @@
 
 export enum ContextId {
     GiftsAndPasses = 1,
-    Coupons = 3,
     CommunityItems = 6
 }
 

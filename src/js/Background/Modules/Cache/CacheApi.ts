@@ -15,7 +15,6 @@ export default class CacheApi implements MessageHandlerInterface{
         );
 
         await IndexedDB.clear(
-            "coupons",
             "giftsAndPasses",
             "items",
             "earlyAccessAppids",

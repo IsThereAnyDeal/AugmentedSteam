@@ -4,7 +4,7 @@ import BundleId from "@Core/GameId/BundleId";
 import {L} from "@Core/Localization/Localization";
 import {
     __tag_collection,
-    __tag_coupon, __tag_followed,
+    __tag_followed,
     __tag_ignoredOwned,
     __tag_invGift,
     __tag_invGuestpass,
@@ -31,7 +31,6 @@ type Options = {
     waitlisted: boolean,
     gift: boolean,
     guestPass: boolean,
-    coupon: boolean,
 }
 
 /**
@@ -89,7 +88,7 @@ export default class HighlightsTagsUtils {
 
     /**
      * Highlights and tags DOM nodes that are owned, wishlisted, ignored, collected, waitlisted
-     * or that the user has a gift, a guest pass or coupon for.
+     * or that the user has a gift or a guest pass for.
      *
      * @param {NodeList|Array} nodes - The nodes that should get highlighted
      * (defaults to all known nodes that are highlightable and taggable)
@@ -110,7 +109,6 @@ export default class HighlightsTagsUtils {
             waitlisted:   Settings.highlight_waitlist      || Settings.tag_waitlist,
             gift:         Settings.highlight_inv_gift      || Settings.tag_inv_gift,
             guestPass:    Settings.highlight_inv_guestpass || Settings.tag_inv_guestpass,
-            coupon:       Settings.highlight_coupon        || Settings.tag_coupon,
         }
         for (let [key, value] of Object.entries(options) as Array<[keyof Options, boolean]>) {
             settings[key] &&= value;
@@ -184,17 +182,13 @@ export default class HighlightsTagsUtils {
 
         const [
             invGiftAppids,
-            invPassAppids,
-            invCouponAppids
+            invPassAppids
         ] = await Promise.all([
             settings.gift
                 ? InventoryApiFacade.getGiftsAppids(appids)
                 : Promise.resolve(new Set<string>()),
             settings.guestPass
                 ? InventoryApiFacade.getPassesAppids(appids)
-                : Promise.resolve(new Set<string>()),
-            settings.coupon
-                ? InventoryApiFacade.getCouponsAppids(appids)
                 : Promise.resolve(new Set<string>())
         ]);
 
@@ -208,8 +202,7 @@ export default class HighlightsTagsUtils {
             collection: <HTMLElement[]>[],
             waitlist: <HTMLElement[]>[],
             gifts: <HTMLElement[]>[],
-            passes: <HTMLElement[]>[],
-            coupons: <HTMLElement[]>[],
+            passes: <HTMLElement[]>[]
         };
 
         for (const [storeId, nodes] of storeIdsMap) {
@@ -222,7 +215,6 @@ export default class HighlightsTagsUtils {
             if (inWaitlist.has(storeId))      { actions.waitlist.push(...nodes); }
             if (invGiftAppids.has(storeId))   { actions.gifts.push(...nodes); }
             if (invPassAppids.has(storeId))   { actions.passes.push(...nodes); }
-            if (invCouponAppids.has(storeId)) { actions.coupons.push(...nodes); }
         }
 
         this.highlightOwned(actions.owned);
@@ -234,7 +226,6 @@ export default class HighlightsTagsUtils {
         this.highlightWaitlist(actions.waitlist);
         this.highlightInvGift(actions.gifts);
         this.highlightInvGuestpass(actions.passes);
-        this.highlightInvCoupon(actions.coupons);
     }
 
     static _addTag(node: HTMLElement, tag: string): void {
@@ -243,7 +234,6 @@ export default class HighlightsTagsUtils {
             owned:         __tag_owned,
             wishlist:      __tag_wishlist,
             followed:      __tag_followed,
-            coupon:        __tag_coupon,
             inv_gift:      __tag_invGift,
             inv_guestpass: __tag_invGuestpass,
             notinterested: __tag_notinterested,
@@ -260,7 +250,6 @@ export default class HighlightsTagsUtils {
                 owned:         Settings.tag_owned_color,
                 wishlist:      Settings.tag_wishlist_color,
                 followed:      Settings.tag_followed_color,
-                coupon:        Settings.tag_coupon_color,
                 inv_gift:      Settings.tag_inv_gift_color,
                 inv_guestpass: Settings.tag_inv_guestpass_color,
                 notinterested: Settings.tag_notinterested_color,
@@ -345,7 +334,6 @@ export default class HighlightsTagsUtils {
                 followed:      Settings.highlight_followed_color,
                 collection:    Settings.highlight_collection_color,
                 owned:         Settings.highlight_owned_color,
-                coupon:        Settings.highlight_coupon_color,
                 inv_guestpass: Settings.highlight_inv_guestpass_color,
                 inv_gift:      Settings.highlight_inv_gift_color,
             };
@@ -446,13 +434,6 @@ export default class HighlightsTagsUtils {
         this._highlightItems(nodes, "followed",
             Settings.tag_followed,
             Settings.highlight_followed
-        );
-    }
-
-    private static highlightInvCoupon(nodes: Iterable<HTMLElement>): void {
-        this._highlightItems(nodes, "coupon",
-            Settings.tag_coupon,
-            Settings.highlight_coupon
         );
     }
 

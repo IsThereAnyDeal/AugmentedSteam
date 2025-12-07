@@ -4,12 +4,6 @@ import type {HasItemResponse} from "@Background/Modules/Inventory/_types";
 
 export default class InventoryApiFacade {
 
-    static async getCouponsAppids(appids: number[]): Promise<Set<string>> {
-        return new Set<string>(
-            await Background.send(EAction.Inventory_GetCouponsAppids, {appids})
-        );
-    }
-
     static async getGiftsAppids(appids: number[]): Promise<Set<string>> {
         return new Set<string>(
             await Background.send(EAction.Inventory_GetGiftsAppids, {appids})

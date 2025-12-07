@@ -28,19 +28,6 @@ export interface TLogin {
     profilePath: string
 }
 
-export interface TCoupon {
-    image_url: string,
-    title: string,
-    discount: number,
-    id: string,
-    discount_note?: string,
-    discount_note_id?: number,
-    discount_doesnt_stack?: true
-    valid_id?: number,
-    valid?: string,
-    appids: number[]
-}
-
 export interface TReview {
     default: number,
     rating: number,

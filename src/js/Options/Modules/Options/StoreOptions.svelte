@@ -7,7 +7,6 @@
         __ignoredOwned,
         __notinterested,
         __options_collection,
-        __options_coupon,
         __options_excludef2p, __options_followed,
         __options_general,
         __options_gift,
@@ -81,12 +80,6 @@
                 {L(__options_followed)}
             </ColorToggle>
 
-            <ColorToggle bind:enabled={$settings.highlight_coupon}
-                         bind:color={$settings.highlight_coupon_color}
-                         defaultColor={SettingsStore.getDefault("highlight_coupon_color")}>
-                {L(__options_coupon)}
-            </ColorToggle>
-
             <ColorToggle bind:enabled={$settings.highlight_inv_gift}
                          bind:color={$settings.highlight_inv_gift_color}
                          defaultColor={SettingsStore.getDefault("highlight_inv_gift_color")}>
@@ -147,12 +140,6 @@
                          bind:color={$settings.tag_followed_color}
                          defaultColor={SettingsStore.getDefault("tag_followed_color")}>
                 {L(__options_followed)}
-            </ColorToggle>
-
-            <ColorToggle bind:enabled={$settings.tag_coupon}
-                         bind:color={$settings.tag_coupon_color}
-                         defaultColor={SettingsStore.getDefault("tag_coupon_color")}>
-                {L(__options_coupon)}
             </ColorToggle>
 
             <ColorToggle bind:enabled={$settings.tag_inv_gift}
