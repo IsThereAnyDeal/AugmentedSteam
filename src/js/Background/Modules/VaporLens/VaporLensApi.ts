@@ -4,6 +4,7 @@ import Api from "@Background/Modules/Api";
 import { Unrecognized } from "@Background/background";
 import type {TVaporLensEntry, TVaporLensResponse} from "@Background/Modules/VaporLens/_types";
 import {z} from "zod";
+import Errors from "@Core/Errors/Errors";
 
 export default class VaporLensApi extends Api implements MessageHandlerInterface {
 
@@ -56,7 +57,9 @@ export default class VaporLensApi extends Api implements MessageHandlerInterface
 
             data = schema.parse(response) as TVaporLensResponse;
         } catch (e) {
-            console.error(e);
+            if (!(e instanceof Errors.HTTPError) || e.code !== 404) {
+                console.error(e);
+            }
             data = null;
         }
         this.cache.set(appid, {
