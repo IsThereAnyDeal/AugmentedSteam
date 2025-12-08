@@ -97,7 +97,9 @@
         margin-bottom: 6px;
         outline: none;
         padding: 4px 6px;
-        width: 500px;
+        min-width: 500px;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     textarea {

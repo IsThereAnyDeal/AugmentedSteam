@@ -111,6 +111,10 @@
     .title {
         padding: 24px 24px 0 24px;
         display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 800px;
     }
 
     .content {
