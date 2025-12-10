@@ -5,27 +5,19 @@ import FWishlistUserNotes from "./FWishlistUserNotes";
 import FWishlistStats from "./FWishlistStats";
 import FEmptyWishlist from "./FEmptyWishlist";
 import FExportWishlist from "./FExportWishlist";
-import FKeepEditableRanking from "./FKeepEditableRanking";
 import FWishlistProfileLink from "./FWishlistProfileLink";
 import ContextType from "@Content/Modules/Context/ContextType";
-import ASEventHandler from "@Content/Modules/ASEventHandler";
 import Context, {type ContextParams} from "@Content/Modules/Context/Context";
 import SteamFacade from "@Content/Modules/Facades/SteamFacade";
 import {WishlistDOM} from "@Content/Features/Store/Wishlist/Utils/WishlistDOM";
-import WebRequestListener from "@Content/Modules/WebRequest/WebRequestListener";
-import ServiceFactory from "@Protobufs/ServiceFactory";
-import Long from "long";
 import type {TReactQueryData} from "@Content/Features/_types";
 
 export interface WishlistEntry {
     appid: number,
-    priority: number,
     added: number
 }
 
 export default class CWishlist extends Context {
-
-    public readonly onReorder: ASEventHandler<void> = new ASEventHandler<void>();
 
     public readonly dom: WishlistDOM;
     public readonly ownerId: string;
@@ -62,7 +54,6 @@ export default class CWishlist extends Context {
             FWishlistStats,
             FEmptyWishlist,
             FExportWishlist,
-            FKeepEditableRanking,
             FWishlistProfileLink,
         ]);
 
@@ -70,29 +61,10 @@ export default class CWishlist extends Context {
         this.wishlistData = wishlistData;
         this.dom = new WishlistDOM();
 
-        WebRequestListener.onComplete("reorder", ["https://store.steampowered.com/wishlist/action/reorder"],
-            async (_url: string) => {
-                await this.reloadWishlistData();
-                this.onReorder.dispatch();
-            });
-
         this.dom.observe();
     }
 
     public get isMyWishlist(): boolean {
         return this.ownerId === this.user.steamId;
-    }
-
-    private async reloadWishlistData(): Promise<void> {
-        const wishlist = await ServiceFactory.WishlistService(this.user).getWishlist({
-            steamid: Long.fromString(this.ownerId!)
-        });
-        this.wishlistData = wishlist.items.map(item => {
-            return {
-                appid: item.appid!,
-                priority: item.priority!,
-                added: item.dateAdded!
-            }
-        });
     }
 }
