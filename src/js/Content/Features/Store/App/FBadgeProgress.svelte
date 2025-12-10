@@ -10,7 +10,7 @@
 
     export let data: TBadgeData;
 
-    let cardOwned = data.rgCards.filter(c => c.owned === 1).length;
+    let cardOwned = data.rgCards.filter(c => c.owned !== 0).length;
     let cardTotal = data.rgCards.length;
 </script>
 
