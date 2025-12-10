@@ -1,3 +1,22 @@
+4.5.0: |
+  - readded similar games provided by SteamPeek - they don't have that nice Steam overlay when you move your cursor over the game box, but it's better than nothing
+  - added review summaries via VaporLens (toggleable in options, turned on by default)
+  - fixed AS not loading on "my games" page, and I've updated how the stats look while I was there
+  - fixed notes not displaying in wishlist
+  - fixed notes modal for games with long titles
+  - fixed background preview links in market listings
+  - optimized ITAD price loading in wishlists
+  
+  But I've also removed several features:
+  - removed Hide trademark and copyright symbols in game titles - this has not worked great,
+    and there are so many different places where title can show up, I didn't feel like it's worth trying to keep it
+  - removed highlighting and tagging for coupons, gifts and guest passes - coupons and gifts seems to be officially dead,
+    for guest passes, I don't know if they still exist. If they do, I'm not sure how common they are to warrant highlighting,
+    but if you really want to have this back, I can try, you just have to send me a guest pass so I can test it out.
+  - removed "keep editable ranking" feature from wishlists. I think this is the only feature that could have been causing issue #2155,
+    so if you were affected by this, let me know if it has helped
+
+
 4.4.2: |
   - fixed quick sell and install sell in inventory
   - fixed 1 click turn into gems - now as a separate button instead of replacing native Steam one
