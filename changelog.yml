@@ -6,6 +6,7 @@
   - fixed notes modal for games with long titles
   - fixed background preview links in market listings
   - fixed badge progress not showing up on app pages
+  - fixed badge progress owned cards count
   - optimized ITAD price loading in wishlists
   
   But I've also removed several features:
@@ -14,6 +15,7 @@
   - removed highlighting and tagging for coupons, gifts and guest passes - coupons and gifts seems to be officially dead,
     for guest passes, I don't know if they still exist. If they do, I'm not sure how common they are to warrant highlighting,
     but if you really want to have this back, I can try, you just have to send me a guest pass so I can test it out.
+    This should also get rid of that community login warning that you have probably seen pop up.
   - removed "keep editable ranking" feature from wishlists. I think this is the only feature that could have been causing issue #2155,
     so if you were affected by this, let me know if it has helped
 
