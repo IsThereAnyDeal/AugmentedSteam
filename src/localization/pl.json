@@ -258,13 +258,11 @@
         "icon": "Ikona",
         "name": "Nazwa",
         "show_alternative_linux_icon": "Wyświetlaj alternatywną ikonę systemu Linux",
-        "hidetmsymbols": "Ukrywaj symbole praw autorskich i znaków towarowych w tytułach gier",
         "metacritic": "Wyświetlaj oceny użytkowników Metacritic",
         "opencritic": "Wyświetlaj informacje z OpenCritic.com",
         "hideactivelistings": "Ukrywaj domyślnie wszystkie moje aktywne oferty na stronie rynku",
         "showlowestmarketprice": "Wyświetlaj najniższą cenę rynkową dla wystawionych przedmiotów",
         "clear": "Czy na pewno chcesz zresetować wszystkie ustawienia? Tej operacji nie można cofnąć.",
-        "coupon": "Tytuły, dla których masz kupony",
         "show_package_info": "Wyświetlaj przycisk „Informacje o pakiecie” dla wszystkich pakietów",
         "wlbuttoncommunityapp": "Wyświetlaj przycisk „Dodaj do listy życzeń” na stronach centrum społeczności",
         "removeguideslanguagefilter": "Nie filtruj automatycznie poradników po języku użytkownika",
@@ -277,7 +275,6 @@
         "show1clickgoo": "Wyłącz potwierdzenia przy zamienianiu przedmiotów na klejnoty",
         "hltb": "Wyświetlaj informacje z HowLongToBeat.com",
         "hidespamcomments": "Ukrywaj spam w komentarzach na stronach Warsztatu i profili",
-        "gift": "Tytuły przechowywane w formie prezentu",
         "regional_price_mouse": "Po najechaniu kursorem",
         "stores_all": "Porównuj we wszystkich sklepach",
         "view_in_currency": "Wyświetlaj w (waluta):",
@@ -299,7 +296,6 @@
         "show_youtubereviews": "Wyświetlaj odnośniki „Wideorecenzje na YouTube”",
         "openinnewtab": "Otwieraj zewnętrzne odnośniki w nowej karcie",
         "showbartervg": "Wyświetlaj odnośniki do Barter.vg",
-        "guest": "Tytuły przechowywane w formie klucza tymczasowego",
         "collection": "Tytuły w twojej kolekcji ITAD",
         "waitlist": "Tytuły na twojej liście oczekujących ITAD",
         "showallstats": "Wyświetlaj podsumowanie na stronie „Wszystkie gry”",
@@ -337,7 +333,6 @@
         "store_general_thirdparty": "Opcje do uzyskiwania informacji ze stron zewnętrznych",
         "purchase_dates": "Wyświetlaj datę zakupu",
         "show_badge_progress": "Wyświetlaj postęp odznaki",
-        "show_coupon": "Wyświetlaj informacje o dostępnych kuponach",
         "show_wishlist_link": "Wyświetlaj odnośnik do listy życzeń na stronach profili",
         "show_wishlist_count": "Wyświetlaj liczbę tytułów na liście życzeń",
         "profile_showcase_twitch": "Dodawaj gablotę Twitch.tv, jeśli gdzieś na profilu znajduje się odnośnik do konta na Twitch.tv",
@@ -397,7 +392,8 @@
             "wishlist": "Na mojej liście życzeń",
             "loc": "Lokalizacja przechowywania:",
             "synced_storage": "Pamięć synchronizowana/lokalna",
-            "local": "Lokalna baza danych"
+            "local": "Lokalna baza danych",
+            "save_with_enter": "Zapisuj klawiszem Enter"
         },
         "show_custom_themes": "Wyświetlaj niestandardowe motywy",
         "oneclickremovewl": "Wyłącz potwierdzenia przy usuwaniu produktów",
@@ -420,7 +416,9 @@
         },
         "followed": "Obserwowane gry",
         "prevent_video_pause": "Nie zatrzymuj filmów przy przełączaniu karty (eksperymentalne)",
-        "tabtitle_appname_first": "Zawsze zaczynaj tytuł karty przeglądarki od nazwy gry"
+        "tabtitle_appname_first": "Zawsze zaczynaj tytuł karty przeglądarki od nazwy gry",
+        "context_steam_lucky": "Wyszukaj „__query__” na Steam (Szczęśliwy traf)",
+        "show_vaporlens_summary": "Wyświetlaj podsumowanie VaporLens"
     },
     "ready": {
         "loading": "Wczytywanie danych Augmented Steam...",
@@ -439,7 +437,6 @@
     },
     "tag": {
         "wishlist": "Na liście życzeń",
-        "coupon": "Kupon",
         "inv_gift": "Prezent",
         "inv_guestpass": "Klucz tymczasowy",
         "owned": "Posiadane",
@@ -484,7 +481,8 @@
     "update": {
         "dont_show": "Nie pokazuj ponownie",
         "updated": "Augmented Steam został zaktualizowany do wersji __version__",
-        "changes": "Zobacz pełną listę zmian na GitHubie"
+        "changes": "Zobacz pełną listę zmian na GitHubie",
+        "updated_no_version": "Augmented Steam został zaktualizowany"
     },
     "register": {
         "success": "Pomyślnie aktywowano __gamename__",
@@ -895,5 +893,7 @@
     "remove_fullgame_from_wishlist_and_waitlist_tooltip": "Usuń pełną grę ze swojej listy życzeń i oczekujących",
     "ok": "OK",
     "launch_random_game_error": "Nie udało się znaleźć gry do uruchomienia",
-    "retry": "Spróbuj ponownie"
+    "retry": "Spróbuj ponownie",
+    "saving": "Zapisywanie...",
+    "saved": "Zapisano"
 }

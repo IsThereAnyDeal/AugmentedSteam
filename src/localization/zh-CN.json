@@ -257,13 +257,11 @@
         "icon": "图标",
         "name": "名称",
         "show_alternative_linux_icon": "显示替代 Linux 图标",
-        "hidetmsymbols": "在游戏标题中隐藏商标和版权符号",
         "metacritic": "显示 Metacritic 用户评分",
         "opencritic": "显示 Opencritic 的评级和评论",
         "hideactivelistings": "默认隐藏市场主页的订单列表",
         "showlowestmarketprice": "显示您在社区市场的最低出售价",
         "clear": "您确定要重设所有选项么？这项操作将无法撤销。",
-        "coupon": "可使用优惠券的物品",
         "show_package_info": "显示所有的“游戏包信息”按钮",
         "wlbuttoncommunityapp": "在游戏社区主页显示“添加至愿望单”按钮",
         "removeguideslanguagefilter": "不根据用户语言自动过滤指南",
@@ -276,7 +274,6 @@
         "show1clickgoo": "在适用的库存物品上显示“一键转换成宝石”按钮",
         "hltb": "显示 HowLongToBeat.com 信息",
         "hidespamcomments": "隐藏创意工坊和个人资料页面的垃圾评论",
-        "gift": "库存中有礼物的物品",
         "regional_price_mouse": "鼠标经过价格时",
         "stores_all": "与所有商店比较",
         "view_in_currency": "以此货币查看：",
@@ -298,7 +295,6 @@
         "show_youtubereviews": "显示 “YouTube 评测视频”链接",
         "openinnewtab": "在新选项卡中打开外部链接",
         "showbartervg": "显示 Barter.vg 链接",
-        "guest": "拥有玩家通行证的物品",
         "collection": "您 ITAD 收藏库中的物品",
         "waitlist": "您 ITAD 观察列表中的物品",
         "showallstats": "在“所有游戏”页面显示时长统计",
@@ -335,7 +331,6 @@
         "store_general_thirdparty": "第三方网站信息选项",
         "purchase_dates": "在商店页面上显示购买日期",
         "show_badge_progress": "在商店页面显示徽章进度",
-        "show_coupon": "在商店页面显示可用的优惠券",
         "show_wishlist_link": "在个人资料页面显示愿望单链接",
         "show_wishlist_count": "在愿望单页面显示物品数量",
         "profile_showcase_twitch": "如果有 Twitch.tv 链接，则为其添加一个展柜",
@@ -395,7 +390,8 @@
             "wishlist": "在愿望单",
             "loc": "存储位置",
             "synced_storage": "同步存储",
-            "local": "本地数据库"
+            "local": "本地数据库",
+            "save_with_enter": "按下回车保存"
         },
         "show_custom_themes": "显示自定义主题",
         "oneclickremovewl": "删除物品时跳过确认",
@@ -412,7 +408,15 @@
         "friends_and_groups": "好友和群组",
         "friends_append_nickname": "给朋友的名字加上昵称",
         "collection_banner_not_owned": "只有当我在 Steam 上不拥有游戏时才会显示 In Collection 横幅",
-        "homepage_default_tab_free": "免费趋势"
+        "homepage_default_tab_free": "免费趋势",
+        "headers": {
+            "itad_price_info": "来自 IsThereAnyDeal 的价格信息"
+        },
+        "followed": "关注的游戏",
+        "prevent_video_pause": "当标签页位于后台时保持视频播放（实验性功能）",
+        "tabtitle_appname_first": "确保标签页标题始终以游戏名称开头",
+        "context_steam_lucky": "在 Steam 商店搜索 '__query__' （试下手气）",
+        "show_vaporlens_summary": "显示 VaporLens 摘要"
     },
     "ready": {
         "loading": "Augmented Steam 加载数据中...",
@@ -431,14 +435,14 @@
     },
     "tag": {
         "wishlist": "愿望单",
-        "coupon": "优惠券",
         "inv_gift": "礼物",
         "inv_guestpass": "玩家通行证",
         "owned": "已拥有",
         "notinterested": "不感兴趣",
         "collection": "在收藏库中",
         "waitlist": "在观察列表中",
-        "ignored_owned": "已忽略（拥有）"
+        "ignored_owned": "已忽略（拥有）",
+        "followed": "已关注"
     },
     "wallet": {
         "custom_amount": "充值自定义金额",
@@ -475,7 +479,8 @@
     "update": {
         "dont_show": "不要再显示",
         "updated": "Augmented Steam 已更新至 __version__",
-        "changes": "在GitHub上查看所有更新改动"
+        "changes": "在GitHub上查看所有更新改动",
+        "updated_no_version": "Augmented Steam 已更新"
     },
     "register": {
         "success": "成功激活 __gamename__",
@@ -884,5 +889,9 @@
     "add_fullgame_to_waitlist": "将完整的游戏添加到您的观察列表中",
     "remove_fullgame_from_waitlist_tooltip": "从您的观察列表中删除完整的游戏",
     "remove_fullgame_from_wishlist_and_waitlist_tooltip": "从您的愿望单和观察列表中删除完整的游戏",
-    "ok": "好的"
+    "ok": "好的",
+    "launch_random_game_error": "未能找到可玩的游戏",
+    "retry": "重试",
+    "saving": "正在保存...",
+    "saved": "已保存"
 }
