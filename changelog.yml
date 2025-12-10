@@ -5,6 +5,7 @@
   - fixed notes not displaying in wishlist
   - fixed notes modal for games with long titles
   - fixed background preview links in market listings
+  - fixed badge progress not showing up on app pages
   - optimized ITAD price loading in wishlists
   
   But I've also removed several features:

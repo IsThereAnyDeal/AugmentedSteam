@@ -26,14 +26,14 @@ export default class FBadgeProgress extends Feature<CApp> {
             return;
         }
 
-        let target = document.querySelector(".rightcol.game_meta_data");
-        if (!target) {
+        const categoryBlock = document.querySelector<HTMLElement>("#category_block");
+        if (!categoryBlock) {
             throw new Error("Node not found");
         }
 
         (new self_({
-            target,
-            anchor: target.querySelector("#category_block")?.nextElementSibling ?? undefined,
+            target: categoryBlock.parentElement!,
+            anchor: categoryBlock.nextElementSibling ?? undefined,
             props: {data}
         }));
     }
