@@ -72,6 +72,10 @@ export default class FDLCCheckboxes extends Feature<CApp> {
             }
 
             node.prepend(label);
+
+            if (node.classList.contains("capsule_container")) {
+                node.style.display = "flex";
+            }
         }
 
         // Toggle dsinfo on label when adding/removing wishlist via ds_options dropdown

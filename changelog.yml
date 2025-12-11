@@ -7,6 +7,7 @@
   - fixed background preview links in market listings
   - fixed badge progress not showing up on app pages
   - fixed badge progress owned cards count
+  - fixed DLC checkbox placement for DLCs with boxart
   - optimized ITAD price loading in wishlists
   
   But I've also removed several features:
