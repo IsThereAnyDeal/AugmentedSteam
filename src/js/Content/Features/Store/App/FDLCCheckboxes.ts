@@ -75,6 +75,7 @@ export default class FDLCCheckboxes extends Feature<CApp> {
 
             if (node.classList.contains("capsule_container")) {
                 node.style.display = "flex";
+                node.querySelector("img")?.style.overflow = "hidden";
             }
         }
 
