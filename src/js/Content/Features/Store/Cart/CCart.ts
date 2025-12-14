@@ -1,4 +1,5 @@
 import FCartHistoryLink from "./FCartHistoryLink";
+import FCartITADPrices from "./FCartITADPrices";
 import Context, {type ContextParams} from "@Content/Modules/Context/Context";
 import ContextType from "@Content/Modules/Context/ContextType";
 
@@ -8,6 +9,7 @@ export default class CCart extends Context {
 
         super(params, ContextType.CART, [
             FCartHistoryLink,
+            FCartITADPrices,
         ]);
     }
 }
