@@ -83,6 +83,7 @@ export interface SettingsSchema {
 
     show_package_info: boolean,
     show_players_info: boolean,
+    show_steampeek: boolean,
     show_vaporlens_summary: boolean,
     show_early_access: boolean,
     show_alternative_linux_icon: boolean,

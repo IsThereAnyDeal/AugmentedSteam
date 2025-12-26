@@ -1,12 +1,17 @@
 import self_ from "./FSteamPeek.svelte";
 import type CApp from "@Content/Features/Store/App/CApp";
 import Feature from "@Content/Modules/Context/Feature";
+import Settings from "@Options/Data/Settings";
 
 export default class FSteamPeek extends Feature<CApp> {
 
     private _moreLikeThis: HTMLElement|null = null;
 
     override async checkPrerequisites(): Promise<boolean> {
+        if (!Settings.show_steampeek) {
+            return false;
+        }
+
         this._moreLikeThis = document.querySelector(".related_items_ctn .page_content");
         return this._moreLikeThis !== null;
     }

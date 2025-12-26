@@ -87,6 +87,7 @@ export const DefaultSettings: Readonly<SettingsSchema> = {
 
     show_package_info: false,
     show_players_info: true,
+    show_steampeek: true,
     show_vaporlens_summary: true,
     show_early_access: true,
     show_alternative_linux_icon: false,
