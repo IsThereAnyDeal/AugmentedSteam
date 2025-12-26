@@ -22,7 +22,8 @@ export default class FExportWishlist extends Feature<CWishlist> {
                 target: document.body,
                 props: {
                     language: this.context.language ?? new Language("english"),
-                    user: this.context.user
+                    user: this.context.user,
+                    ownerId: this.context.ownerId
                 }
             });
             form.$on("close", () => form.$destroy());

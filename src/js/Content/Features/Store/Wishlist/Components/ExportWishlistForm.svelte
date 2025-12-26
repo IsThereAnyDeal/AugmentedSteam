@@ -36,6 +36,7 @@
 
     export let language: Language;
     export let user: UserInterface;
+    export let ownerId: string;
     export let type: "text"|"json" = "text";
     export let format: string = "%title%";
 
@@ -67,7 +68,7 @@
         const storeService = ServiceFactory.StoreBrowseService(user);
 
         const wishlist = await wishlistService.getWishlist({
-            steamid: Long.fromString(user.steamId)
+            steamid: Long.fromString(ownerId)
         });
 
         const dateAddedMap = new Map(wishlist.items.map(item => [item.appid, item.dateAdded]));
