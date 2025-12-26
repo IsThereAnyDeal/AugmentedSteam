@@ -1,6 +1,13 @@
 <script lang="ts">
     import type {TVaporLensResponse} from "@Background/Modules/VaporLens/_types";
     import VaporlensDetails from "@Content/Features/Store/App/Vaporlens/VaporlensDetails.svelte";
+    import {slide} from "svelte/transition";
+    import LocalStorage from "@Core/Storage/LocalStorage";
+    import {onMount} from "svelte";
+    import ViewOnButton from "@Content/Steam/ViewOnButton.svelte";
+    import ExpandCollapseButton from "@Content/Steam/ExpandCollapseButton.svelte";
+    import {__vaporlens_hide, __vaporlens_show, __vaporlens_title, __vaporlens_view} from "@Strings/_strings";
+    import {L} from "@Core/Localization/Localization";
 
     export let appid: number;
     export let data: TVaporLensResponse;
@@ -11,53 +18,73 @@
                   || (data.performance ?? []).length > 0
                   || (data.recommendations ?? []).length > 0
                   || (data.misc ?? []).length > 0
+
+    function toggle(): void {
+        expand = !expand;
+        LocalStorage.set("expand_vaporlens", expand);
+    }
+
+    let expand: boolean = false;
+
+    onMount(() => {
+        (async () => {
+            expand = await LocalStorage.get("expand_vaporlens") ?? true;
+        })();
+    });
 </script>
 
 
 <div class="vaporlens">
     <div class="header">
-        <div>
-            <div class="eyebrow">VaporLens Highlights</div>
-        </div>
-        <a href="https://vaporlens.app/app/{appid}" target="_blank" rel="noopener noreferrer">
-            View on VaporLens
-        </a>
+        <div class="eyebrow">{L(__vaporlens_title)}</div>
+
+        <ViewOnButton href="https://vaporlens.app/app/{appid}">
+            {L(__vaporlens_view)}
+        </ViewOnButton>
+
+        <ExpandCollapseButton expanded={expand} onclick={toggle}>
+            {L(expand ? __vaporlens_hide : __vaporlens_show)}
+        </ExpandCollapseButton>
     </div>
 
-    {#if data.summary?.length || data.categories?.length}
-        <div class="intro">
-            {#if data.summary?.length}
-                <section class="summary-section">
-                    <header>Summary</header>
-                    <ul>
-                        {#each data.summary as line}
-                            <li>{line}</li>
-                        {/each}
-                    </ul>
-                </section>
+    {#if expand}
+        <div class="body" transition:slide={{axis: "y", duration: 200}}>
+            {#if data.summary?.length || data.categories?.length}
+                <div class="intro">
+                    {#if data.summary?.length}
+                        <section class="summary-section">
+                            <header>Summary</header>
+                            <ul>
+                                {#each data.summary as line}
+                                    <li>{line}</li>
+                                {/each}
+                            </ul>
+                        </section>
+                    {/if}
+
+                    {#if data.categories?.length}
+                        <section class="tags">
+                            <header>Tags</header>
+                            <ul class="categories">
+                                {#each data.categories as category}
+                                    <li>{category}</li>
+                                {/each}
+                            </ul>
+                        </section>
+                    {/if}
+                </div>
             {/if}
 
-            {#if data.categories?.length}
-                <section class="tags">
-                    <header>Tags</header>
-                    <ul class="categories">
-                        {#each data.categories as category}
-                            <li>{category}</li>
-                        {/each}
-                    </ul>
-                </section>
+            {#if hasDetails}
+                <div class="sections-grid">
+                    <VaporlensDetails label="Positives" entries={data.positives ?? []} />
+                    <VaporlensDetails label="Negatives" entries={data.negatives ?? []} />
+                    <VaporlensDetails label="Gameplay" entries={data.gameplay ?? []} />
+                    <VaporlensDetails label="Performance" entries={data.performance ?? []} />
+                    <VaporlensDetails label="Recommendations" entries={data.recommendations ?? []} />
+                    <VaporlensDetails label="Misc" entries={data.misc ?? []} />
+                </div>
             {/if}
-        </div>
-    {/if}
-
-    {#if hasDetails}
-        <div class="sections-grid">
-            <VaporlensDetails label="Positives" entries={data.positives ?? []} />
-            <VaporlensDetails label="Negatives" entries={data.negatives ?? []} />
-            <VaporlensDetails label="Gameplay" entries={data.gameplay ?? []} />
-            <VaporlensDetails label="Performance" entries={data.performance ?? []} />
-            <VaporlensDetails label="Recommendations" entries={data.recommendations ?? []} />
-            <VaporlensDetails label="Misc" entries={data.misc ?? []} />
         </div>
     {/if}
 </div>
@@ -66,7 +93,7 @@
 <style>
     .vaporlens {
         margin: 30px 0;
-        padding: 16px 20px 20px;
+        padding: 16px 20px;
         background: linear-gradient(135deg, rgba(24, 40, 55, 0.94), rgba(15, 26, 39, 0.94));
         border-radius: 6px;
         border: 1px solid rgba(255, 255, 255, 0.05);
@@ -79,9 +106,6 @@
         justify-content: space-between;
         gap: 16px;
         align-items: center;
-        margin-bottom: 16px;
-        padding-bottom: 12px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
         flex-wrap: wrap;
     }
 
@@ -90,24 +114,13 @@
         text-transform: uppercase;
         letter-spacing: 0.12em;
         color: #a8cfee;
+        flex-grow: 1;
     }
 
-    a {
-        color: #66c0f4;
-        background: #212c3d;
-        padding: 0 15px;
-        font-size: 15px;
-        line-height: 30px;
-        text-decoration: none;
-        font-weight: 500;
-        white-space: nowrap;
-        transition: background-color 0.2s ease-out;
-
-        &:hover,
-        &:focus-visible {
-            background: #66c0f4;
-            color: white;
-        }
+    .body {
+        margin-top: 12px;
+        padding-top: 16px;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
     }
 
     .intro {
@@ -188,11 +201,6 @@
         .header {
             flex-direction: column;
             align-items: flex-start;
-        }
-
-        a {
-            width: 100%;
-            text-align: center;
         }
     }
 

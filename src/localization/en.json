@@ -895,5 +895,11 @@
         "za": "South Africa",
         "zm": "Zambia",
         "zw": "Zimbabwe"
+    },
+    "vaporlens": {
+        "title": "VaporLens Highlights",
+        "view": "View on VaporLens",
+        "show": "Show VaporLens",
+        "hide": "Hide VaporLens"
     }
 }

@@ -817,3 +817,7 @@ export const __countries_yt = "countries_yt";
 export const __countries_za = "countries_za";
 export const __countries_zm = "countries_zm";
 export const __countries_zw = "countries_zw";
+export const __vaporlens_title = "vaporlens_title";
+export const __vaporlens_view = "vaporlens_view";
+export const __vaporlens_show = "vaporlens_show";
+export const __vaporlens_hide = "vaporlens_hide";

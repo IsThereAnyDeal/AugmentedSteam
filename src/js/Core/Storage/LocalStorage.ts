@@ -53,7 +53,8 @@ export interface LocalStorageSchema extends StorageSchema {
         minPlaytime?: string,
         maxPlaytime?: string
     },
-    cachedUser?: string
+    cachedUser?: string,
+    expand_vaporlens?: boolean
 }
 
 class LocalStorage<Schema extends StorageSchema> extends Storage<ns.LocalStorageArea, Schema>{
