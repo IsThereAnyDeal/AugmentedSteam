@@ -7,6 +7,7 @@
     import {L} from "@Core/Localization/Localization";
     import SessionCacheApiFacade from "@Content/Modules/Facades/SessionCacheApiFacade";
     import type {TSimilarResponse} from "@Background/Modules/AugmentedSteam/_types";
+    import ViewOnButton from "@Content/Steam/ViewOnButton.svelte";
 
     type TSimilarGames = Array<{
         appid: number,
@@ -28,6 +29,10 @@
                 const response = await AugmentedSteamApiFacade.fetchSteamPeek(appid);
                 steampeek = response.slice(0, 8);
                 SessionCacheApiFacade.set("steampeek", String(appid), steampeek);
+            }
+
+            if (steampeek.length === 0) {
+                return [];
             }
 
             const steamResponse = await ServiceFactory.StoreBrowseService(user).getItems({
@@ -68,24 +73,25 @@
 
 
 {#await promise then data}
-    <section id="steampeek">
-        <header>
-            <div>Steampeek</div>
+    {#if data.length > 0}
+        <section id="steampeek">
+            <header>
+                <div>SteamPeek</div>
+                <ViewOnButton href="https://steampeek.hu/?appid={appid}">{L(__moreOnSteampeek)}</ViewOnButton>
+            </header>
 
-            <a href="https://steampeek.hu/?appid={appid}">{L(__moreOnSteampeek)}</a>
-        </header>
-
-        <ul>
-            {#each data as item (item.appid)}
-                <li>
-                    <a href="/app/{item.appid}/" data-ds-appid={appid}>
-                        <img src="https://shared.fastly.steamstatic.com//store_item_assets/steam/apps/{item.appid}/{item.asset}" alt="{item.title} banner" />
-                        <div class="buy">{item.purchase ?? "--"}</div>
-                    </a>
-                </li>
-            {/each}
-        </ul>
-    </section>
+            <ul>
+                {#each data as item (item.appid)}
+                    <li>
+                        <a href="/app/{item.appid}/" data-ds-appid={appid}>
+                            <img src="https://shared.fastly.steamstatic.com//store_item_assets/steam/apps/{item.appid}/{item.asset}" alt="{item.title} banner" />
+                            <div class="buy">{item.purchase ?? "--"}</div>
+                        </a>
+                    </li>
+                {/each}
+            </ul>
+        </section>
+    {/if}
 {/await}
 
 
@@ -108,23 +114,6 @@
             text-transform: uppercase;
             font-family: "Motiva Sans",Arial,Helvetica,sans-serif;
             letter-spacing: 1px;
-        }
-
-        & a {
-            position: relative;
-            border-radius: 2px;
-            display: inline-block;
-            text-decoration: none;
-            color: #66c0f4;
-            background: #212c3d;
-            padding: 0 15px;
-            font-size: 15px;
-            line-height: 30px;
-            transition: background-color 0.2s ease-out;
-        }
-        & a:hover {
-            background: #66c0f4;
-            color: white;
         }
     }
 

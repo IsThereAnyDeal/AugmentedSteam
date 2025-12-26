@@ -1,7 +1,6 @@
 import self_ from "./FSteamPeek.svelte";
 import type CApp from "@Content/Features/Store/App/CApp";
 import Feature from "@Content/Modules/Context/Feature";
-import DOMHelper from "@Content/Modules/DOMHelper";
 
 export default class FSteamPeek extends Feature<CApp> {
 
@@ -26,9 +25,5 @@ export default class FSteamPeek extends Feature<CApp> {
                 appid: this.context.appid
             }
         });
-    }
-
-    private _adjustScroller() {
-        DOMHelper.insertScript("scriptlets/Store/App/SteamPeek/adjustScroller.js");
     }
 }
