@@ -12,7 +12,6 @@
 <script lang="ts">
     import {onMount} from "svelte";
 
-    export let formatter: Intl.NumberFormat;
     export let importance: number;
     export let point: string;
     export let explanation: string;
@@ -50,7 +49,7 @@
         <span class="importance-badge"
             class:high={importance > 0.6}
             class:mid={importance <= 0.6 && importance > 0.4}
-            class:low={importance <= 0.4}>{formatter.format(importance)}</span>
+            class:low={importance <= 0.4}>{Math.round(importance*100)}</span>
         <span class="point-text">{point}</span>
     </button>
 
@@ -63,7 +62,7 @@
         <span class="importance-badge"
               class:high={importance > 0.6}
               class:mid={importance <= 0.6 && importance > 0.4}
-              class:low={importance <= 0.4}>{formatter.format(importance)}</span>
+              class:low={importance <= 0.4}>{Math.round(importance*100)}</span>
         <span class="point-text">{point}</span>
     </div>
 {/if}
@@ -113,7 +112,7 @@
         font-weight: 500;
         border: 1px solid rgba(92, 112, 132, 0.45);
         text-align: center;
-        width: 38px;
+        width: 28px;
         box-sizing: border-box;
 
         &.high {

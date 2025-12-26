@@ -2,7 +2,6 @@
     import type {TVaporLensResponse} from "@Background/Modules/VaporLens/_types";
     import VaporlensDetails from "@Content/Features/Store/App/Vaporlens/VaporlensDetails.svelte";
 
-    export let formatter: Intl.NumberFormat;
     export let appid: number;
     export let data: TVaporLensResponse;
 
@@ -53,12 +52,12 @@
 
     {#if hasDetails}
         <div class="sections-grid">
-            <VaporlensDetails {formatter} label="Positives" entries={data.positives ?? []} />
-            <VaporlensDetails {formatter} label="Negatives" entries={data.negatives ?? []} />
-            <VaporlensDetails {formatter} label="Gameplay" entries={data.gameplay ?? []} />
-            <VaporlensDetails {formatter} label="Performance" entries={data.performance ?? []} />
-            <VaporlensDetails {formatter} label="Recommendations" entries={data.recommendations ?? []} />
-            <VaporlensDetails {formatter} label="Misc" entries={data.misc ?? []} />
+            <VaporlensDetails label="Positives" entries={data.positives ?? []} />
+            <VaporlensDetails label="Negatives" entries={data.negatives ?? []} />
+            <VaporlensDetails label="Gameplay" entries={data.gameplay ?? []} />
+            <VaporlensDetails label="Performance" entries={data.performance ?? []} />
+            <VaporlensDetails label="Recommendations" entries={data.recommendations ?? []} />
+            <VaporlensDetails label="Misc" entries={data.misc ?? []} />
         </div>
     {/if}
 </div>

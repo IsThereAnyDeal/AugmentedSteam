@@ -2,7 +2,6 @@
     import type {TVaporLensEntry} from "@Background/Modules/VaporLens/_types";
     import VaporlensExplanation from "@Content/Features/Store/App/Vaporlens/VaporlensExplanation.svelte";
 
-    export let formatter: Intl.NumberFormat;
     export let label: string;
     export let entries: TVaporLensEntry[];
 </script>
@@ -19,7 +18,7 @@
             {#each entries as entry}
                 {#if entry.explanation && entry.importance}
                     <li>
-                        <VaporlensExplanation {formatter}
+                        <VaporlensExplanation
                                 point={entry.point || (entry.explanation ? entry.explanation.slice(0, 64) : "Insight")}
                                 explanation={entry.explanation}
                                 importance={entry.importance} />

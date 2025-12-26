@@ -36,10 +36,6 @@ export default class FVaporLensInsights extends Feature<CApp> {
             target: summaries.parentElement!,
             anchor: summaries.nextElementSibling!,
             props: {
-                formatter: new Intl.NumberFormat(
-                    this.context.language?.code ?? document.documentElement.lang ?? navigator.language,
-                    {style: "percent", maximumFractionDigits: 0}
-                ),
                 appid: this.context.appid,
                 data: this.data!
             },
