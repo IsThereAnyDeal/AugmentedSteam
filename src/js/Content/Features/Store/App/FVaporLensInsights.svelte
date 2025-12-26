@@ -94,19 +94,20 @@
     }
 
     a {
-        color: #dfeeff;
-        background: #1a3b56;
-        padding: 4px 10px;
-        border-radius: 4px;
-        font-size: 12px;
+        color: #66c0f4;
+        background: #212c3d;
+        padding: 0 15px;
+        font-size: 15px;
+        line-height: 30px;
         text-decoration: none;
         font-weight: 500;
         white-space: nowrap;
-        border: 1px solid rgba(255, 255, 255, 0.18);
+        transition: background-color 0.2s ease-out;
 
         &:hover,
         &:focus-visible {
-            background: #214b6e;
+            background: #66c0f4;
+            color: white;
         }
     }
 

@@ -47,7 +47,10 @@
 
 {#if explanation}
     <button type="button" on:click={e => togglePopover(e, id)}>
-        <span class="importance-badge">{formatter.format(importance)}</span>
+        <span class="importance-badge"
+            class:high={importance > 0.6}
+            class:mid={importance <= 0.6 && importance > 0.4}
+            class:low={importance <= 0.4}>{formatter.format(importance)}</span>
         <span class="point-text">{point}</span>
     </button>
 
@@ -57,7 +60,10 @@
     {/if}
 {:else}
     <div class="point-static">
-        <span class="importance-badge">{formatter.format(importance)}</span>
+        <span class="importance-badge"
+              class:high={importance > 0.6}
+              class:mid={importance <= 0.6 && importance > 0.4}
+              class:low={importance <= 0.4}>{formatter.format(importance)}</span>
         <span class="point-text">{point}</span>
     </div>
 {/if}
@@ -74,7 +80,6 @@
         font-size: 13px;
         font-weight: 400;
         border-radius: 0;
-        padding: 4px 0;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -99,8 +104,8 @@
     }
 
     .importance-badge {
-        font-size: 10px;
-        color: #5c7084;
+        font-size: 12px;
+        color: #d3e4f6;
         background: rgba(18, 32, 43, 0.35);
         border-radius: 3px;
         padding: 1px 5px;
@@ -108,6 +113,18 @@
         font-weight: 500;
         border: 1px solid rgba(92, 112, 132, 0.45);
         text-align: center;
+        width: 38px;
+        box-sizing: border-box;
+
+        &.high {
+            background: #2a475e;
+        }
+        &.mid {
+            background: #1b2838;
+        }
+        &.low {
+            background: #000f18;
+        }
     }
 
     div.popover {
