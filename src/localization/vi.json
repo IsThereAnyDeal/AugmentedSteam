@@ -392,7 +392,8 @@
             "wishlist": "Trong danh sách ước của tôi",
             "loc": "Vị trí lưu trữ",
             "synced_storage": "Lưu trữ Được đồng bộ/Nội bộ",
-            "local": "Cơ sở dữ liệu nội bộ"
+            "local": "Cơ sở dữ liệu nội bộ",
+            "save_with_enter": "Lưu khi nhấn Enter"
         },
         "show_custom_themes": "Hiển thị chủ đề tuỳ chỉnh",
         "oneclickremovewl": "Bỏ qua xác nhận khi loại bỏ vật phẩm khỏi danh sách ước",
@@ -415,7 +416,8 @@
         },
         "followed": "Các trò chơi đã theo dõi",
         "prevent_video_pause": "Ngăn video tạm dừng khi thẻ không còn được chọn (thử nghiệm)",
-        "tabtitle_appname_first": "Luôn bắt đầu tiêu đề thẻ bằng tên trò chơi"
+        "tabtitle_appname_first": "Luôn bắt đầu tiêu đề thẻ bằng tên trò chơi",
+        "show_vaporlens_summary": "Hiển thị tóm tắt từ VaporLens"
     },
     "ready": {
         "loading": "Augmented Steam đang tải dữ liệu...",
@@ -478,7 +480,8 @@
     "update": {
         "dont_show": "Không Hiển Thị Lại",
         "updated": "Augmented Steam đã được cập nhật lên phiên bản __version__",
-        "changes": "Xem mọi thay đổi trên GitHub"
+        "changes": "Xem mọi thay đổi trên GitHub",
+        "updated_no_version": "Augmented Steam đã được cập nhật"
     },
     "register": {
         "success": "Thành công kích hoạt __gamename__",
@@ -889,5 +892,7 @@
     "remove_fullgame_from_wishlist_and_waitlist_tooltip": "Loại bỏ bản trò chơi đầy đủ khỏi cả Danh sách ước và Danh sách chờ",
     "ok": "OK",
     "launch_random_game_error": "Tìm trò chơi mở được thất bại",
-    "retry": "Thử lại"
+    "retry": "Thử lại",
+    "saving": "Đang lưu...",
+    "saved": "Đã lưu"
 }

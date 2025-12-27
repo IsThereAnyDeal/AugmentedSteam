@@ -392,7 +392,8 @@
             "wishlist": "Dans ma liste de souhaits",
             "loc": "Emplacement de stockage",
             "synced_storage": "Stockage synchronisé/local",
-            "local": "Base de données locale"
+            "local": "Base de données locale",
+            "save_with_enter": "Enregistrer avec Entrée"
         },
         "show_custom_themes": "Afficher les thèmes personnalisés",
         "oneclickremovewl": "Ignorer la confirmation lors de la suppression d'objets",
@@ -415,7 +416,9 @@
         },
         "followed": "Jeux suivis",
         "prevent_video_pause": "Empêcher la mise en pause des vidéos lorsque l'onglet perd le focus (expérimental)",
-        "tabtitle_appname_first": "S'assurer que le titre de l'onglet commence toujours par le nom du jeu"
+        "tabtitle_appname_first": "S'assurer que le titre de l'onglet commence toujours par le nom du jeu",
+        "context_steam_lucky": "Recherche Steam pour '__query__' (j'ai de la chance)",
+        "show_vaporlens_summary": "Afficher le résumé VaporLens"
     },
     "ready": {
         "loading": "Chargement des données d'Augmented Steam...",
@@ -890,5 +893,7 @@
     "remove_fullgame_from_wishlist_and_waitlist_tooltip": "Retirer le jeu complet de votre liste de souhaits et de votre liste d'attente",
     "ok": "OK",
     "launch_random_game_error": "Impossible de trouver un jeu jouable",
-    "retry": "Réessayer"
+    "retry": "Réessayer",
+    "saving": "Enregistre...",
+    "saved": "Enregistré"
 }

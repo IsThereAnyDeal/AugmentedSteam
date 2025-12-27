@@ -380,7 +380,8 @@
             "wishlist": "У моєму списку бажаного",
             "loc": "Місце зберігання",
             "synced_storage": "Синхронізоване/Локальне сховище",
-            "local": "Локальна база даних"
+            "local": "Локальна база даних",
+            "save_with_enter": "Зберегти за допомогою Enter"
         },
         "show_custom_themes": "Відображати користувацькі теми",
         "oneclickremovewl": "Видаляти ігри без підтвердження",
@@ -403,7 +404,9 @@
         },
         "followed": "Відстежувані ігри",
         "prevent_video_pause": "Запобігати паузі відео при втраті фокуса вкладки (експериментально)",
-        "tabtitle_appname_first": "Починати заголовок вкладки з назви гри"
+        "tabtitle_appname_first": "Починати заголовок вкладки з назви гри",
+        "context_steam_lucky": "Пошук у Steam за '__query__' (Мені пощастить)",
+        "show_vaporlens_summary": "Показати підсумок VaporLens"
     },
     "ready": {
         "loading": "Augmented Steam завантажує дані...",
@@ -873,5 +876,7 @@
     "remove_fullgame_from_wishlist_and_waitlist_tooltip": "Прибрати повну гру з вашого списку бажаного та зі Списку очікування",
     "ok": "ОК",
     "launch_random_game_error": "Не вдалося знайти гру для запуску",
-    "retry": "Повторити"
+    "retry": "Повторити",
+    "saving": "Збереження...",
+    "saved": "Збережено"
 }

@@ -417,7 +417,8 @@
         "prevent_video_pause": "Не приостанавливать видео при потере фокуса на вкладке (экспериментально)",
         "tabtitle_appname_first": "Имя вкладки всегда начинается с названия игры",
         "context_steam_lucky": "Поиск в Steam по запросу «__query__» (мне везёт)",
-        "show_vaporlens_summary": "Показать сводку VaporLens"
+        "show_vaporlens_summary": "Показать сводку VaporLens",
+        "show_steampeek": "Показать похожие игры от SteamPeek"
     },
     "ready": {
         "loading": "Augmented Steam загружается...",
@@ -891,5 +892,11 @@
     "launch_random_game_error": "Не удалось найти подходящую игру",
     "retry": "Повторить попытку",
     "saving": "Сохранение...",
-    "saved": "Сохранено"
+    "saved": "Сохранено",
+    "vaporlens": {
+        "title": "Значимые моменты VaporLens",
+        "view": "Просмотреть на VaporLens",
+        "show": "Показать VaporLens",
+        "hide": "Скрыть VaporLens"
+    }
 }
