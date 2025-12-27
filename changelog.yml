@@ -1,3 +1,26 @@
+4.5.1: |
+  In the last release, we have added review summaries by VaporLens. That has caused a bunch of negative feedback, so I feel like we need to talk about that.
+
+  If you are a member of our Discord server, you probably know my stance on AI. I can say that I am not using and will not use AI or AI tools on either IsThereAnyDeal or Augmented Steam,
+  but that does not extend to our 3rd parties we get data from or stores we cover. I can't ensure nor enforce that 3rd parties won't use AI in some way. Granted, VaporLens is different,
+  because it's built around AI. I think the idea of VaporLens is solid, and provides additional value, it's just unfortunate they use AI to get there. Ultimately
+  I thought the benefits outweight the cons, which, some of you, have not agreed with.
+
+  It was also added turned on by default, because all new features, that don't change current behavior but add stuff are usually added turned on by default.
+  There's an option for you to turn it off, if you don't like it, which I naively thought is going to be enough.
+
+  As I said, I did get a bunch of negative reviews because of addition of VaporLens, so I'm putting this up for vote, I'm now leaving this up to you whether it will stay as a feature
+  or will get removed in next release. Let me know how you feel about this - write an addon review, message me, tell me on Discord, whatever works for you.
+  
+  Changelog:
+  - added option to turn of SteamPeek section
+  - fixed empty SteamPeek section showing up
+  - fixed highlights and tags in bundle pages
+  - fixed export of other users' wishlists
+  - added option to collapse VaporLens
+  - added color gradients for VaporLens importance score
+  
+
 4.5.0: |
   - readded similar games provided by SteamPeek - they don't have that nice Steam overlay when you move your cursor over the game box, but it's better than nothing
   - added review summaries via VaporLens (toggleable in options, turned on by default)
