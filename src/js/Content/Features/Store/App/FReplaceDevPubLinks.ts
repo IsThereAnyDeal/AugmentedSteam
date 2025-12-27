@@ -42,7 +42,10 @@ export default class FReplaceDevPubLinks extends Feature<CApp> {
                 continue;
             }
 
-            node.href = `https://store.steampowered.com/search/?${type}=${encodeURIComponent(node.textContent!)}`;
+            const name = node.textContent!;
+            const searchParam = name.includes('&') ? 'term' : type;
+            node.href = `https://store.steampowered.com/search/?${searchParam}=${encodeURIComponent(name)}`;
+            
             HTML.afterEnd(node, ` <span class="as-homepage">(<a href="${homepageLink.href}">${L(__options_homepage)}</a>)</span>`);
         }
 
