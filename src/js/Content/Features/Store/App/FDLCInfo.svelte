@@ -11,7 +11,7 @@
 <div class="block es_dlc_info">
     <div class="block_content">
         <div class="block_content_inner">
-            <div class="details_block">`;
+            <div class="details_block">
 
                 {#each dlcInfo as item}
                     <div class="game_area_details_specs">
