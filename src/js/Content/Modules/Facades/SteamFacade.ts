@@ -132,8 +132,7 @@ export default class SteamFacade {
         return Messenger.get(MessageHandler.SteamFacade, "calculateFeeAmount", [amount, publisherFee]);
     }
 
-    // @ts-expect-error FIXME
-    static getItemPriceFromTotal(total) {
+    static getItemPriceFromTotal(total: number): Promise<number> {
         return Messenger.get(MessageHandler.SteamFacade, "getItemPriceFromTotal", [total]);
     }
 

@@ -36,10 +36,10 @@
         e.preventDefault();
 
         selling = true;
-
-        const publisherFee = marketInfo.publisherFee;
-        const feeInfo = await SteamFacade.calculateFeeAmount(price, publisherFee);
-        const sellPrice = feeInfo.amount - feeInfo.fees;
+        const sellPrice = await SteamFacade.getItemPriceFromTotal(price);
+        if (!Number.isFinite(sellPrice) || sellPrice === 0) {
+            throw new Error("Invalid sell price");
+        }
 
         let response: Response|null = null;
         try {
@@ -89,13 +89,6 @@
             prices = new MarketPrices(marketInfo);
             marketPrices.set(key, prices);
         }
-
-        const publisherFee = marketInfo.publisherFee;
-        prices.promise.then(async p => {
-            const a = await SteamFacade.calculateFeeAmount(p!.high, publisherFee);
-            const b = await SteamFacade.getItemPriceFromTotal(p!.high);
-            console.log(a, b, a.amount - a.fees);
-        });
         return prices;
     }
 
