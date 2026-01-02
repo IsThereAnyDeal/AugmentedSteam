@@ -7,6 +7,7 @@ import FITADPrices from "../Common/FITADPrices";
 import FRegionalPricing from "../Common/FRegionalPricing";
 import FSavingsCheck from "./FSavingsCheck";
 import type {ContextParams} from "@Content/Modules/Context/Context";
+import FSubHighlights from "@Content/Features/Store/Sub/FSubHighlights";
 
 export default class CSub extends CStoreBase {
 
@@ -21,6 +22,7 @@ export default class CSub extends CStoreBase {
             FITADPrices,
             FRegionalPricing,
             FSavingsCheck,
+            FSubHighlights
         ]);
 
         this.subid = SubId.fromUrl(window.location.host + window.location.pathname)!;
