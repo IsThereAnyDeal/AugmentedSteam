@@ -59,9 +59,13 @@ export default class FRegionalPricing extends Feature<CSub> {
             // For paid titles that have F2P versions with their own subid (see #894)
             if (prices[localCountry] === undefined) { continue; }
 
-            const node = document.querySelector(`input[name=subid][value="${subid}"]`)!
-                .closest(".game_area_purchase_game_wrapper, #game_area_purchase")!
-                .querySelector(".game_purchase_action")!;
+            const node = document.querySelector(`input[name=subid][value="${subid}"]`)
+                ?.closest(".game_area_purchase_game_wrapper, .game_area_purchase, #game_area_purchase")
+                ?.querySelector(".game_purchase_action")!;
+
+            if (!node) {
+                continue;
+            }
 
             const purchaseArea = node.closest(".game_area_purchase_game")!;
             purchaseArea.classList.add("es_regional_prices");
