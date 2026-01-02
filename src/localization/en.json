@@ -514,6 +514,11 @@
         "footer_author": "original author jshackles",
         "headers": {
             "itad_price_info": "Price Information from IsThereAnyDeal"
+        },
+        "ai": {
+            "title": "AI/LLM",
+            "killswitch": "AI/LLM features",
+            "killswitch_info": "Toggles all AI/LLM features"
         }
     },
     "ready": {

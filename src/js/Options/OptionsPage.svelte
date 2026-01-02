@@ -15,6 +15,7 @@
     import PriceOptions from "./Modules/Options/PriceOptions.svelte";
     import ITADOptions from "./Modules/Options/ITADOptions.svelte";
     import AppPageOptions from "./Modules/Options/AppPageOptions.svelte";
+    import LLMOptions from "@Options/Modules/Options/LLMOptions.svelte";
 
     let initialLoad: Promise<void>|null = null;
 
@@ -60,6 +61,8 @@
                     <PriceOptions />
                 {:else if section === "community"}
                     <CommunityOptions />
+                {:else if section === "llm"}
+                    <LLMOptions />
                 {:else if section === "changelog"}
                     <Changelog />
                 {:else if section === "about"}

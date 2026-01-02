@@ -1,11 +1,9 @@
-<svelte:options immutable={false} />
-
 <script lang="ts">
     import {L} from "@Core/Localization/Localization";
     import {
         __about,
         __community,
-        __news,
+        __news, __options_ai_title,
         __options_apppage,
         __options_general,
         __price,
@@ -19,7 +17,8 @@
             ["store", L(__store)],
             ["app", L(__options_apppage)],
             ["price", L(__price)],
-            ["community", L(__community)]
+            ["community", L(__community)],
+            ["llm", L(__options_ai_title)]
         ],
         [
             ["about", L(__about)],

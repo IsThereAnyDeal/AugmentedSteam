@@ -88,7 +88,6 @@ export const DefaultSettings: Readonly<SettingsSchema> = {
     show_package_info: false,
     show_players_info: true,
     show_steampeek: true,
-    show_vaporlens_summary: true,
     show_early_access: true,
     show_alternative_linux_icon: false,
     show_itad_button: false,
@@ -169,6 +168,9 @@ export const DefaultSettings: Readonly<SettingsSchema> = {
     add_to_waitlist: false,
     collection_banner_notowned: false,
     itad_sync_notes: false,
+
+    ai_enabled: true,
+    show_vaporlens_summary: true,
 
     context_steam_store: false,
     context_steam_lucky: false,

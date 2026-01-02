@@ -78,7 +78,6 @@
 
     <OptionGroup>
         <Toggle bind:value={$settings.show_steampeek}>{L(__options_showSteampeek)}</Toggle>
-        <Toggle bind:value={$settings.show_vaporlens_summary}>{L(__options_showVaporlensSummary)}</Toggle>
     </OptionGroup>
 
     <OptionGroup>

@@ -84,7 +84,6 @@ export interface SettingsSchema {
     show_package_info: boolean,
     show_players_info: boolean,
     show_steampeek: boolean,
-    show_vaporlens_summary: boolean,
     show_early_access: boolean,
     show_alternative_linux_icon: boolean,
     show_itad_button: boolean,
@@ -174,6 +173,9 @@ export interface SettingsSchema {
     add_to_waitlist: boolean,
     collection_banner_notowned: boolean,
     itad_sync_notes: boolean,
+
+    ai_enabled: boolean,
+    show_vaporlens_summary: boolean,
 
     context_steam_store: boolean,
     context_steam_lucky: boolean,
