@@ -151,9 +151,9 @@
             const highAmount = getPrice(high);
 
             return {
-                low: lowAmount,
+                low: Math.floor(lowAmount),
                 lowFormatted: v_currencyformat(lowAmount, currencyCode),
-                high: highAmount,
+                high: Math.floor(highAmount),
                 highFormatted: v_currencyformat(highAmount, currencyCode)
             }
         }
