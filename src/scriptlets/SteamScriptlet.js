@@ -144,16 +144,16 @@
             function getPrice(amount) {
                 const itemPrice = GetItemPriceFromTotal(amount, rgWallet);
                 const validPrice = ToValidMarketPrice(itemPrice, rgWallet);
-                return GetTotalWithFees(validPrice, rgWallet.wallet_fee_percent, publisherFee, rgWallet);
+                return Math.floor(GetTotalWithFees(validPrice, rgWallet.wallet_fee_percent, publisherFee, rgWallet));
             }
 
             const lowAmount = low <= 0 ? 0 : getPrice(low);
             const highAmount = getPrice(high);
 
             return {
-                low: Math.floor(lowAmount),
+                low: lowAmount,
                 lowFormatted: v_currencyformat(lowAmount, currencyCode),
-                high: Math.floor(highAmount),
+                high: highAmount,
                 highFormatted: v_currencyformat(highAmount, currencyCode)
             }
         }
