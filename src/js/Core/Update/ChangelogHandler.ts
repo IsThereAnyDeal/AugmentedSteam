@@ -14,9 +14,10 @@ export default class ChangelogHandler {
                 target: document.body,
                 props: {lastVersion}
             });
-            changelog.$on("close", () => changelog.$destroy());
+            changelog.$on("close", () => {
+                Settings.version = Info.version;
+                changelog.$destroy()
+            });
         }
-
-        Settings.version = Info.version;
     }
 }
