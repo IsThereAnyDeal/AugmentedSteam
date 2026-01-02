@@ -8,6 +8,10 @@
     import ExpandCollapseButton from "@Content/Steam/ExpandCollapseButton.svelte";
     import {__vaporlens_hide, __vaporlens_show, __vaporlens_title, __vaporlens_view} from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
+    import ExtensionResources from "@Core/ExtensionResources";
+    import SettingsIcon from "@Content/Icons/SettingsIcon.svelte";
+
+    const optionsUrl = ExtensionResources.getURL("html/options.html") + "#llm";
 
     export let appid: number;
     export let data: TVaporLensResponse;
@@ -36,7 +40,13 @@
 
 <div class="vaporlens">
     <div class="header">
-        <div class="eyebrow">{L(__vaporlens_title)}</div>
+        <div class="eyebrow">
+            {L(__vaporlens_title)}
+
+            <a href={optionsUrl} target="_blank" rel="noopener">
+                <SettingsIcon />
+            </a>
+        </div>
 
         <ViewOnButton href="https://vaporlens.app/app/{appid}">
             {L(__vaporlens_view)}
@@ -95,10 +105,9 @@
         margin: 30px 0;
         padding: 16px 20px;
         background: linear-gradient(135deg, rgba(24, 40, 55, 0.94), rgba(15, 26, 39, 0.94));
-        border-radius: 6px;
-        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 5px;
         color: #c6daef;
-        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.25)
     }
 
     .header {
@@ -115,6 +124,10 @@
         letter-spacing: 0.12em;
         color: #a8cfee;
         flex-grow: 1;
+
+        & a {
+            font-size: 14px;
+        }
     }
 
     .body {
