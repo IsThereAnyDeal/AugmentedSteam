@@ -19,7 +19,7 @@ export interface MarketInfo {
     walletCurrency: number,
     marketable: boolean,
     hashName: string,
-    publisherFee: number,
+    publisherFee: string,
     lowestListingPrice: number,
     restriction: boolean,
     appid: number,

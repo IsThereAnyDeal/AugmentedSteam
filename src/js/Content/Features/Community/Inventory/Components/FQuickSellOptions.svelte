@@ -36,10 +36,10 @@
         e.preventDefault();
 
         selling = true;
-
-        const publisherFee = marketInfo.publisherFee;
-        const feeInfo = await SteamFacade.calculateFeeAmount(price, publisherFee);
-        const sellPrice = feeInfo.amount - feeInfo.fees;
+        const sellPrice = await SteamFacade.getItemPriceFromTotal(price);
+        if (!Number.isFinite(sellPrice) || sellPrice === 0) {
+            throw new Error("Invalid sell price");
+        }
 
         let response: Response|null = null;
         try {

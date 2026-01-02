@@ -125,15 +125,17 @@ export default class SteamFacade {
 
     // market
 
-    static calculateFeeAmount(amount: number, publisherFee: number): Promise<{
-        amount: number,
-        fees: number
-    }> {
-        return Messenger.get(MessageHandler.SteamFacade, "calculateFeeAmount", [amount, publisherFee]);
+    static getItemPriceFromTotal(total: number): Promise<number> {
+        return Messenger.get(MessageHandler.SteamFacade, "getItemPriceFromTotal", [total]);
     }
 
-    static vCurrencyFormat(amount: number, currencyCode: string): Promise<string> {
-        return Messenger.get(MessageHandler.SteamFacade, "vCurrencyFormat", [amount, currencyCode])
+    static getMarketPrices(low: number, high: number, currencyCode: string, publisherFee: string): Promise<{
+        low: number,
+        high: number,
+        lowFormatted: string
+        highFormatted: string
+    }> {
+        return Messenger.get(MessageHandler.SteamFacade, "getMarketPrices", [low, high, currencyCode, publisherFee])
     }
 
     // profile home

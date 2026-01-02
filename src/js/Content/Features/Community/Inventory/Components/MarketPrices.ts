@@ -58,17 +58,13 @@ export default class MarketPrices {
             priceHigh = Number(priceHigh.toFixed(2)) * 100;
         }
 
-        const currencyType = CurrencyManager.currencyIdToCode(walletCurrency);
-
-        let priceLowFormatted = await SteamFacade.vCurrencyFormat(priceLow, currencyType);
-        let priceHighFormatted = await SteamFacade.vCurrencyFormat(priceHigh, currencyType);
-
-        return {
-            low: priceLow,
-            high: priceHigh,
-            lowFormatted: priceLowFormatted,
-            highFormatted: priceHighFormatted,
-        }
+        const currencyCode = CurrencyManager.currencyIdToCode(walletCurrency);
+        return await SteamFacade.getMarketPrices(
+            priceLow,
+            priceHigh,
+            currencyCode,
+            this.info.publisherFee
+        );
     }
 
     get promise(): Promise<IPriceResponse|null> {

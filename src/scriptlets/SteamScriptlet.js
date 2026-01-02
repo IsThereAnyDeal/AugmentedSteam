@@ -132,9 +132,30 @@
         }
 
         // market
+        // https://community.fastly.steamstatic.com/public/javascript/economy_common.js
 
-        static calculateFeeAmount(amount, publisherFee) {
-            return CalculateFeeAmount(amount, publisherFee);
+        static getItemPriceFromTotal(total) {
+            return GetItemPriceFromTotal(total, window.g_rgWalletInfo);
+        }
+
+        static getMarketPrices(low, high, currencyCode, publisherFee) {
+            const rgWallet = window.g_rgWalletInfo;
+
+            function getPrice(amount) {
+                const itemPrice = GetItemPriceFromTotal(amount, rgWallet);
+                const validPrice = ToValidMarketPrice(itemPrice, rgWallet);
+                return GetTotalWithFees(validPrice, rgWallet.wallet_fee_percent, publisherFee, rgWallet);
+            }
+
+            const lowAmount = low <= 0 ? 0 : getPrice(low);
+            const highAmount = getPrice(high);
+
+            return {
+                low: lowAmount,
+                lowFormatted: v_currencyformat(lowAmount, currencyCode),
+                high: highAmount,
+                highFormatted: v_currencyformat(highAmount, currencyCode)
+            }
         }
 
         static vCurrencyFormat(amount, currencyCode) {
