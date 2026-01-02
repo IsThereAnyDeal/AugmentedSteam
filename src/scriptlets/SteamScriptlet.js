@@ -137,6 +137,10 @@
             return CalculateFeeAmount(amount, publisherFee);
         }
 
+        static getItemPriceFromTotal(total) {
+            return GetItemPriceFromTotal(total, window.g_rgWalletInfo);
+        }
+
         static vCurrencyFormat(amount, currencyCode) {
             return v_currencyformat(amount, currencyCode);
         }

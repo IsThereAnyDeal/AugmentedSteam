@@ -132,6 +132,10 @@ export default class SteamFacade {
         return Messenger.get(MessageHandler.SteamFacade, "calculateFeeAmount", [amount, publisherFee]);
     }
 
+    static getItemPriceFromTotal(total) {
+        return Messenger.get(MessageHandler.SteamFacade, "getItemPriceFromTotal", [total]);
+    }
+
     static vCurrencyFormat(amount: number, currencyCode: string): Promise<string> {
         return Messenger.get(MessageHandler.SteamFacade, "vCurrencyFormat", [amount, currencyCode])
     }

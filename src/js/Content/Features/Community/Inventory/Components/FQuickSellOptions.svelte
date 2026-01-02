@@ -89,6 +89,13 @@
             prices = new MarketPrices(marketInfo);
             marketPrices.set(key, prices);
         }
+
+        const publisherFee = marketInfo.publisherFee;
+        prices.promise.then(async p => {
+            const a = await SteamFacade.calculateFeeAmount(p.high, publisherFee);
+            const b = await SteamFacade.getItemPriceFromTotal(p.high);
+            console.log(a, b, a.amount - a.fees);
+        });
         return prices;
     }
 
