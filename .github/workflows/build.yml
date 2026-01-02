@@ -1,7 +1,7 @@
 name: Build Augmented Steam
 on:
   push:
-    branches: [*]
+    branches: ["*"]
   pull_request:
     types: [opened, edited]
 jobs:
