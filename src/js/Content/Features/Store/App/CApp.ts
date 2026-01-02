@@ -44,6 +44,7 @@ import type {ContextParams} from "@Content/Modules/Context/Context";
 import FPreventVideoPause from "@Content/Features/Store/App/FPreventVideoPause";
 import FAppTitle from "@Content/Features/Store/App/FAppTitle";
 import FHorizontalScrolling from "@Content/Features/Store/App/FHorizontalScrolling";
+import FReleaseCountdown from "@Content/Features/Store/App/FReleaseCountdown";
 
 export default class CApp extends CStoreBase {
 
@@ -111,7 +112,8 @@ export default class CApp extends CStoreBase {
                 FHighlightTitle,
                 FAppTitle,
                 FHorizontalScrolling,
-                FVaporLensInsights
+                FVaporLensInsights,
+                FReleaseCountdown
             ]);
 
         this.appid = AppId.fromUrl(window.location.host + window.location.pathname)!;
