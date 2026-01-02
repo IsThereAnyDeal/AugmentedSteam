@@ -9,6 +9,10 @@ export type WishlistData = Array<{
     price: number|null,
     basePrice: number|null,
     discount: number|null,
+    reviews: {
+        count: number|null,
+        percPositive: number|null
+    }
 }>;
 
 export enum ExportMethod {
@@ -30,7 +34,7 @@ export class WishlistExporter {
 
     async toJson(): Promise<string> {
         const json: {version: string, data: any[]} = {
-            version: "04",
+            version: "05",
             data: []
         };
 
@@ -52,6 +56,7 @@ export class WishlistExporter {
                     ? (new Price(item.price/100)).toString()
                     : null,
                 discount: item.discount ?? 0,
+                reviews: item.reviews ?? null
             });
         }
 
@@ -62,7 +67,6 @@ export class WishlistExporter {
         const notes = await this.notes;
 
         const result = [];
-        const parser = new DOMParser();
         for (const item of Object.values(this.wishlist)) {
             const price = item.price
                 ? (new Price(item.price/100)).toString()
@@ -90,6 +94,8 @@ export class WishlistExporter {
                     .replace("%discount%", discount)
                     .replace("%base_price%", basePrice)
                     .replace("%note%", notes.get(item.appid) ?? "")
+                    .replace("%reviews_count%", String(item.reviews.count ?? ""))
+                    .replace("%reviews_perc_positive%", String(item.reviews.percPositive ?? ""))
             );
         }
 

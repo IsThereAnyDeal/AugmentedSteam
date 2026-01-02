@@ -87,7 +87,8 @@
                 },
                 dataRequest: {
                     includeBasicInfo: true,
-                    includeRelease: true
+                    includeRelease: true,
+                    includeReviews: true
                 },
                 ids: chunk
             });
@@ -107,6 +108,10 @@
                         ?? null
                     ),
                     discount: item.bestPurchaseOption?.discountPct ?? null,
+                    reviews: {
+                        count: item.reviews?.summaryFiltered?.reviewCount ?? null,
+                        percPositive: item.reviews?.summaryFiltered?.percentPositive ?? null
+                    }
                 });
             }
         }
@@ -176,9 +181,13 @@
                 <div>
                     <input type="text" bind:value={format} bind:this={input} on:change>
                     <div class="as_wexport_symbols">
-                        {#each ["%title%", "%id%", "%appid%", "%url%", "%added_date%", "%release_date%", "%price%", "%discount%", "%base_price%", "%note%"] as str, index}
+                        {#each [
+                            "title", "id", "appid", "url", "added_date",
+                            "release_date", "price", "discount", "base_price", "note",
+                            "reviews_count", "reviews_perc_positive"
+                        ] as str, index}
                             {#if index > 0}, {/if}
-                            <button type="button" on:click={() => add(str)}>{str}</button>
+                            <button type="button" on:click={() => add(`%${str}%`)}><span>%</span>{str}<span>%</span></button>
                         {/each}
                     </div>
                 </div>
@@ -250,5 +259,10 @@
     button:hover {
         text-decoration: underline;
         color: white;
+    }
+
+    button span {
+        color: #6e6e6e;
+        font-size: 0.75em;
     }
 </style>
