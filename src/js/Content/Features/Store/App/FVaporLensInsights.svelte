@@ -28,7 +28,7 @@
 
     onMount(() => {
         (async () => {
-            expand = await LocalStorage.get("expand_vaporlens") ?? true;
+            expand = await LocalStorage.get("expand_vaporlens") ?? false;
         })();
     });
 </script>

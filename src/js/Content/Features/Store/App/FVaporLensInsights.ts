@@ -1,8 +1,8 @@
+import self_ from "./FVaporLensInsights.svelte";
 import type CApp from "@Content/Features/Store/App/CApp";
 import Feature from "@Content/Modules/Context/Feature";
 import VaporLensApiFacade from "@Content/Modules/Facades/VaporLensApiFacade";
 import Settings from "@Options/Data/Settings";
-import self_ from "./FVaporLensInsights.svelte";
 import type {TVaporLensResponse,} from "@Background/Modules/VaporLens/_types";
 
 export default class FVaporLensInsights extends Feature<CApp> {
@@ -10,7 +10,7 @@ export default class FVaporLensInsights extends Feature<CApp> {
     private data: TVaporLensResponse | null = null;
 
     override async checkPrerequisites(): Promise<boolean> {
-        if (!Settings.show_vaporlens_summary) {
+        if (!Settings.ai_enabled || !Settings.show_vaporlens_summary) {
             return false;
         }
 
