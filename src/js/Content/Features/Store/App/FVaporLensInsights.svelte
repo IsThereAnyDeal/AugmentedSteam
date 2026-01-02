@@ -95,6 +95,11 @@
                     <VaporlensDetails label="Misc" entries={data.misc ?? []} />
                 </div>
             {/if}
+
+            <div class="note">
+                This summary has been created by a 3rd party with a use of LLM. Fetched data are pre-generated.
+                LLM was not used during data request. <a href={optionsUrl} target="_blank" rel="noopener">Learn more/toggle</a>
+            </div>
         </div>
     {/if}
 </div>
@@ -209,6 +214,13 @@
         }
     }
 
+    .note {
+        margin-top: 15px;
+        color: #8091a2;
+        text-transform: uppercase;
+        font-size: 10.5px;
+        text-align: center;
+    }
 
     @media (max-width: 700px) {
         .header {
