@@ -147,7 +147,7 @@
                 return GetTotalWithFees(validPrice, rgWallet.wallet_fee_percent, publisherFee, rgWallet);
             }
 
-            const lowAmount = getPrice(low);
+            const lowAmount = low <= 0 ? 0 : getPrice(low);
             const highAmount = getPrice(high);
 
             return {
