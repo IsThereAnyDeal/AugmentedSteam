@@ -3,6 +3,7 @@ import HighlightsTagsUtils2, {EHighlightStyle, type ItemSetup} from "@Content/Mo
 import AppId from "@Core/GameId/AppId";
 import type CBundle from "@Content/Features/Store/Bundle/CBundle";
 import GameId from "@Core/GameId/GameId";
+import SubId from "@Core/GameId/SubId";
 
 export default class FBundleHighlights extends Feature<CBundle> {
 
@@ -19,25 +20,37 @@ export default class FBundleHighlights extends Feature<CBundle> {
     }
 
     override async apply(): Promise<void> {
-        const nodes = document.querySelectorAll<HTMLDivElement>(".tab_item[data-ds-appid]");
+        const nodes = document.querySelectorAll<HTMLDivElement>(".tab_item[data-ds-appid],.tab_item[data-ds-packageid]");
         if (nodes.length === 0) {
             return;
         }
 
         const nodeMap: Map<string, [GameId, HTMLDivElement]> = new Map();
-        let appids: GameId[] = [];
+        let gameids: GameId[] = [];
         for(const node of nodes) {
-            const appid = new AppId(Number(node.dataset.dsAppid))
-            appids.push(appid);
-            nodeMap.set(appid.string, [appid, node]);
+            const dsAppid = Number(node.dataset.dsAppid);
+            if (Number.isFinite(dsAppid)) {
+                const appid = new AppId(Number(node.dataset.dsAppid))
+                gameids.push(appid);
+                nodeMap.set(appid.string, [appid, node]);
+                continue;
+            }
+
+            const dsPackageid = Number(node.dataset.dsPackageid);
+            if (Number.isFinite(dsPackageid)) {
+                const subid = new SubId(Number(node.dataset.dsPackageid))
+                gameids.push(subid);
+                nodeMap.set(subid.string, [subid, node]);
+                continue;
+            }
         }
 
         this.highlighter.insertStyles();
 
-        const map: Map<string, ItemSetup> = await this.highlighter.query(appids);
+        const map: Map<string, ItemSetup> = await this.highlighter.query(gameids);
 
-        for (const [appid, node] of nodeMap.values()) {
-            const setup = map.get(appid.string);
+        for (const [gameid, node] of nodeMap.values()) {
+            const setup = map.get(gameid.string);
 
             if (setup?.h) {
                 this.highlighter.highlight(setup.h, EHighlightStyle.BgGradient, node);
