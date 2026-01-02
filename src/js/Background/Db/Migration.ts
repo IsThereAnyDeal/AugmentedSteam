@@ -1,8 +1,8 @@
 import type {IDBPDatabase, IDBPTransaction, StoreNames} from "idb";
 import type {ADB5} from "@Background/Db/Schemas/ADB5";
-import type ADB7 from "@Background/Db/Schemas/ADB7";
+import type ADB8 from "@Background/Db/Schemas/ADB8";
 
-type Schema = ADB7;
+type Schema = ADB8;
 
 async function upgrade(
     db: IDBPDatabase,
@@ -92,6 +92,11 @@ async function upgrade(
     if (oldVersion < 7) {
         db.deleteObjectStore("coupons");
         db.deleteObjectStore("giftsAndPasses");
+    }
+
+    if (oldVersion < 8) {
+        db.deleteObjectStore("purchases");
+        db.createObjectStore("purchases2");
     }
 
     console.log(`DB migrated, ${oldVersion} -> ${newVersion}`);

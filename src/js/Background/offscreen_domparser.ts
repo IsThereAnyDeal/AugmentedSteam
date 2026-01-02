@@ -39,8 +39,8 @@ browser.runtime.onMessage.addListener((
             sendResponse(parser.parseReviews(html));
             return;
 
-        case "purchaseDates":
-            sendResponse(parser.parsePurchaseDates(html));
+        case "purchaseDatesHelp":
+            sendResponse(parser.parsePurchaseDatesHelp(html));
             return;
     }
 

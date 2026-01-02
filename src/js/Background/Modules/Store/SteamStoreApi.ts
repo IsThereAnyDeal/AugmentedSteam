@@ -177,26 +177,20 @@ export default class SteamStoreApi extends Api implements MessageHandlerInterfac
         return HTMLParser.getStringVariable("g_sessionID", html);
     }
 
-    private async fetchPurchaseDates(lang: string): Promise<Array<[string, string]>> {
-        const url = this.getUrl("/account/licenses/", {"l": lang});
+    private async fetchPurchaseDateFromHelp(appid: number): Promise<number|null> {
+        const url = new URL(`https://help.steampowered.com/en/wizard/HelpWithGameTechnicalIssue?appid=${appid}`);
         const html = await this.fetchPage(url);
         const parser = DomParserFactory.getParser();
-
-        return parser.parsePurchaseDates(html);
+        return parser.parsePurchaseDatesHelp(html);
     }
 
-    private async getPurchaseDate(appName: string, lang: string): Promise<string|null> {
-        if (await IndexedDB.isStoreExpired("purchases")) {
-            const purchaseDates = await this.fetchPurchaseDates(lang);
-            await IndexedDB.putMany("purchases", purchaseDates);
-            await IndexedDB.setStoreExpiry("purchases", 86400);
+    private async getPurchaseDate(appid: number): Promise<number> {
+        let purchaseTimestamp: number|null = await IndexedDB.get("purchases2", appid) ?? null;
+        if (purchaseTimestamp === null) {
+            purchaseTimestamp = await this.fetchPurchaseDateFromHelp(appid) ?? 0;
+            await IndexedDB.put("purchases2", purchaseTimestamp, appid);
         }
-
-        return await IndexedDB.get("purchases", appName) ?? null;
-    }
-
-    private clearPurchases(): Promise<void> {
-        return IndexedDB.clear("purchases");
+        return purchaseTimestamp;
     }
 
     private async refreshDynamicStore(): Promise<void> {
@@ -343,10 +337,7 @@ export default class SteamStoreApi extends Api implements MessageHandlerInterfac
                 return this.fetchSessionId();
 
             case EAction.Purchases:
-                return this.getPurchaseDate(message.params.appName, message.params.lang);
-
-            case EAction.Purchases_Clear:
-                return this.clearPurchases();
+                return this.getPurchaseDate(message.params.appid);
 
             case EAction.DynamicStore_Clear:
                 return this.clearDynamicStore();

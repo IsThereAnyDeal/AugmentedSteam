@@ -25,7 +25,6 @@ export default class Localization {
             current = new Language(stored);
         } else if (current.name !== stored) {
             Settings.language = current.name;
-            SteamStoreApiFacade.clearPurchases(); // TODO this is a nasty side effect, get rid of it
         }
 
         const lang = current.code ?? "en";

@@ -1,7 +1,6 @@
 import {DateTime, type DateTimeOptions} from "luxon";
 import {__dateUnlocked, __theworddefault} from "@Strings/_strings";
 import {L} from "@Core/Localization/Localization";
-import Language from "@Core/Localization/Language";
 import HTML from "@Core/Html/Html";
 import Feature from "@Content/Modules/Context/Feature";
 import type CProfileStats from "@Content/Features/Community/ProfileStats/CProfileStats";

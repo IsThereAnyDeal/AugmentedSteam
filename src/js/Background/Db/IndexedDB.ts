@@ -11,9 +11,9 @@ import {
 import Migration from "@Background/Db/Migration";
 import LocalStorage from "@Core/Storage/LocalStorage";
 import TimeUtils from "@Core/Utils/TimeUtils";
-import type ADB7 from "@Background/Db/Schemas/ADB7";
+import type ADB8 from "@Background/Db/Schemas/ADB8";
 
-type Schema = ADB7;
+type Schema = ADB8;
 
 export default class IndexedDB {
 

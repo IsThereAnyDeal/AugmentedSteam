@@ -5,6 +5,5 @@ export default interface DomParserInterface {
     parseCurrencyFromApp(html: string): string|null|Promise<string|null>;
     parseWorkshopFileSize(html: string): number|Promise<number>;
     parseReviews(html: string): TReview[]|Promise<TReview[]>;
-
-    parsePurchaseDates(html: string): Array<[string, string]>|Promise<Array<[string, string]>>;
+    parsePurchaseDatesHelp(html: string): number|null|Promise<number|null>;
 }

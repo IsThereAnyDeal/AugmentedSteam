@@ -1,6 +1,6 @@
 import type DomParserInterface from "@Background/Modules/Dom/DomParserInterface";
 import type {TReview} from "@Background/Modules/Community/_types";
-import StringUtils from "@Core/Utils/StringUtils";
+import {DateTime} from "luxon";
 
 export default class NativeDomParser implements DomParserInterface {
 
@@ -105,46 +105,26 @@ export default class NativeDomParser implements DomParserInterface {
         return reviews;
     }
 
-    parsePurchaseDates(html: string): Array<[string, string]> {
-        const replaceRegex = [
-            /- Complete Pack/ig,
-            /Standard Edition/ig,
-            /Steam Store and Retail Key/ig,
-            /- Hardware Survey/ig,
-            /ComputerGamesRO -/ig,
-            /Founder Edition/ig,
-            /Retail( Key)?/ig,
-            /Complete$/ig,
-            /Launch$/ig,
-            /Free$/ig,
-            /(RoW)/ig,
-            /ROW/ig,
-            /:/ig,
-        ];
-
-        const purchaseDates: Array<[string, string]> = [];
-
+    parsePurchaseDatesHelp(html: string): number|null {
         const dummyPage = this.dom(html);
-        const nodes = dummyPage.querySelectorAll<HTMLTableCellElement>("#main_content td.license_date_col");
 
-        for (const node of nodes) {
-            const name = node.nextElementSibling;
-            if (!name) {
-                continue;
-            }
-
-            // "Remove" link if present
-            name.querySelector("div")?.remove();
-
-            let appName = StringUtils.clearSpecialSymbols(name.textContent!.trim());
-            for (const regex of replaceRegex) {
-                appName = appName.replace(regex, "");
-            }
-            appName = appName.trim();
-            purchaseDates.push([appName, node.textContent!]);
+        const node: HTMLElement|null = dummyPage.querySelector<HTMLElement>(".account_details div:has(.help_lowlight_text):last-of-type");
+        if (!node) {
+            return null;
         }
 
-        return purchaseDates;
+        const label: HTMLElement|null = node.querySelector<HTMLElement>(".help_highlight_text");
+        const value: HTMLElement|null = node.querySelector<HTMLElement>(".help_lowlight_text");
+
+        if (label?.textContent && value?.textContent) {
+            if (/purchased|activated/i.test(label.textContent)) {
+                const date = DateTime.fromFormat(value.textContent, "LLL d, yyyy");
+                if (date.isValid) {
+                    return date.toUnixInteger();
+                }
+            }
+        }
+        return null;
     }
 }
 

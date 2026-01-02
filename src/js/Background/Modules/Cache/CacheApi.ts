@@ -17,7 +17,7 @@ export default class CacheApi implements MessageHandlerInterface{
         await IndexedDB.clear(
             "items",
             "earlyAccessAppids",
-            "purchases",
+            "purchases2",
             "dynamicStore",
             "packages",
             "profiles",

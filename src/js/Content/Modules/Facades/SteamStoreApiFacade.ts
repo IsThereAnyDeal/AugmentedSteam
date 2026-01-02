@@ -16,16 +16,12 @@ export default class SteamStoreApiFacade {
         return Background.send(EAction.AppDetails, {appid, filter});
     }
 
-    static getPurchaseDate(appName: string, lang: string): Promise<string|null> {
-        return Background.send(EAction.Purchases, {appName, lang});
+    static getPurchaseDate(appid: number): Promise<number> {
+        return Background.send(EAction.Purchases, {appid});
     }
 
     static getCurrency(): Promise<string> {
         return Background.send(EAction.Currency);
-    }
-
-    static clearPurchases(): Promise<void> {
-        return Background.send(EAction.Purchases_Clear);
     }
 
     static clearDynamicStore(): Promise<void> {
