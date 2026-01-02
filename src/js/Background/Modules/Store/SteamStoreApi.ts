@@ -188,7 +188,9 @@ export default class SteamStoreApi extends Api implements MessageHandlerInterfac
         let purchaseTimestamp: number|null = await IndexedDB.get("purchases2", appid) ?? null;
         if (purchaseTimestamp === null) {
             purchaseTimestamp = await this.fetchPurchaseDateFromHelp(appid) ?? 0;
-            await IndexedDB.put("purchases2", purchaseTimestamp, appid);
+            if (purchaseTimestamp !== 0) {
+                await IndexedDB.put("purchases2", purchaseTimestamp, appid);
+            }
         }
         return purchaseTimestamp;
     }

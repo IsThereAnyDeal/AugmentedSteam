@@ -1,5 +1,5 @@
 import {L} from "@Core/Localization/Localization";
-import {__purchaseDate} from "@Strings/_strings";
+import {__purchaseDate, __seePurchaseDate} from "@Strings/_strings";
 import type CApp from "@Content/Features/Store/App/CApp";
 import Feature from "@Content/Modules/Context/Feature";
 import Settings from "@Options/Data/Settings";
@@ -18,13 +18,17 @@ export default class FPurchaseDate extends Feature<CApp> {
 
     async apply() {
         const date = await SteamStoreApiFacade.getPurchaseDate(this.context.appid);
-        if (!date) {
-            console.warn("Failed to retrieve purchase date");
-            return;
-        }
 
-        this._node!.textContent += ` ${L(__purchaseDate, {
-            date: (new Date(date*1000)).toLocaleDateString()
-        })}`;
+        if (date === 0) {
+            const a = document.createElement("a");
+            a.href = `https://help.steampowered.com/wizard/HelpWithGameTechnicalIssue?appid=${this.context.appid}`;
+            a.innerText = ` (${L(__seePurchaseDate)})`
+
+            this._node?.appendChild(a);
+        } else {
+            this._node!.textContent += ` ${L(__purchaseDate, {
+                date: (new Date(date*1000)).toLocaleDateString()
+            })}`;
+        }
     }
 }

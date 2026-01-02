@@ -202,6 +202,7 @@ export const __usingLanguage = "usingLanguage";
 export const __loginWarning = "loginWarning";
 export const __visitTradeForum = "visitTradeForum";
 export const __purchaseDate = "purchaseDate";
+export const __seePurchaseDate = "seePurchaseDate";
 export const __customBackgroundHelp = "customBackgroundHelp";
 export const __dateUnlocked = "dateUnlocked";
 export const __netSpent = "netSpent";

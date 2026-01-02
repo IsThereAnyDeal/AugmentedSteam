@@ -219,6 +219,7 @@
     "login_warning": "Make sure that you are logged into __link__ in order to be able to use all features of Augmented Steam.",
     "visit_trade_forum": "Visit Trade Forum",
     "purchase_date": "(Purchased __date__)",
+    "see_purchase_date": "See purchased date",
     "custom_background_help": "All users of Augmented Steam will see this background on your profile. Non-Augmented Steam users will see your regular profile background.",
     "date_unlocked": "Date Unlocked",
     "net_spent": "Net spent:",
