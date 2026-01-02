@@ -33,7 +33,7 @@
     }
 
     function textareaListener(e: KeyboardEvent) {
-        if (e.code !== "Enter") {
+        if (e.code !== "Enter" && e.code !== "NumpadEnter") {
             return;
         }
 
