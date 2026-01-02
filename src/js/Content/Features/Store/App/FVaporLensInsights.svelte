@@ -6,7 +6,13 @@
     import {onMount} from "svelte";
     import ViewOnButton from "@Content/Steam/ViewOnButton.svelte";
     import ExpandCollapseButton from "@Content/Steam/ExpandCollapseButton.svelte";
-    import {__vaporlens_hide, __vaporlens_show, __vaporlens_title, __vaporlens_view} from "@Strings/_strings";
+    import {
+        __vaporlens_hide, __vaporlens_learnMore,
+        __vaporlens_llmNote,
+        __vaporlens_show,
+        __vaporlens_title,
+        __vaporlens_view
+    } from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
     import ExtensionResources from "@Core/ExtensionResources";
     import SettingsIcon from "@Content/Icons/SettingsIcon.svelte";
@@ -97,8 +103,8 @@
             {/if}
 
             <div class="note">
-                This summary has been created by a 3rd party with a use of LLM. Fetched data are pre-generated.
-                LLM was not used during data request. <a href={optionsUrl} target="_blank" rel="noopener">Learn more/toggle</a>
+                {L(__vaporlens_llmNote)}
+                <a href={optionsUrl} target="_blank" rel="noopener">{L(__vaporlens_learnMore)}</a>
             </div>
         </div>
     {/if}

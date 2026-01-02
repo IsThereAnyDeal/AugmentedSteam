@@ -826,3 +826,5 @@ export const __vaporlens_title = "vaporlens_title";
 export const __vaporlens_view = "vaporlens_view";
 export const __vaporlens_show = "vaporlens_show";
 export const __vaporlens_hide = "vaporlens_hide";
+export const __vaporlens_llmNote = "vaporlens_llmNote";
+export const __vaporlens_learnMore = "vaporlens_learnMore";
