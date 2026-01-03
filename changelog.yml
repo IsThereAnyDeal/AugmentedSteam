@@ -1,3 +1,30 @@
+4.6.0: |
+  Thank you to everyone who have participated in the VaporLens discussion I brought up in the last release.
+  
+  The VaporLens will stay, but I have made some changes:
+  - VaporLens will stay enabled by default, but in a collapsed state
+  - a quick link to settings have been added to the VaporLens box
+  - in settings, a new AI/LLM category was created so it can be more easily found
+  - an AI/LLM kill switch toggle has been added. I don't plan to add any more features that use LLM in any way,
+    but this way everyone can have a peace of mind that if something is added (which it won't), you won't see it
+    because of the kill switch setting
+  - explanation of how VaporLens works and what it does has been added to the settings
+  - a note about LLM usage has been added to VaporLens box, with another link to settings
+  
+  Other than that:
+  - changelog will now keep showing up until you explicitly close it (unless you turn off changelogs in settings);
+    hopefully you won't miss new features or changes anymore. In the future I'll try to explore whether it's possible to
+    show settings directly in changelog, but I am making no promises about that at this point
+  - fixed quick sell and instant sell prices in some currencies after latest Steam change (very big thanks to przemo20 and Wojox for helping with this)
+  - fixed highlighting in bundle pages (again); also on package pages
+  - fixed notes not being saved with numpad enter
+  - improved "Show purchase date" option; it should be more robust now and work for more games. In cases where we can't fetch it, you will see
+    link to the help page which shows purchase/acquire date
+  - fixed publisher and developer search not working in some cases, falls back to regular search now (thanks Dheemanth07)
+  - added exact release date for upcoming titles that have the date listed  
+  - added option to restore price cut (and full price) on app pages, where Steam only shows a discount icon and price history table for last 30 days
+  
+
 4.5.1: |
   In the last release, we have added review summaries by VaporLens. That has caused a bunch of negative feedback, so I feel like we need to talk about that.
 
