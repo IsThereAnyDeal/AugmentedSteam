@@ -102,7 +102,7 @@
     });
 </script>
 
-<div class="as-menu" bind:this={parentNode}>
+<div id="as-menu" class="as-menu" bind:this={parentNode}>
     <button class:is-open={isOpen} on:click={toggleMenu}>Augmented Steam</button>
 
     {#if isOpen}

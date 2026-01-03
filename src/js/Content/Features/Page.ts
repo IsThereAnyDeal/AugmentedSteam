@@ -54,6 +54,10 @@ export default abstract class Page {
     protected abstract getUser(factory: UserFactory): Promise<UserInterface>;
 
     async run(): Promise<void> {
+        if (document.querySelector("#as-menu")) {
+            // already loaded
+            return;
+        }
         if (!this.check()) { return; }
 
         let language: Language|null;
