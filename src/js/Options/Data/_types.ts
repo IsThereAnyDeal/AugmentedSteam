@@ -56,6 +56,7 @@ export interface SettingsSchema {
     override_price: "auto"|string,
     showregionalprice: "mouse"|"always"|"off",
     regional_countries: string[],
+    restore_price_cut: boolean,
 
     show_es_homepagetabs: boolean,
     showmarkettotal: boolean,

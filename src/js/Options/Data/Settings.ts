@@ -53,6 +53,7 @@ export const DefaultSettings: Readonly<SettingsSchema> = {
     override_price: "auto",
     showregionalprice: "mouse",
     regional_countries: ["us", "gb", "fr", "br", "au", "jp"],
+    restore_price_cut: false,
 
     show_es_homepagetabs: true,
     showmarkettotal: false,

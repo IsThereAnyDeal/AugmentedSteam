@@ -515,6 +515,9 @@
         "headers": {
             "itad_price_info": "Price Information from IsThereAnyDeal"
         },
+        "price": {
+            "restore_price_cut": "Restore price cut if Steam shows only icon (on app pages)"
+        },
         "ai": {
             "title": "AI/LLM",
             "killswitch": "AI/LLM features",

@@ -471,6 +471,7 @@ export const __options_aboutDescLinks = "options_aboutDescLinks";
 export const __options_footerFork = "options_footerFork";
 export const __options_footerAuthor = "options_footerAuthor";
 export const __options_headers_itadPriceInfo = "options_headers_itadPriceInfo";
+export const __options_price_restorePriceCut = "options_price_restorePriceCut";
 export const __options_ai_title = "options_ai_title";
 export const __options_ai_killswitch = "options_ai_killswitch";
 export const __options_ai_killswitchInfo = "options_ai_killswitchInfo";
