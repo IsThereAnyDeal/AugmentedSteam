@@ -178,7 +178,7 @@ export default class SteamStoreApi extends Api implements MessageHandlerInterfac
     }
 
     private async fetchPurchaseDateFromHelp(appid: number): Promise<number|null> {
-        const url = new URL(`https://help.steampowered.com/en/wizard/HelpWithGameTechnicalIssue?appid=${appid}`);
+        const url = new URL(`https://help.steampowered.com/cs/wizard/HelpWithGame?appid=${appid}`);
         const html = await this.fetchPage(url);
         const parser = DomParserFactory.getParser();
         return parser.parsePurchaseDatesHelp(html);

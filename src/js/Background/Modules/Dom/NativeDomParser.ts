@@ -117,13 +117,35 @@ export default class NativeDomParser implements DomParserInterface {
         const value: HTMLElement|null = node.querySelector<HTMLElement>(".help_lowlight_text");
 
         if (label?.textContent && value?.textContent) {
-            if (/purchased|activated/i.test(label.textContent)) {
-                const date = DateTime.fromFormat(value.textContent, "LLL d, yyyy");
+            if (/Zakoupeno|Aktivováno/i.test(label.textContent)) {
+                let date = DateTime.fromFormat(value.textContent, "d. LLL. yyyy", {locale: "cs"});
+                if (date.isValid) {
+                    return date.toUnixInteger();
+                }
+
+                date = DateTime.fromFormat(value.textContent, "d. LLL.", {locale: "cs"});
                 if (date.isValid) {
                     return date.toUnixInteger();
                 }
             }
         }
+
+        // no luck, try line items
+        const lineItem = dummyPage.querySelector(".help_purchase_detail_box .LineItemRow span");
+        if (lineItem && lineItem.textContent) {
+            const textValue = lineItem.textContent.trim()
+
+            let date = DateTime.fromFormat(textValue, "d. LLL. yyyy -", {locale: "cs"});
+            if (date.isValid) {
+                return date.toUnixInteger();
+            }
+
+            date = DateTime.fromFormat(textValue, "d. LLL. -", {locale: "cs"});
+            if (date.isValid) {
+                return date.toUnixInteger();
+            }
+        }
+
         return null;
     }
 }
