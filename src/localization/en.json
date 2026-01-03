@@ -220,6 +220,8 @@
     "visit_trade_forum": "Visit Trade Forum",
     "purchase_date": "(Purchased __date__)",
     "see_purchase_date": "See purchased date",
+    "since_date": "since __date__",
+    "see_since_when_date": "see since when",
     "custom_background_help": "All users of Augmented Steam will see this background on your profile. Non-Augmented Steam users will see your regular profile background.",
     "date_unlocked": "Date Unlocked",
     "net_spent": "Net spent:",
