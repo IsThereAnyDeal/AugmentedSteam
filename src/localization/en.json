@@ -909,6 +909,6 @@
         "show": "Show VaporLens",
         "hide": "Hide VaporLens",
         "llm_note": "This summary has been created by a 3rd party with a use of LLM. Fetched data are pre-generated. LLM was not used during data request.",
-        "learn_more": "Learn more/toggle"
+        "learn_more": "Learn more/disable"
     }
 }
