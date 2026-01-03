@@ -418,7 +418,15 @@
         "tabtitle_appname_first": "Имя вкладки всегда начинается с названия игры",
         "context_steam_lucky": "Поиск в Steam по запросу «__query__» (мне везёт)",
         "show_vaporlens_summary": "Показать сводку VaporLens",
-        "show_steampeek": "Показать похожие игры от SteamPeek"
+        "show_steampeek": "Показать похожие игры от SteamPeek",
+        "ai": {
+            "title": "ИИ/LLM",
+            "killswitch": "Функции ИИ/LLM",
+            "killswitch_info": "Переключает все функции ИИ/LLM"
+        },
+        "price": {
+            "restore_price_cut": "Восстановить снижение цены, если Steam показывает только значок (на страницах приложений)"
+        }
     },
     "ready": {
         "loading": "Augmented Steam загружается...",
@@ -897,7 +905,11 @@
         "title": "Значимые моменты VaporLens",
         "view": "Просмотреть на VaporLens",
         "show": "Показать VaporLens",
-        "hide": "Скрыть VaporLens"
+        "hide": "Скрыть VaporLens",
+        "llm_note": "Эта сводка была создана третьей стороной с использованием LLM. Полученные данные были сгенерированы заранее. LLM не использовался при запросе данных.",
+        "learn_more": "Узнать больше/отключить"
     },
-    "see_purchase_date": "Просмотреть дату покупки"
+    "see_purchase_date": "Просмотреть дату покупки",
+    "since_date": "с __date__",
+    "see_since_when_date": "см. как давно"
 }
