@@ -415,7 +415,7 @@
             "itad_price_info": "Informacje o cenach z IsThereAnyDeal"
         },
         "followed": "Obserwowane gry",
-        "prevent_video_pause": "Nie zatrzymuj filmów przy przełączaniu karty (eksperymentalne)",
+        "prevent_video_pause": "Nie zatrzymuj odtwarzania filmów przy przełączaniu karty (eksperymentalne)",
         "tabtitle_appname_first": "Zawsze zaczynaj tytuł karty przeglądarki od nazwy gry",
         "context_steam_lucky": "Wyszukaj „__query__” na Steam (Szczęśliwy traf)",
         "show_vaporlens_summary": "Wyświetlaj podsumowanie VaporLens"

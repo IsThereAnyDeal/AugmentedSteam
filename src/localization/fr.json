@@ -418,7 +418,8 @@
         "prevent_video_pause": "Empêcher la mise en pause des vidéos lorsque l'onglet perd le focus (expérimental)",
         "tabtitle_appname_first": "S'assurer que le titre de l'onglet commence toujours par le nom du jeu",
         "context_steam_lucky": "Recherche Steam pour '__query__' (j'ai de la chance)",
-        "show_vaporlens_summary": "Afficher le résumé VaporLens"
+        "show_vaporlens_summary": "Afficher le résumé VaporLens",
+        "show_steampeek": "Afficher des jeux similaires selon SteamPeek"
     },
     "ready": {
         "loading": "Chargement des données d'Augmented Steam...",
@@ -895,5 +896,11 @@
     "launch_random_game_error": "Impossible de trouver un jeu jouable",
     "retry": "Réessayer",
     "saving": "Enregistre...",
-    "saved": "Enregistré"
+    "saved": "Enregistré",
+    "vaporlens": {
+        "title": "Points marquants de VaporLens",
+        "view": "Voir sur VaporLens",
+        "show": "Afficher VaporLens",
+        "hide": "Cacher VaporLens"
+    }
 }

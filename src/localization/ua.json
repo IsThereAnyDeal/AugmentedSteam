@@ -289,7 +289,7 @@
         "waitlist": "Ігри з розділу Waitlist на ITAD",
         "showallstats": "Відображати статистику часу у грі на сторінці «Усі ігри»",
         "lowestprice_onwishlist": "Показувати у списку бажаного",
-        "lowestprice": "Показувати на сторінках товарів",
+        "lowestprice": "Показати на сторінках товарів",
         "owned": "У вашій власності",
         "itadlinks": "Відображати посилання на IsThereAnyDeal",
         "steamdb": "Показати SteamDB",
@@ -406,7 +406,8 @@
         "prevent_video_pause": "Запобігати паузі відео при втраті фокуса вкладки (експериментально)",
         "tabtitle_appname_first": "Починати заголовок вкладки з назви гри",
         "context_steam_lucky": "Пошук у Steam за '__query__' (Мені пощастить)",
-        "show_vaporlens_summary": "Показати підсумок VaporLens"
+        "show_vaporlens_summary": "Показати підсумок VaporLens",
+        "show_steampeek": "Показати схожі ігри від SteamPeek"
     },
     "ready": {
         "loading": "Augmented Steam завантажує дані...",
@@ -878,5 +879,11 @@
     "launch_random_game_error": "Не вдалося знайти гру для запуску",
     "retry": "Повторити",
     "saving": "Збереження...",
-    "saved": "Збережено"
+    "saved": "Збережено",
+    "vaporlens": {
+        "title": "Основні моменти VaporLens",
+        "view": "Переглянути на VaporLens",
+        "show": "Показати VaporLens",
+        "hide": "Приховати VaporLens"
+    }
 }

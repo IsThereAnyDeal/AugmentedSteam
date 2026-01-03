@@ -479,7 +479,7 @@
         "dont_show": "Больше не показывать",
         "updated": "Augmented Steam был обновлён до версии __version__",
         "changes": "Просмотр изменений на GitHub",
-        "updated_no_version": "Augmented Steam был обновлен"
+        "updated_no_version": "Augmented Steam был обновлён"
     },
     "register": {
         "success": "__gamename__ успешно активирована",
@@ -898,5 +898,6 @@
         "view": "Просмотреть на VaporLens",
         "show": "Показать VaporLens",
         "hide": "Скрыть VaporLens"
-    }
+    },
+    "see_purchase_date": "Просмотреть дату покупки"
 }
