@@ -50,7 +50,7 @@
                 contextid: String(marketInfo.contextId),
                 assetid: marketInfo.assetId,
                 amount: "1", // TODO support stacked items, e.g. sack of gems
-                price: String(sellPrice)
+                price: String(Math.floor(sellPrice))
             });
         } catch(e) {
             console.error(e);
