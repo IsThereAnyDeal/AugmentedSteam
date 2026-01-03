@@ -1,5 +1,6 @@
 import Feature from "@Content/Modules/Context/Feature";
 import type CStoreBase from "@Content/Features/Store/Common/CStoreBase";
+import Settings from "@Options/Data/Settings";
 
 export default class FRestorePriceCut extends Feature<CStoreBase> {
 
