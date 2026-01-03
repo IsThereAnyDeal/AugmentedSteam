@@ -4,7 +4,7 @@ import type CStoreBase from "@Content/Features/Store/Common/CStoreBase";
 export default class FRestorePriceCut extends Feature<CStoreBase> {
 
     override checkPrerequisites(): boolean {
-        return true;
+        return Settings.restore_price_cut;
     }
 
     override async apply(): Promise<void> {
