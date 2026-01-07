@@ -419,7 +419,15 @@
         "tabtitle_appname_first": "S'assurer que le titre de l'onglet commence toujours par le nom du jeu",
         "context_steam_lucky": "Recherche Steam pour '__query__' (j'ai de la chance)",
         "show_vaporlens_summary": "Afficher le résumé VaporLens",
-        "show_steampeek": "Afficher des jeux similaires selon SteamPeek"
+        "show_steampeek": "Afficher des jeux similaires selon SteamPeek",
+        "ai": {
+            "title": "IA/LLM",
+            "killswitch": "IA/LLM fonctionnalités",
+            "killswitch_info": "Active/désactive toutes les fonctionnalités IA/LLM"
+        },
+        "price": {
+            "restore_price_cut": "Rétablir la réduction de prix si Steam n'affiche que l'icône (dans le magasin)"
+        }
     },
     "ready": {
         "loading": "Chargement des données d'Augmented Steam...",
@@ -468,7 +476,7 @@
         "sync_now": "Synchroniser maintenant",
         "info": {
             "itad-steam": "Connecter Augmented Steam avec IsThereAnyDeal vous permet d'appliquer le surlignage et les tags d'Augmented Steam aux jeux de votre liste d'attente et de votre collection même si vous ne les avez pas sur Steam.",
-            "steam-itad": "De plus, cela vous permet d'importer des jeux depuis votre bibliothèque Steam et / ou votre liste de souhaits vers IsThereAnyDeal, pour une précision améliorée (par exemple, des DLC ou des jeux non répertoriés). Actuellement, cette fonctionnalité ne peut ajouter que des titres, pas les retirer, donc ce n'est pas un remplacement mais un ajout à la synchronisation intégrée d'IsThereAnyDeal."
+            "steam-itad": "De plus, cela vous permet d'importer des jeux depuis votre bibliothèque Steam et/ou votre liste de souhaits vers IsThereAnyDeal, pour une précision améliorée (par exemple, des DLC ou des jeux non répertoriés). Actuellement, cette fonctionnalité ne peut ajouter que des titres, pas les retirer, donc ce n'est pas un remplacement mais un ajout à la synchronisation intégrée d'IsThereAnyDeal."
         },
         "enable_sync_library": "Activer la synchronisation de la bibliothèque",
         "enable_sync_wishlist": "Activer la synchronisation de la liste de souhaits",
@@ -901,6 +909,11 @@
         "title": "Points marquants de VaporLens",
         "view": "Voir sur VaporLens",
         "show": "Afficher VaporLens",
-        "hide": "Cacher VaporLens"
-    }
+        "hide": "Cacher VaporLens",
+        "llm_note": "Ce résumé a été créé par un tiers à l'aide de LLM. Les données récupérées sont pré-générées. LLM n'a pas été utilisé lors de la demande de données.",
+        "learn_more": "En savoir plus/désactiver"
+    },
+    "see_purchase_date": "Voir la date d'achat",
+    "since_date": "depuis __date__",
+    "see_since_when_date": "voir depuis quand"
 }
