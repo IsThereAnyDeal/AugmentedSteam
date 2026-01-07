@@ -20,7 +20,6 @@ export interface MarketInfo {
     marketable: boolean,
     hashName: string,
     publisherFee: string,
-    lowestListingPrice: number,
     restriction: boolean,
     appid: number,
     itemType: string,
