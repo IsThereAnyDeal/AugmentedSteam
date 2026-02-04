@@ -126,6 +126,7 @@ export default class Downloader {
             for (const perm of user.permissions) {
                 for (const poeLang of perm.languages ?? []) {
                     const lang = LANGUAGE_MAP[poeLang];
+                    if (!lang) { continue; }
                     map[lang] ??= [];
                     map[lang] = [...(new Set(map[lang])).add(user.name)];
                 }

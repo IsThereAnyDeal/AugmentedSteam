@@ -391,7 +391,8 @@
             "wishlist": "於我的願望清單",
             "loc": "儲存位置",
             "synced_storage": "可同步的本地儲存空間",
-            "local": "本地資料庫"
+            "local": "本地資料庫",
+            "save_with_enter": "按 Enter 鍵儲存"
         },
         "show_custom_themes": "顯示自訂主題",
         "oneclickremovewl": "移除項目時跳過確認訊息",
@@ -408,7 +409,24 @@
         "friends_and_groups": "好友與群組",
         "friends_append_nickname": "在好友名稱後附加暱稱",
         "collection_banner_not_owned": "僅在您於 Steam 尚未擁有該遊戲時顯示收藏橫幅",
-        "homepage_default_tab_free": "熱門免費"
+        "homepage_default_tab_free": "熱門免費",
+        "headers": {
+            "itad_price_info": "來自 IsThereAnyDeal 的價格資訊"
+        },
+        "followed": "正在關注的遊戲",
+        "prevent_video_pause": "防止標籤頁失去焦點時影片暫停（實驗性功能）",
+        "tabtitle_appname_first": "確保標籤頁標題永遠以遊戲名稱開頭",
+        "context_steam_lucky": "在Steam搜尋 '__query__'  (類似Google的“手氣不錯”)",
+        "show_vaporlens_summary": "顯示 VaporLens 摘要",
+        "show_steampeek": "顯示來自 SteamPeek 推薦的相似遊戲",
+        "ai": {
+            "title": "AI／LLM",
+            "killswitch": "AI／LLM 功能",
+            "killswitch_info": "切換所有 AI／LLM 功能"
+        },
+        "price": {
+            "restore_price_cut": "若 Steam 在應用程式頁面僅顯示圖示，則恢復降價資訊"
+        }
     },
     "ready": {
         "loading": "Augmented Steam 資料載入中…",
@@ -433,7 +451,8 @@
         "notinterested": "已忽略",
         "collection": "已加入 Collection",
         "waitlist": "已加入 Waitlist",
-        "ignored_owned": "已忽略 (在其他平台玩過)"
+        "ignored_owned": "已忽略 (在其他平台玩過)",
+        "followed": "正在關注"
     },
     "wallet": {
         "custom_amount": "新增自訂金額",
@@ -467,7 +486,8 @@
     "update": {
         "dont_show": "不要再顯示",
         "updated": "Augmented Steam 已更新至 __version__",
-        "changes": "前往 GitHub 檢視所有變更"
+        "changes": "前往 GitHub 檢視所有變更",
+        "updated_no_version": "Augmented Steam 已更新"
     },
     "register": {
         "success": "成功啟用 __gamename__",
@@ -876,5 +896,20 @@
     "add_fullgame_to_waitlist": "將完整遊戲加入您的等待清單",
     "remove_fullgame_from_waitlist_tooltip": "從您的等待清單移除完整遊戲",
     "remove_fullgame_from_wishlist_and_waitlist_tooltip": "從您的願望清單與等待清單中移除完整遊戲",
-    "ok": "確定"
+    "ok": "確定",
+    "launch_random_game_error": "找不到可遊玩的遊戲",
+    "retry": "重試",
+    "saving": "保存中...",
+    "saved": "已保存",
+    "vaporlens": {
+        "title": "VaporLens 高光",
+        "view": "在 VaporLens 上查看",
+        "show": "顯示VaporLens",
+        "hide": "隱藏VaporLens",
+        "llm_note": "此摘要由第三方使用大型語言模型（LLM）產生。所擷取的資料為預先生成，資料請求過程中並未使用 LLM。",
+        "learn_more": "了解更多／停用"
+    },
+    "see_purchase_date": "查看購買日期",
+    "since_date": "自 __date__ 起",
+    "see_since_when_date": "查看自何時起"
 }

@@ -895,5 +895,8 @@
     "launch_random_game_error": "Nie udało się znaleźć gry do uruchomienia",
     "retry": "Spróbuj ponownie",
     "saving": "Zapisywanie...",
-    "saved": "Zapisano"
+    "saved": "Zapisano",
+    "see_purchase_date": "Zobacz datę zakupu",
+    "since_date": "od __date__",
+    "see_since_when_date": "zobacz datę zakupu"
 }

@@ -56,7 +56,7 @@
     "loading": "Đang tải...",
     "selling": "Đang bán...",
     "quick_sell": "Bán nhanh với giá __amount__",
-    "quick_sell_desc": "Chênh lệch __modifier__ so với giá thấp nhất hiện tại trên Chợ cộng đồng Steam",
+    "quick_sell_desc": "Chênh lệch __modifier__ so với giá thấp nhất của lệnh mua hiện tại trên Chợ cộng đồng Steam",
     "instant_sell": "Bán ngay lập tức với giá __amount__",
     "instant_sell_desc": "Giá cao nhất của lệnh bán hiện tại trên Chợ cộng đồng Steam",
     "starting_at": "Bắt đầu từ: __price__",
@@ -66,7 +66,7 @@
     "view_on_website": "Xem trên __website__",
     "drm_third_party": "Cảnh báo: Sản phẩm này sử dụng DRM bên thứ 3 __drmlist__.",
     "hours_short": "__hours__ giờ",
-    "spam_comment_show": "__num__ bình luận spam được ẩn.  Nhấp vào đây để hiển thị.",
+    "spam_comment_show": "__num__ bình luận spam được ẩn trên trang này.  Nhấp vào đây để hiển thị.",
     "add_to_wishlist": "Thêm vào Danh sách uớc",
     "add_to_waitlist": "Thêm vào Danh sách Chờ",
     "language": "Ngôn ngữ",
@@ -108,7 +108,7 @@
     "viewinclient": "Xem trong Client Steam",
     "custom_background": "Nền tùy chỉnh",
     "custom_style": "Chủ đề tuỳ chỉnh",
-    "custom_style_help": "Tất cả những ai dùng tiện ích Augmented Steam sẽ nhìn thấy chủ đề tuỳ chỉnh này này trên trang cá nhân của bạn.  Những ai không dùng sẽ không thấy bất kì thay đổi nào về chủ đề.",
+    "custom_style_help": "Tất cả người dùng tiện ích Augmented Steam sẽ nhìn thấy chủ đề tuỳ chỉnh này trên trang cá nhân của bạn. Những ai không dùng sẽ không thấy bất kì thay đổi nào về chủ đề ở đây.",
     "noneselected": "Không được chọn / Không thay đổi",
     "most_drops": "Số lượng rớt nhiều nhất",
     "net_gain": "Lợi nhuận ròng:",
@@ -131,7 +131,7 @@
     "binder_view": "Dạng Đóng sách",
     "visit_trade_forum": "Truy cập Diễn đàn Trao đổi",
     "purchase_date": "(Đã mua ngày __date__)",
-    "custom_background_help": "Tất cả những ai dùng tiện ích Augmented Steam sẽ nhìn thấy hình nền tuỳ chỉnh này này trên trang cá nhân của bạn.  Những ai không dùng thì sẽ thấy hình nền được cài mặc định.",
+    "custom_background_help": "Tất cả người dùng tiện ích Augmented Steam sẽ nhìn thấy hình nền tuỳ chỉnh này trên trang cá nhân của bạn. Những ai không dùng thì sẽ thấy hình nền được cài mặc định của bạn.",
     "date_unlocked": "Ngày mở khóa",
     "net_spent": "Chi tiêu ròng:",
     "buy": "Mua",
@@ -419,7 +419,15 @@
         "tabtitle_appname_first": "Luôn bắt đầu tiêu đề thẻ bằng tên trò chơi",
         "context_steam_lucky": "Tìm kiếm '__query__' trên Cửa hàng Steam (Tôi cảm thấy may mắn)",
         "show_vaporlens_summary": "Hiển thị tóm tắt từ VaporLens",
-        "show_steampeek": "Hiện những trò chơi tương đồng bằng SteamPeek"
+        "show_steampeek": "Hiện những trò chơi tương đồng bằng SteamPeek",
+        "ai": {
+            "title": "AI/LLM",
+            "killswitch": "Các chức năng AI/LLM",
+            "killswitch_info": "Bật/tắt tất cả chức năng AI (Trí tuệ nhân tạo)/LLM (Mô hình ngôn ngữ lớn)"
+        },
+        "price": {
+            "restore_price_cut": "Khôi phục giảm giá nếu Steam chỉ hiện mỗi icon (trên trang ứng dụng)"
+        }
     },
     "ready": {
         "loading": "Augmented Steam đang tải dữ liệu...",
@@ -901,6 +909,11 @@
         "title": "Tóm tắt từ VaporLens",
         "view": "Xem trên VaporLens",
         "show": "Hiện VaporLens",
-        "hide": "Ẩn VaporLens"
-    }
+        "hide": "Ẩn VaporLens",
+        "llm_note": "Bài tóm tắt này đã được tạo ra bởi một bên thứ ba bằng cách sử dụng LLM (Mô hình ngôn ngữ lớn). Những thông tin lấy được đã được khởi tạo sẵn. LLM không được sử dụng trong lúc yêu cầu dữ liệu.",
+        "learn_more": "Tìm hiểu thêm/Tắt đi"
+    },
+    "see_purchase_date": "Xem ngày mua hàng",
+    "since_date": "từ __date__",
+    "see_since_when_date": "xem từ lúc nào"
 }
