@@ -1,3 +1,6 @@
+4.6.2: |
+  - fix wishlist features after Steam changes
+
 4.6.1: |
   - fix inventory quick sell buttons after yet another Steam's breaking change
   - fix changelog not showing up for after fresh installs
