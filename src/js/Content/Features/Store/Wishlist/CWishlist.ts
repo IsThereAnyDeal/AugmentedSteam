@@ -54,7 +54,6 @@ export default class CWishlist extends Context {
             FWishlistStats,
             FEmptyWishlist,
             FExportWishlist,
-            FWishlistProfileLink,
         ]);
 
         this.ownerId = ownerId;
