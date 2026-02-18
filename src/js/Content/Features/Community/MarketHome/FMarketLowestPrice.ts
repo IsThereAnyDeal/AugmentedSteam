@@ -13,7 +13,7 @@ import Price from "@Content/Modules/Currency/Price";
 export default class FMarketLowestPrice extends Feature<CMarketHome> {
 
     private _loadedMarketPrices: Record<string, string> = {};
-    private _delayMs = 2000; // Delay to put between requests in attempt to avoid 429s
+    private _delayMs = 3000; // Delay to put between requests in attempt to avoid 429s
     private _delay = false; // Whether to put a delay between requests
     private _timeout = false; // Whether the user has been timed-out
 
