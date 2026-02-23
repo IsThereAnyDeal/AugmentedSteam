@@ -13,7 +13,8 @@ import Price from "@Content/Modules/Currency/Price";
 export default class FMarketLowestPrice extends Feature<CMarketHome> {
 
     private _loadedMarketPrices: Record<string, string> = {};
-    private _delayMs = 3000; // Delay to put between requests in attempt to avoid 429s
+    private _delayMs = 2000; // Delay to put between requests in attempt to avoid 429s
+    private _delayTimeoutMs = 60000; // Time to wait for rate limit reset
     private _delay = false; // Whether to put a delay between requests
     private _timeout = false; // Whether the user has been timed-out
 
@@ -109,12 +110,13 @@ export default class FMarketLowestPrice extends Feature<CMarketHome> {
 
             let data = this._loadedMarketPrices[marketHashName];
             if (typeof data === "undefined") {
-                if (this._timeout) {
-                    this._insertPrice(node, "timeout");
-                    continue;
+                data = await this._getPriceOverview(Number(appid), marketHashName);
+
+                while (data == "timeout") {
+                    await TimeUtils.timer(this._delayTimeoutMs);
+                    data = await this._getPriceOverview(Number(appid), marketHashName);
                 }
 
-                data = await this._getPriceOverview(Number(appid), marketHashName);
                 this._delay = true;
             }
 
