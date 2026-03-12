@@ -6,7 +6,7 @@ export function getMenuNode(): self_ {
     if (menuComponent) {
         return menuComponent;
     }
-    const header = document.querySelector<HTMLElement>(".jfAmlCmNzHQ-");
+    const header = document.querySelector<HTMLElement>(".G-xGsXlx-Sw-");
     if (!header) {
         throw new Error("Didn't find menu container node");
     }

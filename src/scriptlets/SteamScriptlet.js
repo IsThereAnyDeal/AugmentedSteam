@@ -144,7 +144,7 @@
             function getPrice(amount) {
                 const itemPrice = GetItemPriceFromTotal(amount, rgWallet);
                 const validPrice = ToValidMarketPrice(itemPrice, rgWallet);
-                return GetTotalWithFees(validPrice, rgWallet.wallet_fee_percent, publisherFee, rgWallet);
+                return Math.floor(GetTotalWithFees(validPrice, publisherFee, rgWallet.wallet_fee_percent, rgWallet));
             }
 
             const lowAmount = low <= 0 ? 0 : getPrice(low);

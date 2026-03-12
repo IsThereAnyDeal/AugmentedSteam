@@ -54,7 +54,7 @@ export default class MarketPrices {
 
         if (priceHigh > 0) {
             const diff = Settings.quickinv_diff;
-            priceHigh = Math.max((priceHigh / 100) + Number(diff), this.info.lowestListingPrice) || 0;
+            priceHigh = Math.max((priceHigh / 100) + Number(diff), 0);
             priceHigh = Number(priceHigh.toFixed(2)) * 100;
         }
 

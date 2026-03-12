@@ -1,6 +1,7 @@
 import type CApp from "@Content/Features/Store/App/CApp";
 import Feature from "@Content/Modules/Context/Feature";
 import ServiceFactory from "@Protobufs/ServiceFactory";
+import {DateTime} from "luxon";
 
 export default class FReleaseCountdown extends Feature<CApp> {
 
@@ -40,8 +41,14 @@ export default class FReleaseCountdown extends Feature<CApp> {
         // TODO what other values would be valid here?
         if (comingSoonDisplay === "date_full") {
             if (steamReleaseDate && Number.isInteger(steamReleaseDate)) {
-                const date = new Date(steamReleaseDate*1000);
-                const str = ` (${date.toLocaleString()})`;
+
+                const date = (DateTime.fromSeconds(steamReleaseDate)).toLocaleString({
+                    dateStyle: "medium",
+                    timeStyle: "short"
+                }, {
+                    locale: this.context.language?.code ?? undefined
+                })
+                const str = ` (${date})`;
 
                 const target = this.comingSoon!.querySelector(".content p");
                 target?.append(str);

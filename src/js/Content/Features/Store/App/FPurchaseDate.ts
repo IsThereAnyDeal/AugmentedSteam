@@ -1,9 +1,10 @@
 import {L} from "@Core/Localization/Localization";
-import {__purchaseDate, __seePurchaseDate} from "@Strings/_strings";
 import type CApp from "@Content/Features/Store/App/CApp";
 import Feature from "@Content/Modules/Context/Feature";
 import Settings from "@Options/Data/Settings";
 import SteamStoreApiFacade from "@Content/Modules/Facades/SteamStoreApiFacade";
+import {DateTime} from "luxon";
+import {__seeSinceWhenDate, __sinceDate} from "@Strings/_strings";
 
 export default class FPurchaseDate extends Feature<CApp> {
 
@@ -21,14 +22,20 @@ export default class FPurchaseDate extends Feature<CApp> {
 
         if (date === 0) {
             const a = document.createElement("a");
-            a.href = `https://help.steampowered.com/wizard/HelpWithGameTechnicalIssue?appid=${this.context.appid}`;
-            a.innerText = ` (${L(__seePurchaseDate)})`
+            a.href = `https://help.steampowered.com/wizard/HelpWithGame?appid=${this.context.appid}`;
+            a.innerText = ` (${L(__seeSinceWhenDate)})`
 
             this._node?.appendChild(a);
         } else {
-            this._node!.textContent += ` ${L(__purchaseDate, {
-                date: (new Date(date*1000)).toLocaleDateString()
-            })}`;
+            const datetime = DateTime.fromSeconds(date);
+
+            this._node!.textContent += ` (${L(__sinceDate, {
+                date: datetime.toLocaleString({
+                    dateStyle: "medium"
+                }, {
+                    locale: this.context.language?.code ?? undefined
+                })
+            })})`;
         }
     }
 }

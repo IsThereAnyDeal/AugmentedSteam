@@ -15,10 +15,10 @@
     "connected": "已连接",
     "disconnect": "断开",
     "disconnected": "已断开连接",
-    "oneclickgoo": "一键转换为宝石……",
+    "oneclickgoo": "一键转换为宝石…",
     "view_in_library": "在库中查看",
     "support": "支持信息",
-    "email": "邮箱",
+    "email": "电子邮箱",
     "contact": "联系方式",
     "fav_emoticons_dragging": "将表情拖至此处收藏",
     "post_history": "查看发布历史",
@@ -39,7 +39,7 @@
     "activate_products": "激活产品",
     "coupon_application_note": "您库存中的一张优惠券将在付款时自动使用。",
     "hide": "隐藏",
-    "cards_owned": "已有卡牌 __owned__ / __possible__",
+    "cards_owned": "已拥有 __owned__ / __possible__ 张卡牌",
     "library_menu": "库",
     "clear_cache": "清空缓存数据",
     "translation": "翻译",
@@ -58,7 +58,7 @@
     "quick_sell": "以 __amount__ 快速出售",
     "quick_sell_desc": "与社区市场最低出售价相差 __modifier__ 的价格",
     "instant_sell": "以 __amount__ 立刻出售",
-    "instant_sell_desc": "当前Steam市场上的最高收购价",
+    "instant_sell_desc": "当前 Steam 市场上的最高收购价",
     "starting_at": "起价：__price__",
     "homepage_tabs": "主页标签",
     "store": "商店",
@@ -137,7 +137,7 @@
     "buy": "购买",
     "buy_package": "购买 __package__",
     "more_information": "更多信息",
-    "region_unavailable": "该地区暂不可用",
+    "region_unavailable": "在该地区不可用",
     "avg_price_3cards": "三张交易卡牌的平均价格：__price__",
     "groups": {
         "leave_groups_confirm": "您确定要离开已选择的 __n__ 个组吗？",
@@ -235,7 +235,7 @@
         "community_default_tab": "默认社区中心页面",
         "videos": "视频",
         "broadcasts": "直播",
-        "artwork": "作品",
+        "artwork": "艺术作品",
         "screenshots": "截图",
         "show_backtotop": "在长页面显示返回顶部按钮",
         "context_menu": "右键菜单",
@@ -262,12 +262,12 @@
         "hideactivelistings": "默认隐藏市场主页的订单列表",
         "showlowestmarketprice": "显示您在社区市场的最低出售价",
         "clear": "您确定要重设所有选项么？这项操作将无法撤销。",
-        "show_package_info": "显示所有的“游戏包信息”按钮",
+        "show_package_info": "为所有捆绑包显示“捆绑包信息”按钮",
         "wlbuttoncommunityapp": "在游戏社区主页显示“添加至愿望单”按钮",
         "removeguideslanguagefilter": "不根据用户语言自动过滤指南",
         "disablelinkfilter": "禁用访问外部网站的确认警告",
         "regional_price_on": "显示区域价格比较",
-        "horizontalscrolling": "启用鼠标滚轮为水平滚动",
+        "horizontalscrolling": "启用鼠标滚轮水平滚动",
         "supportinfo": "在商店页面显示支持信息",
         "drm": "显示第三方 DRM 警告",
         "profile_link_images": "个人资料与群组页面链接图标样式",
@@ -293,13 +293,13 @@
         "show_astatslink": "在游戏页面显示 AStats 链接",
         "show_youtubegameplay": "显示 “YouTube 实况视频”链接",
         "show_youtubereviews": "显示 “YouTube 评测视频”链接",
-        "openinnewtab": "在新选项卡中打开外部链接",
+        "openinnewtab": "在新标签页中打开外部链接",
         "showbartervg": "显示 Barter.vg 链接",
         "collection": "您 ITAD 收藏库中的物品",
         "waitlist": "您 ITAD 观察列表中的物品",
         "showallstats": "在“所有游戏”页面显示时长统计",
         "lowestprice_onwishlist": "在愿望单中显示",
-        "lowestprice": "显示在应用页面",
+        "lowestprice": "在商店页面显示",
         "owned": "已拥有的物品",
         "itadlinks": "显示 IsThereAnyDeal 链接",
         "steamdb": "显示 SteamDB 链接",
@@ -391,7 +391,7 @@
             "loc": "存储位置",
             "synced_storage": "同步存储",
             "local": "本地数据库",
-            "save_with_enter": "按下回车保存"
+            "save_with_enter": "按回车键保存"
         },
         "show_custom_themes": "显示自定义主题",
         "oneclickremovewl": "删除物品时跳过确认",
@@ -400,26 +400,35 @@
         "hideannouncementcomments": "默认隐藏所有组公告下的评论",
         "friend_activity": "好友动态",
         "confirmdeletecomment": "删除留言时要求确认",
-        "about_desc": "Augmented Steam 是 Enhanced Steam 插件的衍生版。",
+        "about_desc": "Augmented Steam 是 Enhanced Steam 扩展程序的衍生版。",
         "about_desc_links": "访问此扩展程序的__website__或 __discord__ 了解更多。",
         "footer_fork": "来自 IsThereAnyDeal 的衍生版本",
         "footer_author": "原始作者 jshackles",
         "show_players_info": "显示玩家数信息",
         "friends_and_groups": "好友和群组",
-        "friends_append_nickname": "给朋友的名字加上昵称",
-        "collection_banner_not_owned": "只有当我在 Steam 上不拥有游戏时才会显示 In Collection 横幅",
-        "homepage_default_tab_free": "免费趋势",
+        "friends_append_nickname": "给好友名称添加昵称",
+        "collection_banner_not_owned": "只有当我在 Steam 上不拥有游戏时才会显示“在收藏库中”横幅",
+        "homepage_default_tab_free": "人气蹿升的免费游戏",
         "headers": {
             "itad_price_info": "来自 IsThereAnyDeal 的价格信息"
         },
         "followed": "关注的游戏",
         "prevent_video_pause": "当标签页位于后台时保持视频播放（实验性功能）",
         "tabtitle_appname_first": "确保标签页标题始终以游戏名称开头",
-        "context_steam_lucky": "在 Steam 商店搜索 '__query__' （试下手气）",
-        "show_vaporlens_summary": "显示 VaporLens 摘要"
+        "context_steam_lucky": "在 Steam 商店搜索 '__query__' （手气不错）",
+        "show_vaporlens_summary": "显示 VaporLens 摘要",
+        "show_steampeek": "显示 SteamPeek 提供的类似游戏",
+        "ai": {
+            "title": "AI / 大模型",
+            "killswitch": "AI / 大模型功能",
+            "killswitch_info": "切换所有 AI / 大模型功能"
+        },
+        "price": {
+            "restore_price_cut": "如果 Steam 只显示折扣图标（在商店页面上），则恢复显示降价信息"
+        }
     },
     "ready": {
-        "loading": "Augmented Steam 加载数据中...",
+        "loading": "Augmented Steam 正在加载数据……",
         "ready": "Augmented Steam 已就绪",
         "failed": "__amount__ 个请求发送失败，请打开浏览器的开发者控制台以了解详情",
         "server_outage": "Augmented Steam 服务器目前已超负荷"
@@ -479,7 +488,7 @@
     "update": {
         "dont_show": "不要再显示",
         "updated": "Augmented Steam 已更新至 __version__",
-        "changes": "在GitHub上查看所有更新改动",
+        "changes": "在 GitHub 上查看所有更改",
         "updated_no_version": "Augmented Steam 已更新"
     },
     "register": {
@@ -496,7 +505,7 @@
     "wl": {
         "total_price": "当前价值",
         "in_wishlist": "在愿望单中",
-        "on_sale": "打折中",
+        "on_sale": "正在促销",
         "no_price": "无价格",
         "label": "统计",
         "hidden": "隐藏的 App",
@@ -528,13 +537,13 @@
         "sync_info_3": "您可以在 IsThereAnyDeal 的备注和标签部分中看到存储的所有备注。",
         "sync_button_push": "将备注推送到\nIsThereAnyDeal",
         "sync_button_pull": "从 IsThereAnyDeal \n获取备注",
-        "sync_pulled": "从 IsThereAnyDeal 中获取了 __n__ 条备注",
+        "sync_pulled": "从 IsThereAnyDeal 获取了 __n__ 条备注",
         "sync_pushed": "向 IsThereAnyDeal 推送了 __n__ 条备注",
         "sync_failed": "__n__ 条备注同步失败",
         "sync_error": "无法同步您的备注",
         "sync_error_empty": "备注为空",
         "sync_error_unknown": "ITAD 无法识别这款游戏",
-        "sync_error_length": "备注太长（__length__，最长： __max__）"
+        "sync_error_length": "备注太长（__length__，最长：__max__）"
     },
     "queue": {
         "new": "开始新队列",
@@ -545,10 +554,10 @@
         "subscriptions": "订阅",
         "subscribe_all": "订阅所有",
         "subscribe_confirm": "您确定要订阅 __count__ 个符合条件的创意工坊物品吗？",
-        "subscribe_loading": "正在订阅 __i__/__count__ 个创意工坊物品，请稍候……",
+        "subscribe_loading": "正在订阅第 __i__/__count__ 个创意工坊物品，请稍候……",
         "unsubscribe_all": "取消订阅所有",
         "unsubscribe_confirm": "您确定要取消订阅 __count__ 个符合条件的创意工坊物品吗？",
-        "unsubscribe_loading": "正在取消订阅 __i__/__count__ 个创意工坊物品，请稍候……",
+        "unsubscribe_loading": "正在取消订阅第 __i__/__count__ 个创意工坊物品，请稍候……",
         "finished": "已完成！__success__ 个成功，__fail__ 个失败。点击 OK 刷新页面。",
         "failed": "__n__ 个失败",
         "collection_sort_by": "排序方式：",
@@ -579,8 +588,8 @@
         "hide_negative": "隐藏差评物品",
         "discount_percent": {
             "count": "折扣百分比：",
-            "min_count": "最少 %",
-            "max_count": "最多 %"
+            "min_count": "最小 %",
+            "max_count": "最大 %"
         }
     },
     "calc_workshop_size": {
@@ -884,14 +893,25 @@
     "thewordunknown": "未知",
     "badge_level": "等级 __level__",
     "ignored_owned": "您忽略的在其他平台上玩过的游戏",
-    "owned_collection": "__gametitle__ 已经在您的 IsThereAnyDeal 集合中",
-    "add_fullgame_to_wishlist": "将完整的游戏添加到您的愿望单中",
-    "add_fullgame_to_waitlist": "将完整的游戏添加到您的观察列表中",
-    "remove_fullgame_from_waitlist_tooltip": "从您的观察列表中删除完整的游戏",
+    "owned_collection": "__gametitle__ 已经在您的 IsThereAnyDeal 收藏库中",
+    "add_fullgame_to_wishlist": "将完整游戏添加到您的愿望单中",
+    "add_fullgame_to_waitlist": "将完整游戏添加到您的观察列表中",
+    "remove_fullgame_from_waitlist_tooltip": "从您的观察列表中删除完整游戏",
     "remove_fullgame_from_wishlist_and_waitlist_tooltip": "从您的愿望单和观察列表中删除完整的游戏",
-    "ok": "好的",
-    "launch_random_game_error": "未能找到可玩的游戏",
+    "ok": "确定",
+    "launch_random_game_error": "无法找到可玩的游戏",
     "retry": "重试",
-    "saving": "正在保存...",
-    "saved": "已保存"
+    "saving": "正在保存……",
+    "saved": "已保存",
+    "vaporlens": {
+        "title": "VaporLens 焦点",
+        "view": "在 VaporLens 上查看",
+        "show": "显示 VaporLens",
+        "hide": "隐藏 VaporLens",
+        "llm_note": "此摘要由第三方通过大模型生成。获取的数据为预先生成。请求数据时未使用大模型。",
+        "learn_more": "了解更多 / 禁用"
+    },
+    "see_purchase_date": "查看购买日期",
+    "since_date": "购买于 __date__",
+    "see_since_when_date": "查看购买日期"
 }

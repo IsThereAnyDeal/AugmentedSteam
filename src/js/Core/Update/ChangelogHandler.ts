@@ -18,6 +18,9 @@ export default class ChangelogHandler {
                 Settings.version = Info.version;
                 changelog.$destroy()
             });
+        } else {
+            // overwrite default setting for new installs, or if user has changelogs off
+            Settings.version = Info.version;
         }
     }
 }

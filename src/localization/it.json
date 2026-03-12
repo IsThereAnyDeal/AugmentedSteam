@@ -48,7 +48,7 @@
     "view_badge_progress": "Mostra il progresso della medaglia",
     "badge_progress": "Progresso della medaglia",
     "sales_total": "Vendite totali:",
-    "view_normal_badge": "Mostra il progresso della medaglia normale",
+    "view_normal_badge": "Vedi medaglia normale",
     "apppage_sections": "Seleziona le sezioni che vorresti vedere su questa pagina",
     "website": "Sito web",
     "games": "Giochi",
@@ -78,7 +78,7 @@
     "community": "Comunità",
     "view_badge": "Mostra la medaglia",
     "purchase_total": "Acquisti totali:",
-    "view_foil_badge": "Visualizza il progresso della medaglia Foil",
+    "view_foil_badge": "Vedi medaglia Foil",
     "view_astats": "Visualizza le statistiche su AStats",
     "contribute": "Contributi (GitHub)",
     "reviews": "Recensioni",
@@ -127,7 +127,7 @@
     "all": "Tutti",
     "games_with_drops": "__dropsgames__ giochi con carte da trovare",
     "binder_view": "Griglia",
-    "visit_trade_forum": "Visita il forum degli scambi",
+    "visit_trade_forum": "Forum degli scambi",
     "purchase_date": "(Acquistato il __date__)",
     "custom_background_help": "Tutti gli utenti di Augmented Steam vedranno questo sfondo sul tuo profilo. Gli altri vedranno il tuo sfondo normale.",
     "date_unlocked": "Data di sblocco",
@@ -387,7 +387,8 @@
             "wishlist": "Nella mia lista dei desideri",
             "loc": "Posizione di archiviazione",
             "synced_storage": "Archiviazione sincronizzata/locale",
-            "local": "Database locale"
+            "local": "Database locale",
+            "save_with_enter": "Salva con Invio"
         },
         "show_custom_themes": "Mostra temi personalizzati",
         "oneclickremovewl": "Salta la conferma quando si rimuovono prodotti",
@@ -404,7 +405,24 @@
         "friends_and_groups": "Amici e gruppi",
         "friends_append_nickname": "Aggiungi soprannomi ai nomi degli amici",
         "collection_banner_not_owned": "Mostra banner In Collezione solo quando non possiedo il gioco su Steam",
-        "homepage_default_tab_free": "Gratuiti di tendenza"
+        "homepage_default_tab_free": "Gratuiti di tendenza",
+        "headers": {
+            "itad_price_info": "Informazioni prezzi da IsThereAnyDeal"
+        },
+        "followed": "Giochi seguiti",
+        "prevent_video_pause": "Impedisci pausa dei video quando la scheda perde il focus (sperimentale)",
+        "tabtitle_appname_first": "Assicurati che il titolo della scheda inizi sempre con il nome del gioco",
+        "context_steam_lucky": "Cerca '__query__' su Steam (Mi sento fortunato)",
+        "show_vaporlens_summary": "Mostra riepilogo di VaporLens",
+        "show_steampeek": "Mostra giochi simili da SteamPeek",
+        "ai": {
+            "title": "IA/LLM",
+            "killswitch": "Funzionalità IA/LLM",
+            "killswitch_info": "Attiva/disattiva funzionalità IA/LLM"
+        },
+        "price": {
+            "restore_price_cut": "Ripristina la percentuale di sconto se Steam mostra solo l'icona (sulle pagine dell'app)"
+        }
     },
     "ready": {
         "loading": "Caricamento di Augmented Steam in corso...",
@@ -429,7 +447,8 @@
         "notinterested": "Non fa per me",
         "collection": "In una collezione",
         "waitlist": "In lista dei desideri",
-        "ignored_owned": "Ignorati (posseduti)"
+        "ignored_owned": "Ignorati (posseduti)",
+        "followed": "Seguito"
     },
     "wallet": {
         "custom_amount": "Importo personalizzato",
@@ -461,7 +480,8 @@
     },
     "update": {
         "dont_show": "Non mostrare più",
-        "updated": "Augmented Steam è stato aggiornato alla versione __version__"
+        "updated": "Augmented Steam è stato aggiornato alla versione __version__",
+        "updated_no_version": "Augmented Steam è stato aggiornato"
     },
     "register": {
         "success": "Il prodotto __gamename__ è stato attivato",
@@ -870,5 +890,20 @@
     "add_fullgame_to_waitlist": "Aggiungi gioco completo alla lista d'attesa",
     "remove_fullgame_from_waitlist_tooltip": "Rimuovi gioco completo dalla lista d'attesa",
     "remove_fullgame_from_wishlist_and_waitlist_tooltip": "Rimuovi gioco completo sia dalla lista dei desideri che dalla lista d'attesa.",
-    "ok": "OK"
+    "ok": "OK",
+    "launch_random_game_error": "Impossibile trovare gioco avviabile",
+    "retry": "Riprova",
+    "saving": "Salvataggio...",
+    "saved": "Salvato",
+    "vaporlens": {
+        "title": "Panoramica VaporLens",
+        "view": "Visualizza su VaporLens",
+        "show": "Mostra VaporLens",
+        "hide": "Nascondi VaporLens",
+        "llm_note": "Questo riepilogo è stato creato con l'uso di un LLM recuperando dati pre-generati da terze parti. Nessun LLM viene utilizzato durante la richiesta dei dati.",
+        "learn_more": "Scopri di più/disattiva"
+    },
+    "see_purchase_date": "Mostra data di acquisto",
+    "since_date": "dal __date__",
+    "see_since_when_date": "vedi da quando"
 }

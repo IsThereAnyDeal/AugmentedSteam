@@ -181,7 +181,7 @@
     "sort_by": "Сортировать по:",
     "playtime": "Время в игре",
     "year": "Год",
-    "lastonline": "Последний раз в сети:",
+    "lastonline": "Посл. раз в сети",
     "members": "Участники",
     "name": "Название",
     "drm_third_party_sub": "Внимание: один или несколько продуктов в этом наборе используют DRM-технологию сторонних поставщиков __drmlist__.",
@@ -324,6 +324,7 @@
         "homepage_default_tab": "Вкладка начальной страницы по умолчанию",
         "homepage_default_tab_remember": "Запомнить предыдущие",
         "homepage_default_tab_newreleases": "Популярные новинки",
+        "homepage_default_tab_topsellers": "Лидеры продаж",
         "homepage_default_tab_upcoming": "Скоро выйдут",
         "homepage_default_tab_specials": "Скидки",
         "wishlist": "Из вашего списка желаемого",
@@ -418,7 +419,15 @@
         "tabtitle_appname_first": "Имя вкладки всегда начинается с названия игры",
         "context_steam_lucky": "Поиск в Steam по запросу «__query__» (мне везёт)",
         "show_vaporlens_summary": "Показать сводку VaporLens",
-        "show_steampeek": "Показать похожие игры от SteamPeek"
+        "show_steampeek": "Показать похожие игры от SteamPeek",
+        "ai": {
+            "title": "ИИ/LLM",
+            "killswitch": "Функции ИИ/LLM",
+            "killswitch_info": "Переключает все функции ИИ/LLM"
+        },
+        "price": {
+            "restore_price_cut": "Восстановить снижение цены, если Steam показывает только значок (на страницах приложений)"
+        }
     },
     "ready": {
         "loading": "Augmented Steam загружается...",
@@ -461,6 +470,9 @@
     },
     "itad": {
         "import": "Периодически импортировать:",
+        "last_import": "Последний импорт...",
+        "from": "из ITAD:",
+        "to": "в ITAD:",
         "sync_now": "Синхронизировать сейчас",
         "info": {
             "itad-steam": "Связь аккаунта IsThereAnyDeal с Augmented Steam даёт возможность использовать выделение игр и добавление меток для игр в списке ожидаемого и коллекции, даже если этих игр у вас нет в Steam.",
@@ -479,7 +491,7 @@
         "dont_show": "Больше не показывать",
         "updated": "Augmented Steam был обновлён до версии __version__",
         "changes": "Просмотр изменений на GitHub",
-        "updated_no_version": "Augmented Steam был обновлен"
+        "updated_no_version": "Augmented Steam был обновлён"
     },
     "register": {
         "success": "__gamename__ успешно активирована",
@@ -897,6 +909,11 @@
         "title": "Значимые моменты VaporLens",
         "view": "Просмотреть на VaporLens",
         "show": "Показать VaporLens",
-        "hide": "Скрыть VaporLens"
-    }
+        "hide": "Скрыть VaporLens",
+        "llm_note": "Эта сводка была создана третьей стороной с использованием LLM. Полученные данные были сгенерированы заранее. LLM не использовался при запросе данных.",
+        "learn_more": "Узнать больше/отключить"
+    },
+    "see_purchase_date": "Просмотреть дату покупки",
+    "since_date": "с __date__",
+    "see_since_when_date": "см. как давно"
 }

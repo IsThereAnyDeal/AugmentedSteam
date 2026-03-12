@@ -24,6 +24,7 @@
         padding: 0 5px;
         display: inline-flex;
         align-items: center;
+        cursor: pointer;
 
         &:hover {
             background: #97c0e3;

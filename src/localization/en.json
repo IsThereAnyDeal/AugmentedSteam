@@ -220,6 +220,8 @@
     "visit_trade_forum": "Visit Trade Forum",
     "purchase_date": "(Purchased __date__)",
     "see_purchase_date": "See purchased date",
+    "since_date": "since __date__",
+    "see_since_when_date": "see since when",
     "custom_background_help": "All users of Augmented Steam will see this background on your profile. Non-Augmented Steam users will see your regular profile background.",
     "date_unlocked": "Date Unlocked",
     "net_spent": "Net spent:",
@@ -514,6 +516,9 @@
         "footer_author": "original author jshackles",
         "headers": {
             "itad_price_info": "Price Information from IsThereAnyDeal"
+        },
+        "price": {
+            "restore_price_cut": "Restore price cut if Steam shows only icon (on app pages)"
         },
         "ai": {
             "title": "AI/LLM",
@@ -909,6 +914,6 @@
         "show": "Show VaporLens",
         "hide": "Hide VaporLens",
         "llm_note": "This summary has been created by a 3rd party with a use of LLM. Fetched data are pre-generated. LLM was not used during data request.",
-        "learn_more": "Learn more/toggle"
+        "learn_more": "Learn more/disable"
     }
 }

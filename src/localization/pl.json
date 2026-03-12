@@ -415,10 +415,19 @@
             "itad_price_info": "Informacje o cenach z IsThereAnyDeal"
         },
         "followed": "Obserwowane gry",
-        "prevent_video_pause": "Nie zatrzymuj filmów przy przełączaniu karty (eksperymentalne)",
+        "prevent_video_pause": "Nie zatrzymuj odtwarzania filmów przy przełączaniu karty (eksperymentalne)",
         "tabtitle_appname_first": "Zawsze zaczynaj tytuł karty przeglądarki od nazwy gry",
         "context_steam_lucky": "Wyszukaj „__query__” na Steam (Szczęśliwy traf)",
-        "show_vaporlens_summary": "Wyświetlaj podsumowanie VaporLens"
+        "show_vaporlens_summary": "Wyświetlaj podsumowanie VaporLens",
+        "show_steampeek": "Wyświetlaj rekomendacje podobnych gier od SteamPeek",
+        "ai": {
+            "title": "AI/LLM",
+            "killswitch": "Funkcje AI/LLM",
+            "killswitch_info": "Włącza lub wyłącza wszystkie funkcje AI/LLM"
+        },
+        "price": {
+            "restore_price_cut": "Przywróć wyświetlanie procentowej zniżki, gdy Steam pokazuje tylko ikonę (na stronach aplikacji)"
+        }
     },
     "ready": {
         "loading": "Wczytywanie danych Augmented Steam...",
@@ -895,5 +904,16 @@
     "launch_random_game_error": "Nie udało się znaleźć gry do uruchomienia",
     "retry": "Spróbuj ponownie",
     "saving": "Zapisywanie...",
-    "saved": "Zapisano"
+    "saved": "Zapisano",
+    "vaporlens": {
+        "title": "Podsumowanie VaporLens",
+        "view": "Pokaż na VaporLens",
+        "show": "Pokaż VaporLens",
+        "hide": "Ukryj VaporLens",
+        "llm_note": "To podsumowanie zostało przygotowane przez podmiot zewnętrzny z użyciem LLM. Dane są wygenerowane wcześniej i tylko pobierane podczas otwierania strony.",
+        "learn_more": "Więcej informacji / ukryj"
+    },
+    "see_purchase_date": "Zobacz datę zakupu",
+    "since_date": "od __date__",
+    "see_since_when_date": "zobacz datę zakupu"
 }

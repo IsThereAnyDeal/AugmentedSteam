@@ -1,5 +1,3 @@
-<svelte:options immutable={false} />
-
 <script lang="ts">
     import {L} from "@Core/Localization/Localization";
     import {
@@ -7,6 +5,7 @@
         __options_lowestprice,
         __options_lowestpriceCoupon,
         __options_lowestpriceOnwishlist,
+        __options_price_restorePriceCut,
         __options_regionalPrice,
     } from "@Strings/_strings";
     import {type Writable, writable} from "svelte/store";
@@ -22,6 +21,12 @@
     let settings: Writable<SettingsSchema> = writable(Settings);
 </script>
 
+
+<Section>
+    <OptionGroup>
+        <Toggle bind:value={$settings.restore_price_cut}>{L(__options_price_restorePriceCut)}</Toggle>
+    </OptionGroup>
+</Section>
 
 <Section title={L(__options_headers_itadPriceInfo)}>
     <OptionGroup>

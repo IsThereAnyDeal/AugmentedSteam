@@ -5,7 +5,6 @@ import FWishlistUserNotes from "./FWishlistUserNotes";
 import FWishlistStats from "./FWishlistStats";
 import FEmptyWishlist from "./FEmptyWishlist";
 import FExportWishlist from "./FExportWishlist";
-import FWishlistProfileLink from "./FWishlistProfileLink";
 import ContextType from "@Content/Modules/Context/ContextType";
 import Context, {type ContextParams} from "@Content/Modules/Context/Context";
 import SteamFacade from "@Content/Modules/Facades/SteamFacade";
@@ -62,7 +61,6 @@ export default class CWishlist extends Context {
             FWishlistStats,
             FEmptyWishlist,
             FExportWishlist,
-            FWishlistProfileLink,
             FShowRanking
         ]);
 
