@@ -63,8 +63,21 @@ export default class CurrencyManager {
         return null;
     }
 
+    private static _getCurrencyCodeFromAppConfig(): string|null {
+        const configNode: HTMLElement|null = document.querySelector("#application_config");
+
+        if (!configNode?.dataset.store_user_config) {
+            return null;
+        }
+
+        const storeUserConfig = JSON.parse(configNode.dataset.store_user_config);
+        const currencyId = storeUserConfig?.accountcart?.cart?.subtotal?.currency_code;
+
+        return currencyId ? this.currencyIdToCode(currencyId) : null;
+    }
+
     private static async _getStoreCurrency(): Promise<string> {
-        let currency = this._getCurrencyCodeFromDom() ?? this._getCurrencyCodeFromWallet();
+        let currency = this._getCurrencyCodeFromDom() ?? this._getCurrencyCodeFromWallet() ?? this._getCurrencyCodeFromAppConfig();
         if (currency) {
             return currency;
         }
