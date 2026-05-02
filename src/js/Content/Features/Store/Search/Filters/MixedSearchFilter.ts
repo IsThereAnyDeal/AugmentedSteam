@@ -1,7 +1,7 @@
 import SimpleSearchFilter from "./SimpleSearchFilter";
 import {__searchFilters_hideMixed} from "@Strings/_strings";
-import {L} from "@Core/Localization/Localization";
 import type FSearchFilters from "@Content/Features/Store/Search/FSearchFilters";
+import {L} from "@Core/Localization/Localization";
 
 export default class MixedSearchFilter extends SimpleSearchFilter {
 
