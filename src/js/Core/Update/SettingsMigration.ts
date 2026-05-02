@@ -18,6 +18,7 @@ export default class SettingsMigration {
             await storage.remove("hide_wishlist");
             await storage.remove("hide_cart");
             await storage.remove("hide_notdiscounted");
+            await storage.remove("hide_mostly");
             await storage.remove("hide_mixed");
             await storage.remove("hide_negative");
             await storage.remove("hide_priceabove");
