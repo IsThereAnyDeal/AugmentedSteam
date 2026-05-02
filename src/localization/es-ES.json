@@ -561,6 +561,7 @@
         },
         "hide_ea": "Ocultar elem. anticipados",
         "hide_cart": "Ocultar elem. en tu carro",
+        "hide_mostly": "Ocultar elem. con reseñas mayormente positivas",
         "hide_mixed": "Ocultar elem. con reseñas variadas",
         "hide_negative": "Ocultar elem. con reseñas negativas",
         "discount_percent": {
