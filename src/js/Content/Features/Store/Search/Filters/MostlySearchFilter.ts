@@ -1,7 +1,7 @@
 import SimpleSearchFilter from "./SimpleSearchFilter";
 import {__searchFilters_hideMostly} from "@Strings/_strings";
-import type FSearchFilters from "@Content/Features/Store/Search/FSearchFilters";
 import {L} from "@Core/Localization/Localization";
+import type FSearchFilters from "@Content/Features/Store/Search/FSearchFilters";
 
 export default class MostlySearchFilter extends SimpleSearchFilter {
 
