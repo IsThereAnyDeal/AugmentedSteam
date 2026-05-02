@@ -6,6 +6,7 @@ import HTML from "@Core/Html/Html";
 import {L} from "@Core/Localization/Localization";
 import CartSearchFilter from "@Content/Features/Store/Search/Filters/CartSearchFilter";
 import EarlyAccessSearchFilter from "@Content/Features/Store/Search/Filters/EarlyAccessSearchFilter";
+import MostlySearchFilter from "@Content/Features/Store/Search/Filters/MostlySearchFilter";
 import MixedSearchFilter from "@Content/Features/Store/Search/Filters/MixedSearchFilter";
 import NegativeSearchFilter from "@Content/Features/Store/Search/Filters/NegativeSearchFilter";
 import ReviewsScoreSearchFilter from "@Content/Features/Store/Search/Filters/ReviewsScoreSearchFilter";
