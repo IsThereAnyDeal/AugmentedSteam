@@ -179,6 +179,7 @@
         },
         "hide_cart": "Hide items in your Cart",
         "hide_ea": "Hide Early Access items",
+        "hide_mostly": "Hide mostly rating items",
         "hide_mixed": "Hide mixed rating items",
         "hide_negative": "Hide negative rating items"
     },
