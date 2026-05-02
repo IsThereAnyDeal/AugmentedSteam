@@ -165,6 +165,7 @@ export const __searchFilters_discountPercent_minCount = "searchFilters_discountP
 export const __searchFilters_discountPercent_maxCount = "searchFilters_discountPercent_maxCount";
 export const __searchFilters_hideCart = "searchFilters_hideCart";
 export const __searchFilters_hideEa = "searchFilters_hideEa";
+export const __searchFilters_hideMostly = "searchFilters_hideMostly";
 export const __searchFilters_hideMixed = "searchFilters_hideMixed";
 export const __searchFilters_hideNegative = "searchFilters_hideNegative";
 export const __news = "news";
