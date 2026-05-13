@@ -1,3 +1,6 @@
+4.6.3: |
+  - fix AS not loading in wishlist after Steam changes
+
 4.6.2: |
   - fix wishlist features after Steam changes
 

@@ -24,33 +24,22 @@ export default class MarketPrices {
     private async fetchPrices(): Promise<IPriceResponse|null> {
         const globalId = this.info.globalId;
         const hashName = this.info.hashName;
-        const country = this.info.country;
         const walletCurrency = this.info.walletCurrency;
 
-        // load nameid
-        const itemResponse = await RequestData.getText(`https://steamcommunity.com/market/listings/${globalId}/${encodeURIComponent(hashName)}`);
-
-        const m = itemResponse.match(/Market_LoadOrderSpread\( (\d+) \)/);
-        if (!m) {
-            console.error("Failed to get nameId for item '%s'", hashName);
-            return null;
-        }
-        const itemNameId = Number(m[1]);
-
-        // load prices
-        const priceResponse = await RequestData.getJson<{
-            success?: boolean,
-            highest_buy_order?: string,
-            lowest_sell_order?: string
-        }>(`https://steamcommunity.com/market/itemordershistogram?country=${country}&language=english&currency=${walletCurrency}&item_nameid=${itemNameId}`);
-
-        if (!priceResponse || !priceResponse.success) {
-            console.error("Failed to get market prices for item '%s'", hashName);
+        const orderbook = await RequestData.getJson<{
+            success: boolean,
+            data: {
+                amtMaxBuyOrder: number,
+                amtMinSellOrder: number,
+                eCurrency: number
+            }
+        }>(`https://steamcommunity.com/market/orderbook?q=Load&qp=${encodeURIComponent(JSON.stringify([globalId,hashName]))}`);
+        if (!orderbook.success) {
             return null;
         }
 
-        let priceLow = Number(priceResponse.highest_buy_order);
-        let priceHigh = Number(priceResponse.lowest_sell_order);
+        let priceLow = Number(orderbook.data.amtMaxBuyOrder);
+        let priceHigh = Number(orderbook.data.amtMinSellOrder);
 
         if (priceHigh > 0) {
             const diff = Settings.quickinv_diff;
@@ -58,7 +47,7 @@ export default class MarketPrices {
             priceHigh = Number(priceHigh.toFixed(2)) * 100;
         }
 
-        const currencyCode = CurrencyManager.currencyIdToCode(walletCurrency);
+        const currencyCode = CurrencyManager.currencyIdToCode(orderbook.data.eCurrency); // walletCurrency?
         return await SteamFacade.getMarketPrices(
             priceLow,
             priceHigh,
