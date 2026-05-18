@@ -1470,6 +1470,22 @@ export namespace google {
             public static getTypeUrl(typeUrlPrefix?: string): string;
         }
 
+        /** Edition enum. */
+        enum Edition {
+            EDITION_UNKNOWN = 0,
+            EDITION_LEGACY = 900,
+            EDITION_PROTO2 = 998,
+            EDITION_PROTO3 = 999,
+            EDITION_2023 = 1000,
+            EDITION_2024 = 1001,
+            EDITION_1_TEST_ONLY = 1,
+            EDITION_2_TEST_ONLY = 2,
+            EDITION_99997_TEST_ONLY = 99997,
+            EDITION_99998_TEST_ONLY = 99998,
+            EDITION_99999_TEST_ONLY = 99999,
+            EDITION_MAX = 2147483647
+        }
+
         /** Properties of a FileDescriptorProto. */
         interface IFileDescriptorProto {
 
@@ -1487,6 +1503,9 @@ export namespace google {
 
             /** FileDescriptorProto weakDependency */
             weakDependency?: (number[]|null);
+
+            /** FileDescriptorProto optionDependency */
+            optionDependency?: (string[]|null);
 
             /** FileDescriptorProto messageType */
             messageType?: (google.protobuf.IDescriptorProto[]|null);
@@ -1508,6 +1527,9 @@ export namespace google {
 
             /** FileDescriptorProto syntax */
             syntax?: (string|null);
+
+            /** FileDescriptorProto edition */
+            edition?: (google.protobuf.Edition|null);
         }
 
         /** Represents a FileDescriptorProto. */
@@ -1534,6 +1556,9 @@ export namespace google {
             /** FileDescriptorProto weakDependency. */
             public weakDependency: number[];
 
+            /** FileDescriptorProto optionDependency. */
+            public optionDependency: string[];
+
             /** FileDescriptorProto messageType. */
             public messageType: google.protobuf.IDescriptorProto[];
 
@@ -1554,6 +1579,9 @@ export namespace google {
 
             /** FileDescriptorProto syntax. */
             public syntax: string;
+
+            /** FileDescriptorProto edition. */
+            public edition: google.protobuf.Edition;
 
             /**
              * Encodes the specified FileDescriptorProto message. Does not implicitly {@link google.protobuf.FileDescriptorProto.verify|verify} messages.
@@ -1613,6 +1641,9 @@ export namespace google {
 
             /** DescriptorProto reservedName */
             reservedName?: (string[]|null);
+
+            /** DescriptorProto visibility */
+            visibility?: (google.protobuf.SymbolVisibility|null);
         }
 
         /** Represents a DescriptorProto. */
@@ -1654,6 +1685,9 @@ export namespace google {
             /** DescriptorProto reservedName. */
             public reservedName: string[];
 
+            /** DescriptorProto visibility. */
+            public visibility: google.protobuf.SymbolVisibility;
+
             /**
              * Encodes the specified DescriptorProto message. Does not implicitly {@link google.protobuf.DescriptorProto.verify|verify} messages.
              * @param message DescriptorProto message or plain object to encode
@@ -1690,6 +1724,9 @@ export namespace google {
 
                 /** ExtensionRange end */
                 end?: (number|null);
+
+                /** ExtensionRange options */
+                options?: (google.protobuf.IExtensionRangeOptions|null);
             }
 
             /** Represents an ExtensionRange. */
@@ -1706,6 +1743,9 @@ export namespace google {
 
                 /** ExtensionRange end. */
                 public end: number;
+
+                /** ExtensionRange options. */
+                public options?: (google.protobuf.IExtensionRangeOptions|null);
 
                 /**
                  * Encodes the specified ExtensionRange message. Does not implicitly {@link google.protobuf.DescriptorProto.ExtensionRange.verify|verify} messages.
@@ -1785,6 +1825,147 @@ export namespace google {
             }
         }
 
+        /** Properties of an ExtensionRangeOptions. */
+        interface IExtensionRangeOptions {
+
+            /** ExtensionRangeOptions uninterpretedOption */
+            uninterpretedOption?: (google.protobuf.IUninterpretedOption[]|null);
+
+            /** ExtensionRangeOptions declaration */
+            declaration?: (google.protobuf.ExtensionRangeOptions.IDeclaration[]|null);
+
+            /** ExtensionRangeOptions features */
+            features?: (google.protobuf.IFeatureSet|null);
+
+            /** ExtensionRangeOptions verification */
+            verification?: (google.protobuf.ExtensionRangeOptions.VerificationState|null);
+        }
+
+        /** Represents an ExtensionRangeOptions. */
+        class ExtensionRangeOptions implements IExtensionRangeOptions {
+
+            /**
+             * Constructs a new ExtensionRangeOptions.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: google.protobuf.IExtensionRangeOptions);
+
+            /** ExtensionRangeOptions uninterpretedOption. */
+            public uninterpretedOption: google.protobuf.IUninterpretedOption[];
+
+            /** ExtensionRangeOptions declaration. */
+            public declaration: google.protobuf.ExtensionRangeOptions.IDeclaration[];
+
+            /** ExtensionRangeOptions features. */
+            public features?: (google.protobuf.IFeatureSet|null);
+
+            /** ExtensionRangeOptions verification. */
+            public verification: google.protobuf.ExtensionRangeOptions.VerificationState;
+
+            /**
+             * Encodes the specified ExtensionRangeOptions message. Does not implicitly {@link google.protobuf.ExtensionRangeOptions.verify|verify} messages.
+             * @param message ExtensionRangeOptions message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encode(message: google.protobuf.IExtensionRangeOptions, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an ExtensionRangeOptions message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns ExtensionRangeOptions
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.ExtensionRangeOptions;
+
+            /**
+             * Gets the default type url for ExtensionRangeOptions
+             * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+             * @returns The default type url
+             */
+            public static getTypeUrl(typeUrlPrefix?: string): string;
+        }
+
+        namespace ExtensionRangeOptions {
+
+            /** Properties of a Declaration. */
+            interface IDeclaration {
+
+                /** Declaration number */
+                number?: (number|null);
+
+                /** Declaration fullName */
+                fullName?: (string|null);
+
+                /** Declaration type */
+                type?: (string|null);
+
+                /** Declaration reserved */
+                reserved?: (boolean|null);
+
+                /** Declaration repeated */
+                repeated?: (boolean|null);
+            }
+
+            /** Represents a Declaration. */
+            class Declaration implements IDeclaration {
+
+                /**
+                 * Constructs a new Declaration.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.protobuf.ExtensionRangeOptions.IDeclaration);
+
+                /** Declaration number. */
+                public number: number;
+
+                /** Declaration fullName. */
+                public fullName: string;
+
+                /** Declaration type. */
+                public type: string;
+
+                /** Declaration reserved. */
+                public reserved: boolean;
+
+                /** Declaration repeated. */
+                public repeated: boolean;
+
+                /**
+                 * Encodes the specified Declaration message. Does not implicitly {@link google.protobuf.ExtensionRangeOptions.Declaration.verify|verify} messages.
+                 * @param message Declaration message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.protobuf.ExtensionRangeOptions.IDeclaration, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a Declaration message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns Declaration
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.ExtensionRangeOptions.Declaration;
+
+                /**
+                 * Gets the default type url for Declaration
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** VerificationState enum. */
+            enum VerificationState {
+                DECLARATION = 0,
+                UNVERIFIED = 1
+            }
+        }
+
         /** Properties of a FieldDescriptorProto. */
         interface IFieldDescriptorProto {
 
@@ -1817,6 +1998,9 @@ export namespace google {
 
             /** FieldDescriptorProto options */
             options?: (google.protobuf.IFieldOptions|null);
+
+            /** FieldDescriptorProto proto3Optional */
+            proto3Optional?: (boolean|null);
         }
 
         /** Represents a FieldDescriptorProto. */
@@ -1857,6 +2041,9 @@ export namespace google {
 
             /** FieldDescriptorProto options. */
             public options?: (google.protobuf.IFieldOptions|null);
+
+            /** FieldDescriptorProto proto3Optional. */
+            public proto3Optional: boolean;
 
             /**
              * Encodes the specified FieldDescriptorProto message. Does not implicitly {@link google.protobuf.FieldDescriptorProto.verify|verify} messages.
@@ -1911,8 +2098,8 @@ export namespace google {
             /** Label enum. */
             enum Label {
                 LABEL_OPTIONAL = 1,
-                LABEL_REQUIRED = 2,
-                LABEL_REPEATED = 3
+                LABEL_REPEATED = 3,
+                LABEL_REQUIRED = 2
             }
         }
 
@@ -1978,6 +2165,15 @@ export namespace google {
 
             /** EnumDescriptorProto options */
             options?: (google.protobuf.IEnumOptions|null);
+
+            /** EnumDescriptorProto reservedRange */
+            reservedRange?: (google.protobuf.EnumDescriptorProto.IEnumReservedRange[]|null);
+
+            /** EnumDescriptorProto reservedName */
+            reservedName?: (string[]|null);
+
+            /** EnumDescriptorProto visibility */
+            visibility?: (google.protobuf.SymbolVisibility|null);
         }
 
         /** Represents an EnumDescriptorProto. */
@@ -1997,6 +2193,15 @@ export namespace google {
 
             /** EnumDescriptorProto options. */
             public options?: (google.protobuf.IEnumOptions|null);
+
+            /** EnumDescriptorProto reservedRange. */
+            public reservedRange: google.protobuf.EnumDescriptorProto.IEnumReservedRange[];
+
+            /** EnumDescriptorProto reservedName. */
+            public reservedName: string[];
+
+            /** EnumDescriptorProto visibility. */
+            public visibility: google.protobuf.SymbolVisibility;
 
             /**
              * Encodes the specified EnumDescriptorProto message. Does not implicitly {@link google.protobuf.EnumDescriptorProto.verify|verify} messages.
@@ -2022,6 +2227,60 @@ export namespace google {
              * @returns The default type url
              */
             public static getTypeUrl(typeUrlPrefix?: string): string;
+        }
+
+        namespace EnumDescriptorProto {
+
+            /** Properties of an EnumReservedRange. */
+            interface IEnumReservedRange {
+
+                /** EnumReservedRange start */
+                start?: (number|null);
+
+                /** EnumReservedRange end */
+                end?: (number|null);
+            }
+
+            /** Represents an EnumReservedRange. */
+            class EnumReservedRange implements IEnumReservedRange {
+
+                /**
+                 * Constructs a new EnumReservedRange.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.protobuf.EnumDescriptorProto.IEnumReservedRange);
+
+                /** EnumReservedRange start. */
+                public start: number;
+
+                /** EnumReservedRange end. */
+                public end: number;
+
+                /**
+                 * Encodes the specified EnumReservedRange message. Does not implicitly {@link google.protobuf.EnumDescriptorProto.EnumReservedRange.verify|verify} messages.
+                 * @param message EnumReservedRange message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.protobuf.EnumDescriptorProto.IEnumReservedRange, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes an EnumReservedRange message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns EnumReservedRange
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.EnumDescriptorProto.EnumReservedRange;
+
+                /**
+                 * Gets the default type url for EnumReservedRange
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
         }
 
         /** Properties of an EnumValueDescriptorProto. */
@@ -2258,6 +2517,24 @@ export namespace google {
             /** FileOptions csharpNamespace */
             csharpNamespace?: (string|null);
 
+            /** FileOptions swiftPrefix */
+            swiftPrefix?: (string|null);
+
+            /** FileOptions phpClassPrefix */
+            phpClassPrefix?: (string|null);
+
+            /** FileOptions phpNamespace */
+            phpNamespace?: (string|null);
+
+            /** FileOptions phpMetadataNamespace */
+            phpMetadataNamespace?: (string|null);
+
+            /** FileOptions rubyPackage */
+            rubyPackage?: (string|null);
+
+            /** FileOptions features */
+            features?: (google.protobuf.IFeatureSet|null);
+
             /** FileOptions uninterpretedOption */
             uninterpretedOption?: (google.protobuf.IUninterpretedOption[]|null);
         }
@@ -2313,6 +2590,24 @@ export namespace google {
             /** FileOptions csharpNamespace. */
             public csharpNamespace: string;
 
+            /** FileOptions swiftPrefix. */
+            public swiftPrefix: string;
+
+            /** FileOptions phpClassPrefix. */
+            public phpClassPrefix: string;
+
+            /** FileOptions phpNamespace. */
+            public phpNamespace: string;
+
+            /** FileOptions phpMetadataNamespace. */
+            public phpMetadataNamespace: string;
+
+            /** FileOptions rubyPackage. */
+            public rubyPackage: string;
+
+            /** FileOptions features. */
+            public features?: (google.protobuf.IFeatureSet|null);
+
             /** FileOptions uninterpretedOption. */
             public uninterpretedOption: google.protobuf.IUninterpretedOption[];
 
@@ -2367,6 +2662,12 @@ export namespace google {
             /** MessageOptions mapEntry */
             mapEntry?: (boolean|null);
 
+            /** MessageOptions deprecatedLegacyJsonFieldConflicts */
+            deprecatedLegacyJsonFieldConflicts?: (boolean|null);
+
+            /** MessageOptions features */
+            features?: (google.protobuf.IFeatureSet|null);
+
             /** MessageOptions uninterpretedOption */
             uninterpretedOption?: (google.protobuf.IUninterpretedOption[]|null);
         }
@@ -2391,6 +2692,12 @@ export namespace google {
 
             /** MessageOptions mapEntry. */
             public mapEntry: boolean;
+
+            /** MessageOptions deprecatedLegacyJsonFieldConflicts. */
+            public deprecatedLegacyJsonFieldConflicts: boolean;
+
+            /** MessageOptions features. */
+            public features?: (google.protobuf.IFeatureSet|null);
 
             /** MessageOptions uninterpretedOption. */
             public uninterpretedOption: google.protobuf.IUninterpretedOption[];
@@ -2436,11 +2743,32 @@ export namespace google {
             /** FieldOptions lazy */
             lazy?: (boolean|null);
 
+            /** FieldOptions unverifiedLazy */
+            unverifiedLazy?: (boolean|null);
+
             /** FieldOptions deprecated */
             deprecated?: (boolean|null);
 
             /** FieldOptions weak */
             weak?: (boolean|null);
+
+            /** FieldOptions debugRedact */
+            debugRedact?: (boolean|null);
+
+            /** FieldOptions retention */
+            retention?: (google.protobuf.FieldOptions.OptionRetention|null);
+
+            /** FieldOptions targets */
+            targets?: (google.protobuf.FieldOptions.OptionTargetType[]|null);
+
+            /** FieldOptions editionDefaults */
+            editionDefaults?: (google.protobuf.FieldOptions.IEditionDefault[]|null);
+
+            /** FieldOptions features */
+            features?: (google.protobuf.IFeatureSet|null);
+
+            /** FieldOptions featureSupport */
+            featureSupport?: (google.protobuf.FieldOptions.IFeatureSupport|null);
 
             /** FieldOptions uninterpretedOption */
             uninterpretedOption?: (google.protobuf.IUninterpretedOption[]|null);
@@ -2470,11 +2798,32 @@ export namespace google {
             /** FieldOptions lazy. */
             public lazy: boolean;
 
+            /** FieldOptions unverifiedLazy. */
+            public unverifiedLazy: boolean;
+
             /** FieldOptions deprecated. */
             public deprecated: boolean;
 
             /** FieldOptions weak. */
             public weak: boolean;
+
+            /** FieldOptions debugRedact. */
+            public debugRedact: boolean;
+
+            /** FieldOptions retention. */
+            public retention: google.protobuf.FieldOptions.OptionRetention;
+
+            /** FieldOptions targets. */
+            public targets: google.protobuf.FieldOptions.OptionTargetType[];
+
+            /** FieldOptions editionDefaults. */
+            public editionDefaults: google.protobuf.FieldOptions.IEditionDefault[];
+
+            /** FieldOptions features. */
+            public features?: (google.protobuf.IFeatureSet|null);
+
+            /** FieldOptions featureSupport. */
+            public featureSupport?: (google.protobuf.FieldOptions.IFeatureSupport|null);
 
             /** FieldOptions uninterpretedOption. */
             public uninterpretedOption: google.protobuf.IUninterpretedOption[];
@@ -2523,10 +2872,148 @@ export namespace google {
                 JS_STRING = 1,
                 JS_NUMBER = 2
             }
+
+            /** OptionRetention enum. */
+            enum OptionRetention {
+                RETENTION_UNKNOWN = 0,
+                RETENTION_RUNTIME = 1,
+                RETENTION_SOURCE = 2
+            }
+
+            /** OptionTargetType enum. */
+            enum OptionTargetType {
+                TARGET_TYPE_UNKNOWN = 0,
+                TARGET_TYPE_FILE = 1,
+                TARGET_TYPE_EXTENSION_RANGE = 2,
+                TARGET_TYPE_MESSAGE = 3,
+                TARGET_TYPE_FIELD = 4,
+                TARGET_TYPE_ONEOF = 5,
+                TARGET_TYPE_ENUM = 6,
+                TARGET_TYPE_ENUM_ENTRY = 7,
+                TARGET_TYPE_SERVICE = 8,
+                TARGET_TYPE_METHOD = 9
+            }
+
+            /** Properties of an EditionDefault. */
+            interface IEditionDefault {
+
+                /** EditionDefault edition */
+                edition?: (google.protobuf.Edition|null);
+
+                /** EditionDefault value */
+                value?: (string|null);
+            }
+
+            /** Represents an EditionDefault. */
+            class EditionDefault implements IEditionDefault {
+
+                /**
+                 * Constructs a new EditionDefault.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.protobuf.FieldOptions.IEditionDefault);
+
+                /** EditionDefault edition. */
+                public edition: google.protobuf.Edition;
+
+                /** EditionDefault value. */
+                public value: string;
+
+                /**
+                 * Encodes the specified EditionDefault message. Does not implicitly {@link google.protobuf.FieldOptions.EditionDefault.verify|verify} messages.
+                 * @param message EditionDefault message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.protobuf.FieldOptions.IEditionDefault, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes an EditionDefault message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns EditionDefault
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.FieldOptions.EditionDefault;
+
+                /**
+                 * Gets the default type url for EditionDefault
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a FeatureSupport. */
+            interface IFeatureSupport {
+
+                /** FeatureSupport editionIntroduced */
+                editionIntroduced?: (google.protobuf.Edition|null);
+
+                /** FeatureSupport editionDeprecated */
+                editionDeprecated?: (google.protobuf.Edition|null);
+
+                /** FeatureSupport deprecationWarning */
+                deprecationWarning?: (string|null);
+
+                /** FeatureSupport editionRemoved */
+                editionRemoved?: (google.protobuf.Edition|null);
+            }
+
+            /** Represents a FeatureSupport. */
+            class FeatureSupport implements IFeatureSupport {
+
+                /**
+                 * Constructs a new FeatureSupport.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.protobuf.FieldOptions.IFeatureSupport);
+
+                /** FeatureSupport editionIntroduced. */
+                public editionIntroduced: google.protobuf.Edition;
+
+                /** FeatureSupport editionDeprecated. */
+                public editionDeprecated: google.protobuf.Edition;
+
+                /** FeatureSupport deprecationWarning. */
+                public deprecationWarning: string;
+
+                /** FeatureSupport editionRemoved. */
+                public editionRemoved: google.protobuf.Edition;
+
+                /**
+                 * Encodes the specified FeatureSupport message. Does not implicitly {@link google.protobuf.FieldOptions.FeatureSupport.verify|verify} messages.
+                 * @param message FeatureSupport message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.protobuf.FieldOptions.IFeatureSupport, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a FeatureSupport message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns FeatureSupport
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.FieldOptions.FeatureSupport;
+
+                /**
+                 * Gets the default type url for FeatureSupport
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
         }
 
         /** Properties of an OneofOptions. */
         interface IOneofOptions {
+
+            /** OneofOptions features */
+            features?: (google.protobuf.IFeatureSet|null);
 
             /** OneofOptions uninterpretedOption */
             uninterpretedOption?: (google.protobuf.IUninterpretedOption[]|null);
@@ -2540,6 +3027,9 @@ export namespace google {
              * @param [properties] Properties to set
              */
             constructor(properties?: google.protobuf.IOneofOptions);
+
+            /** OneofOptions features. */
+            public features?: (google.protobuf.IFeatureSet|null);
 
             /** OneofOptions uninterpretedOption. */
             public uninterpretedOption: google.protobuf.IUninterpretedOption[];
@@ -2579,6 +3069,12 @@ export namespace google {
             /** EnumOptions deprecated */
             deprecated?: (boolean|null);
 
+            /** EnumOptions deprecatedLegacyJsonFieldConflicts */
+            deprecatedLegacyJsonFieldConflicts?: (boolean|null);
+
+            /** EnumOptions features */
+            features?: (google.protobuf.IFeatureSet|null);
+
             /** EnumOptions uninterpretedOption */
             uninterpretedOption?: (google.protobuf.IUninterpretedOption[]|null);
 
@@ -2600,6 +3096,12 @@ export namespace google {
 
             /** EnumOptions deprecated. */
             public deprecated: boolean;
+
+            /** EnumOptions deprecatedLegacyJsonFieldConflicts. */
+            public deprecatedLegacyJsonFieldConflicts: boolean;
+
+            /** EnumOptions features. */
+            public features?: (google.protobuf.IFeatureSet|null);
 
             /** EnumOptions uninterpretedOption. */
             public uninterpretedOption: google.protobuf.IUninterpretedOption[];
@@ -2639,6 +3141,15 @@ export namespace google {
             /** EnumValueOptions deprecated */
             deprecated?: (boolean|null);
 
+            /** EnumValueOptions features */
+            features?: (google.protobuf.IFeatureSet|null);
+
+            /** EnumValueOptions debugRedact */
+            debugRedact?: (boolean|null);
+
+            /** EnumValueOptions featureSupport */
+            featureSupport?: (google.protobuf.FieldOptions.IFeatureSupport|null);
+
             /** EnumValueOptions uninterpretedOption */
             uninterpretedOption?: (google.protobuf.IUninterpretedOption[]|null);
 
@@ -2657,6 +3168,15 @@ export namespace google {
 
             /** EnumValueOptions deprecated. */
             public deprecated: boolean;
+
+            /** EnumValueOptions features. */
+            public features?: (google.protobuf.IFeatureSet|null);
+
+            /** EnumValueOptions debugRedact. */
+            public debugRedact: boolean;
+
+            /** EnumValueOptions featureSupport. */
+            public featureSupport?: (google.protobuf.FieldOptions.IFeatureSupport|null);
 
             /** EnumValueOptions uninterpretedOption. */
             public uninterpretedOption: google.protobuf.IUninterpretedOption[];
@@ -2693,6 +3213,9 @@ export namespace google {
         /** Properties of a ServiceOptions. */
         interface IServiceOptions {
 
+            /** ServiceOptions features */
+            features?: (google.protobuf.IFeatureSet|null);
+
             /** ServiceOptions deprecated */
             deprecated?: (boolean|null);
 
@@ -2711,6 +3234,9 @@ export namespace google {
              * @param [properties] Properties to set
              */
             constructor(properties?: google.protobuf.IServiceOptions);
+
+            /** ServiceOptions features. */
+            public features?: (google.protobuf.IFeatureSet|null);
 
             /** ServiceOptions deprecated. */
             public deprecated: boolean;
@@ -2753,6 +3279,12 @@ export namespace google {
             /** MethodOptions deprecated */
             deprecated?: (boolean|null);
 
+            /** MethodOptions idempotencyLevel */
+            idempotencyLevel?: (google.protobuf.MethodOptions.IdempotencyLevel|null);
+
+            /** MethodOptions features */
+            features?: (google.protobuf.IFeatureSet|null);
+
             /** MethodOptions uninterpretedOption */
             uninterpretedOption?: (google.protobuf.IUninterpretedOption[]|null);
 
@@ -2771,6 +3303,12 @@ export namespace google {
 
             /** MethodOptions deprecated. */
             public deprecated: boolean;
+
+            /** MethodOptions idempotencyLevel. */
+            public idempotencyLevel: google.protobuf.MethodOptions.IdempotencyLevel;
+
+            /** MethodOptions features. */
+            public features?: (google.protobuf.IFeatureSet|null);
 
             /** MethodOptions uninterpretedOption. */
             public uninterpretedOption: google.protobuf.IUninterpretedOption[];
@@ -2802,6 +3340,16 @@ export namespace google {
              * @returns The default type url
              */
             public static getTypeUrl(typeUrlPrefix?: string): string;
+        }
+
+        namespace MethodOptions {
+
+            /** IdempotencyLevel enum. */
+            enum IdempotencyLevel {
+                IDEMPOTENCY_UNKNOWN = 0,
+                NO_SIDE_EFFECTS = 1,
+                IDEMPOTENT = 2
+            }
         }
 
         /** Properties of an UninterpretedOption. */
@@ -2932,6 +3480,314 @@ export namespace google {
 
                 /**
                  * Gets the default type url for NamePart
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+        }
+
+        /** Properties of a FeatureSet. */
+        interface IFeatureSet {
+
+            /** FeatureSet fieldPresence */
+            fieldPresence?: (google.protobuf.FeatureSet.FieldPresence|null);
+
+            /** FeatureSet enumType */
+            enumType?: (google.protobuf.FeatureSet.EnumType|null);
+
+            /** FeatureSet repeatedFieldEncoding */
+            repeatedFieldEncoding?: (google.protobuf.FeatureSet.RepeatedFieldEncoding|null);
+
+            /** FeatureSet utf8Validation */
+            utf8Validation?: (google.protobuf.FeatureSet.Utf8Validation|null);
+
+            /** FeatureSet messageEncoding */
+            messageEncoding?: (google.protobuf.FeatureSet.MessageEncoding|null);
+
+            /** FeatureSet jsonFormat */
+            jsonFormat?: (google.protobuf.FeatureSet.JsonFormat|null);
+
+            /** FeatureSet enforceNamingStyle */
+            enforceNamingStyle?: (google.protobuf.FeatureSet.EnforceNamingStyle|null);
+
+            /** FeatureSet defaultSymbolVisibility */
+            defaultSymbolVisibility?: (google.protobuf.FeatureSet.VisibilityFeature.DefaultSymbolVisibility|null);
+        }
+
+        /** Represents a FeatureSet. */
+        class FeatureSet implements IFeatureSet {
+
+            /**
+             * Constructs a new FeatureSet.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: google.protobuf.IFeatureSet);
+
+            /** FeatureSet fieldPresence. */
+            public fieldPresence: google.protobuf.FeatureSet.FieldPresence;
+
+            /** FeatureSet enumType. */
+            public enumType: google.protobuf.FeatureSet.EnumType;
+
+            /** FeatureSet repeatedFieldEncoding. */
+            public repeatedFieldEncoding: google.protobuf.FeatureSet.RepeatedFieldEncoding;
+
+            /** FeatureSet utf8Validation. */
+            public utf8Validation: google.protobuf.FeatureSet.Utf8Validation;
+
+            /** FeatureSet messageEncoding. */
+            public messageEncoding: google.protobuf.FeatureSet.MessageEncoding;
+
+            /** FeatureSet jsonFormat. */
+            public jsonFormat: google.protobuf.FeatureSet.JsonFormat;
+
+            /** FeatureSet enforceNamingStyle. */
+            public enforceNamingStyle: google.protobuf.FeatureSet.EnforceNamingStyle;
+
+            /** FeatureSet defaultSymbolVisibility. */
+            public defaultSymbolVisibility: google.protobuf.FeatureSet.VisibilityFeature.DefaultSymbolVisibility;
+
+            /**
+             * Encodes the specified FeatureSet message. Does not implicitly {@link google.protobuf.FeatureSet.verify|verify} messages.
+             * @param message FeatureSet message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encode(message: google.protobuf.IFeatureSet, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a FeatureSet message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns FeatureSet
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.FeatureSet;
+
+            /**
+             * Gets the default type url for FeatureSet
+             * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+             * @returns The default type url
+             */
+            public static getTypeUrl(typeUrlPrefix?: string): string;
+        }
+
+        namespace FeatureSet {
+
+            /** FieldPresence enum. */
+            enum FieldPresence {
+                FIELD_PRESENCE_UNKNOWN = 0,
+                EXPLICIT = 1,
+                IMPLICIT = 2,
+                LEGACY_REQUIRED = 3
+            }
+
+            /** EnumType enum. */
+            enum EnumType {
+                ENUM_TYPE_UNKNOWN = 0,
+                OPEN = 1,
+                CLOSED = 2
+            }
+
+            /** RepeatedFieldEncoding enum. */
+            enum RepeatedFieldEncoding {
+                REPEATED_FIELD_ENCODING_UNKNOWN = 0,
+                PACKED = 1,
+                EXPANDED = 2
+            }
+
+            /** Utf8Validation enum. */
+            enum Utf8Validation {
+                UTF8_VALIDATION_UNKNOWN = 0,
+                VERIFY = 2,
+                NONE = 3
+            }
+
+            /** MessageEncoding enum. */
+            enum MessageEncoding {
+                MESSAGE_ENCODING_UNKNOWN = 0,
+                LENGTH_PREFIXED = 1,
+                DELIMITED = 2
+            }
+
+            /** JsonFormat enum. */
+            enum JsonFormat {
+                JSON_FORMAT_UNKNOWN = 0,
+                ALLOW = 1,
+                LEGACY_BEST_EFFORT = 2
+            }
+
+            /** EnforceNamingStyle enum. */
+            enum EnforceNamingStyle {
+                ENFORCE_NAMING_STYLE_UNKNOWN = 0,
+                STYLE2024 = 1,
+                STYLE_LEGACY = 2
+            }
+
+            /** Properties of a VisibilityFeature. */
+            interface IVisibilityFeature {
+            }
+
+            /** Represents a VisibilityFeature. */
+            class VisibilityFeature implements IVisibilityFeature {
+
+                /**
+                 * Constructs a new VisibilityFeature.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.protobuf.FeatureSet.IVisibilityFeature);
+
+                /**
+                 * Encodes the specified VisibilityFeature message. Does not implicitly {@link google.protobuf.FeatureSet.VisibilityFeature.verify|verify} messages.
+                 * @param message VisibilityFeature message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.protobuf.FeatureSet.IVisibilityFeature, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a VisibilityFeature message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns VisibilityFeature
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.FeatureSet.VisibilityFeature;
+
+                /**
+                 * Gets the default type url for VisibilityFeature
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            namespace VisibilityFeature {
+
+                /** DefaultSymbolVisibility enum. */
+                enum DefaultSymbolVisibility {
+                    DEFAULT_SYMBOL_VISIBILITY_UNKNOWN = 0,
+                    EXPORT_ALL = 1,
+                    EXPORT_TOP_LEVEL = 2,
+                    LOCAL_ALL = 3,
+                    STRICT = 4
+                }
+            }
+        }
+
+        /** Properties of a FeatureSetDefaults. */
+        interface IFeatureSetDefaults {
+
+            /** FeatureSetDefaults defaults */
+            defaults?: (google.protobuf.FeatureSetDefaults.IFeatureSetEditionDefault[]|null);
+
+            /** FeatureSetDefaults minimumEdition */
+            minimumEdition?: (google.protobuf.Edition|null);
+
+            /** FeatureSetDefaults maximumEdition */
+            maximumEdition?: (google.protobuf.Edition|null);
+        }
+
+        /** Represents a FeatureSetDefaults. */
+        class FeatureSetDefaults implements IFeatureSetDefaults {
+
+            /**
+             * Constructs a new FeatureSetDefaults.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: google.protobuf.IFeatureSetDefaults);
+
+            /** FeatureSetDefaults defaults. */
+            public defaults: google.protobuf.FeatureSetDefaults.IFeatureSetEditionDefault[];
+
+            /** FeatureSetDefaults minimumEdition. */
+            public minimumEdition: google.protobuf.Edition;
+
+            /** FeatureSetDefaults maximumEdition. */
+            public maximumEdition: google.protobuf.Edition;
+
+            /**
+             * Encodes the specified FeatureSetDefaults message. Does not implicitly {@link google.protobuf.FeatureSetDefaults.verify|verify} messages.
+             * @param message FeatureSetDefaults message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encode(message: google.protobuf.IFeatureSetDefaults, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a FeatureSetDefaults message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns FeatureSetDefaults
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.FeatureSetDefaults;
+
+            /**
+             * Gets the default type url for FeatureSetDefaults
+             * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+             * @returns The default type url
+             */
+            public static getTypeUrl(typeUrlPrefix?: string): string;
+        }
+
+        namespace FeatureSetDefaults {
+
+            /** Properties of a FeatureSetEditionDefault. */
+            interface IFeatureSetEditionDefault {
+
+                /** FeatureSetEditionDefault edition */
+                edition?: (google.protobuf.Edition|null);
+
+                /** FeatureSetEditionDefault overridableFeatures */
+                overridableFeatures?: (google.protobuf.IFeatureSet|null);
+
+                /** FeatureSetEditionDefault fixedFeatures */
+                fixedFeatures?: (google.protobuf.IFeatureSet|null);
+            }
+
+            /** Represents a FeatureSetEditionDefault. */
+            class FeatureSetEditionDefault implements IFeatureSetEditionDefault {
+
+                /**
+                 * Constructs a new FeatureSetEditionDefault.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.protobuf.FeatureSetDefaults.IFeatureSetEditionDefault);
+
+                /** FeatureSetEditionDefault edition. */
+                public edition: google.protobuf.Edition;
+
+                /** FeatureSetEditionDefault overridableFeatures. */
+                public overridableFeatures?: (google.protobuf.IFeatureSet|null);
+
+                /** FeatureSetEditionDefault fixedFeatures. */
+                public fixedFeatures?: (google.protobuf.IFeatureSet|null);
+
+                /**
+                 * Encodes the specified FeatureSetEditionDefault message. Does not implicitly {@link google.protobuf.FeatureSetDefaults.FeatureSetEditionDefault.verify|verify} messages.
+                 * @param message FeatureSetEditionDefault message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.protobuf.FeatureSetDefaults.IFeatureSetEditionDefault, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a FeatureSetEditionDefault message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns FeatureSetEditionDefault
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.FeatureSetDefaults.FeatureSetEditionDefault;
+
+                /**
+                 * Gets the default type url for FeatureSetEditionDefault
                  * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
                  * @returns The default type url
                  */
@@ -3117,6 +3973,9 @@ export namespace google {
 
                 /** Annotation end */
                 end?: (number|null);
+
+                /** Annotation semantic */
+                semantic?: (google.protobuf.GeneratedCodeInfo.Annotation.Semantic|null);
             }
 
             /** Represents an Annotation. */
@@ -3139,6 +3998,9 @@ export namespace google {
 
                 /** Annotation end. */
                 public end: number;
+
+                /** Annotation semantic. */
+                public semantic: google.protobuf.GeneratedCodeInfo.Annotation.Semantic;
 
                 /**
                  * Encodes the specified Annotation message. Does not implicitly {@link google.protobuf.GeneratedCodeInfo.Annotation.verify|verify} messages.
@@ -3165,6 +4027,23 @@ export namespace google {
                  */
                 public static getTypeUrl(typeUrlPrefix?: string): string;
             }
+
+            namespace Annotation {
+
+                /** Semantic enum. */
+                enum Semantic {
+                    NONE = 0,
+                    SET = 1,
+                    ALIAS = 2
+                }
+            }
+        }
+
+        /** SymbolVisibility enum. */
+        enum SymbolVisibility {
+            VISIBILITY_UNSET = 0,
+            VISIBILITY_LOCAL = 1,
+            VISIBILITY_EXPORT = 2
         }
     }
 }
