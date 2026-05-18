@@ -11,11 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 21
+          node-version: 24
       - name: Install
         run: npm install
       - name: Check
@@ -23,7 +23,7 @@ jobs:
       - name: Build
         run: npm run build -- ${{ inputs.browser }} --production
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ inputs.browser }}
           path: dist/prod.${{ inputs.browser }}
