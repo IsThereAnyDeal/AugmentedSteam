@@ -36,7 +36,7 @@
     "idb": "^7.1.1",
     "luxon": "^3.4.4",
     "protobufjs": "^7.5.5",
-    "svelte": "^4.2.19",
+    "svelte": "^5.55.8",
     "webextension-polyfill": "^0.10.0",
     "zod": "^4.1.13"
   }
