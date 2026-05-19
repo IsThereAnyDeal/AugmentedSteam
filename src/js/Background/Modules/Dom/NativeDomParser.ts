@@ -124,7 +124,7 @@ export default class NativeDomParser implements DomParserInterface {
             const infoText = lineItem.textContent.toLowerCase();
             const match = (infoText.includes("zakoupeno") && !infoText.includes("odesláno")) // "Purchased on Steam" or "Purchased as part of" without "Sent to" (Store purchase including fod/nocost)
                 || (infoText.includes("aktivováno jako součást") && !infoText.includes("cd klíč byl zrušen")) // "Activated as part of" without "CD Key was revoked" (key activation)
-                || infoText.includes("získano jako dárek") // "Received as a gift or in trade" or "Received on Steam as part of" (Gift or inventory gift activation)
+                || infoText.includes("získáno jako dárek") // "Received as a gift or in trade" or "Received on Steam as part of" (Gift or inventory gift activation)
                 || infoText.includes("přidáno do vaší knihovny"); // "Added to your Steam library as part of" (External grant)
 
             if (!match) {
