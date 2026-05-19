@@ -11,6 +11,10 @@
     export let communityAppid: number;
     export let appName: string = "";
     export let appPage: boolean = false;
+
+    function slugify(value: string, separator: string): string {
+        return value.replaceAll(/\W+/g, separator);
+    }
 </script>
 
 
@@ -69,7 +73,12 @@
 
     {#each Settings.app_custom_link as link}
         {#if link.enabled}
-            {@const href = UrlUtils.escapeUserUrl(link.url, {"NAME": appName, "ID": String(appid)})}
+            {@const href = UrlUtils.escapeUserUrl(link.url, {
+                "NAME": appName,
+                "ID": String(appid),
+                "SLUG-": slugify(appName, "-"),
+                "SLUG_": slugify(appName, "_"),
+            })}
             {#if href}
                 <ExtraLink {href}
                            iconUrl={link.icon ? HTML.formatUrl(link.icon) : null}>
