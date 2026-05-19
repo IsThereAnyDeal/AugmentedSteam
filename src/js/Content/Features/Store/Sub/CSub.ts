@@ -5,7 +5,6 @@ import FDRMWarnings from "../Common/FDRMWarnings";
 import FExtraLinksCommon from "../Common/FExtraLinksCommon";
 import FITADPrices from "../Common/FITADPrices";
 import FRegionalPricing from "../Common/FRegionalPricing";
-import FSavingsCheck from "./FSavingsCheck";
 import type {ContextParams} from "@Content/Modules/Context/Context";
 import FSubHighlights from "@Content/Features/Store/Sub/FSubHighlights";
 
@@ -21,7 +20,6 @@ export default class CSub extends CStoreBase {
             FDRMWarnings,
             FITADPrices,
             FRegionalPricing,
-            FSavingsCheck,
             FSubHighlights
         ]);
 
