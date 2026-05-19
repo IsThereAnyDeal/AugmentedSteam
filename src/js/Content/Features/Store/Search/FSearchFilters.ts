@@ -95,7 +95,6 @@ export default class FSearchFilters extends Feature<CSearch> {
             const newResults = document.querySelectorAll<HTMLElement>(".search_result_row:not([data-as-review-count])");
 
             EarlyAccessUtils.show(this.context.language, newResults);
-            HighlightsTagsUtils.highlightAndTag(newResults);
 
             const params = new URLSearchParams(window.location.search);
 

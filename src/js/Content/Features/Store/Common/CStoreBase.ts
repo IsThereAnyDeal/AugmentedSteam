@@ -1,4 +1,3 @@
-import FHighlightsTags from "../../Common/FHighlightsTags";
 import FAlternativeLinuxIcon from "./FAlternativeLinuxIcon";
 import FSkipGotSteamDialog from "./FSkipGotSteamDialog";
 import FHorizontalScrolling from "./FHorizontalScrolling";
@@ -17,7 +16,6 @@ export default class CStoreBase extends CBase {
         features: (typeof Feature<Context>)[] = []
     ) {
         features.push(
-            FHighlightsTags,
             FAlternativeLinuxIcon,
             FSkipGotSteamDialog,
             FHorizontalScrolling,
