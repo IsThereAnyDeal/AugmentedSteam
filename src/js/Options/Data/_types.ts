@@ -185,5 +185,6 @@ export interface SettingsSchema {
     context_bartervg: boolean,
     context_steamdb: boolean,
     context_steamdb_instant: boolean,
+    context_protondb: boolean,
     context_steam_keys: boolean,
 }

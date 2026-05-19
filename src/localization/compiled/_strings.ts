@@ -316,6 +316,7 @@ export const __options_contextItad = "options_contextItad";
 export const __options_contextBartervg = "options_contextBartervg";
 export const __options_contextSteamdb = "options_contextSteamdb";
 export const __options_contextSteamdbInstant = "options_contextSteamdbInstant";
+export const __options_contextProtondb = "options_contextProtondb";
 export const __options_contextSteamKeys = "options_contextSteamKeys";
 export const __options_wsgf = "options_wsgf";
 export const __options_versionShow = "options_versionShow";

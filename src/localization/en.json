@@ -354,6 +354,7 @@
         "context_bartervg": "Search Barter.vg for '__query__'",
         "context_steamdb": "Search SteamDB for '__query__'",
         "context_steamdb_instant": "Instant Search SteamDB for '__query__'",
+        "context_protondb": "Search ProtonDB for '__query__'",
         "context_steam_keys": "Activate steam product keys within selection",
         "wsgf": "Show WSGF (Widescreen) information",
         "version_show": "Show change log when Augmented Steam updates",

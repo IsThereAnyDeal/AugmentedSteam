@@ -180,6 +180,7 @@ export const DefaultSettings: Readonly<SettingsSchema> = {
     context_bartervg: false,
     context_steamdb: false,
     context_steamdb_instant: false,
+    context_protondb: false,
     context_steam_keys: false,
 };
 
