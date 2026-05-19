@@ -789,15 +789,6 @@ video.highlight_movie:hover + .html5_video_overlay {
  * App pages
  * Common/FExtraLinks
  **************************************/
-.es_extralinks_ctn .es_app_btn:last-of-type {
-  margin-bottom: 0;
-}
-.es_extralinks_ctn {
-  text-align: center;
-  background: linear-gradient(to right, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.5) 100%);
-  padding: 16px;
-  margin: auto;
-}
 
 /* Copied from apphub.css, which isn't loaded on error pages */
 .es_apphub_OtherSiteInfo {
