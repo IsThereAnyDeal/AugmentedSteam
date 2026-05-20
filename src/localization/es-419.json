@@ -537,6 +537,7 @@
         },
         "hide_ea": "Ocultar artículos de Acceso Anticipado",
         "hide_cart": "Ocultar artículos en tu carrito",
+        "hide_mostly": "Ocultar artículos con calificación mayormente positiva",
         "hide_mixed": "Ocultar artículos con calificación mixta",
         "hide_negative": "Ocultar artículos con calificación negativa"
     },
