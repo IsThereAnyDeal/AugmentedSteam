@@ -22,7 +22,7 @@ import FPackageInfoButton from "./FPackageInfoButton";
 import FPatchHighlightPlayer from "./FPatchHighlightPlayer";
 import FPlayers from "./FPlayers";
 import FPurchaseDate from "./FPurchaseDate";
-import FRemoveBroadcasts from "./FRemoveBroadcasts";
+import FRemoveBroadcasts from "../Common/FRemoveBroadcasts";
 import FRemoveDupeScreenshots from "./FRemoveDupeScreenshots";
 import FReplaceDevPubLinks from "./FReplaceDevPubLinks";
 import FReviewToggleButton from "./FReviewToggleButton";

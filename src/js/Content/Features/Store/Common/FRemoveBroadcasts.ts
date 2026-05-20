@@ -1,9 +1,9 @@
 import Feature from "@Content/Modules/Context/Feature";
-import type CApp from "@Content/Features/Store/App/CApp";
 import Settings from "@Options/Data/Settings";
 import DOMHelper from "@Content/Modules/DOMHelper";
+import type CStoreBase from "@Content/Features/Store/Common/CStoreBase";
 
-export default class FRemoveBroadcasts extends Feature<CApp> {
+export default class FRemoveBroadcasts extends Feature<CStoreBase> {
 
     override checkPrerequisites(): boolean {
         return Settings.removebroadcasts
