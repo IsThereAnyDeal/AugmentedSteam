@@ -76,6 +76,7 @@ export const __translation = "translation";
 export const __helpTranslate = "helpTranslate";
 export const __lowest = "lowest";
 export const __lowestPrice = "lowestPrice";
+export const __loadCardPrice = "loadCardPrice";
 export const __viewBadgeProgress = "viewBadgeProgress";
 export const __badgeProgress = "badgeProgress";
 export const __salesTotal = "salesTotal";

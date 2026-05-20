@@ -46,8 +46,8 @@ export default class FCardMarketLinks extends Feature<CGameCard> {
             (new CardLowestPrice({
                 target: node,
                 props: {
-                    country: this.context.user.storeCountry,
-                    currency: CurrencyManager.storeCurrency,
+                    // country: this.context.user.storeCountry,
+                    // currency: CurrencyManager.storeCurrency,
                     appid: this.context.appid,
                     cardName,
                     foil: this.context.isFoil,
