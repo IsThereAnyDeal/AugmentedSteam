@@ -359,13 +359,14 @@
             "romanian": "rumano",
             "schinese": "chino simplificado",
             "spanish": "español",
-            "latam": "español de Latinoamérica",
+            "latam": "español de Hispanoamérica",
             "swedish": "sueco",
             "tchinese": "chino tradicional",
             "thai": "tailandés",
             "turkish": "turco",
             "ukrainian": "ucraniano",
-            "vietnamese": "vietnamita"
+            "vietnamese": "vietnamita",
+            "indonesian": "indonesio"
         },
         "add_custom_link": "Añadir enlace personalizado",
         "auto_detect": "Autodetectar",
@@ -390,7 +391,8 @@
             "wishlist": "En mi lista de deseados",
             "loc": "Lugar de almacenamiento",
             "synced_storage": "Almacenamiento sincronizado/local",
-            "local": "Base de datos local"
+            "local": "Base de datos local",
+            "save_with_enter": "Guardar con Entrar"
         },
         "show_custom_themes": "Mostrar temas personalizados",
         "oneclickremovewl": "Saltar confirmación al eliminar obetos",
@@ -407,7 +409,24 @@
         "friends_and_groups": "Amigos y grupos",
         "friends_append_nickname": "Añadir apodos a los nombres de los amigos",
         "collection_banner_not_owned": "Mostrar solo en colección cuando no tengo el juego en Steam",
-        "homepage_default_tab_free": "Tendencias gratis"
+        "homepage_default_tab_free": "Tendencias gratis",
+        "headers": {
+            "itad_price_info": "La información del precio es de IsThereAnyDeal."
+        },
+        "followed": "Juegos seguidos",
+        "prevent_video_pause": "Evitar que se pausen los vídeos al minimizar (experimental)",
+        "tabtitle_appname_first": "Asegurar que el título de la pestaña empiece con el nombre del juego siempre",
+        "context_steam_lucky": "Buscar '__query__' en Steam (voy a tener suerte)",
+        "show_vaporlens_summary": "Mostrar resumen de VaporLens",
+        "show_steampeek": "Mostrar juegos similares según SteamPeek",
+        "ai": {
+            "title": "IA/LLM",
+            "killswitch": "Características IA/LLM",
+            "killswitch_info": "Alternar características IA/LLM"
+        },
+        "price": {
+            "restore_price_cut": "Restaurar corte del precio si Steam solo muestra el icono"
+        }
     },
     "ready": {
         "loading": "Cargando datos de Augmented Steam...",
@@ -432,7 +451,8 @@
         "notinterested": "No me interesa",
         "collection": "Coleccionado",
         "waitlist": "En lista de espera",
-        "ignored_owned": "No interesantes (los tienes)"
+        "ignored_owned": "No interesantes (los tienes)",
+        "followed": "Seguido"
     },
     "wallet": {
         "custom_amount": "Añadir valor personalizado",
@@ -466,7 +486,8 @@
     "update": {
         "dont_show": "No mostrar de nuevo",
         "updated": "Augmented Steam se ha actualizado a la versión __version__",
-        "changes": "Ver todos los cambios en GitHub"
+        "changes": "Ver todos los cambios en GitHub",
+        "updated_no_version": "Augmented Steam se ha actualizado"
     },
     "register": {
         "success": "__gamename__ se ha activado con éxito",
@@ -874,5 +895,21 @@
     "add_fullgame_to_wishlist": "Añadir juego completo a tu lista de deseados",
     "add_fullgame_to_waitlist": "Añadir juego completo a tu lista de espera",
     "remove_fullgame_from_waitlist_tooltip": "Eliminar de tu lista de espera",
-    "remove_fullgame_from_wishlist_and_waitlist_tooltip": "Eliminar de tus listas de deseados y de espera"
+    "remove_fullgame_from_wishlist_and_waitlist_tooltip": "Eliminar de tus listas de deseados y de espera",
+    "ok": "Aceptar",
+    "launch_random_game_error": "Error al buscar juegos",
+    "retry": "Reintentar",
+    "saving": "Guardando...",
+    "saved": "Guardado",
+    "vaporlens": {
+        "title": "Destacados de VaporLens",
+        "view": "Ver en VaporLens",
+        "show": "Mostrar VaporLens",
+        "hide": "Ocultar VaporLens",
+        "llm_note": "Este resumen se ha creado por terceros usando LLM. Las fechas son pregeneradas. No se usó LLM durante la solicitud de datos.",
+        "learn_more": "Más info./Desactivar"
+    },
+    "see_purchase_date": "Ver fecha de compra",
+    "since_date": "desde __date__",
+    "see_since_when_date": "ver desde"
 }

@@ -15,7 +15,7 @@
     "connected": "Kapcsolódva",
     "disconnect": "Kapcsolat bontása",
     "disconnected": "Kapcsolat bontva",
-    "oneclickgoo": "Drágakőre váltás 1 kattintással",
+    "oneclickgoo": "Drágakővé alakítás 1 kattintással",
     "view_in_library": "Megtekintés a Könyvtárban",
     "support": "Támogatás",
     "email": "E-mail",
@@ -57,18 +57,18 @@
     "selling": "Eladás...",
     "quick_sell": "Gyors eladás __amount__-ért",
     "quick_sell_desc": "__modifier__ árkülönbsége a legolcsóbb jelenleg listázotthoz képest Steam Piac-on",
-    "instant_sell": "Azonalli eladás __amount__-ért",
+    "instant_sell": "Azonnali eladás __amount__-ért",
     "instant_sell_desc": "A jelenleg listázott legdrágább megrendelés Steam Piac-on",
     "starting_at": "Kezdődik: __price__",
     "homepage_tabs": "Kezdőlap",
     "store": "Áruház",
-    "view_in_store": "Megtekintés a Áruház",
+    "view_in_store": "Megtekintés az Áruházban",
     "view_on_website": "Megtekintés itt: __website__",
     "drm_third_party": "Figyelem: A játék külső DRM-et tartalmaz __drmlist__.",
     "hours_short": "__hours__ óra",
     "spam_comment_show": "__num__ kéretlen hozzászólás elrejtve az oldalon.  Kattintson ide a megtekintéshez.",
-    "add_to_wishlist": "Felvétel a kívánságlistára",
-    "add_to_waitlist": "Kívánságlistához adás",
+    "add_to_wishlist": "Kívánságlistához adás",
+    "add_to_waitlist": "Várólistához adás",
     "language": "Nyelv",
     "theworddefault": "Alapértelmezett",
     "thewordclear": "Törlés",
@@ -107,13 +107,13 @@
     "viewinclient": "Megtekintés a Steam kliensben",
     "custom_background": "Egyedi profilháttér",
     "custom_style": "Egyéni stílus",
-    "custom_style_help": "Minden Bővített Steam felhasználó látni fogja ezt a témát a profilodon.A nem Bővített Steam felhasználók nem látják a változtatásokat.",
+    "custom_style_help": "Minden Augmented Steam felhasználó látni fogja ezt a témát a profilodon. A nem Augmented Steam felhasználók nem fogják látni a változtatásokat.",
     "noneselected": "Nincs kiválasztva / Nincs változás",
     "most_drops": "Legtöbb Esés",
     "net_gain": "Tiszta nyereség:",
     "apppage_recentupdates": "Friss események és bejelentések",
     "apppage_eaheader": "Korai hozzáférés info doboz",
-    "apppage_eabanner": "Korai hozzáférés megbeszélések banner",
+    "apppage_eabanner": "Korai hozzáférés témák banner",
     "apppage_workshop": "Steam Műhely Banner",
     "apppage_greenlight": "Steam Greenlight Banner",
     "apppage_legal": "Jogi információ",
@@ -145,6 +145,7 @@
         "leave": "Kilépés csoportokból",
         "selected": "__n__ kijelölve.",
         "leave_admin_confirm": {
+            "currently_admin": "Jelenleg a(z) __name__ adminisztrátora vagy.",
             "want_to_leave": "Biztosan kilépsz a csoportból?"
         }
     },
@@ -171,7 +172,7 @@
     "on_waitlist": "Várólistán",
     "cancel": "Mégse",
     "wiki_article": "__pcgw__ cikk megtekintése",
-    "view_all": "ÖSSZES MEGTEKINTÉS",
+    "view_all": "ÖSSZES MEGTEKINTÉSE",
     "games_with_booster": "__boostergames__ játékhoz vagy jogosult bónuszcsomagra",
     "sort_by": "Rendezési szempont:",
     "playtime": "Játékidő",
@@ -183,7 +184,7 @@
     "customize": "Testreszabás",
     "bundle_saving_text": "Ennyit spórolsz a csomag megvásárlásával",
     "thewordoptions": "Beállítások",
-    "discussions": "Megbeszélések",
+    "discussions": "Témák",
     "pricing": {
         "lowest_price": "Jelenlegi legjobb:",
         "historical_low": "Eddigi legalacsonyabb:",
@@ -240,7 +241,7 @@
         "context_itad": "IsThereAnyDeal keresése ezzel: '__query__'",
         "context_bartervg": "Barter.vg keresése ezzel: '__query__'",
         "context_steamdb": "SteamDB keresése ezzel: '__query__'",
-        "context_steamdb_instant": "Azonalli SteamDB keresés ezzel: '__query__'",
+        "context_steamdb_instant": "Azonnali SteamDB keresés ezzel: '__query__'",
         "context_steam_keys": "Kijelölésen belüli Steam kulcsok aktiválása",
         "wsgf": "Mutassa a WSGF (Széles képernyő) infókat",
         "version_show": "Változtatások mutatása, amikor az Augmented Steam frissül",
@@ -259,16 +260,16 @@
         "showlowestmarketprice": "Legalacsonyabb piaci ár mutatása az általad listázott elemekre",
         "clear": "Biztosan alaphelyzetbe állítja a beállításokat? A művelet nem vonható vissza.",
         "show_package_info": "Csomag információ megjelenítése minden alkalmazásra",
-        "wlbuttoncommunityapp": "\"Tedd Kivánságlistára\" gomb megjelenítése a közösségi alkalmazásokon",
+        "wlbuttoncommunityapp": "\"Kivánságlistára\" gomb megjelenítése a közösségi alkalmazásokon",
         "removeguideslanguagefilter": "Ne szűrje automatikusan az Útmutatókat nyelv szerint",
         "disablelinkfilter": "Megerősítés kikapcsolása külső oldalak esetén",
         "regional_price_on": "Mutassa a régiók árainak összevetését",
         "horizontalscrolling": "Vízszintes görgetés engedélyezése egér görgővel",
         "supportinfo": "Támogatás info mutatása az áruház oldalakon",
         "drm": "Mutassa a 3. fél általi DRM figyelmeztetéseket",
-        "show1clickgoo": "Mutassa \"1 klikk cserélje drágakőre\" gomb az alkalmazható raktár tárgyakon.",
+        "show1clickgoo": "Megerősítés kihagyása az elemek drágakővé alakításához",
         "hltb": "Mutassa a HowLongToBeat.com infókat",
-        "hidespamcomments": "Rejtse el a spam hozzászólásokat a Mühely és profilon.",
+        "hidespamcomments": "Spam hozzászólások elrejtése a Műhely elemeken és profilokon",
         "regional_price_mouse": "Egér mutató az Ár felett",
         "stores_all": "Összehasonlítás az összes bolttal",
         "view_in_currency": "Valuta:",
@@ -279,7 +280,7 @@
         "send_age_info": "Automatikusan elküldi az életkor ellenőrzést amikor kérik",
         "youtube": "YouTube linkek mutatása",
         "twitch": "Twitch linkek mutatása",
-        "pcgw": "Mutassa a PCGaminfWiki linkeket",
+        "pcgw": "Mutassa a PCGamingWiki linkeket",
         "completionistme": "Completionist.me linkek mutatása",
         "protondb": "ProtonDB linkek mutatása",
         "store_steamcards": "SteamCardExchange link mutatása az áruház oldalain",
@@ -382,11 +383,16 @@
             "user_notes": "Jegyzetek",
             "app": "App oldalakon",
             "wishlist": "Kivánságlistámon",
-            "local": "Lokális adatbázis"
+            "local": "Lokális adatbázis",
+            "save_with_enter": "Mentés Enterrel"
         },
         "show_custom_themes": "Egyéni témák megjelenítése",
         "hideannouncementcomments": "Kommentek automatikus elrejtése csoport bejelentések alatt",
-        "friends_and_groups": "Barátok és Csoportok"
+        "confirmdeletecomment": "Megerősítés kérése hozzászólás törlésekor",
+        "friends_and_groups": "Barátok és Csoportok",
+        "friends_append_nickname": "Becenevek hozzáfűzése a barátok nevéhez",
+        "homepage_default_tab_free": "Felkapott ingyenes",
+        "show_steampeek": "Hasonló játékok mutatása a SteamPeekről"
     },
     "ready": {
         "loading": "Augmented Steam betölti az adatokat...",
@@ -436,11 +442,13 @@
     },
     "tradeoffer": {
         "num_item": "__num__ tárgy",
-        "num_items": "__num__ tárgyak"
+        "num_items": "__num__ tárgyak",
+        "back": "Vissza a Csereajánlatokhoz"
     },
     "update": {
         "dont_show": "Ne Mutassa Újra",
-        "updated": "Augmented Steam frissítve lett a __version__ verzióra"
+        "updated": "Augmented Steam frissítve lett a __version__ verzióra",
+        "updated_no_version": "Az Augmented Steam frissült"
     },
     "register": {
         "success": "__gamename__ sikeresen aktiválva",
@@ -458,7 +466,9 @@
         "in_wishlist": "kívánságlistán",
         "on_sale": "akciós",
         "no_price": "ár nélkül",
-        "hidden": "rejtett app-ok"
+        "hidden": "rejtett app-ok",
+        "remove_title": "Törlöd ezt az elemet a kívánságlistádról?",
+        "remove_confirm": "Biztosan el akarod távolítani a(z) 'appid __appid__' tételt a kívánságlistádról?"
     },
     "coll": {
         "total_time": "összes idő",
@@ -471,6 +481,7 @@
         "update": "Jegyzet frissítése",
         "add_for_game": "Jegyzetek ehhez: __gamename__",
         "not_enough_space": "Nincs elég hely a jegyzet mentéséhez",
+        "close_on_storage": "A tárhelyed hamarosan megtelik",
         "save_local": "Jegyzetek lokális tárolása",
         "sync_option": "Jegyzetek automatikus szinkronizálása",
         "sync_error_empty": "A jegyzet üres",
@@ -540,6 +551,8 @@
     "login_warning": "Győződj meg róla, hogy be vagy jelentkezve __link__, hogy az Augmented Steam összes funkcióját használhasd",
     "youtube_reviews": "YouTube értékelések",
     "download_demo_header": "__gamename__ Demo letöltése",
+    "shopping_cart_history": "Kosárelőzmények megtekintése",
+    "manage_webapi_key": "Steam Web API-kulcsom kezelése",
     "steam_cloud_header": "Steam Felhő",
     "steam_cloud_saves": "Felhő mentések",
     "community_hub": "Közösség",
@@ -555,12 +568,17 @@
     "delete_comment_prompt": "Biztosan törlöd a kommentet?",
     "theworderror": "Hiba",
     "no_data": "Nincs adat",
+    "quick_sell_verify": "Steam Guard megerősítés szükséges",
     "show_all": "Mind",
     "coupon_learn_more": {
         "link_text": "Tudj meg többet"
     },
+    "family_sharing_notice": {
+        "desc": "Ez a játék nem támogatja a Steam Családi Megosztást."
+    },
     "in_cart": "Kosárban",
     "toomanyrequests": "Túl sok kérés",
+    "awards": "Profildíjak",
     "remove_from_waitlist_tooltip": "Törlés kivánságlistáról",
     "remove_from_wishlist_and_waitlist_tooltip": "Törlés kivánság- és várólistáról",
     "on_wishlist_and_waitlist": "Kivánság- és várólistán",
@@ -811,5 +829,9 @@
     "add_fullgame_to_wishlist": "Teljes játék kivánságlistához adása",
     "add_fullgame_to_waitlist": "Teljes játék várólistához adása",
     "remove_fullgame_from_waitlist_tooltip": "Teljes játék törlése várólistáról",
-    "remove_fullgame_from_wishlist_and_waitlist_tooltip": "Teljes játék törlése kivánság- és várólistáról"
+    "remove_fullgame_from_wishlist_and_waitlist_tooltip": "Teljes játék törlése kivánság- és várólistáról",
+    "saving": "Mentés...",
+    "saved": "Mentve",
+    "since_date": "__date__ óta",
+    "see_since_when_date": "nézd meg mióta"
 }

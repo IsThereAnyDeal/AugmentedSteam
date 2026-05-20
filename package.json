@@ -4,7 +4,7 @@
     "build": "node scripts/build.mjs",
     "update-locales": "node scripts/locales.mjs download",
     "compile-locales": "node scripts/locales.mjs compile",
-    "locales": "npm run update-locales && npm run compile-locales",
+    "locales": "npm run update-locales || npm run compile-locales",
     "check": "npx tsc --noEmit && svelte-check",
     "release": "npm run check && node scripts/make-release.mjs",
     "protobufs": "node scripts/protobufs.mjs compile"

@@ -1,6 +1,7 @@
 {
     "steamid_of_user": "SteamID __user__",
     "copied": "Скопійовано до буферу обміну",
+    "view_steamid": "SteamID",
     "more_on_steampeek": "Переглянути більше на SteamPeek",
     "invite_friends": "Запросити друзів",
     "invite_to_group": "Запросити до групи",
@@ -83,6 +84,7 @@
     "reviews": "Огляди",
     "read_reviews": "Переглянути рецензії",
     "read_more_reviews": "Переглянути більше рецензій",
+    "youtube_gameplay": "Ґеймплей з YouTube",
     "package_info": "Інформація набору",
     "badge_completion_avg": "Середня ціна завершення: __cost__",
     "volume_sold_last_24": "Кількість: __sold__ продано за останні 24 год.",
@@ -111,6 +113,9 @@
     "most_drops": "більшість випадінь",
     "net_gain": "чистий доход:",
     "apppage_recentupdates": "Нещодавні події та оголошення",
+    "apppage_eaheader": "Інформація про дочасний доступ",
+    "apppage_eabanner": "Банер обговорень дочасного доступу",
+    "apppage_workshop": "Банер Майстерні Steam",
     "apppage_greenlight": "Банер Steam Greenlight",
     "apppage_legal": "Правова інформація",
     "apppage_franchise": "Франшиза",
@@ -121,6 +126,7 @@
     "drops_worth_avg": "Приблизна вартість",
     "visit_store": "Відвідати сторінку магазину",
     "all": "Всі",
+    "external_funds": "Витрачено зовнішніх коштів",
     "games_with_drops": "Ігор, в яких можуть випасти картки: __dropsgames__",
     "binder_view": "Вид «Папки»",
     "visit_trade_forum": "Відвідати Торговий Форум",
@@ -156,6 +162,7 @@
     "none": "Жодної",
     "empty_wishlist": {
         "title": "Очистити список бажаного",
+        "confirm": "Ви впевнені, що ви хочете очистити свій список бажаного? Цю дію скасувати не можна!",
         "removing": "Видалення елементу __cur__ з __total__..."
     },
     "about": "Про додаток",
@@ -165,6 +172,7 @@
     "play_game": "Грати в __gamename__?",
     "drops_value": "Найдорожча картка",
     "wishlist": "Список бажаного",
+    "on_wishlist": "У списку Бажаного",
     "on_waitlist": "У Waitlist",
     "cancel": "Вихід",
     "wiki_article": "Переглянути статтю __pcgw__",
@@ -184,6 +192,7 @@
     "pricing": {
         "lowest_price": "Поточна найкраща:",
         "historical_low": "Історичний мінімум:",
+        "bundled": "У бандлах:",
         "with_voucher": "З купоном __voucher__",
         "store": "у&nbsp;__store__",
         "bundle_count": "__count__ разів"
@@ -259,8 +268,10 @@
         "removeguideslanguagefilter": "Не фільтрувати автоматично гайди на мові користувача",
         "disablelinkfilter": "Переходити за посиланнями зовнішніх сайтів без підтвердження",
         "regional_price_on": "Відображати порівняння цін",
+        "horizontalscrolling": "Включити горизонтальне прокручування коліщатком миші на сторінках продуктів",
         "supportinfo": "Показувати інформацію про підтримку на сторінках крамниці",
         "drm": "Відображати попередження про DRM-технології сторонніх розробників (GFWL, Uplay і т.д.)",
+        "profile_link_images": "Іконки в профілі",
         "show1clickgoo": "Перетворювати предмети на самоцвіти без підтвердження",
         "hltb": "Відображати інформацію HowLongToBeat.com",
         "hidespamcomments": "Заховати коментарі в Майстерні і профілях, помічені як спам",
@@ -313,6 +324,7 @@
         "homepage_default_tab": "Вкладка домашньої сторінки за замовчуванням",
         "homepage_default_tab_remember": "Пам'ятайти попередні",
         "homepage_default_tab_newreleases": "Популярні новинки",
+        "homepage_default_tab_topsellers": "Лідери продажів",
         "homepage_default_tab_upcoming": "Майбутні",
         "homepage_default_tab_specials": "Знижки",
         "wishlist": "Предмети списку побажань",
@@ -445,6 +457,7 @@
     },
     "wallet": {
         "custom_amount": "Додати",
+        "custom_amount_text": "Будь-яка сума більше ніж __minamount__",
         "custom_giftcard": "Обрати подарункову картку  __input__"
     },
     "wsgf": {
@@ -457,6 +470,9 @@
     },
     "itad": {
         "import": "Періодично імпортувати:",
+        "last_import": "Останній імпорт",
+        "from": "з ITAD",
+        "to": "до ITAD",
         "sync_now": "Синхронізувати",
         "info": {
             "itad-steam": "Сполучення  Augmented Steam з IsThereAnyDeal надає вам можливість користатися підсвічуванням Augmented Steam та тегами для ігор у розділах Waitlist та Collection, навіть якщо ви не маєте їх у Steam.",
@@ -474,6 +490,7 @@
     "update": {
         "dont_show": "Більше не показувати",
         "updated": "Augmented Steam оновлено до __version__",
+        "changes": "Ця версія містить наступні зміни",
         "updated_no_version": "Augmented Steam оновлено"
     },
     "register": {
