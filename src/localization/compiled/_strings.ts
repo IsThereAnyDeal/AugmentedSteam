@@ -392,6 +392,7 @@ export const __options_installSteamButton = "options_installSteamButton";
 export const __options_replaceViewClient = "options_replaceViewClient";
 export const __options_showEmptyWishlist = "options_showEmptyWishlist";
 export const __options_showWishlistStats = "options_showWishlistStats";
+export const __options_showWishlistRanking = "options_showWishlistRanking";
 export const __options_oneclickremovewl = "options_oneclickremovewl";
 export const __options_userNotes_userNotes = "options_userNotes_userNotes";
 export const __options_userNotes_app = "options_userNotes_app";

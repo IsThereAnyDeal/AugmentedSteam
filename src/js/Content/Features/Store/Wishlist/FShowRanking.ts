@@ -1,6 +1,7 @@
 import type CWishlist from "@Content/Features/Store/Wishlist/CWishlist";
 import Feature from "@Content/Modules/Context/Feature";
 import Rank from "@Content/Features/Store/Wishlist/Components/Rank.svelte";
+import Settings from "@Options/Data/Settings";
 
 export default class FShowRanking extends Feature<CWishlist> {
 
@@ -8,11 +9,10 @@ export default class FShowRanking extends Feature<CWishlist> {
     private components: Rank[] = [];
 
     override checkPrerequisites(): boolean {
-        return this.context.isMyWishlist; // TODO add option
+        return Settings.show_wishlist_ranking && this.context.isMyWishlist;
     }
 
     override apply(): void {
-        // TODO update on reorder
         this.buildRankMap();
         this.context.onReorder.subscribe(() => this.handleUpdate());
         this.context.dom.onUpdate.subscribe(() => {
@@ -21,22 +21,40 @@ export default class FShowRanking extends Feature<CWishlist> {
     }
 
     private buildRankMap(): void {
-        this.ranks = new Map(
-            this.context.wishlistData?.map(
-                item => [item.appid, item.priority]
-            )
-        );
+        const priorities = this.context.wishlistData
+            ?.map(item => [item.appid, item.priority])
+            .sort((a, b) => (a[1] ?? Number.MAX_SAFE_INTEGER) - (b[1] ?? Number.MAX_SAFE_INTEGER));
+
+        this.ranks.clear();
+        let p = 1;
+        for (const [appid, _priority] of priorities) {
+            this.ranks.set(Number(appid), p++);
+        }
     }
 
     private async handleUpdate(): Promise<void> {
         this.buildRankMap();
+        this.clearRanks();
         this.addRanks();
+    }
+
+    private clearRanks(): void {
+        for (const component of this.components) {
+            if (component.isConnected()) {
+                component.$destroy();
+            }
+        }
+        this.components = [];
     }
 
     private addRanks(): void {
         const dom = this.context.dom.dom;
 
         for (let game of dom.gameList?.games ?? []) {
+            if (game.node.querySelector("[data-rfd-drag-handle-draggable-id]")) {
+                break;
+            }
+
             if (!game.appid) {
                 continue;
             }

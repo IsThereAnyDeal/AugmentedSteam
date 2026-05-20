@@ -102,6 +102,7 @@ export const DefaultSettings: Readonly<SettingsSchema> = {
     user_notes_wishlist: true,
     user_notes_simple: true,
     showwishliststats: true,
+    show_wishlist_ranking: false,
     oneclickremovewl: false,
     user_notes_adapter: "synced_storage",
     showlanguagewarning: true,

@@ -23,7 +23,7 @@
         __options_removebroadcasts,
         __options_showAlternativeLinuxIcon,
         __options_showEarlyAccess,
-        __options_showEmptyWishlist,
+        __options_showEmptyWishlist, __options_showWishlistRanking,
         __options_showWishlistStats,
         __options_skipGotSteam,
         __options_tag,
@@ -177,6 +177,7 @@
         <OptionGroup>
             <Toggle bind:value={$settings.showemptywishlist}>{L(__options_showEmptyWishlist)}</Toggle>
             <Toggle bind:value={$settings.showwishliststats}>{L(__options_showWishlistStats)}</Toggle>
+            <Toggle bind:value={$settings.show_wishlist_ranking}>{L(__options_showWishlistRanking)}</Toggle>
         </OptionGroup>
 
         <OptionGroup>
