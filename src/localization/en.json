@@ -581,7 +581,8 @@
         },
         "sync_events": "Sync Events",
         "expired": "Your ITAD connection has expired",
-        "reauthorize": "Reconnect"
+        "reauthorize": "Reconnect",
+        "no_sync_events": "No sync events"
     },
     "tradeoffer": {
         "num_item": "__num__ item",

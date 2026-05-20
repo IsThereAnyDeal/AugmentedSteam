@@ -518,6 +518,7 @@ export const __itad_info_steamItad = "itad_info_steamItad";
 export const __itad_syncEvents = "itad_syncEvents";
 export const __itad_expired = "itad_expired";
 export const __itad_reauthorize = "itad_reauthorize";
+export const __itad_noSyncEvents = "itad_noSyncEvents";
 export const __tradeoffer_numItem = "tradeoffer_numItem";
 export const __tradeoffer_numItems = "tradeoffer_numItems";
 export const __tradeoffer_back = "tradeoffer_back";
