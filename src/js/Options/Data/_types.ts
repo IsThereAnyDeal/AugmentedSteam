@@ -169,6 +169,7 @@ export interface SettingsSchema {
     profile_showcase_own_twitch: boolean,
     profile_showcase_twitch_profileonly: boolean,
 
+    itad_disconnect_popup: boolean,
     itad_sync_library: boolean,
     itad_sync_wishlist: boolean,
     add_to_waitlist: boolean,

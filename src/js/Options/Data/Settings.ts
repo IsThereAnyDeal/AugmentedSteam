@@ -164,6 +164,7 @@ export const DefaultSettings: Readonly<SettingsSchema> = {
     profile_showcase_own_twitch: false,
     profile_showcase_twitch_profileonly: false,
 
+    itad_disconnect_popup: true,
     itad_sync_library: true,
     itad_sync_wishlist: true,
     add_to_waitlist: false,

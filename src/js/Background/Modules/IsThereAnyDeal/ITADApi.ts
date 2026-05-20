@@ -181,6 +181,10 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
         }
     }
 
+    private async isExpired(): Promise<boolean> {
+        return AccessToken.isExpired();
+    }
+
     private async isConnected(): Promise<boolean> {
         return (await AccessToken.load()) !== null;
     }
@@ -603,6 +607,9 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
 
             case EAction.IsConnected:
                 return this.isConnected();
+
+            case EAction.IsExpired:
+                return this.isExpired();
 
             case EAction.Export:
                 return this.exportToItad(message.params.force);
