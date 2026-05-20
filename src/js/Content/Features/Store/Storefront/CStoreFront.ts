@@ -3,12 +3,14 @@ import FHomePageTab from "./FHomePageTab";
 import CStoreBase from "@Content/Features/Store/Common/CStoreBase";
 import ContextType from "@Content/Modules/Context/ContextType";
 import type {ContextParams} from "@Content/Modules/Context/Context";
+import FHighlightsTags from "@Content/Features/Common/FHighlightsTags";
 
 export default class CStoreFront extends CStoreBase {
 
     constructor(params: ContextParams) {
 
         super(params, ContextType.STORE_FRONT, [
+            FHighlightsTags,
             FCustomizer,
             FHomePageTab,
         ]);

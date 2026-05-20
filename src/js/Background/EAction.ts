@@ -47,6 +47,7 @@ export const enum EAction {
     Authorize = "itad.authorize",
     Disconnect = "itad.disconnect",
     IsConnected = "itad.isconnected",
+    IsExpired = "itad.isexpired",
     Export = "itad.export",
     Sync = "itad.sync",
     LastImport = "itad.lastimport",

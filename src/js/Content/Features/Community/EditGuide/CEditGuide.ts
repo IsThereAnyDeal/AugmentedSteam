@@ -1,6 +1,7 @@
 import FCustomTags from "./FCustomTags";
 import Context, {type ContextParams} from "@Content/Modules/Context/Context";
 import ContextType from "@Content/Modules/Context/ContextType";
+import FMaxLengthIndicator from "@Content/Features/Community/EditGuide/FMaxLengthIndicator";
 
 export default class CEditGuide extends Context {
 
@@ -11,6 +12,7 @@ export default class CEditGuide extends Context {
 
         super(params, ContextType.EDIT_GUIDE, hasFeatures ? [
             FCustomTags,
+            FMaxLengthIndicator
         ] : []);
     }
 }

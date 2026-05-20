@@ -3,8 +3,9 @@
 <script lang="ts">
     import {L} from "@Core/Localization/Localization";
     import {
+        __itad_enableSyncIgnored,
         __itad_enableSyncLibrary,
-        __itad_enableSyncWishlist, __itad_syncEvents,
+        __itad_enableSyncWishlist, __itad_showDisconnectPopup, __itad_syncEvents,
         __options_addToWaitlist,
         __options_collectionBannerNotOwned,
         __options_userNotes_userNotes,
@@ -48,6 +49,8 @@
                             on:syncEvent={loadSyncEvents}
                             on:connection={loadSyncEvents}
             />
+
+            <Toggle bind:value={$settings.itad_disconnect_popup}>{L(__itad_showDisconnectPopup)}</Toggle>
         </OptionGroup>
     </Section>
 
@@ -68,6 +71,12 @@
 
         <OptionGroup>
             <Toggle bind:value={$settings.add_to_waitlist}>{L(__options_addToWaitlist)}</Toggle>
+        </OptionGroup>
+    </Section>
+
+    <Section title="Ignore List">
+        <OptionGroup>
+            <Toggle bind:value={$settings.itad_sync_ignored}>{L(__itad_enableSyncIgnored)}</Toggle>
         </OptionGroup>
     </Section>
 

@@ -98,6 +98,7 @@ export interface SettingsSchema {
     user_notes_wishlist: boolean,
     user_notes_simple: boolean,
     showwishliststats: boolean,
+    show_wishlist_ranking: boolean,
     oneclickremovewl: boolean,
     user_notes_adapter: "synced_storage"|"idb",
     showlanguagewarning: boolean,
@@ -169,8 +170,10 @@ export interface SettingsSchema {
     profile_showcase_own_twitch: boolean,
     profile_showcase_twitch_profileonly: boolean,
 
+    itad_disconnect_popup: boolean,
     itad_sync_library: boolean,
     itad_sync_wishlist: boolean,
+    itad_sync_ignored: boolean,
     add_to_waitlist: boolean,
     collection_banner_notowned: boolean,
     itad_sync_notes: boolean,
@@ -185,5 +188,6 @@ export interface SettingsSchema {
     context_bartervg: boolean,
     context_steamdb: boolean,
     context_steamdb_instant: boolean,
+    context_protondb: boolean,
     context_steam_keys: boolean,
 }

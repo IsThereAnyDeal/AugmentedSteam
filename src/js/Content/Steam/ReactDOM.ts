@@ -5,7 +5,7 @@
 export default class ReactDOM {
 
     static globalHeader(): HTMLElement|null {
-        return document.querySelector<HTMLElement>("#StoreTemplate > header,#CommunityTemplate > header");
+        return document.querySelector<HTMLElement>("#StoreTemplate header,#CommunityTemplate header");
     }
 
     static globalActions(): HTMLElement|null {

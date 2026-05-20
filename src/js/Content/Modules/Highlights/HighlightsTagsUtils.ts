@@ -301,9 +301,9 @@ export default class HighlightsTagsUtils {
             const colors = {
                 ignored_owned: Settings.highlight_ignored_owned_color,
                 notinterested: Settings.highlight_notinterested_color,
+                followed:      Settings.highlight_followed_color,
                 waitlist:      Settings.highlight_waitlist_color,
                 wishlist:      Settings.highlight_wishlist_color,
-                followed:      Settings.highlight_followed_color,
                 collection:    Settings.highlight_collection_color,
                 owned:         Settings.highlight_owned_color,
             };

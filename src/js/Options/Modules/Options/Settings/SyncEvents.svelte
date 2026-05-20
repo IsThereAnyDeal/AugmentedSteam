@@ -1,5 +1,7 @@
 <script lang="ts">
     import type {TSyncEvent} from "@Background/Modules/IsThereAnyDeal/_types";
+    import {__itad_noSyncEvents} from "@Strings/_strings";
+    import {L} from "@Core/Localization/Localization";
 
     export let events: TSyncEvent[];
 </script>
@@ -14,7 +16,7 @@
             <div>{event.count}</div>
         </div>
     {:else}
-        No sync events
+        {L(__itad_noSyncEvents)}
     {/each}
 </div>
 

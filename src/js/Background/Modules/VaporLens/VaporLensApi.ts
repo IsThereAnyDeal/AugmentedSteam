@@ -44,6 +44,7 @@ export default class VaporLensApi extends Api implements MessageHandlerInterface
 
             const schema = z.object({
                 name: z.string().optional(),
+                lastUpdated: z.string().optional(),
                 categories: z.array(z.string()).optional(),
                 summary: z.array(z.string()).optional(),
                 positives: z.array(entrySchema).optional(),

@@ -1,19 +1,15 @@
 <script lang="ts">
     import {L} from "@Core/Localization/Localization";
-    import {__error, __loading, __lowestPrice, __retry, __toomanyrequests} from "@Strings/_strings";
+    import {__error, __loadCardPrice, __loading, __lowestPrice, __retry, __toomanyrequests} from "@Strings/_strings";
     import RequestData from "@Content/Modules/RequestData";
     import {onMount} from "svelte";
-    import TimeUtils from "@Core/Utils/TimeUtils";
     import SessionCacheApiFacade from "@Content/Modules/Facades/SessionCacheApiFacade";
     import Errors from "@Core/Errors/Errors";
     import Price from "@Content/Modules/Currency/Price";
     import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
 
-    interface TMarketPriceOverview {
-        success: boolean,
-        lowest_price?: string
-    }
-    interface TCacheData extends TMarketPriceOverview {
+    interface TCacheData {
+        price: string,
         url: string
     }
     const CachePrefix = "market:card";
@@ -22,51 +18,67 @@
         [" (Trading Card)", " (Foil Trading Card)"]
     ] as const;
 
-    export let country: string;
-    export let currency: string;
+    // export let country: string;
+    // export let currency: string;
     export let appid: number;
     export let cardName: string;
     export let foil: boolean;
     export let onprice: (price: Price) => void;
 
+    let marketHashName = `${appid}-${cardName}`;
+    let cacheName = marketHashName + (foil ? "-foil" : "");
+
     let uriPath: string = `${appid}-${encodeURIComponent(cardName)}`;
-    let promise = new Promise(() => {});
+    let promise: Promise<Price|null>|null = null;
 
-    async function fetchCardPrices(marketHashName: string): Promise<TMarketPriceOverview> {
-        // try to reduce chance for 429, not sure if this will help in any way shape or form
-        const jitter = 100 + Math.floor(Math.random()*5000)
-        await TimeUtils.timer(jitter);
+    async function loadFromCache(): Promise<Price|null> {
+        const cached = await SessionCacheApiFacade.get<TCacheData|null>(CachePrefix, cacheName);
+        if (cached) {
+            uriPath = cached.url;
 
-        const url = "https://steamcommunity.com/market/priceoverview/?"+(new URLSearchParams({
-            country,
-            currency: String(CurrencyManager.getCurrencyInfo(currency).id),
-            appid: "753",
-            market_hash_name: marketHashName
-        }));
+            if (cached.price) {
+                const price = Price.parseFromString(cached.price);
+                if (price) {
+                    onprice(price);
+                    return price;
+                }
+            }
+        }
+        return null;
+    }
 
+    async function fetchCardPrices(marketHashName: string): Promise<Price|null> {
+        let orderbook;
         try {
-            return await RequestData.getJson<TMarketPriceOverview>(url);
+            orderbook = await RequestData.getJson<{
+                success: boolean,
+                data: {
+                    amtMinSellOrder: number,
+                    eCurrency: number
+                }
+            }>(`https://steamcommunity.com/market/orderbook?q=Load&qp=${encodeURIComponent(JSON.stringify([753, marketHashName]))}`);
+
         } catch(e) {
             console.error(e);
             throw e;
         }
-    }
 
-    async function loadMarketCardPrices(): Promise<string|null> {
-        const marketHashName = `${appid}-${cardName}`;
-        const cacheName = marketHashName + (foil ? "-foil" : "");
-        const cached = await SessionCacheApiFacade.get<TCacheData>(CachePrefix, cacheName);
-        if (cached && cached.success) {
-            uriPath = cached.url;
-            return cached.lowest_price ?? null;
+        if (!orderbook.success || !orderbook.data.amtMinSellOrder) {
+            return null;
         }
 
-        let data: TMarketPriceOverview = {success: false};
+        const price = Number(orderbook.data.amtMinSellOrder*0.01);
+        const currencyCode = CurrencyManager.currencyIdToCode(orderbook.data.eCurrency);
+        return new Price(price, currencyCode);
+    }
+
+    async function loadMarketCardPrice(): Promise<Price|null> {
+        let price: Price|null = null;
         let fetched = false;
         for (const [sb, sf] of CardSuffixes) {
             const suffix = foil ? sf : sb;
-            data = await fetchCardPrices(marketHashName + suffix);
-            if (data.success && data.lowest_price) {
+            price = await fetchCardPrices(marketHashName + suffix);
+            if (price) {
                 fetched = true;
                 uriPath += suffix;
                 break;
@@ -78,52 +90,60 @@
             uriPath += CardSuffixes[0][foil ? 1 : 0];
         }
 
-        if (data.success) {
-            await SessionCacheApiFacade.set(CachePrefix, cacheName, Object.assign(data, {url: uriPath}));
+        if (price) {
+            await SessionCacheApiFacade.set(CachePrefix, cacheName, {
+                url: uriPath,
+                price: price.toString()
+            });
         }
-        return data.lowest_price ?? null;
-    }
 
-    async function getMarketCardPrices(): Promise<string|null> {
-        const priceStr = await loadMarketCardPrices();
-        if (priceStr) {
-            const price = Price.parseFromString(priceStr, currency);
-            if (price) {
-                onprice(price);
-            }
-        }
-        return priceStr;
+        return price;
     }
 
     function load(): void {
-        promise = getMarketCardPrices();
+        promise = (async () => {
+            const price = await loadMarketCardPrice();
+            if (price) {
+                onprice(price);
+            }
+            return price;
+        })();
     }
 
     onMount(() => {
-        load();
-    });
+        loadFromCache().then(price => {
+            if (price) {
+                promise = Promise.resolve(price);
+            }
+        });
+    })
 </script>
 
 
-
 <span>
-    {#await promise}
-        {L(__loading)}
-    {:then price}
-        <a class="es_card_search" href="https://steamcommunity.com/market/listings/753/{uriPath}">
-            {L(__lowestPrice)}
-        </a>
-        {price ?? "N/A"}
-    {:catch e}
+    {#if !promise}
         <button type="button" on:click={load}>
-            {#if e instanceof Errors.HTTPError && e.code === 429}
-                {L(__toomanyrequests)}
-            {:else}
-                {L(__error)}
-            {/if}
-            ({L(__retry)})
+            {L(__loadCardPrice)}
         </button>
-    {/await}
+    {:else}
+        {#await promise}
+            {L(__loading)}
+        {:then price}
+            <a class="es_card_search" href="https://steamcommunity.com/market/listings/753/{uriPath}">
+                {L(__lowestPrice)}
+            </a>
+            {price?.toString() ?? "N/A"}
+        {:catch e}
+            <button type="button" on:click={load}>
+                {#if e instanceof Errors.HTTPError && e.code === 429}
+                    {L(__toomanyrequests)}
+                {:else}
+                    {L(__error)}
+                {/if}
+                ({L(__retry)})
+            </button>
+        {/await}
+    {/if}
 </span>
 
 

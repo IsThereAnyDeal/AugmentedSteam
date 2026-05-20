@@ -102,6 +102,7 @@ export const DefaultSettings: Readonly<SettingsSchema> = {
     user_notes_wishlist: true,
     user_notes_simple: true,
     showwishliststats: true,
+    show_wishlist_ranking: false,
     oneclickremovewl: false,
     user_notes_adapter: "synced_storage",
     showlanguagewarning: true,
@@ -164,8 +165,10 @@ export const DefaultSettings: Readonly<SettingsSchema> = {
     profile_showcase_own_twitch: false,
     profile_showcase_twitch_profileonly: false,
 
+    itad_disconnect_popup: true,
     itad_sync_library: true,
     itad_sync_wishlist: true,
+    itad_sync_ignored: false,
     add_to_waitlist: false,
     collection_banner_notowned: false,
     itad_sync_notes: false,
@@ -180,6 +183,7 @@ export const DefaultSettings: Readonly<SettingsSchema> = {
     context_bartervg: false,
     context_steamdb: false,
     context_steamdb_instant: false,
+    context_protondb: false,
     context_steam_keys: false,
 };
 

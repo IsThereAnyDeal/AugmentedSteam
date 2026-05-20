@@ -11,6 +11,7 @@ interface TDOMGame {
 }
 
 interface TDOMStructure {
+    parent?: HTMLElement,
     gameList?: {
         node: HTMLElement,
         games: Array<TDOMGame>
@@ -27,13 +28,23 @@ export class WishlistDOM {
     }
 
     private update() {
-        const gameList = document.querySelector<HTMLElement>(".PU7fdVEQB8s-.Panel");
-        if (!gameList) {
+
+        const parent = document.querySelector<HTMLElement>("section.GHIW6-Wf1rQ-");
+        if (!parent) {
+            console.error("Didn't find parent");
             this.dom = {};
+            return;
+        }
+
+        const gameList = parent.querySelector<HTMLElement>(".PU7fdVEQB8s-.Panel");
+        if (!gameList) {
+            console.error("Didn't find gameList");
+            this.dom = {};
+            return;
         }
 
         const games: TDOMGame[] = [];
-        for (const gameNode of document.querySelectorAll<HTMLElement>(".c-Pw-ER6JnA-.Panel")) {
+        for (const gameNode of gameList.querySelectorAll<HTMLElement>(".c-Pw-ER6JnA-.Panel")) {
             const game: TDOMGame = {
                 node: gameNode
             };
@@ -55,6 +66,7 @@ export class WishlistDOM {
         }
 
         this.dom = Object.freeze({
+            parent,
             gameList: {
                 node: gameList!,
                 games
@@ -77,7 +89,7 @@ export class WishlistDOM {
             this.onUpdate.dispatch();
         });
         observer.observe(
-            this.dom.gameList!.node,
+            this.dom.parent!,
             {
                 subtree: true,
                 childList: true,

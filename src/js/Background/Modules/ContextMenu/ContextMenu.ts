@@ -1,6 +1,6 @@
 import {
     __options_contextBartervg,
-    __options_contextItad,
+    __options_contextItad, __options_contextProtondb,
     __options_contextSteamdb,
     __options_contextSteamdbInstant,
     __options_contextSteamKeys, __options_contextSteamLucky,
@@ -20,6 +20,7 @@ export type ContextMenuKeys = keyof SettingsSchema & (
     | "context_bartervg"
     | "context_steamdb"
     | "context_steamdb_instant"
+    | "context_protondb"
     | "context_steam_keys"
 );
 
@@ -53,6 +54,10 @@ export default class ContextMenu {
         "context_steamdb_instant": [
             __options_contextSteamdbInstant, "https://steamdb.info/instantsearch/?query=__query__",
             () => Settings.context_steamdb_instant
+        ],
+        "context_protondb": [
+            __options_contextProtondb, "https://www.protondb.com/search?q=__query__",
+            () => Settings.context_protondb
         ],
         "context_steam_keys": [
             __options_contextSteamKeys, "https://store.steampowered.com/account/registerkey?key=__query__",

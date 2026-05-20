@@ -6,6 +6,9 @@ import AppLinks from "@Content/Features/Store/Common/ExtraLinks/AppLinks.svelte"
 import type CApp from "@Content/Features/Store/App/CApp";
 import Settings from "@Options/Data/Settings";
 
+/**
+ * See: https://store.steampowered.com/app/102810/Gatling_Gears/?cc=fr
+ */
 export default class FExtraLinksAppError extends Feature<CApp> {
 
     override apply(): void {
@@ -18,25 +21,7 @@ export default class FExtraLinksAppError extends Feature<CApp> {
                 </a>
             </div>`);
 
-        if (!this.hasExtraLinksEnabled()) {
-            return;
-        }
-
-        const target = document.createElement("div");
-        target.classList.add("es_extralinks_ctn");
-        document.querySelector("#error_box")!.insertAdjacentElement("afterend", target);
-
-        (new AppLinks({
-            target,
-            props: {
-                appid: this.context.appid,
-                communityAppid: this.context.appid,
-            }
-        }));
-    }
-
-    private hasExtraLinksEnabled(): boolean {
-        return Settings.showitadlinks
+        const hasExtraLinks =  Settings.showitadlinks
             || Settings.showsteamdb
             || Settings.showbartervg
             || Settings.showsteamcardexchange
@@ -44,5 +29,18 @@ export default class FExtraLinksAppError extends Feature<CApp> {
             || Settings.showcompletionistme
             || Settings.showpcgw
             || Settings.app_custom_link.some(link => link.enabled);
+
+        if (!hasExtraLinks) {
+            return;
+        }
+
+        (new AppLinks({
+            target: document.querySelector("#error_box")!,
+            props: {
+                appid: this.context.appid,
+                communityAppid: this.context.appid,
+                appPage: false
+            }
+        }));
     }
 }

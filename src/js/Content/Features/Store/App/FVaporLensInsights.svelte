@@ -47,11 +47,16 @@
 <div class="vaporlens">
     <div class="header">
         <div class="eyebrow">
-            {L(__vaporlens_title)}
+            <div>
+                {L(__vaporlens_title)}
 
-            <a href={optionsUrl} target="_blank" rel="noopener">
-                <SettingsIcon />
-            </a>
+                <a href={optionsUrl} target="_blank" rel="noopener">
+                    <SettingsIcon />
+                </a>
+            </div>
+            <div class="date">
+                {(new Date(data.lastUpdated)).toLocaleString()}
+            </div>
         </div>
 
         <ViewOnButton href="https://vaporlens.app/app/{appid}">
@@ -138,6 +143,12 @@
 
         & a {
             font-size: 14px;
+        }
+
+        & .date {
+            font-size: 11px;
+            letter-spacing: normal;
+            color: #9ba3ab;
         }
     }
 

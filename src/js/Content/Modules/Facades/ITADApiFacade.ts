@@ -54,6 +54,10 @@ export default class ITADApiFacade {
         return Background.send(EAction.Disconnect);
     }
 
+    static isExpired(): Promise<boolean> {
+        return Background.send(EAction.IsExpired);
+    }
+
     static isConnected(): Promise<boolean> {
         return Background.send(EAction.IsConnected);
     }

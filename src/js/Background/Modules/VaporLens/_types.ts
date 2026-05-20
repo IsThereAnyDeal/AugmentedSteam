@@ -6,6 +6,7 @@ export interface TVaporLensEntry {
 
 export interface TVaporLensResponse {
     name?: string;
+    lastUpdated: string;
     categories?: string[];
     summary?: string[];
     positives?: TVaporLensEntry[];

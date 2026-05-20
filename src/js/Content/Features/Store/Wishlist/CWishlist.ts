@@ -10,10 +10,17 @@ import Context, {type ContextParams} from "@Content/Modules/Context/Context";
 import SteamFacade from "@Content/Modules/Facades/SteamFacade";
 import {WishlistDOM} from "@Content/Features/Store/Wishlist/Utils/WishlistDOM";
 import type {TReactQueryData} from "@Content/Features/_types";
+import FShowRanking from "@Content/Features/Store/Wishlist/FShowRanking";
+import Long from "long";
+import ServiceFactory from "@Protobufs/ServiceFactory";
+import WebRequestListener from "@Content/Modules/WebRequest/WebRequestListener";
+import ASEventHandler from "@Content/Modules/ASEventHandler";
+import Settings from "@Options/Data/Settings";
 
 export interface WishlistEntry {
     appid: number,
-    added: number
+    priority: number,
+    added: number,
 }
 
 export default class CWishlist extends Context {
@@ -22,6 +29,8 @@ export default class CWishlist extends Context {
     public readonly ownerId: string;
 
     public wishlistData: WishlistEntry[];
+
+    public readonly onReorder: ASEventHandler<void> = new ASEventHandler<void>();
 
     static override async create(params: ContextParams): Promise<CWishlist> {
 
@@ -53,16 +62,38 @@ export default class CWishlist extends Context {
             FWishlistStats,
             FEmptyWishlist,
             FExportWishlist,
+            FShowRanking
         ]);
 
         this.ownerId = ownerId;
         this.wishlistData = wishlistData;
         this.dom = new WishlistDOM();
 
+        if (Settings.show_wishlist_ranking && this.isMyWishlist) {
+            WebRequestListener.onComplete("reorder", ["https://store.steampowered.com/wishlist/action"],
+                async (_url: string) => {
+                    await this.reloadWishlistData();
+                    this.onReorder.dispatch();
+                });
+        }
+
         this.dom.observe();
     }
 
     public get isMyWishlist(): boolean {
         return this.ownerId === this.user.steamId;
+    }
+
+    private async reloadWishlistData(): Promise<void> {
+        const wishlist = await ServiceFactory.WishlistService(this.user).getWishlist({
+            steamid: Long.fromString(this.ownerId!)
+        });
+        this.wishlistData = wishlist.items.map(item => {
+            return {
+                appid: item.appid!,
+                priority: item.priority!,
+                added: item.dateAdded!
+            }
+        });
     }
 }

@@ -71,11 +71,11 @@ export default class FReviewSort extends Feature<CRecommended> {
                     ["playtime", L(__playtime)],
                     ["awards", L(__awards)],
                 ],
-                value: (await SyncedStorage.get("sortreviewsby")) ?? "default_ASC"
+                value: "default_ASC" // (await SyncedStorage.get("sortreviewsby")) ??
             }
         })).$on("change", e => {
             const {value, key, direction} = e.detail;
-            SyncedStorage.set("sortreviewsby", value);
+            // SyncedStorage.set("sortreviewsby", value);
             this._sortReviews(key, direction < 0);
         });
     }

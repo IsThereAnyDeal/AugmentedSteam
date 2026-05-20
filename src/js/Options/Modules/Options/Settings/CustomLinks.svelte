@@ -82,6 +82,7 @@
                     <span>URL</span>
                     <input type="url" class="inpt" placeholder="URL"
                            bind:value={link.url}>
+                    <span class="options">[ID], [NAME], [SLUG-], [SLUG_]</span>
                 </label>
 
                 <label>
@@ -133,6 +134,10 @@
         display: block;
         font-size: 0.85em;
         margin-bottom: 2px;
+
+        &.options {
+            margin: 2px 5px;
+        }
     }
 
     input[type=url] {
