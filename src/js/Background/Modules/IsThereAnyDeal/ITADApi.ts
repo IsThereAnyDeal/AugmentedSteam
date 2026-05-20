@@ -24,6 +24,7 @@ import TimeUtils from "@Core/Utils/TimeUtils";
 import {Unrecognized} from "@Background/background";
 import {__userNote_syncErrorEmpty, __userNote_syncErrorLength, __userNote_syncErrorUnknown} from "@Strings/_strings";
 import SyncedStorageAdapter from "@Content/Modules/UserNotes/Adapters/SyncedStorageAdapter";
+import browser from "webextension-polyfill";
 
 const MaxNoteLength = 250;
 const SyncEventsLimit = 40;
@@ -652,6 +653,19 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
         }
     }
 
+    private async checkPermissions(): Promise<boolean> {
+        // @ts-expect-error
+        if (!__FIREFOX) {
+            return true;
+        }
+
+        const RequiredPermissions = {
+            data_collection: ["websiteContent"]
+        };
+
+        // @ts-expect-error
+        return browser.permissions.contains(RequiredPermissions);
+    }
 
     handle(message: any): typeof Unrecognized|Promise<any> {
 
@@ -706,6 +720,9 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
 
             case EAction.ITAD_Notes_Delete:
                 return this.deleteNotes(message.params.appids);
+
+            case EAction.ITAD_Permissions_Check:
+                return this.checkPermissions();
         }
 
         return Unrecognized;

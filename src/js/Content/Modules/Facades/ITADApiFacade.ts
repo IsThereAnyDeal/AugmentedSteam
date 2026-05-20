@@ -1,8 +1,12 @@
 import type {
     TCollectionCopy,
-    TGetStoreListResponse, TInCollectionResponse,
+    TGetStoreListResponse,
+    TInCollectionResponse,
     TInWaitlistResponse,
-    TLastImportResponse, TNotesList, TPushNotesStatus, TSyncEvent
+    TLastImportResponse,
+    TNotesList,
+    TPushNotesStatus,
+    TSyncEvent
 } from "@Background/Modules/IsThereAnyDeal/_types";
 import Background from "@Core/Background";
 import {EAction} from "@Background/EAction";
@@ -19,9 +23,7 @@ export default class ITADApiFacade {
             return;
         }
 
-        // @ts-expect-error
-        const result = await browser.permissions.contains(RequiredPermissions);
-
+        const result = await Background.send<boolean>(EAction.ITAD_Permissions_Check);
         if (!result) {
             throw new Error("Missing permissions");
         }
