@@ -71,31 +71,31 @@
 {/if}
 
 
-<style global>
-    .es-copy {
+<style>
+    :global(.es-copy) {
         display: flex;
         align-items: baseline;
     }
-    .es-copy:hover .es-copy__id {
+    :global(.es-copy:hover .es-copy__id) {
         text-decoration: underline;
     }
-    .es-copy:hover .es-copy__icon {
+    :global(.es-copy:hover .es-copy__icon) {
         opacity: 1;
     }
-    .es-copy .es-copy__icon {
+    :global(.es-copy .es-copy__icon) {
         filter: invert(55%);
         height: 1.2em;
         margin-left: 5px;
         opacity: 0;
     }
-    .es-copy__copied {
+    :global(.es-copy__copied) {
         opacity: 0;
         transition: opacity .2s .6s;
         margin-left: 20px;
         color: #999;
         font-size: 0.95em;
     }
-    .es-copy.is-copied .es-copy__copied {
+    :global(.es-copy.is-copied .es-copy__copied) {
         opacity: 1;
         transition: opacity .2s 0s;
     }

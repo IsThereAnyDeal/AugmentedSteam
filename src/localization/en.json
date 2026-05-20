@@ -81,6 +81,7 @@
     "help_translate": "Help us translate Augmented Steam over at POEditor",
     "lowest": "Lowest",
     "lowest_price": "Current Lowest Price:",
+    "load_card_price": "Load card price",
     "view_badge_progress": "View badge progress",
     "badge_progress": "Badge Progress",
     "sales_total": "Sales total:",
@@ -354,6 +355,7 @@
         "context_bartervg": "Search Barter.vg for '__query__'",
         "context_steamdb": "Search SteamDB for '__query__'",
         "context_steamdb_instant": "Instant Search SteamDB for '__query__'",
+        "context_protondb": "Search ProtonDB for '__query__'",
         "context_steam_keys": "Activate steam product keys within selection",
         "wsgf": "Show WSGF (Widescreen) information",
         "version_show": "Show change log when Augmented Steam updates",
@@ -566,6 +568,7 @@
         "certifications": "WSGF Widescreen Certifications"
     },
     "itad": {
+        "show_disconnect_popup": "Show popup when connection with ITAD expires",
         "enable_sync_library": "Enable library sync",
         "enable_sync_wishlist": "Enable wishlist sync",
         "import": "Periodically import:",
@@ -577,7 +580,10 @@
             "itad-steam": "Connecting Augmented Steam with IsThereAnyDeal allows you to apply Augmented Steam's highlighting and tagging to games in your Waitlist and Collection even if you don't have them on Steam.",
             "steam-itad": "Furthermore, it allows you to import games from your Steam Library and/or Wishlist to IsThereAnyDeal, for improved accuracy (e.g. DLCs or unlisted games). Currently this feature can only add titles, not remove them, so it's not the replacement for IsThereAnyDeal's integrated sync, but an addition to it."
         },
-        "sync_events": "Sync Events"
+        "sync_events": "Sync Events",
+        "expired": "Your ITAD connection has expired",
+        "reauthorize": "Reconnect",
+        "no_sync_events": "No sync events"
     },
     "tradeoffer": {
         "num_item": "__num__ item",

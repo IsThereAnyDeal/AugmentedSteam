@@ -7,7 +7,8 @@
         __ignoredOwned,
         __notinterested,
         __options_collection,
-        __options_excludef2p, __options_followed,
+        __options_excludef2p,
+        __options_followed,
         __options_general,
         __options_homepageDefaultTab,
         __options_homepageDefaultTabFree,
@@ -19,6 +20,7 @@
         __options_horizontalscrolling,
         __options_oneclickremovewl,
         __options_owned,
+        __options_removebroadcasts,
         __options_showAlternativeLinuxIcon,
         __options_showEarlyAccess,
         __options_showEmptyWishlist,
@@ -186,6 +188,10 @@
         <OptionGroup>
             <Toggle bind:value={$settings.show_early_access}>{L(__options_showEarlyAccess)}</Toggle>
             <Toggle bind:value={$settings.show_alternative_linux_icon}>{L(__options_showAlternativeLinuxIcon)}</Toggle>
+        </OptionGroup>
+
+        <OptionGroup>
+            <Toggle bind:value={$settings.removebroadcasts}>{L(__options_removebroadcasts)}</Toggle>
         </OptionGroup>
 
         <OptionGroup>

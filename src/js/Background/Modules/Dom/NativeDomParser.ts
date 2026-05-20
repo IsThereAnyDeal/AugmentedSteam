@@ -108,6 +108,42 @@ export default class NativeDomParser implements DomParserInterface {
     parsePurchaseDatesHelp(html: string): number|null {
         const dummyPage = this.dom(html);
 
+        const lineItems = dummyPage.querySelectorAll(".help_purchase_detail_box .LineItemRow");
+        for (const lineItem of lineItems) {
+            const spans = lineItem.querySelectorAll("span");
+            if (spans.length < 2) {
+                continue;
+            }
+
+            const dateSpan = spans[0];
+            const infoSpan = spans[1];
+            if (!dateSpan?.textContent || !infoSpan?.textContent) {
+                continue;
+            }
+
+            const infoText = lineItem.textContent.toLowerCase();
+            const match = (infoText.includes("zakoupeno") && !infoText.includes("odesláno")) // "Purchased on Steam" or "Purchased as part of" without "Sent to" (Store purchase including fod/nocost)
+                || (infoText.includes("aktivováno jako součást") && !infoText.includes("cd klíč byl zrušen")) // "Activated as part of" without "CD Key was revoked" (key activation)
+                || infoText.includes("získáno") // "Received as a gift or in trade" or "Received on Steam as part of" (Gift or inventory gift activation)
+                || infoText.includes("přidáno do vaší knihovny"); // "Added to your Steam library as part of" (External grant)
+
+            if (!match) {
+                continue;
+            }
+
+            const dateText = dateSpan.textContent.trim()
+            let date = DateTime.fromFormat(dateText, "d. LLL. yyyy -", {locale: "cs"});
+            if (date.isValid) {
+                return date.toUnixInteger();
+            }
+
+            date = DateTime.fromFormat(dateText, "d. LLL. -", {locale: "cs"});
+            if (date.isValid) {
+                return date.toUnixInteger();
+            }
+        }
+
+        // revert to purchase box
         const node: HTMLElement|null = dummyPage.querySelector<HTMLElement>(".account_details div:has(.help_lowlight_text):last-of-type");
         if (!node) {
             return null;
@@ -131,21 +167,6 @@ export default class NativeDomParser implements DomParserInterface {
         }
 
         // no luck, try line items
-        const lineItem = dummyPage.querySelector(".help_purchase_detail_box .LineItemRow span");
-        if (lineItem && lineItem.textContent) {
-            const textValue = lineItem.textContent.trim()
-
-            let date = DateTime.fromFormat(textValue, "d. LLL. yyyy -", {locale: "cs"});
-            if (date.isValid) {
-                return date.toUnixInteger();
-            }
-
-            date = DateTime.fromFormat(textValue, "d. LLL. -", {locale: "cs"});
-            if (date.isValid) {
-                return date.toUnixInteger();
-            }
-        }
-
         return null;
     }
 }

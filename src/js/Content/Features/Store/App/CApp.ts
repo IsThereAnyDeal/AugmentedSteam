@@ -1,5 +1,4 @@
 import AppId from "@Core/GameId/AppId";
-import FMediaExpander from "../../Common/FMediaExpander";
 import FCustomizer from "../Common/FCustomizer";
 import FDRMWarnings from "../Common/FDRMWarnings";
 import FITADPrices from "../Common/FITADPrices";
@@ -22,7 +21,6 @@ import FPackageInfoButton from "./FPackageInfoButton";
 import FPatchHighlightPlayer from "./FPatchHighlightPlayer";
 import FPlayers from "./FPlayers";
 import FPurchaseDate from "./FPurchaseDate";
-import FRemoveBroadcasts from "./FRemoveBroadcasts";
 import FRemoveDupeScreenshots from "./FRemoveDupeScreenshots";
 import FReplaceDevPubLinks from "./FReplaceDevPubLinks";
 import FReviewToggleButton from "./FReviewToggleButton";
@@ -46,6 +44,7 @@ import FAppTitle from "@Content/Features/Store/App/FAppTitle";
 import FHorizontalScrolling from "@Content/Features/Store/App/FHorizontalScrolling";
 import FReleaseCountdown from "@Content/Features/Store/App/FReleaseCountdown";
 import FRestorePriceCut from "@Content/Features/Store/Common/FRestorePriceCut";
+import FHighlightsTags from "@Content/Features/Common/FHighlightsTags";
 
 export default class CApp extends CStoreBase {
 
@@ -76,6 +75,7 @@ export default class CApp extends CStoreBase {
             ? [
                 FExtraLinksAppError
             ] : [
+                FHighlightsTags,
                 FReplaceDevPubLinks,
                 FUserNotes,
                 FWaitlistDropdown,
@@ -103,7 +103,6 @@ export default class CApp extends CStoreBase {
                 FReviewToggleButton,
                 FOwnedActionsButtons,
                 FSupportInfo,
-                FRemoveBroadcasts,
                 FPreventVideoPause,
                 FDemoAbovePurchase,
                 FSaveReviewFilters,

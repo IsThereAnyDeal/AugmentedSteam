@@ -76,7 +76,7 @@ export default class HighlightsTagsUtils2 {
         for (const [name, color] of Object.entries(colors)) {
             css.push(
                 `.ash-${name}-bg {
-                    background: ${color} linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important;
+                    background: linear-gradient(135deg, hsla(from ${color} h s l / 0.1) 10%, hsla(from ${color} h s l / 0.5) 100%) !important;
                 }
                 .ash-${name}-outline {
                     outline: solid ${color};

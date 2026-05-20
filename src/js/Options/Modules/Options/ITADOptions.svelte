@@ -4,7 +4,7 @@
     import {L} from "@Core/Localization/Localization";
     import {
         __itad_enableSyncLibrary,
-        __itad_enableSyncWishlist, __itad_syncEvents,
+        __itad_enableSyncWishlist, __itad_showDisconnectPopup, __itad_syncEvents,
         __options_addToWaitlist,
         __options_collectionBannerNotOwned,
         __options_userNotes_userNotes,
@@ -48,6 +48,8 @@
                             on:syncEvent={loadSyncEvents}
                             on:connection={loadSyncEvents}
             />
+
+            <Toggle bind:value={$settings.itad_disconnect_popup}>{L(__itad_showDisconnectPopup)}</Toggle>
         </OptionGroup>
     </Section>
 

@@ -4,6 +4,7 @@ import ContextType from "@Content/Modules/Context/ContextType";
 import type {ContextParams} from "@Content/Modules/Context/Context";
 import DOMHelper from "@Content/Modules/DOMHelper";
 import FIFeelLucky from "@Content/Features/Store/Search/FIFeelLucky";
+import FSearchHighlights from "@Content/Features/Store/Search/FSearchHighlights";
 
 export default class CSearch extends CStoreBase {
 
@@ -11,6 +12,7 @@ export default class CSearch extends CStoreBase {
 
     constructor(params: ContextParams) {
         super(params, ContextType.SEARCH, [
+            FSearchHighlights,
             FSearchFilters,
             FIFeelLucky
         ]);

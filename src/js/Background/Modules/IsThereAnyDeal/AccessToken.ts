@@ -3,26 +3,14 @@ import TimeUtils from "@Core/Utils/TimeUtils";
 
 export default class AccessToken {
 
-    private static loadPromise: Promise<string|null>|undefined = undefined;
+    static async load(): Promise<string|null> {
+        const data = await LocalStorage.get("access_token");
+        return data && TimeUtils.isInFuture(data.expiry) ? data.token : null;
+    }
 
-    static load(): Promise<string|null> {
-        if (!this.loadPromise) {
-            this.loadPromise = (async () => {
-                const data = await LocalStorage.get("access_token");
-                if (!data) {
-                    return null;
-                }
-
-                if (TimeUtils.isInPast(data.expiry)) {
-                    await LocalStorage.remove("access_token");
-                    return null;
-                }
-
-                return data.token;
-            })();
-        }
-
-        return this.loadPromise;
+    static async isExpired(): Promise<boolean> {
+        const data = await LocalStorage.get("access_token");
+        return typeof data !== "undefined" && TimeUtils.isInPast(data.expiry);
     }
 
     static async create(token: string, expiresIn: number) {
@@ -30,11 +18,9 @@ export default class AccessToken {
             token: token,
             expiry: TimeUtils.now() + expiresIn
         })
-        this.loadPromise = undefined;
     }
 
     static async clear(): Promise<void> {
         await LocalStorage.remove("access_token");
-        this.loadPromise = undefined;
     }
 }

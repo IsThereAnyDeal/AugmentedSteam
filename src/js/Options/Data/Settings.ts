@@ -164,6 +164,7 @@ export const DefaultSettings: Readonly<SettingsSchema> = {
     profile_showcase_own_twitch: false,
     profile_showcase_twitch_profileonly: false,
 
+    itad_disconnect_popup: true,
     itad_sync_library: true,
     itad_sync_wishlist: true,
     add_to_waitlist: false,
@@ -180,6 +181,7 @@ export const DefaultSettings: Readonly<SettingsSchema> = {
     context_bartervg: false,
     context_steamdb: false,
     context_steamdb_instant: false,
+    context_protondb: false,
     context_steam_keys: false,
 };
 

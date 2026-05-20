@@ -5,7 +5,7 @@
     import type {SettingsSchema} from "../../../Data/_types";
     import {
         __options_contextBartervg,
-        __options_contextItad,
+        __options_contextItad, __options_contextProtondb,
         __options_contextSteamdb,
         __options_contextSteamdbInstant,
         __options_contextSteamKeys,
@@ -58,6 +58,11 @@
 <Toggle value={$settings.context_steamdb_instant}
         on:toggle={async (e) => handleChange("context_steamdb_instant", e.detail)}>
     {L(__options_contextSteamdbInstant, {query: "..."})}
+</Toggle>
+
+<Toggle value={$settings.context_protondb}
+        on:toggle={async (e) => handleChange("context_protondb", e.detail)}>
+    {L(__options_contextProtondb, {query: "..."})}
 </Toggle>
 
 <Toggle value={$settings.context_steam_keys}

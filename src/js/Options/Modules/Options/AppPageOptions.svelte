@@ -16,7 +16,6 @@
         __options_preventVideoPause,
         __options_protondb,
         __options_purchaseDates,
-        __options_removebroadcasts,
         __options_showBadgeProgress,
         __options_showbartervg,
         __options_showPackageInfo,
@@ -55,10 +54,6 @@
         <Toggle bind:value={$settings.showachinstore}>{L(__achievements_option)}</Toggle>
         <Toggle bind:value={$settings.purchase_dates}>{L(__options_purchaseDates)}</Toggle>
         <Toggle bind:value={$settings.show_badge_progress}>{L(__options_showBadgeProgress)}</Toggle>
-    </OptionGroup>
-
-    <OptionGroup>
-        <Toggle bind:value={$settings.removebroadcasts}>{L(__options_removebroadcasts)}</Toggle>
     </OptionGroup>
 
     <OptionGroup>
