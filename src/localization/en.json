@@ -572,6 +572,7 @@
         "show_disconnect_popup": "Show popup when connection with ITAD expires",
         "enable_sync_library": "Enable library sync",
         "enable_sync_wishlist": "Enable wishlist sync",
+        "enable_sync_ignored": "Enable sync of ignored games to ITAD",
         "import": "Periodically import:",
         "last_import": "Last import",
         "from": "from ITAD",

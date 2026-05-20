@@ -173,6 +173,7 @@ export interface SettingsSchema {
     itad_disconnect_popup: boolean,
     itad_sync_library: boolean,
     itad_sync_wishlist: boolean,
+    itad_sync_ignored: boolean,
     add_to_waitlist: boolean,
     collection_banner_notowned: boolean,
     itad_sync_notes: boolean,

@@ -510,6 +510,7 @@ export const __wsgf_certifications = "wsgf_certifications";
 export const __itad_showDisconnectPopup = "itad_showDisconnectPopup";
 export const __itad_enableSyncLibrary = "itad_enableSyncLibrary";
 export const __itad_enableSyncWishlist = "itad_enableSyncWishlist";
+export const __itad_enableSyncIgnored = "itad_enableSyncIgnored";
 export const __itad_import = "itad_import";
 export const __itad_lastImport = "itad_lastImport";
 export const __itad_from = "itad_from";

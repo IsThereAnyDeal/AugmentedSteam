@@ -8,8 +8,8 @@ export default abstract class Api {
         this.origin = origin;
     }
 
-    protected getUrl(path: string, query: Record<string, string|number|undefined> = {}): URL {
-        let url = new URL(path, this.origin);
+    protected getUrl(path: string, query: Record<string, string|number|undefined> = {}, origin?: string): URL {
+        let url = new URL(path, origin ?? this.origin);
         for (let [key, value] of Object.entries(query)) {
             if (value === undefined) {
                 continue

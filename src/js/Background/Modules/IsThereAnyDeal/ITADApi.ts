@@ -38,6 +38,7 @@ const RequiredScopes = [
     "wait_write",
     "coll_read",
     "coll_write",
+    "ignored_write",
     "notes_read",
     "notes_write"
 ];
@@ -307,10 +308,42 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
         // TODO error handling
     }
 
+    private async addToIgnored(appids: number[], subids: number[]): Promise<void> {
+        const accessToken = await AccessToken.load();
+        if (!accessToken) {
+            throw new Error("Missing access token");
+        }
+
+        const steamids = [
+            ...appids.map(appid => `app/${appid}`),
+            ...subids.map(subid => `sub/${subid}`),
+        ];
+
+        if (steamids.length === 0) {
+            return;
+        }
+
+        const map = await this.fetchGameIds(steamids);
+
+        if (map.size !== 0) {
+            const response = await fetch(new URL("ignored/games/v1", Config.ITADApiServerHost), {
+                method: "PUT",
+                headers: {"authorization": "Bearer " + accessToken},
+                body: JSON.stringify(Array.from(map.values()))
+            });
+
+            if (!response.ok) {
+                throw new Errors.HTTPError(response.status, response.statusText);
+            }
+        }
+
+        // TODO error handling
+    }
+
     private async exportToItad(force: boolean): Promise<void> {
         await SettingsStore.load();
 
-        if (!Settings.itad_sync_library && !Settings.itad_sync_wishlist) {
+        if (!Settings.itad_sync_library && !Settings.itad_sync_wishlist && !Settings.itad_sync_ignored) {
             return;
         }
 
@@ -322,20 +355,31 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
             }
         }
 
+        // fetch fresh data
+        const url = this.getUrl("dynamicstore/userdata", {}, "https://store.steampowered.com/");
+        const store = await this.fetchJson<{
+            rgOwnedApps: number[],
+            rgOwnedPackages: number[],
+            rgIgnoredApps: Record<number, number>,
+            // rgIgnoredPackages: Record<number, number>, // is this record or array?
+            rgWishlist: number[]
+        }>(url, {cache: "no-cache"});
+
+        const {rgOwnedApps, rgOwnedPackages, rgIgnoredApps, rgWishlist} = store;
+
         if (Settings.itad_sync_library) {
             const tx = IndexedDB.db.transaction(["dynamicStore", "itadImport"]);
-            const dynamicStore = tx.objectStore("dynamicStore");
             const itadImport = tx.objectStore("itadImport");
 
             const lastOwnedApps: Set<number> = new Set(await itadImport.get("lastOwnedApps") ?? []);
             const lastOwnedPackages: Set<number> = new Set(await itadImport.get("lastOwnedPackages") ?? []);
-
-            const ownedApps: number[] = await dynamicStore.get("ownedApps") ?? [];
-            const ownedPackages: number[] = await dynamicStore.get("ownedPackages") ?? [];
             await tx.done;
 
-            const newOwnedApps: number[] = ownedApps.filter(id => force || !lastOwnedApps.has(id));
-            const newOwnedPackages: number[] = ownedPackages.filter(id => force || !lastOwnedPackages.has(id));
+            const ownedApps: number[] = rgOwnedApps ?? [];
+            const ownedPackages: number[] = rgOwnedPackages ?? [];
+
+            const newOwnedApps: number[] = force ? ownedApps : ownedApps.filter(id => !lastOwnedApps.has(id));
+            const newOwnedPackages: number[] = force ? ownedPackages : ownedPackages.filter(id => !lastOwnedPackages.has(id));
 
             if (newOwnedApps.length > 0 || newOwnedPackages.length > 0) {
                 await this.addToCollection(newOwnedApps, newOwnedPackages);
@@ -349,20 +393,36 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
 
         if (Settings.itad_sync_wishlist) {
             const tx = IndexedDB.db.transaction(["dynamicStore", "itadImport"]);
-            const dynamicStore = tx.objectStore("dynamicStore");
             const itadImport = tx.objectStore("itadImport");
 
             const lastWishlisted: Set<number> = new Set(await itadImport.get("lastWishlisted") ?? []);
-            const wishlisted: number[] = await dynamicStore.get("wishlisted") ?? [];
+            const wishlisted: number[] = rgWishlist ?? [];
             await tx.done;
 
-            const newWishlisted: number[] = wishlisted.filter(id => force || !lastWishlisted.has(id));
+            const newWishlisted: number[] = force ? wishlisted : wishlisted.filter(id => !lastWishlisted.has(id));
 
             if (newWishlisted.length > 0) {
                 await this.addToWaitlist(newWishlisted);
                 await IndexedDB.put("itadImport", wishlisted, "lastWishlisted");
             }
             await this.recordSyncEvent("waitlist", "push", newWishlisted.length);
+        }
+
+        if (Settings.itad_sync_ignored) {
+            const tx = IndexedDB.db.transaction(["dynamicStore", "itadImport"]);
+            const itadImport = tx.objectStore("itadImport");
+
+            const lastIgnoredApps: Set<number> = new Set(await itadImport.get("lastIgnoredApps") ?? []);
+            const ignored: number[] = rgIgnoredApps ? Object.keys(rgIgnoredApps).map(Number) : [];
+            await tx.done;
+
+            const newIgnored: number[] = force ? ignored : ignored.filter(id => !lastIgnoredApps.has(id));
+
+            if (newIgnored.length > 0) {
+                await this.addToIgnored(newIgnored, [])
+                await IndexedDB.put("itadImport", ignored, "lastIgnoredApps");
+            }
+            await this.recordSyncEvent("ignored", "push", newIgnored.length);
         }
 
         let lastImport = await this.getLastImport();

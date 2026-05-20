@@ -168,6 +168,7 @@ export const DefaultSettings: Readonly<SettingsSchema> = {
     itad_disconnect_popup: true,
     itad_sync_library: true,
     itad_sync_wishlist: true,
+    itad_sync_ignored: false,
     add_to_waitlist: false,
     collection_banner_notowned: false,
     itad_sync_notes: false,
