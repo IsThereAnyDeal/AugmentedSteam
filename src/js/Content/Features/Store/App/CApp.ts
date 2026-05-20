@@ -1,5 +1,4 @@
 import AppId from "@Core/GameId/AppId";
-import FMediaExpander from "../../Common/FMediaExpander";
 import FCustomizer from "../Common/FCustomizer";
 import FDRMWarnings from "../Common/FDRMWarnings";
 import FITADPrices from "../Common/FITADPrices";
@@ -22,7 +21,6 @@ import FPackageInfoButton from "./FPackageInfoButton";
 import FPatchHighlightPlayer from "./FPatchHighlightPlayer";
 import FPlayers from "./FPlayers";
 import FPurchaseDate from "./FPurchaseDate";
-import FRemoveBroadcasts from "../Common/FRemoveBroadcasts";
 import FRemoveDupeScreenshots from "./FRemoveDupeScreenshots";
 import FReplaceDevPubLinks from "./FReplaceDevPubLinks";
 import FReviewToggleButton from "./FReviewToggleButton";
@@ -105,7 +103,6 @@ export default class CApp extends CStoreBase {
                 FReviewToggleButton,
                 FOwnedActionsButtons,
                 FSupportInfo,
-                FRemoveBroadcasts,
                 FPreventVideoPause,
                 FDemoAbovePurchase,
                 FSaveReviewFilters,

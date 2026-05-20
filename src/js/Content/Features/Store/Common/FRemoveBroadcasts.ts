@@ -6,12 +6,25 @@ import type CStoreBase from "@Content/Features/Store/Common/CStoreBase";
 export default class FRemoveBroadcasts extends Feature<CStoreBase> {
 
     override checkPrerequisites(): boolean {
-        return Settings.removebroadcasts
-            && document.querySelector("[data-featuretarget=broadcast-embed]") !== null;
+        return Settings.removebroadcasts;
     }
 
     override apply(): void {
-        document.querySelector("[data-featuretarget=broadcast-embed]")?.remove();
-        DOMHelper.insertScript("scriptlets/Store/App/stopBroadcast.js");
+        const observer = new MutationObserver(() => {
+            const broadcastNode = document.querySelector("[data-featuretarget=broadcast-embed],.SaleBroadcastSection_trgt");
+            if (!broadcastNode) {
+                return;
+            }
+
+            console.log("Removing broadcast");
+            broadcastNode.remove();
+            DOMHelper.insertScript("scriptlets/Store/App/stopBroadcast.js");
+            
+            // observer.disconnect(); // can't disconnect, because on react pages hydration would add broadcast back
+        });
+        observer.observe(document.body, {
+            subtree: true,
+            childList: true,
+        });
     }
 }

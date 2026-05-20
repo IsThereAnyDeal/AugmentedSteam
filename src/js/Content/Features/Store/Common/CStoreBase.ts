@@ -7,6 +7,7 @@ import HighlightsTagsUtils from "@Content/Modules/Highlights/HighlightsTagsUtils
 import EarlyAccessUtils from "@Content/Modules/EarlyAccess/EarlyAccessUtils";
 import type Feature from "@Content/Modules/Context/Feature";
 import Context, {type ContextParams} from "@Content/Modules/Context/Context";
+import FRemoveBroadcasts from "@Content/Features/Store/Common/FRemoveBroadcasts";
 
 export default class CStoreBase extends CBase {
 
@@ -19,6 +20,7 @@ export default class CStoreBase extends CBase {
             FAlternativeLinuxIcon,
             FSkipGotSteamDialog,
             FHorizontalScrolling,
+            FRemoveBroadcasts
         );
 
         super(params, type, features);

@@ -6,7 +6,6 @@ import FITADPrices from "../Common/FITADPrices";
 import ContextType from "@Content/Modules/Context/ContextType";
 import type {ContextParams} from "@Content/Modules/Context/Context";
 import FBundleHighlights from "@Content/Features/Store/Bundle/FBundleHighlights";
-import FRemoveBroadcasts from "@Content/Features/Store/Common/FRemoveBroadcasts";
 
 export default class CBundle extends CStoreBase {
 
@@ -19,8 +18,7 @@ export default class CBundle extends CStoreBase {
             FExtraLinksCommon,
             FDRMWarnings,
             FITADPrices,
-            FBundleHighlights,
-            FRemoveBroadcasts
+            FBundleHighlights
         ]);
 
         this.bundleid = BundleId.fromUrl(window.location.host + window.location.pathname)!;
