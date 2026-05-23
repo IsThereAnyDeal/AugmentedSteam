@@ -46,7 +46,7 @@ export default class FReleaseCountdown extends Feature<CApp> {
                     dateStyle: "medium",
                     timeStyle: "short"
                 }, {
-                    locale: this.context.language?.code ?? undefined
+                    locale: this.context.language?.locale ?? undefined
                 })
                 const str = ` (${date})`;
 
