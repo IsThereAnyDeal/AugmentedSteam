@@ -2,6 +2,7 @@ import ContextMenu from "./Modules/ContextMenu/ContextMenu";
 import IndexedDB from "@Background/Db/IndexedDB";
 import SteamCommunityApi from "./Modules/Community/SteamCommunityApi";
 import SteamStoreApi from "./Modules/Store/SteamStoreApi";
+import SteamWebApi from "./Modules/Store/SteamWebApi";
 import ITADApi from "./Modules/IsThereAnyDeal/ITADApi";
 import AugmentedSteamApi from "./Modules/AugmentedSteam/AugmentedSteamApi";
 import UserNotesApi from "./Modules/UserNotes/UserNotesApi";
@@ -60,6 +61,7 @@ const messageHandlers: MessageHandlerInterface[] = [
     new InventoryApi(),
     new ITADApi(),
     new SteamStoreApi(),
+    new SteamWebApi(),
     new UserNotesApi(),
     new VaporLensApi(),
     new WebRequestHandler(),

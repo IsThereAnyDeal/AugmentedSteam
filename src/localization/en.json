@@ -180,6 +180,8 @@
         },
         "hide_cart": "Hide items in your Cart",
         "hide_ea": "Hide Early Access items",
+        "hide_familyshared": "Hide games shared with my Family",
+        "hide_familyowned": "Hide games owned by my Family",
         "hide_mixed": "Hide mixed rating items",
         "hide_negative": "Hide negative rating items"
     },
