@@ -55,6 +55,7 @@ export default class ManifestBuilder {
                     id: "{1be309c5-3e4f-4b99-927d-bb500eb4fa88}",
                     strict_min_version: "109.0",
                     data_collection_permissions: {
+                        required: ["none"],
                         optional: [
                             "websiteContent"
                         ]
