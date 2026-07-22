@@ -36,7 +36,7 @@ export class WishlistDOM {
             return;
         }
 
-        const gameList = parent.querySelector<HTMLElement>(".PGSopUefbiA-.Panel");
+        const gameList = parent.querySelector<HTMLElement>(".PLkUpk974nY-.Panel");
         if (!gameList) {
             console.error("Didn't find gameList");
             this.dom = {};
@@ -44,7 +44,7 @@ export class WishlistDOM {
         }
 
         const games: TDOMGame[] = [];
-        for (const gameNode of gameList.querySelectorAll<HTMLElement>("._23GYIR-4tYA-.Panel")) {
+        for (const gameNode of gameList.querySelectorAll<HTMLElement>(".PE-3oq-yIvg-.Panel")) {
             const game: TDOMGame = {
                 node: gameNode
             };
@@ -75,7 +75,7 @@ export class WishlistDOM {
     }
 
     titleNode(parent: HTMLElement): HTMLAnchorElement|null {
-        return parent.querySelector<HTMLAnchorElement>("a.-GoIMKI09-4-[href*='/app/']");
+        return parent.querySelector<HTMLAnchorElement>("a.I8vuMMV-osE-[href*='/app/']");
     }
 
     appid(anchorNode: HTMLAnchorElement): AppId|null {
