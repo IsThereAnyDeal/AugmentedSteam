@@ -41,13 +41,13 @@ export default class FWishlistUserNotes extends Feature<CWishlist> {
                 }
             }
 
-            const titleNode = game.title?.node;
-            if (!titleNode) {
+            const targetNode = game.categories;
+            if (!targetNode) {
                 continue;
             }
 
             const component = new UserNote({
-                target: titleNode.parentElement!,
+                target: targetNode,
                 props: {
                     notes: this.notes!,
                     appName,

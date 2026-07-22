@@ -7,7 +7,8 @@ interface TDOMGame {
     title?: {
         node: HTMLElement,
         value: string|null,
-    }
+    },
+    categories: HTMLElement|null
 }
 
 interface TDOMStructure {
@@ -46,7 +47,8 @@ export class WishlistDOM {
         const games: TDOMGame[] = [];
         for (const gameNode of gameList.querySelectorAll<HTMLElement>(".PE-3oq-yIvg-.Panel")) {
             const game: TDOMGame = {
-                node: gameNode
+                node: gameNode,
+                categories: this.categoriesNode(gameNode)
             };
 
             const titleNode = this.titleNode(gameNode);
@@ -76,6 +78,10 @@ export class WishlistDOM {
 
     titleNode(parent: HTMLElement): HTMLAnchorElement|null {
         return parent.querySelector<HTMLAnchorElement>("a.I8vuMMV-osE-[href*='/app/']");
+    }
+
+    categoriesNode(parent: HTMLElement): HTMLAnchorElement|null {
+        return parent.querySelector<HTMLAnchorElement>(".lZzQoZsDjew-");
     }
 
     appid(anchorNode: HTMLAnchorElement): AppId|null {

@@ -38,7 +38,7 @@
         display: flex;
         gap: 2px;
         justify-content: flex-end;
-        margin-top: -50px;
+        margin-top: -30px;
         margin-bottom: 10px;
         position: relative;
         z-index: 2;

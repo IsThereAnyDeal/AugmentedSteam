@@ -43,7 +43,7 @@
         justify-self: flex-end;
         text-align: right;
         cursor: pointer;
-        color: #5fafdd;
+        color: #9dacbc;
         max-width: 400px;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -51,7 +51,7 @@
     }
     div.is-empty {
         font-style: italic;
-        color: #b2b8bd;
+        color: #9dacbc;
     }
     div:hover {
         color: white;
