@@ -1,3 +1,10 @@
+4.8.1: |
+  Just after I pushed hotfix, Steam broke wishlists again for us by adding new features. So we're hotfixing twice in the same day.
+  
+  It's entirely possible that there will be some minor changes by Steam in the next few days if they find some issues with new features.
+  If that happens and it breaks again, I might wait a little bit for it to settle down before fixing it in Augmented Steam,
+  so I'll ask you for patience :)
+  
 4.8.0: |
   Hotfix wishlist after Steam's breaking change.
   
