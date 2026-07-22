@@ -303,7 +303,7 @@
         "show_view_in_library": "\"Megtekintés a könyvtárban\" gomb mutatása birtokolt játékoknál",
         "install_steam_button": "\"Steam telepítése\" gomb",
         "replace_view_client": "Lecserélés \"Megtekintés a Steam kliensben\"-re",
-        "show_empty_wishlist": "\"Üres kívánságlista\" gomb kimutatása",
+        "show_empty_wishlist": "\"Kívánságlista ürítése\" gomb mutatása",
         "show_wishlist_stats": "Kívánságlista statisztikák mutatása a kívánságlistán",
         "inventory_nav_text": "Bővített kezelési lehetőségek a raktár oldalon",
         "market_total": "Tranzakció összefoglalás megjelenítése a Piacon",

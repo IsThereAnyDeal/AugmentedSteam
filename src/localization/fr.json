@@ -427,7 +427,9 @@
         },
         "price": {
             "restore_price_cut": "Rétablir la réduction de prix si Steam n'affiche que l'icône (dans le magasin)"
-        }
+        },
+        "context_protondb": "Recherche ProtonDB pour '__query__'",
+        "show_wishlist_ranking": "Toujours afficher le classement de la liste de souhaits"
     },
     "ready": {
         "loading": "Chargement des données d'Augmented Steam...",
@@ -480,7 +482,12 @@
         },
         "enable_sync_library": "Activer la synchronisation de la bibliothèque",
         "enable_sync_wishlist": "Activer la synchronisation de la liste de souhaits",
-        "sync_events": "Synchroniser les événements"
+        "sync_events": "Synchroniser les événements",
+        "show_disconnect_popup": "Afficher une fenêtre contextuelle lorsque la connexion avec ITAD expire",
+        "expired": "Votre connexion ITAD a expiré.",
+        "reauthorize": "Reconnecter",
+        "no_sync_events": "Aucun événement de synchronisation",
+        "enable_sync_ignored": "Activer la synchronisation des jeux ignorés avec ITAD"
     },
     "tradeoffer": {
         "num_item": "__num__ objet",
@@ -915,5 +922,6 @@
     },
     "see_purchase_date": "Voir la date d'achat",
     "since_date": "depuis __date__",
-    "see_since_when_date": "voir depuis quand"
+    "see_since_when_date": "voir depuis quand",
+    "load_card_price": "Charger le prix de la carte"
 }

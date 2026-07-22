@@ -427,7 +427,9 @@
         },
         "price": {
             "restore_price_cut": "Восстановить снижение цены, если Steam показывает только значок (на страницах приложений)"
-        }
+        },
+        "context_protondb": "Искать «__query__» в ProtonDB",
+        "show_wishlist_ranking": "Всегда показывать рейтинг списка желаемого"
     },
     "ready": {
         "loading": "Augmented Steam загружается...",
@@ -480,7 +482,12 @@
         },
         "enable_sync_library": "Включить синхронизацию библиотеки",
         "enable_sync_wishlist": "Включить синхронизацию списка желаемого",
-        "sync_events": "Синхронизация событий"
+        "sync_events": "Синхронизация событий",
+        "show_disconnect_popup": "Показывать всплывающее окно при истечении срока подключения к ITAD",
+        "expired": "Срок действия вашего подключения к ITAD истёк",
+        "reauthorize": "Переподключиться",
+        "no_sync_events": "Нет событий синхронизации",
+        "enable_sync_ignored": "Включить синхронизацию игр, добавленных в игнор, с ITAD"
     },
     "tradeoffer": {
         "num_item": "__num__ элем.",
@@ -915,5 +922,6 @@
     },
     "see_purchase_date": "Просмотреть дату покупки",
     "since_date": "с __date__",
-    "see_since_when_date": "см. как давно"
+    "see_since_when_date": "см. как давно",
+    "load_card_price": "Загрузить цену карточки"
 }
