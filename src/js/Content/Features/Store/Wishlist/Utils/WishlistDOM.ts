@@ -29,14 +29,14 @@ export class WishlistDOM {
 
     private update() {
 
-        const parent = document.querySelector<HTMLElement>("section.GHIW6-Wf1rQ-");
+        const parent = document.querySelector<HTMLElement>("section.jGMVnjZbmZM-");
         if (!parent) {
             console.error("Didn't find parent");
             this.dom = {};
             return;
         }
 
-        const gameList = parent.querySelector<HTMLElement>(".PU7fdVEQB8s-.Panel");
+        const gameList = parent.querySelector<HTMLElement>(".PGSopUefbiA-.Panel");
         if (!gameList) {
             console.error("Didn't find gameList");
             this.dom = {};
@@ -44,7 +44,7 @@ export class WishlistDOM {
         }
 
         const games: TDOMGame[] = [];
-        for (const gameNode of gameList.querySelectorAll<HTMLElement>(".c-Pw-ER6JnA-.Panel")) {
+        for (const gameNode of gameList.querySelectorAll<HTMLElement>("._23GYIR-4tYA-.Panel")) {
             const game: TDOMGame = {
                 node: gameNode
             };
@@ -75,7 +75,7 @@ export class WishlistDOM {
     }
 
     titleNode(parent: HTMLElement): HTMLAnchorElement|null {
-        return parent.querySelector<HTMLAnchorElement>("a.pOyXxbQoV38-[href*='/app/']");
+        return parent.querySelector<HTMLAnchorElement>("a.-GoIMKI09-4-[href*='/app/']");
     }
 
     appid(anchorNode: HTMLAnchorElement): AppId|null {
