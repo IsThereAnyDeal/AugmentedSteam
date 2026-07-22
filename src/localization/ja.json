@@ -387,7 +387,8 @@
             "wishlist": "自分の欲しいものリスト",
             "loc": "保存場所",
             "synced_storage": "同期済み/ローカルストレージ",
-            "local": "ローカルデータベース"
+            "local": "ローカルデータベース",
+            "save_with_enter": "Enter で保存 "
         },
         "show_custom_themes": "カスタムテーマを表示",
         "oneclickremovewl": "アイテムを削除するときに確認をスキップする",
@@ -400,7 +401,10 @@
         "about_desc_links": "詳細については、拡張機能の __website__ または __discord__ をご覧ください。",
         "footer_fork": "フォーク: IsThereAnyDeal",
         "footer_author": "原作者: jshackles",
-        "show_players_info": "プレイヤー数の情報を表示"
+        "show_players_info": "プレイヤー数の情報を表示",
+        "friends_and_groups": "フレンドとグループ",
+        "friends_append_nickname": "フレンドの名前にニックネームを追加する",
+        "collection_banner_not_owned": "Steamでゲームを所有していない場合にのみ、[コレクション] バナーを表示 "
     },
     "ready": {
         "loading": "Augmented Steam がデータをロード中……",
@@ -445,7 +449,9 @@
         "info": {
             "itad-steam": "Augmented SteamをIsThereAnyDealと接続すると、Steamでゲームを所持していない場合も、IsThereAnyDealのウェイトリストとコレクションをAugmented Steamでハイライトやタグすることができます。",
             "steam-itad": "また、精確さをさらに上げるため、ゲームをSteamライブラリまたはウィッシュリストからIsThereAnyDealへインポートすることも可能（例えば、DLCまたは収録されていないゲーム）です。今、削除機能は実装されていないため、この機能を使ってアイテムを追加するだけができます。IsThereAnyDealが統合した同期機能の代わりにはなれませんが、補充としてはできます。"
-        }
+        },
+        "enable_sync_library": "ライブラリの同期を有​​効化 ",
+        "enable_sync_wishlist": "ウィッシュリストの同期を有​​効化 "
     },
     "tradeoffer": {
         "num_item": "__num__ 個のアイテム",
@@ -495,7 +501,17 @@
         "close_on_storage_desc": "Augmented Steam は、現在のストレージアダプターでは、ユーザーノートをこれ以上保存できなくなる可能性が近づいています。(ストレージ使用量 ~__perc__%)",
         "storage_warning_desc": "ユーザーノートをローカル データベースに保存する(同期なし) か、ブラウザーが提供する保存方法を引き続き使用する(古いメモを削除した場合にのみ新しいメモを追加できる)かを選択できます。",
         "save_synced_storage": "同期されたストレージを引き続き使用する",
-        "save_local": "メモをローカルに保存する"
+        "save_local": "メモをローカルに保存する",
+        "sync_option": "メモを自動同期する",
+        "sync_info_1": "Augmented Steam と IsThereAnyDeal の間でノートを同期できます。自動同期を有効にすると、ノートは定期的に ITAD から取得されます。また、Augmented Steam での編集内容は即座に ITAD に反映されます。",
+        "sync_info_2": "さらに、Augmented Steam と IsThereAnyDeal の間でノートを手動で送信または取得することも可能です。同じゲームに対して異なるノートが保存されている場合に備え、正しいバージョンが使用されるよう、自動同期を有効にする前にこれを行うことをおすすめします。",
+        "sync_info_3": "IsThereAnyDeal 上の「Notes and Tags」セクションで、保存されているすべてのノートを確認できます。",
+        "sync_button_push": "IsThereAnyDeal\nにメモを送信",
+        "sync_button_pull": "IsThereAnyDeal\nからメモを取得",
+        "sync_pulled": "__n__ 件のメモが IsThereAnyDeal から取得されました ",
+        "sync_pushed": "__n__ 件のメモが IsThereAnyDeal に送信されました ",
+        "sync_failed": "__n__ 件のメモの同期に失敗しました ",
+        "sync_error": "メモの同期に失敗しました "
     },
     "queue": {
         "new": "新しいキュー",
@@ -844,5 +860,8 @@
     "using_language": "あなたは現在 __current__ でSteamを閲覧しています。",
     "thewordunknown": "不明",
     "badge_level": "レベル __level__",
-    "ignored_owned": "他のプラットフォームでプレイしたため無視したゲーム"
+    "ignored_owned": "他のプラットフォームでプレイしたため無視したゲーム",
+    "owned_collection": "__gametitle__ は既に IsThereAnyDeal コレクションに含まれています ",
+    "saving": "保存中... ",
+    "saved": "保存済み "
 }

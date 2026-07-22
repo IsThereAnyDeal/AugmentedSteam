@@ -426,7 +426,9 @@
         },
         "price": {
             "restore_price_cut": "若 Steam 在應用程式頁面僅顯示圖示，則恢復降價資訊"
-        }
+        },
+        "context_protondb": "於'__query__'搜尋ProtonDB",
+        "show_wishlist_ranking": "永遠顯示願望清單排名"
     },
     "ready": {
         "loading": "Augmented Steam 資料載入中…",
@@ -476,7 +478,12 @@
         },
         "enable_sync_library": "啟用遊戲庫同步",
         "enable_sync_wishlist": "啟用願望清單同步",
-        "sync_events": "同步事件"
+        "sync_events": "同步事件",
+        "show_disconnect_popup": "ITAD連線逾期時顯示彈窗",
+        "expired": "你的ITAD連線已失效",
+        "reauthorize": "重新連線",
+        "no_sync_events": "無同步事件",
+        "enable_sync_ignored": "啟用已忽略遊戲同步至ITAD"
     },
     "tradeoffer": {
         "num_item": "__num__ 個物品",
@@ -911,5 +918,6 @@
     },
     "see_purchase_date": "查看購買日期",
     "since_date": "自 __date__ 起",
-    "see_since_when_date": "查看自何時起"
+    "see_since_when_date": "查看自何時起",
+    "load_card_price": "加載卡片價格"
 }

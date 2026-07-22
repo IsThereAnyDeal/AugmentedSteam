@@ -425,7 +425,9 @@
         },
         "price": {
             "restore_price_cut": "如果 Steam 只显示折扣图标（在商店页面上），则恢复显示降价信息"
-        }
+        },
+        "context_protondb": "在 ProtonDB 上搜索 '__query__'",
+        "show_wishlist_ranking": "总是显示愿望单排序"
     },
     "ready": {
         "loading": "Augmented Steam 正在加载数据……",
@@ -478,7 +480,12 @@
         },
         "enable_sync_library": "启用库同步",
         "enable_sync_wishlist": "启用愿望单同步",
-        "sync_events": "同步事件"
+        "sync_events": "同步事件",
+        "show_disconnect_popup": "ITAD 连接过期时弹出提示",
+        "expired": "您的 ITAD 连接已过期",
+        "reauthorize": "重新连接",
+        "no_sync_events": "没有同步事件",
+        "enable_sync_ignored": "启用向 ITAD 同步忽略的游戏"
     },
     "tradeoffer": {
         "num_item": "__num__ 个物品",
@@ -913,5 +920,6 @@
     },
     "see_purchase_date": "查看购买日期",
     "since_date": "购买于 __date__",
-    "see_since_when_date": "查看购买日期"
+    "see_since_when_date": "查看购买日期",
+    "load_card_price": "加载卡片价格"
 }

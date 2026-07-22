@@ -427,7 +427,9 @@
         },
         "price": {
             "restore_price_cut": "Khôi phục giảm giá nếu Steam chỉ hiện mỗi icon (trên trang ứng dụng)"
-        }
+        },
+        "context_protondb": "Tìm kiếm '__query__' trên ProtonDB",
+        "show_wishlist_ranking": "Luôn hiển thị hạng danh sách ước"
     },
     "ready": {
         "loading": "Augmented Steam đang tải dữ liệu...",
@@ -480,7 +482,12 @@
         },
         "enable_sync_library": "Kích hoạt đồng bộ thư viện",
         "enable_sync_wishlist": "Kích hoạt đồng bộ danh sách ước",
-        "sync_events": "Lịch sử Đồng bộ hóa"
+        "sync_events": "Lịch sử Đồng bộ hóa",
+        "show_disconnect_popup": "Hiện thông báo khi kết nối ITAD đã hết hạn",
+        "expired": "Kết nối với ITAD của bạn đã hết hạn",
+        "reauthorize": "Kết nối lại",
+        "no_sync_events": "Không có lịch sử đồng bộ hóa",
+        "enable_sync_ignored": "Bật đồng bộ những trò chơi đã phớt lờ đến ITAD"
     },
     "tradeoffer": {
         "num_item": "__num__ vật phẩm",
@@ -915,5 +922,6 @@
     },
     "see_purchase_date": "Xem ngày mua hàng",
     "since_date": "từ __date__",
-    "see_since_when_date": "xem từ lúc nào"
+    "see_since_when_date": "xem từ lúc nào",
+    "load_card_price": "Tải giá của thẻ"
 }

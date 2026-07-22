@@ -427,7 +427,9 @@
         },
         "price": {
             "restore_price_cut": "Възстановяване на намалената цена, ако Steam показва само икона (на страниците за приложения)"
-        }
+        },
+        "context_protondb": "Търсене в ProtonDB за „__query__“",
+        "show_wishlist_ranking": "Винаги да се показва позиция в списъка с желания"
     },
     "ready": {
         "loading": "Зареждане на данните за Augmented Steam…",
@@ -480,7 +482,12 @@
         },
         "enable_sync_library": "Вкл. на синхр. за библиотеката",
         "enable_sync_wishlist": "Вкл. на синхр. за списъка с желания",
-        "sync_events": "Синх. на събития"
+        "sync_events": "Синх. на събития",
+        "show_disconnect_popup": "Показване на изскачащо известие, когато връзката с ITAD изтече",
+        "expired": "ITAD връзката Ви изтече",
+        "reauthorize": "Повторно свързване",
+        "no_sync_events": "Няма синхронизирани събития",
+        "enable_sync_ignored": "Включване на синхронизиране за игнорирани игри към ITAD"
     },
     "tradeoffer": {
         "num_item": "__num__ артикул",
@@ -915,5 +922,6 @@
     },
     "see_purchase_date": "Виждане на дата за закупуване",
     "since_date": "от __date__ насам",
-    "see_since_when_date": "вижте откога насам"
+    "see_since_when_date": "вижте откога насам",
+    "load_card_price": "Зареждане на цена за карта"
 }

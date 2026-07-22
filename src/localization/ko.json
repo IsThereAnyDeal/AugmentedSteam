@@ -226,7 +226,7 @@
         "peaktoday": "오늘의 최고점"
     },
     "hltb": {
-        "title": "얼마나 오래 이길까",
+        "title": "얼마나 오래 걸릴까",
         "main_e": "본편 및 추가 스토리",
         "compl": "완벽 플레이",
         "main": "본편 스토리"
@@ -425,7 +425,9 @@
         },
         "price": {
             "restore_price_cut": "Steam 앱 페이지에서 아이콘만 표시되는 경우 가격 인하 복원(앱 페이지에서)"
-        }
+        },
+        "context_protondb": "ProtonDB에서 '__query__'를 검색",
+        "show_wishlist_ranking": "찜 목록 순위 항상 표시"
     },
     "ready": {
         "loading": "Augmented Steam 데이터 로딩중...",
@@ -447,10 +449,10 @@
         "inv_gift": "선물",
         "inv_guestpass": "게스트패스",
         "owned": "소유",
-        "notinterested": "무시됨",
+        "notinterested": "관심 없음 됨",
         "collection": "수집함",
         "waitlist": "대기 목록 명단",
-        "ignored_owned": "무시됨 (소유)",
+        "ignored_owned": "관심 없음 됨 (소유)",
         "followed": "팔로우됨"
     },
     "wallet": {
@@ -477,7 +479,12 @@
         },
         "enable_sync_library": "라이브러리 동기화 활성화",
         "enable_sync_wishlist": "찜 목록 동기화 활성화",
-        "sync_events": "이벤트 동기화"
+        "sync_events": "이벤트 동기화",
+        "show_disconnect_popup": "ITAD와의 연결이 만료될 때 팝업을 표시",
+        "expired": "ITAD 연결이 만료되었습니다",
+        "reauthorize": "재연결",
+        "no_sync_events": "동기화 이벤트 없음",
+        "enable_sync_ignored": "관심 없음 게임을 ITAD에 동기화하도록 설정"
     },
     "tradeoffer": {
         "num_item": "__num__ 항목",
@@ -607,7 +614,7 @@
     "wait": "기다리세요",
     "login_warning": "Augmented Steam의 모든 기능을 사용하려면 __link__에 로그인되어 있는지 확인하세요.",
     "youtube_reviews": "YouTube 리뷰",
-    "download_demo_header": "__gamename_ 데모 다운로드",
+    "download_demo_header": "__gamename__ 데모 다운로드",
     "shopping_cart_history": "장바구니 내역 보기",
     "manage_webapi_key": "Steam 웹 API 키 관리",
     "steam_cloud_header": "Steam 클라우드",
@@ -890,7 +897,7 @@
     "using_language": "__current__에서 Steam을 탐색하고 있습니다.",
     "thewordunknown": "알 수 없는",
     "badge_level": "레벨 __level__",
-    "ignored_owned": "다른 플랫폼에서 이미 플레이한 것으로 표시된 게임",
+    "ignored_owned": "다른 플랫폼에서 플레이하는 게임이라서 무시했던 게임들",
     "owned_collection": "__gametitle__은(는) 이미 IsThereAnyDeal 수집품에 있음",
     "add_fullgame_to_wishlist": "정식 게임을 찜 목록에 추가",
     "add_fullgame_to_waitlist": "정식 게임을 대기 목록에 추가",
@@ -911,5 +918,6 @@
     },
     "see_purchase_date": "구매 날짜 보기",
     "since_date": "__date__ 이후",
-    "see_since_when_date": "언제부터 보다"
+    "see_since_when_date": "언제부터 보다",
+    "load_card_price": "카드 가격"
 }

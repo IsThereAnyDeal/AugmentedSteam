@@ -427,7 +427,8 @@
         },
         "price": {
             "restore_price_cut": "Przywróć wyświetlanie procentowej zniżki, gdy Steam pokazuje tylko ikonę (na stronach aplikacji)"
-        }
+        },
+        "context_protondb": "Wyszukaj „__query__” na ProtonDB"
     },
     "ready": {
         "loading": "Wczytywanie danych Augmented Steam...",
@@ -480,7 +481,12 @@
         },
         "enable_sync_library": "Włącz synchronizację biblioteki",
         "enable_sync_wishlist": "Włącz synchronizację listy życzeń",
-        "sync_events": "Historia synchronizacji"
+        "sync_events": "Historia synchronizacji",
+        "show_disconnect_popup": "Wyświetlaj okienko z komunikatem o wygaśnięciu połączenia z ITAD",
+        "expired": "Twoje połączenie z ITAD wygasło",
+        "reauthorize": "Połącz ponownie",
+        "no_sync_events": "Brak historii synchronizacji",
+        "enable_sync_ignored": "Włącz synchronizację ignorowanych gier"
     },
     "tradeoffer": {
         "num_item": "__num__ przedmiot",
@@ -915,5 +921,6 @@
     },
     "see_purchase_date": "Zobacz datę zakupu",
     "since_date": "od __date__",
-    "see_since_when_date": "zobacz datę zakupu"
+    "see_since_when_date": "zobacz datę zakupu",
+    "load_card_price": "Wczytaj cenę karty"
 }

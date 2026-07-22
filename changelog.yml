@@ -1,3 +1,21 @@
+4.7.0: |
+  - fixed inventory quick sell buttons after Steam's breaking change
+  - refactored custom links to use their own box on app pages, instead of Steam's report/share (#2324)
+  - added SLUG_ and SLUG- as a replacement options for custom links (#2276)
+  - card prices are now being fetched on demand, to prevent Steam's throttling; I've also changed to different endpoint, which might help a little too
+  - added option to import ignore list to ITAD - this is one way only, and it won't remove ignored games when you remove them from Steam, for now it's just additive;
+    if you enable this, you will need to reconnect to ITAD to authorize with new permissions
+  - added option to show wishlist ranking in other than priority sorts
+  - added ProtonDb search as an option to Context menu (#2312)
+  - added date of last update to VaporLens (#2314)
+  - fixed highlights priority - wishlist should have higher priority than followed (#2273)
+  - fixed tags not showing up in search (#2272)
+  - made improvements to purchase date fetching, should be more accurate now (#2309)
+  - added length indicator when writing a guide (#2260)
+  - improved broadcast removal feature (#2253)
+  - improved handling of ITAD connection expiry - you can now get popup that would prompt about reconnect, see options
+  - review sorting will no longer remember last sort, but instead goes to default - prevents long loading times when opening profile that has large number of reviews
+
 4.6.3: |
   - fix AS not loading in wishlist after Steam changes
 
