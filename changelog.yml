@@ -1,3 +1,9 @@
+4.8.0: |
+  Hotfix wishlist after Steam's breaking change.
+  
+  Version bump is due to updated manifest requirements from Mozilla, where we now ask you for data collection consent
+  before you connect Augmented Steam with IsThereAnyDeal. 
+
 4.7.0: |
   - fixed inventory quick sell buttons after Steam's breaking change
   - refactored custom links to use their own box on app pages, instead of Steam's report/share (#2324)
