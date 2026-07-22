@@ -43,6 +43,8 @@ export const enum EAction {
     DynamicStore_Status = "dynamicstore.status",
     DynamicStore_RandomApp = "dynamicstore.randomapp",
 
+    FamilyLibrary_Apps = "familylibrary.apps",
+
     StoreList = "itad.storelist",
     Authorize = "itad.authorize",
     Disconnect = "itad.disconnect",

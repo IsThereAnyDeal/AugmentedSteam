@@ -1,11 +1,15 @@
 import {__filters} from "@Strings/_strings";
 import Feature from "@Content/Modules/Context/Feature";
 import type CSearch from "@Content/Features/Store/Search/CSearch";
+import type UserInterface from "@Core/User/UserInterface";
 import type SearchFilter from "@Content/Features/Store/Search/Filters/SearchFilter";
 import HTML from "@Core/Html/Html";
 import {L} from "@Core/Localization/Localization";
 import CartSearchFilter from "@Content/Features/Store/Search/Filters/CartSearchFilter";
 import EarlyAccessSearchFilter from "@Content/Features/Store/Search/Filters/EarlyAccessSearchFilter";
+import FamilySharedSearchFilter from "@Content/Features/Store/Search/Filters/FamilySharedSearchFilter";
+import FamilyOwnedSearchFilter from "@Content/Features/Store/Search/Filters/FamilyOwnedSearchFilter";
+import SteamWebApiFacade from "@Content/Modules/Facades/SteamWebApiFacade";
 import MixedSearchFilter from "@Content/Features/Store/Search/Filters/MixedSearchFilter";
 import NegativeSearchFilter from "@Content/Features/Store/Search/Filters/NegativeSearchFilter";
 import ReviewsScoreSearchFilter from "@Content/Features/Store/Search/Filters/ReviewsScoreSearchFilter";
@@ -23,11 +27,42 @@ export default class FSearchFilters extends Feature<CSearch> {
 
     private _filterValues: Array<[string, string]> = [];
 
+    private _familyLibrary: Promise<{shareable: Set<number>, owned: Set<number>}> | null = null;
+
+    public get user(): UserInterface {
+        return this.context.user;
+    }
+
+    public getFamilyLibrary(): Promise<{shareable: Set<number>, owned: Set<number>}> {
+        if (this._familyLibrary === null) {
+            this._familyLibrary = (async () => {
+                if (!this.context.user.isSignedIn) {
+                    return {shareable: new Set<number>(), owned: new Set<number>()};
+                }
+                try {
+                    const token = await this.context.user.getWebApiToken();
+                    const {shareable, owned} = await SteamWebApiFacade.getFamilyLibrary(token, this.context.user.steamId);
+                    return {shareable: new Set(shareable), owned: new Set(owned)};
+                } catch {
+                    return {shareable: new Set<number>(), owned: new Set<number>()};
+                }
+            })();
+        }
+        return this._familyLibrary;
+    }
+
     override apply(): void {
+
+        // Steam collapses the filter sidebar on narrow layouts; nothing to attach to then.
+        if (!document.querySelector("#advsearchform .rightcol")) {
+            return;
+        }
 
         this._filters = [
             CartSearchFilter,
             EarlyAccessSearchFilter,
+            FamilySharedSearchFilter,
+            FamilyOwnedSearchFilter,
             MixedSearchFilter,
             NegativeSearchFilter,
             ReviewsScoreSearchFilter,
@@ -64,6 +99,9 @@ export default class FSearchFilters extends Feature<CSearch> {
         for (const filter of this._filters) {
             filter.setup(params);
         }
+
+        // Warm the family library cache so the family filters apply instantly when toggled.
+        void this.getFamilyLibrary();
 
         this._updateFilterValues();
         this._modifyPageLinks();
