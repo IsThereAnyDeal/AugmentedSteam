@@ -81,7 +81,7 @@
             for (const item of page.storeItems) {
                 const option = item.bestPurchaseOption;
                 if (!option) {
-                    if (item.unlisted) {
+                    if (!item.visible) {
                         unlistedApps.push(item);
                     } else {
                         noPriceCount++;
