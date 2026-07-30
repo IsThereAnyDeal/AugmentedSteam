@@ -14,7 +14,11 @@ export default class FHowLongToBeat extends Feature<CApp> {
         }
 
         const result = await this.context.data;
-        if (!result || !result.hltb) {
+        if (
+            !result?.hltb
+            || [result.hltb.story, result.hltb.extras, result.hltb.complete]
+                .every(duration => duration === null)
+        ) {
             return false;
         }
 
