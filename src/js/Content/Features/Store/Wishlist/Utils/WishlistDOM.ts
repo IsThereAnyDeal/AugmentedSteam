@@ -76,6 +76,10 @@ export class WishlistDOM {
         });
     }
 
+    gameNode(parent: HTMLElement): HTMLDivElement {
+        return parent.querySelector(".PE-3oq-yIvg-")!;
+    }
+
     titleNode(parent: HTMLElement): HTMLAnchorElement|null {
         return parent.querySelector<HTMLAnchorElement>("a.I8vuMMV-osE-[href*='/app/']");
     }

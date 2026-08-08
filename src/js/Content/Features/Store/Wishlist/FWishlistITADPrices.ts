@@ -91,8 +91,7 @@ export default class FWishlistITADPrices extends Feature<CWishlist> {
 
         if (data && this.currentHoverAppid === appid) {
             // margin of game node
-            const margin = window.getComputedStyle(node.querySelector(".c-Pw-ER6JnA-")!).marginBottom;
-
+            const margin = window.getComputedStyle(this.context.dom.gameNode(node)).marginBottom;
             this.currentElement = new PriceOverview({
                 target: node,
                 props: {
