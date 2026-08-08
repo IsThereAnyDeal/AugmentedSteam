@@ -177,7 +177,6 @@
         <OptionGroup>
             <Toggle bind:value={$settings.showemptywishlist}>{L(__options_showEmptyWishlist)}</Toggle>
             <Toggle bind:value={$settings.showwishliststats}>{L(__options_showWishlistStats)}</Toggle>
-            <Toggle bind:value={$settings.show_wishlist_ranking}>{L(__options_showWishlistRanking)}</Toggle>
         </OptionGroup>
 
         <OptionGroup>

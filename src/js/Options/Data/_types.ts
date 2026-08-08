@@ -98,7 +98,6 @@ export interface SettingsSchema {
     user_notes_wishlist: boolean,
     user_notes_simple: boolean,
     showwishliststats: boolean,
-    show_wishlist_ranking: boolean,
     oneclickremovewl: boolean,
     user_notes_adapter: "synced_storage"|"idb",
     showlanguagewarning: boolean,
