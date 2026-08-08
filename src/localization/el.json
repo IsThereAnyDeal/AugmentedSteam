@@ -427,7 +427,9 @@
         },
         "price": {
             "restore_price_cut": "Επαναφορά μείωσης τιμής εάν το Steam εμφανίζει μόνο το εικονίδιο (στις σελίδες της εφαρμογής)"
-        }
+        },
+        "context_protondb": "Αναζήτηση στο ProtonDB για '__query__'",
+        "show_wishlist_ranking": "Να εμφανίζεται πάντα κατάταξη στη λίστα επιθυμιών"
     },
     "ready": {
         "loading": "Φόρτωση δεδομένων Augmented Steam...",
@@ -480,7 +482,12 @@
         },
         "enable_sync_library": "Ενεργοποίηση συγχρονισμού βιβλιοθήκης",
         "enable_sync_wishlist": "Ενεργοποίηση συγχρονισμού λίστας επιθυμιών",
-        "sync_events": "Συγχρονισμός συμβάντων"
+        "sync_events": "Συγχρονισμός συμβάντων",
+        "show_disconnect_popup": "Εμφάνιση αναδυόμενου παραθύρου όταν λήγει η σύνδεση με το ITAD",
+        "expired": "Η σύνδεσή σας στο ITAD έχει λήξει",
+        "reauthorize": "Επανασύνδεση",
+        "no_sync_events": "Χωρίς συγχρονισμό συμβάντων",
+        "enable_sync_ignored": "Ενεργοποίηση συγχρονισμού των αγνοημένων παιχνιδιών στο ITAD"
     },
     "tradeoffer": {
         "num_item": "__num__ αντικείμενο",
@@ -915,5 +922,6 @@
     },
     "see_purchase_date": "Δείτε την ημερομηνία αγοράς",
     "since_date": "Από τις  __date__",
-    "see_since_when_date": "δείτε από πότε"
+    "see_since_when_date": "δείτε από πότε",
+    "load_card_price": "Φόρτωση τιμής κάρτας"
 }

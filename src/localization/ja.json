@@ -362,7 +362,8 @@
             "thai": "タイ語",
             "turkish": "トルコ語",
             "ukrainian": "ウクライナ語",
-            "vietnamese": "ベトナム語"
+            "vietnamese": "ベトナム語",
+            "indonesian": "インドネシア語"
         },
         "add_custom_link": "カスタムリンクを追加",
         "auto_detect": "自動検出",
@@ -404,7 +405,27 @@
         "show_players_info": "プレイヤー数の情報を表示",
         "friends_and_groups": "フレンドとグループ",
         "friends_append_nickname": "フレンドの名前にニックネームを追加する",
-        "collection_banner_not_owned": "Steamでゲームを所有していない場合にのみ、[コレクション] バナーを表示 "
+        "collection_banner_not_owned": "Steamでゲームを所有していない場合にのみ、[コレクション] バナーを表示 ",
+        "homepage_default_tab_free": "人気の無料ゲーム",
+        "headers": {
+            "itad_price_info": "IsThereAnyDealの価格情報"
+        },
+        "followed": "フォロー中のゲーム",
+        "prevent_video_pause": "タブが非アクティブになっても動画を一時停止しない（試験的）",
+        "tabtitle_appname_first": "タブのタイトルを常にゲーム名から始める",
+        "context_steam_lucky": "Steamで「__query__」を検索（おまかせ）",
+        "show_vaporlens_summary": "VaporLensの概要を表示",
+        "show_steampeek": "SteamPeekで類似ゲームを表示",
+        "ai": {
+            "title": "AI/LLM",
+            "killswitch": "AI/LLM機能",
+            "killswitch_info": "すべてのAI/LLM機能を切り替えます"
+        },
+        "price": {
+            "restore_price_cut": "Steamでアイコンのみ表示される場合に割引率を復元（アプリページ）"
+        },
+        "context_protondb": "ProtonDBで「__query__」を検索",
+        "show_wishlist_ranking": "ウィッシュリストの順位を常に表示"
     },
     "ready": {
         "loading": "Augmented Steam がデータをロード中……",
@@ -429,7 +450,8 @@
         "notinterested": "興味なし",
         "collection": "収集済み",
         "waitlist": "ウェイトリストに追加した",
-        "ignored_owned": "無視(所有済み)"
+        "ignored_owned": "無視(所有済み)",
+        "followed": "フォロー中"
     },
     "wallet": {
         "custom_amount": "カスタムした額を追加",
@@ -451,7 +473,13 @@
             "steam-itad": "また、精確さをさらに上げるため、ゲームをSteamライブラリまたはウィッシュリストからIsThereAnyDealへインポートすることも可能（例えば、DLCまたは収録されていないゲーム）です。今、削除機能は実装されていないため、この機能を使ってアイテムを追加するだけができます。IsThereAnyDealが統合した同期機能の代わりにはなれませんが、補充としてはできます。"
         },
         "enable_sync_library": "ライブラリの同期を有​​効化 ",
-        "enable_sync_wishlist": "ウィッシュリストの同期を有​​効化 "
+        "enable_sync_wishlist": "ウィッシュリストの同期を有​​効化 ",
+        "sync_events": "イベントを同期",
+        "show_disconnect_popup": "ITADとの接続が期限切れになったときにポップアップを表示",
+        "expired": "ITADとの接続の有効期限が切れました",
+        "reauthorize": "再接続",
+        "no_sync_events": "同期イベントはありません",
+        "enable_sync_ignored": "無視したゲームのITADへの同期を有効にする"
     },
     "tradeoffer": {
         "num_item": "__num__ 個のアイテム",
@@ -460,7 +488,8 @@
     },
     "update": {
         "dont_show": "今後表示しない",
-        "updated": "Augmented Steamは、__version__ にアップデートされました"
+        "updated": "Augmented Steamは、__version__ にアップデートされました",
+        "updated_no_version": "Augmented Steamが更新されました"
     },
     "register": {
         "success": "__gamename__ を有効化しました",
@@ -511,7 +540,10 @@
         "sync_pulled": "__n__ 件のメモが IsThereAnyDeal から取得されました ",
         "sync_pushed": "__n__ 件のメモが IsThereAnyDeal に送信されました ",
         "sync_failed": "__n__ 件のメモの同期に失敗しました ",
-        "sync_error": "メモの同期に失敗しました "
+        "sync_error": "メモの同期に失敗しました ",
+        "sync_error_empty": "メモが空です",
+        "sync_error_unknown": "ITADではこのゲームを認識できません",
+        "sync_error_length": "メモが長すぎます（__length__、上限：__max__）"
     },
     "queue": {
         "new": "新しいキュー",
@@ -862,6 +894,25 @@
     "badge_level": "レベル __level__",
     "ignored_owned": "他のプラットフォームでプレイしたため無視したゲーム",
     "owned_collection": "__gametitle__ は既に IsThereAnyDeal コレクションに含まれています ",
+    "add_fullgame_to_wishlist": "ゲーム本編をウィッシュリストに追加",
+    "add_fullgame_to_waitlist": "ゲーム本編をウェイトリストに追加",
+    "remove_fullgame_from_waitlist_tooltip": "ゲーム本編をウェイトリストから削除",
+    "remove_fullgame_from_wishlist_and_waitlist_tooltip": "ゲーム本編をウィッシュリストとウェイトリストの両方から削除",
+    "ok": "OK",
+    "launch_random_game_error": "プレイ可能なゲームが見つかりませんでした",
+    "retry": "再試行",
     "saving": "保存中... ",
-    "saved": "保存済み "
+    "saved": "保存済み ",
+    "vaporlens": {
+        "title": "VaporLensのハイライト",
+        "view": "VaporLensで表示",
+        "show": "VaporLensを表示",
+        "hide": "VaporLensを非表示",
+        "llm_note": "この概要は、第三者がLLMを使用して作成したものです。取得されるデータは事前に生成されており、データのリクエスト時にLLMは使用されません。",
+        "learn_more": "詳細を確認/無効化"
+    },
+    "see_purchase_date": "購入日を表示",
+    "since_date": "__date__以降",
+    "see_since_when_date": "開始時期を表示",
+    "load_card_price": "カード価格を読み込む"
 }
