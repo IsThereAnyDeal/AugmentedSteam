@@ -1,6 +1,4 @@
 import HTMLParser from "@Core/Html/HtmlParser";
-import StringUtils from "@Core/Utils/StringUtils";
-import SteamStoreApiFacade from "@Content/Modules/Facades/SteamStoreApiFacade";
 import RequestData from "@Content/Modules/RequestData";
 import type UserInterface from "@Core/User/UserInterface";
 
