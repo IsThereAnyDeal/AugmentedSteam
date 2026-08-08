@@ -1,3 +1,10 @@
+4.8.2: |
+  More wishlist fixes:
+  - fixed ITAD price info in wishlists
+  - fixed hidden games in wishlist stats, only games that are actually unlisted will show up now (thanks przemo20)
+  - removed wishlist ranking feature (made obsolete by Steam)
+  - added support for restoring price cut - let me know how well this works for you, it's not as straightforward as on app pages
+
 4.8.1: |
   Just after I pushed hotfix, Steam broke wishlists again for us by adding new features. So we're hotfixing twice in the same day.
   
