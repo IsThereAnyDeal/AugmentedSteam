@@ -37,7 +37,7 @@
     let totalPrice: number = 0;
     let onSaleCount: number = 0;
     let noPriceCount: number = 0;
-    let unlistedApps: IStoreItemID[] = [];
+    let hiddenApps: IStoreItemID[] = [];
 
     let promise: Promise<void>;
 
@@ -82,7 +82,7 @@
                 const option = item.bestPurchaseOption;
                 if (!option) {
                     if (!item.visible) {
-                        unlistedApps.push(item);
+                        hiddenApps.push(item);
                     } else {
                         noPriceCount++;
                     }
@@ -103,17 +103,17 @@
         totalPrice = totalPrice;
         noPriceCount = noPriceCount;
         onSaleCount = onSaleCount;
-        unlistedApps = unlistedApps;
+        hiddenApps = hiddenApps;
     }
 
     async function handleRemove(app: IStoreItemID): Promise<void> {
         await ServiceFactory.WishlistService(user)
             .removeFromWishlist({appid: app.appid!});
 
-        const index = unlistedApps.findIndex(id => id.appid === app.appid!);
+        const index = hiddenApps.findIndex(id => id.appid === app.appid!);
         if (index >= 0) {
-            unlistedApps.splice(index, 1);
-            unlistedApps = unlistedApps;
+            hiddenApps.splice(index, 1);
+            hiddenApps = hiddenApps;
         }
     }
 
@@ -160,12 +160,12 @@
                         <span class="label">{L(__wl_noPrice)}</span>
                     </div>
 
-                    {#if unlistedApps.length > 0}
+                    {#if hiddenApps.length > 0}
                         <!-- TODO better tooltips -->
                         <!-- TODO use button, cba to style button right now -->
                         <!-- svelte-ignore a11y-no-static-element-interactions a11y-click-events-have-key-events -->
                         <div class="stat button" title={L(__wl_hiddenTooltip)} on:click={() => isHiddenOpen = true}>
-                            {unlistedApps.length}
+                            {hiddenApps.length}
                             <span class="label">
                                 {L(__wl_hidden)}
                                 <span>(?)</span>
@@ -177,10 +177,10 @@
         {/if}
     </Modal>
 
-    {#key unlistedApps}
-        {#if isHiddenOpen && unlistedApps && unlistedApps.length > 0}
+    {#key hiddenApps}
+        {#if isHiddenOpen && hiddenApps && hiddenApps.length > 0}
             <Modal title="Hidden apps" showClose on:button={() => isHiddenOpen = false}>
-                {#each unlistedApps as app (app.appid)}
+                {#each hiddenApps as app (app.appid)}
                     {@const appid = app.appid}
                     <div class="unlisted">
                         <a href="https://steamcommunity.com/app/{appid}/discussions/" target="_blank">
