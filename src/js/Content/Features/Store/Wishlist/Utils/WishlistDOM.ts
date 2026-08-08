@@ -88,6 +88,35 @@ export class WishlistDOM {
         return parent.querySelector<HTMLAnchorElement>(".lZzQoZsDjew-");
     }
 
+    priceNodes(parent: HTMLElement): {
+        normal: HTMLElement|null,
+        icon: HTMLElement|null,
+        current: HTMLElement|null,
+        replacer: (cut: number) => void
+    } {
+        const parentPriceNode = parent.querySelector<HTMLElement>("._5obTMJByPr0-");
+        const normalPriceNode = parentPriceNode?.querySelector<HTMLElement>(".sNExYpOoTBo- .r4XxdUG9Bg0-") ?? null;
+        const cutIconNode = parentPriceNode?.querySelector<HTMLElement>(".rsMD9WnTopA-.OaA5Hz-VGBw-") ?? null;
+        const currentNode = parentPriceNode?.querySelector<HTMLElement>(".-HQzBzl6lqI-") ?? null;
+        const replacer = (cut: number) => {
+            if (!cutIconNode) { return; }
+            cutIconNode.classList.remove("OaA5Hz-VGBw-");
+
+            const node = document.createElement("div");
+            node.classList.add("hPiY1A-1izA-");
+            node.innerText = `-${cut}%`;
+
+            cutIconNode.replaceChildren(node);
+        }
+
+        return {
+            normal: normalPriceNode,
+            icon: cutIconNode,
+            current: currentNode,
+            replacer
+        }
+    }
+
     appid(anchorNode: HTMLAnchorElement): AppId|null {
         const m = anchorNode.href.match(/app\/(\d+)/)!;
         return m ? new AppId(Number(m[1])) : null;

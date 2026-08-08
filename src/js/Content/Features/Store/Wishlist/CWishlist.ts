@@ -12,6 +12,7 @@ import type {TReactQueryData} from "@Content/Features/_types";
 import Long from "long";
 import ServiceFactory from "@Protobufs/ServiceFactory";
 import ASEventHandler from "@Content/Modules/ASEventHandler";
+import FWishlistRestorePriceCut from "@Content/Features/Store/Wishlist/FWishlistRestorePriceCut";
 
 export interface WishlistEntry {
     appid: number,
@@ -57,7 +58,8 @@ export default class CWishlist extends Context {
             FWishlistUserNotes,
             FWishlistStats,
             FEmptyWishlist,
-            FExportWishlist
+            FExportWishlist,
+            FWishlistRestorePriceCut
         ]);
 
         this.ownerId = ownerId;
