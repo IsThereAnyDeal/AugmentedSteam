@@ -1,4 +1,3 @@
-import FAlternativeLinuxIcon from "../Common/FAlternativeLinuxIcon";
 import FWishlistHighlights from "./FWishlistHighlights";
 import FWishlistITADPrices from "./FWishlistITADPrices";
 import FWishlistUserNotes from "./FWishlistUserNotes";
@@ -52,7 +51,7 @@ export default class CWishlist extends Context {
 
     /* TODO private */ constructor(params: ContextParams, ownerId: string, wishlistData: WishlistEntry[]) {
         super(params, ContextType.WISHLIST, [
-            FAlternativeLinuxIcon,
+            // FAlternativeLinuxIcon,
             FWishlistHighlights,
             FWishlistITADPrices,
             FWishlistUserNotes,
