@@ -51,6 +51,7 @@
         height: 60%;
         min-height: 35px;
         max-height: 120px;
+        aspect-ratio: 1;
     }
     .es_overlay img {
         position: relative;
