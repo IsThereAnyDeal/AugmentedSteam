@@ -243,6 +243,16 @@
             "want_to_leave": "Are you sure you want to leave this group?"
         }
     },
+    "pending_invites": {
+        "manage": "Manage Pending Invites",
+        "action": "Select the pending invites below that you wish to take action on.",
+        "accept": "Accept",
+        "ignore": "Ignore",
+        "cancel": "Cancel Invites",
+        "cancel_confirm": "Are you sure you want to cancel __n__ selected invites?",
+        "selected": "__n__ selected.",
+        "none_selected": "You have not selected any pending invites."
+    },
     "export": {
         "wishlist": "Export wishlist",
         "type": "Export type",
