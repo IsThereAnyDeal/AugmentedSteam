@@ -287,6 +287,7 @@
         "twitch": "顯示 Twitch 連結",
         "pcgw": "顯示 PCGamingWiki 連結",
         "completionistme": "顯示 Completionist.me 連結",
+        "gamalytic": "顯示 Gamalyic 連結",
         "protondb": "顯示 ProtonDB 連結",
         "store_steamcards": "顯示 SteamCardExchange 連結",
         "spamcommentregex": "正則表達式字串：",

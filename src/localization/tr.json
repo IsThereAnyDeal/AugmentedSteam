@@ -287,6 +287,7 @@
         "twitch": "Twitch bağlantılarını göster",
         "pcgw": "PCGamingWiki bağlantılarını göster",
         "completionistme": "Completionist.me bağlantılarını göster",
+        "gamalytic": "Gamalytic bağlantılarını göster",
         "protondb": "ProtonDB bağlantılarını göster",
         "store_steamcards": "Mağaza sayfalarında SteamCardExchange bağlantılarını göster",
         "spamcommentregex": "Düzenli İfade dizisi:",

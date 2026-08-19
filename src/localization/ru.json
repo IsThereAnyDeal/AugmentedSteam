@@ -287,6 +287,7 @@
         "twitch": "Показывать ссылки на Twitch",
         "pcgw": "Показывать ссылки на PCGamingWiki ",
         "completionistme": "Показывать ссылки на Completionist.me",
+        "gamalytic": "Показывать ссылки на Gamalytic",
         "protondb": "Показывать ссылки на ProtonDB",
         "store_steamcards": "Показывать ссылки SteamCardExchange",
         "spamcommentregex": "Строка регулярных выражений:",

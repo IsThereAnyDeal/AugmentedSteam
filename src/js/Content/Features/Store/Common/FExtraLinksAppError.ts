@@ -28,6 +28,7 @@ export default class FExtraLinksAppError extends Feature<CApp> {
             || Settings.showprotondb
             || Settings.showcompletionistme
             || Settings.showpcgw
+            || Settings.showgamalytic
             || Settings.app_custom_link.some(link => link.enabled);
 
         if (!hasExtraLinks) {

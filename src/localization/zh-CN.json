@@ -286,6 +286,7 @@
         "twitch": "显示 Twitch 链接",
         "pcgw": "显示 PCGamingWiki 链接",
         "completionistme": "显示 Completionist.me 链接",
+        "gamalytic": "显示 Gamalytic 链接",
         "protondb": "显示 ProtonDB 链接",
         "store_steamcards": "显示 SteamCardExchange 链接",
         "spamcommentregex": "正则表达式字符串：",

@@ -366,6 +366,7 @@ export const __options_youtube = "options_youtube";
 export const __options_twitch = "options_twitch";
 export const __options_pcgw = "options_pcgw";
 export const __options_completionistme = "options_completionistme";
+export const __options_gamalytic = "options_gamalytic";
 export const __options_protondb = "options_protondb";
 export const __options_storeSteamcards = "options_storeSteamcards";
 export const __options_spamcommentregex = "options_spamcommentregex";

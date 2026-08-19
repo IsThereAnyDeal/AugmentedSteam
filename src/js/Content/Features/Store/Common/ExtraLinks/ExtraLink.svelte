@@ -61,6 +61,9 @@
     .pcgw_btn i {
         background-image: url("extension://img/pcgw.png");
     }
+    .gamalytic_btn i {
+        background-image: url("extension://img/gamalytic_logo_tiny.png");
+    }
     .completionistme_btn i {
         background-image: url("extension://img/icon-completionistme.png");
     }

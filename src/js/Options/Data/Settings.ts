@@ -65,6 +65,7 @@ export const DefaultSettings: Readonly<SettingsSchema> = {
     showpcgw: true,
     showcompletionistme: false,
     showprotondb: false,
+    showgamalytic: true,
     showviewinlibrary: false,
     showsteamcardexchange: false,
     showitadlinks: true,

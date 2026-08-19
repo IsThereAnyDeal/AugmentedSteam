@@ -287,6 +287,7 @@
         "twitch": "Відображати посилання на Twitch",
         "pcgw": "Відображати посилання на PCGamingWiki",
         "completionistme": "Відображати посилання на Completionist.me",
+        "gamalytic": "Відображати посилання на Gamalytic",
         "protondb": "Відображати посилання на ProtonDB",
         "store_steamcards": "Показувати посилання на SteamCardExchange",
         "spamcommentregex": "Рядок регулярних виразів:",
