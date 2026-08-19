@@ -11,6 +11,25 @@ interface IPriceResponse {
     highFormatted: string
 }
 
+interface IOrderBookData {
+    amtMaxBuyOrder: number,
+    amtMinSellOrder: number,
+    eCurrency: number
+}
+
+interface IOrderBookPayload {
+    success: boolean,
+    data: IOrderBookData
+}
+
+type IOrderBookResponse = IOrderBookPayload | {data: IOrderBookPayload};
+
+export function parseOrderBookResponse(response: IOrderBookResponse): IOrderBookPayload|null {
+    // Steam currently wraps the orderbook payload in an outer `data` property.
+    const orderbook = "success" in response ? response : response.data;
+    return orderbook.success ? orderbook : null;
+}
+
 export default class MarketPrices {
 
     private readonly info: MarketInfo;
@@ -26,15 +45,11 @@ export default class MarketPrices {
         const hashName = this.info.hashName;
         const walletCurrency = this.info.walletCurrency;
 
-        const orderbook = await RequestData.getJson<{
-            success: boolean,
-            data: {
-                amtMaxBuyOrder: number,
-                amtMinSellOrder: number,
-                eCurrency: number
-            }
-        }>(`https://steamcommunity.com/market/orderbook?q=Load&qp=${encodeURIComponent(JSON.stringify([globalId,hashName]))}`);
-        if (!orderbook.success) {
+        const response = await RequestData.getJson<IOrderBookResponse>(
+            `https://steamcommunity.com/market/orderbook?q=Load&qp=${encodeURIComponent(JSON.stringify([globalId,hashName]))}`
+        );
+        const orderbook = parseOrderBookResponse(response);
+        if (!orderbook) {
             return null;
         }
 
