@@ -99,7 +99,8 @@ export default class CStoreFront extends CStoreBase {
                     if (addedNodes.length > 1) {
                         // @ts-ignore
                         const nodes: HTMLElement[] = Array.from(addedNodes)
-                            .filter(el => el instanceof HTMLElement && el.classList.contains("tab_item"));
+                            .filter(el => el instanceof HTMLElement
+                                && (el.classList.contains("tab_item") || el.classList.contains("tab_row_item")));
 
                         this.decorateStoreCapsules(nodes);
                     }
