@@ -38,10 +38,12 @@ export default class HighlightsTagsUtils {
 
     // Note: select the node which has DS info, and traverse later when highlighting if needed
     private static readonly _selector = [
-        ".tab_item", // Item rows on storefront
+        ".tab_item", // Item rows on storefront (pre-2026 markup)
+        ".tab_row_item", // Item rows on storefront
         ".newonsteam_headercap", // explore/new/
         ".comingsoon_headercap", // explore/upcoming/
         ".store_capsule",
+        ".sale_capsule", // "Discounts & Events" carousel on the storefront
         ".dailydeal_ctn",
         ".special.special_img_ctn", // explore/new, cart/
         ".special > .special_img_ctn",
@@ -65,6 +67,7 @@ export default class HighlightsTagsUtils {
         ".friendactivity_tab_row", // recommended/friendactivity/
         ".recommendation_app", // recommended/byfriends/
         ".recommendation_carousel_item",
+        ".community_recommendation_capsule", // Community Recommendations on the storefront
         ".app_header",
         ".friendplaytime_appheader",
     ].join(",");
@@ -246,8 +249,9 @@ export default class HighlightsTagsUtils {
                 container.classList.add("es_tags_short");
             }
 
-            if (node.classList.contains("tab_item")) {
-                node.querySelector(".tab_item_details")!.prepend(container);
+            if (node.classList.contains("tab_item") || node.classList.contains("tab_row_item")) {
+                // Steam replaced .tab_item_details with .tab_item_content
+                (node.querySelector(".tab_item_details") ?? node.querySelector(".tab_item_content"))!.prepend(container);
             } else if (node.classList.contains("store_main_capsule")) {
                 node.querySelector(".platforms")!.prepend(container);
             } else if (node.classList.contains("newonsteam_headercap") || node.classList.contains("comingsoon_headercap")) {
@@ -270,6 +274,8 @@ export default class HighlightsTagsUtils {
                 node.querySelector(".regular_price, .discount_block")!.append(container);
             } else if (node.classList.contains("recommendation_carousel_item")) {
                 node.querySelector(".buttons")!.before(container);
+            } else if (node.classList.contains("community_recommendation_capsule")) {
+                node.parentElement!.querySelector(".right_col")!.prepend(container);
             } else if (node.classList.contains("friendplaytime_game")) {
                 node.querySelector(".friendplaytime_buttons")!.before(container);
             }
@@ -334,7 +340,9 @@ export default class HighlightsTagsUtils {
         if (node.classList.contains("item")) {
             nodeToHighlight = node.querySelector<HTMLElement>(".info");
         } else if (node.classList.contains("home_area_spotlight")) {
-            nodeToHighlight = node.querySelector(".spotlight_content");
+            // Steam replaced .spotlight_content with .spotlight_bottom_ctn; support both
+            nodeToHighlight = node.querySelector(".spotlight_content")
+                ?? node.querySelector(".spotlight_bottom_ctn");
         } else if (node.classList.contains("special_img_ctn") && node.parentElement?.classList.contains("special")) {
             nodeToHighlight = node.parentElement;
         } else if (node.classList.contains("store_capsule")) {
@@ -354,6 +362,8 @@ export default class HighlightsTagsUtils {
             || node.classList.contains("game_capsule")
             || node.classList.contains("highlighted_app_header")
             || node.classList.contains("friendplaytime_appheader")
+            // the capsule <a> is fully covered by its image; the parent carries the visible area
+            || node.classList.contains("community_recommendation_capsule")
         ) {
             nodeToHighlight = node.parentNode as HTMLElement;
         }
