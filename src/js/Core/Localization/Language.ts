@@ -32,12 +32,20 @@ export default class Language {
         "vietnamese": "vi",
     };
 
+    public static readonly localeMap: Record<string, string> = {
+        ...Language.map,
+        "thai": "th-TH-u-ca-gregory",
+        "ukrainian": "uk",
+    };
+
     private readonly _name: string;
     private readonly _code: string|null;
+    private readonly _locale: string|null;
 
     constructor(language: string) {
         this._name = language;
         this._code = Language.map[language] ?? null;
+        this._locale = Language.localeMap[language] ?? this._code;
         // TODO should we throw when there is unsupported language?
     }
 
@@ -49,8 +57,11 @@ export default class Language {
         return this._code;
     }
 
+    get locale(): string|null {
+        return this._locale;
+    }
+
     isOneOf(...languages: string[]) {
         return languages.includes(this._name);
     }
 }
-

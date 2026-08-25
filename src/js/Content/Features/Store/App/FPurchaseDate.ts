@@ -33,7 +33,7 @@ export default class FPurchaseDate extends Feature<CApp> {
                 date: datetime.toLocaleString({
                     dateStyle: "medium"
                 }, {
-                    locale: this.context.language?.code ?? undefined
+                    locale: this.context.language?.locale ?? undefined
                 })
             })})`;
         }
