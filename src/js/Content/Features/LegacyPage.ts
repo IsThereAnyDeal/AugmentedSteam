@@ -13,7 +13,7 @@ import ITAD from "@Content/Modules/ITAD";
 export default class LegacyPage extends Page {
 
     override check(): boolean {
-        return !!document.getElementById("global_header");
+        return !!document.querySelector("#global_header, .responsive_page_frame.no_header");
     }
 
     protected override async getAppConfig(factory: AppConfigFactory): Promise<AppConfig> {
