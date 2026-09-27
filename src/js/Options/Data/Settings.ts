@@ -70,6 +70,7 @@ export const DefaultSettings: Readonly<SettingsSchema> = {
     showitadlinks: true,
     showsteamdb: true,
     showbartervg: false,
+    showlestrades: true,
     showyoutubegameplay: true,
     showyoutubereviews: true,
     showwsgf: true,

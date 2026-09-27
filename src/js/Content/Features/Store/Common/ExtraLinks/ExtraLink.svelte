@@ -52,6 +52,9 @@
     .bartervg_ico i {
         background-image: url("extension://img/bartervg.png");
     }
+    .lestrades_ico i {
+        background-image: url("extension://img/lestrades.png");
+    }
     .as_youtube_btn i {
         background-image: url("extension://img/icon-youtube.png");
     }

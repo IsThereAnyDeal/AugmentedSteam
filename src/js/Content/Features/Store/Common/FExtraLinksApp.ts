@@ -10,6 +10,7 @@ export default class FExtraLinksApp extends Feature<CApp> {
         return Settings.showitadlinks
             || Settings.showsteamdb
             || Settings.showbartervg
+            || Settings.showlestrades
             || Settings.showsteamcardexchange
             || Settings.showprotondb
             || Settings.showcompletionistme

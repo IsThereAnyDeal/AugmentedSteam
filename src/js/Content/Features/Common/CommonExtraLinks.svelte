@@ -27,3 +27,9 @@
         {isCommunity ? "Barter.vg" : L(__viewOnWebsite, {"website": "Barter.vg"})}
     </ExtraLink>
 {/if}
+
+{#if Settings.showlestrades && (type === "app" || type === "sub")}
+    <ExtraLink href="https://lestrades.com/{type}/{gameid}/" icon="lestrades_ico" {isCommunity}>
+        {isCommunity ? "Lestrade's" : L(__viewOnWebsite, {"website": "Lestrade's"})}
+    </ExtraLink>
+{/if}

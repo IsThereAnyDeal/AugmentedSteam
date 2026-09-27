@@ -73,6 +73,7 @@ export interface SettingsSchema {
     showitadlinks: boolean,
     showsteamdb: boolean,
     showbartervg: boolean,
+    showlestrades: boolean,
     showyoutubegameplay: boolean,
     showyoutubereviews: boolean,
     showwsgf: boolean,
