@@ -46,19 +46,20 @@
     /*
      * The component moves the capsule's own image into .es_overlay_container, which drops
      * any of Steam's rules that positioned that image through a child combinator. The rule
-     * above compensates for that on .store_capsule, whose image Steam positions absolutely
-     * inside a percentage-padding ratio box.
+     * above compensates for that on .store_capsule when Steam positions the image
+     * absolutely inside a percentage-padding ratio box.
      *
-     * A .sale_capsule on its own is laid out the other way round: its image is in flow and
-     * gives the capsule its height, so the container has to stay in flow too or the capsule
-     * collapses to the height of its price bar. The daily deals carry both classes and need
-     * the .store_capsule treatment, hence the :not().
+     * A capsule whose image is in flow (img.sale_capsule_image) is laid out the other way
+     * round: the image gives the capsule its height, so the container has to stay in flow
+     * too or the capsule collapses to the height of its price bar. This is keyed on the image
+     * rather than on .sale_capsule:not(.store_capsule) because the daily deals carry both
+     * classes yet have been served with both layouts, and the wrong guess collapses them.
      */
-    :global(.sale_capsule:not(.store_capsule)) .es_overlay_container {
+    :global(.sale_capsule) .es_overlay_container:has(> :global(img.sale_capsule_image)) {
         position: relative;
         display: inherit;
     }
-    :global(.sale_capsule:not(.store_capsule)) .es_overlay_container > :global(img) {
+    :global(.sale_capsule) .es_overlay_container > :global(img.sale_capsule_image) {
         width: 100%;
     }
 
