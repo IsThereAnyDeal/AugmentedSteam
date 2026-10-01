@@ -13,7 +13,7 @@
     import {
         CStoreBrowse_GetItems_Request,
         CStoreBrowse_GetItems_Response,
-        type IStoreItemID, StoreBrowseContext, StoreBrowseItemDataRequest, StoreItemID
+        type IStoreItem, type IStoreItemID, StoreBrowseContext, StoreBrowseItemDataRequest, StoreItemID
     } from "@Protobufs/Compiled/proto.bundle";
     import ServiceFactory from "@Protobufs/ServiceFactory";
     import ProtobufUtils from "@Protobufs/ProtobufUtils";
@@ -37,7 +37,7 @@
     let totalPrice: number = 0;
     let onSaleCount: number = 0;
     let noPriceCount: number = 0;
-    let hiddenApps: IStoreItemID[] = [];
+    let hiddenApps: IStoreItem[] = [];
 
     let promise: Promise<void>;
 
@@ -106,11 +106,11 @@
         hiddenApps = hiddenApps;
     }
 
-    async function handleRemove(app: IStoreItemID): Promise<void> {
+    async function handleRemove(app: IStoreItem): Promise<void> {
         await ServiceFactory.WishlistService(user)
-            .removeFromWishlist({appid: app.appid!});
+            .removeFromWishlist({appid: app.id!});
 
-        const index = hiddenApps.findIndex(id => id.appid === app.appid!);
+        const index = hiddenApps.findIndex(item => item.id === app.id!);
         if (index >= 0) {
             hiddenApps.splice(index, 1);
             hiddenApps = hiddenApps;
@@ -180,8 +180,8 @@
     {#key hiddenApps}
         {#if isHiddenOpen && hiddenApps && hiddenApps.length > 0}
             <Modal title="Hidden apps" showClose on:button={() => isHiddenOpen = false}>
-                {#each hiddenApps as app (app.appid)}
-                    {@const appid = app.appid}
+                {#each hiddenApps as app (app.id)}
+                    {@const appid = app.id}
                     <div class="unlisted">
                         <a href="https://steamcommunity.com/app/{appid}/discussions/" target="_blank">
                             <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/{appid}/header_292x136.jpg" class="banner" alt="Banner" loading="lazy" />
