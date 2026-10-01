@@ -165,9 +165,6 @@
         <Toggle bind:value={$settings.profile_steamtrades}>
             <ProfileLink id="steamtrades" type={$settings.show_profile_link_images}>SteamTrades</ProfileLink>
         </Toggle>
-        <Toggle bind:value={$settings.profile_bartervg}>
-            <ProfileLink id="bartervg" type={$settings.show_profile_link_images}>Barter.vg</ProfileLink>
-        </Toggle>
         <Toggle bind:value={$settings.profile_backpacktf}>
             <ProfileLink id="backpacktf" type={$settings.show_profile_link_images}>Backpack.tf</ProfileLink>
         </Toggle>

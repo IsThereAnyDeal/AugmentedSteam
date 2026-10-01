@@ -45,11 +45,6 @@
     {L(__options_contextItad, {query: "..."})}
 </Toggle>
 
-<Toggle value={$settings.context_bartervg}
-        on:toggle={async (e) => handleChange("context_bartervg", e.detail)}>
-    {L(__options_contextBartervg, {query: "..."})}
-</Toggle>
-
 <Toggle value={$settings.context_steamdb}
         on:toggle={async (e) => handleChange("context_steamdb", e.detail)}>
     {L(__options_contextSteamdb, {query: "..."})}
