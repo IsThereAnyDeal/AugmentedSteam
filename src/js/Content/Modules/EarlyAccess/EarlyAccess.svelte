@@ -55,7 +55,7 @@
      * rather than on .sale_capsule:not(.store_capsule) because the daily deals carry both
      * classes yet have been served with both layouts, and the wrong guess collapses them.
      */
-    :global(.sale_capsule) .es_overlay_container:has(> :global(img.sale_capsule_image)) {
+    :global(.sale_capsule) .es_overlay_container:global(:has(> img.sale_capsule_image)) {
         position: relative;
         display: inherit;
     }
