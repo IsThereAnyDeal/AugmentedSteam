@@ -21,9 +21,3 @@
         {isCommunity ? "SteamDB" : L(__viewOnWebsite, {"website": "SteamDB"})}
     </ExtraLink>
 {/if}
-
-{#if Settings.showbartervg}
-    <ExtraLink href="https://barter.vg/steam/{type}/{gameid}/" icon="bartervg_ico" {isCommunity}>
-        {isCommunity ? "Barter.vg" : L(__viewOnWebsite, {"website": "Barter.vg"})}
-    </ExtraLink>
-{/if}

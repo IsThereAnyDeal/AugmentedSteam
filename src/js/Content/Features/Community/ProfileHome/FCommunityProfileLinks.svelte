@@ -27,10 +27,6 @@
     <ProfileLink id="steamtrades" href="https://www.steamtrades.com/user/{steamId}">SteamTrades</ProfileLink>
 {/if}
 
-{#if Settings.profile_bartervg}
-    <ProfileLink id="bartervg" href="https://barter.vg/steam/{steamId}">Barter.vg</ProfileLink>
-{/if}
-
 {#if Settings.profile_backpacktf}
     <ProfileLink id="backpacktf" href="https://backpack.tf/profiles/{steamId}">Backpack.tf</ProfileLink>
 {/if}

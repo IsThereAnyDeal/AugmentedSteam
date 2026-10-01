@@ -39,9 +39,6 @@
     .asi-steamtrades {
         background-image: url("extension://img/ico/steamtrades.png");
     }
-    .asi-bartervg {
-        background-image: url("extension://img/ico/bartervg.png");
-    }
     .asi-backpacktf {
         background-image: url("extension://img/ico/backpacktf.png");
     }

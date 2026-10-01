@@ -49,9 +49,6 @@
     .itad_ico:hover i {
         background-image: url("extension://img/itad_small_black.png");
     }
-    .bartervg_ico i {
-        background-image: url("extension://img/bartervg.png");
-    }
     .as_youtube_btn i {
         background-image: url("extension://img/icon-youtube.png");
     }

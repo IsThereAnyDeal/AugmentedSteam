@@ -17,7 +17,6 @@ export type ContextMenuKeys = keyof SettingsSchema & (
     | "context_steam_lucky"
     | "context_steam_market"
     | "context_itad"
-    | "context_bartervg"
     | "context_steamdb"
     | "context_steamdb_instant"
     | "context_protondb"
@@ -42,10 +41,6 @@ export default class ContextMenu {
         "context_itad": [
             __options_contextItad, "https://isthereanydeal.com/search/?q=__query__",
             () => Settings.context_itad
-        ],
-        "context_bartervg": [
-            __options_contextBartervg, "https://barter.vg/search?q=__query__",
-            () => Settings.context_bartervg
         ],
         "context_steamdb": [
             __options_contextSteamdb, "https://steamdb.info/search/?q=__query__",

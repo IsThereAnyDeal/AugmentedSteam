@@ -9,7 +9,6 @@ export default class FExtraLinksApp extends Feature<CApp> {
     override checkPrerequisites(): boolean | Promise<boolean> {
         return Settings.showitadlinks
             || Settings.showsteamdb
-            || Settings.showbartervg
             || Settings.showsteamcardexchange
             || Settings.showprotondb
             || Settings.showcompletionistme
