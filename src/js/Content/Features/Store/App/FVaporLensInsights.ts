@@ -27,7 +27,7 @@ export default class FVaporLensInsights extends Feature<CApp> {
     }
 
     override apply(): void {
-        const summaries = document.querySelector(".review_score_summaries");
+        const summaries = document.querySelector("._2pLm-6qnTQoI2Ir1Btg_id");
         if (!summaries) {
             return;
         }
