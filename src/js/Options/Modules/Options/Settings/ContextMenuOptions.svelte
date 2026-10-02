@@ -4,7 +4,6 @@
     import type {Writable} from "svelte/store";
     import type {SettingsSchema} from "../../../Data/_types";
     import {
-        __options_contextBartervg,
         __options_contextItad, __options_contextProtondb,
         __options_contextSteamdb,
         __options_contextSteamdbInstant,
