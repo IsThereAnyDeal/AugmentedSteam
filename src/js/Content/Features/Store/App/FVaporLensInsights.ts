@@ -27,9 +27,26 @@ export default class FVaporLensInsights extends Feature<CApp> {
     }
 
     override apply(): void {
-        const summaries = document.querySelector("._2pLm-6qnTQoI2Ir1Btg_id");
-        if (!summaries) {
+        if (this.#attach()) {
             return;
+        }
+
+        const observer = new MutationObserver(() => {
+            if (this.#attach()) {
+                observer.disconnect();
+            }
+        });
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    }
+
+    #attach(): boolean {
+        const selector = "._2pLm-6qnTQoI2Ir1Btg_id";
+        const summaries = document.querySelector(selector);
+        if (!summaries) {
+            return false;
         }
 
         new self_({
@@ -40,5 +57,6 @@ export default class FVaporLensInsights extends Feature<CApp> {
                 data: this.data!
             },
         });
+        return true;
     }
 }
