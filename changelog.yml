@@ -1,3 +1,10 @@
+5.0.0: |
+  - updated protobufs and protobufs library to the latest major version (reason for the jump to v5.0)
+  - fixed hidden apps display in Wishlist (thanks przemo20)
+  - fixed horizontal scrolling (thanks przemo20)
+  - fixed Vaporlens not showing up (thanks przemo20)
+  - removed Barter.vg from settings as default option
+
 4.8.3: |
   Fix Quick sell/Instant sell buttons in inventory (thanks breezeFur)
 
