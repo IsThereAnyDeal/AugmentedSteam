@@ -32,7 +32,11 @@ export default class AugmentedSteam {
         const target = document.querySelector(this.react
             ? "header nav + div"
             : "#global_action_menu"
-        )!;
+        );
+        if (!target) {
+            console.warn("Augmented Steam menu is unavailable on this page");
+            return;
+        }
 
         (new AugmentedSteamMenu({
             target,
@@ -116,7 +120,8 @@ export default class AugmentedSteam {
             target = document.querySelector("header ~ section");
             anchor = target?.firstElementChild ?? null;
         } else {
-            const header = document.querySelector("#global_header")!
+            const header = document.querySelector("#global_header");
+            if (!header) { return; }
             target = header.parentElement!;
             anchor = header.nextElementSibling!;
         }

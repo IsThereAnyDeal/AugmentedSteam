@@ -53,12 +53,32 @@ export default abstract class Page {
     protected abstract getLanguage(factory: LanguageFactory): Promise<Language|null>;
     protected abstract getUser(factory: UserFactory): Promise<UserInterface>;
 
+    private async waitForCheck(timeout = 10000): Promise<boolean> {
+        if (this.check()) { return true; }
+
+        return new Promise(resolve => {
+            const observer = new MutationObserver(() => {
+                if (!this.check()) { return; }
+
+                window.clearTimeout(timeoutId);
+                observer.disconnect();
+                resolve(true);
+            });
+            const timeoutId = window.setTimeout(() => {
+                observer.disconnect();
+                resolve(false);
+            }, timeout);
+
+            observer.observe(document.documentElement, {childList: true, subtree: true});
+        });
+    }
+
     async run(): Promise<void> {
         if (document.querySelector("#as-menu")) {
             // already loaded
             return;
         }
-        if (!this.check()) { return; }
+        if (!await this.waitForCheck()) { return; }
 
         let language: Language|null;
         let user: UserInterface;
