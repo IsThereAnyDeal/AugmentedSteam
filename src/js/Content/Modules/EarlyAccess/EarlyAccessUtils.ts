@@ -9,10 +9,12 @@ export default class EarlyAccessUtils {
 
     // TODO support React-based sales pages, curator lists, etc.
     private static readonly storeSelectors = [
-        ".tab_item", // Item rows on storefront
+        ".tab_item", // Item rows on storefront (pre-2026 markup)
+        ".tab_row_item", // Item rows on storefront
         ".newonsteam_headercap", // explore/new
         ".comingsoon_headercap", // explore/upcoming
         ".store_capsule",
+        ".sale_capsule", // "Discounts & Events" carousel on the storefront
         ".dailydeal_ctn",
         ".special.special_img_ctn", // explore/new, cart/
         /*
