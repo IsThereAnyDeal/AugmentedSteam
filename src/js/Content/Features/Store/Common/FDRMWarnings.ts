@@ -7,6 +7,7 @@ import Settings from "@Options/Data/Settings";
 import ContextType from "@Content/Modules/Context/ContextType";
 import type CSub from "@Content/Features/Store/Sub/CSub";
 import type CApp from "@Content/Features/Store/App/CApp";
+import { mount } from "svelte";
 
 export default class FDRMWarnings extends Feature<CApp|CSub|CBundle> {
 
@@ -148,11 +149,11 @@ export default class FDRMWarnings extends Feature<CApp|CSub|CBundle> {
                 throw new Error("Node not found");
             }
 
-            (new self_({
-                target,
-                anchor: target.firstElementChild!,
-                props: {drmString}
-            }));
+            (mount(self_, {
+                            target,
+                            anchor: target.firstElementChild!,
+                            props: {drmString}
+                        }));
         }
     }
 }

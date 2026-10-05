@@ -4,9 +4,19 @@
     import ColorPicker from "./ColorPicker.svelte";
     import Toggle from "./Toggle.svelte";
 
-    export let enabled: boolean;
-    export let color: string;
-    export let defaultColor: string;
+    interface Props {
+        enabled: boolean;
+        color: string;
+        defaultColor: string;
+        children?: import('svelte').Snippet;
+    }
+
+    let {
+        enabled = $bindable(),
+        color = $bindable(),
+        defaultColor,
+        children
+    }: Props = $props();
 </script>
 
 
@@ -14,7 +24,7 @@
     <ColorPicker bind:value={color} {defaultColor} />
 
     <span class="option">
-        <Toggle bind:value={enabled}><slot></slot></Toggle>
+        <Toggle bind:value={enabled}>{@render children?.()}</Toggle>
     </span>
 </div>
 

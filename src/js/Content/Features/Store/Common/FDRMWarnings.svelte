@@ -1,5 +1,9 @@
 <script lang="ts">
-    export let drmString: string;
+    interface Props {
+        drmString: string;
+    }
+
+    let { drmString }: Props = $props();
 </script>
 
 

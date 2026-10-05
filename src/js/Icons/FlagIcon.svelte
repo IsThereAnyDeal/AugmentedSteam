@@ -1,5 +1,9 @@
 <script lang="ts">
-    export let country: string;
+    interface Props {
+        country: string;
+    }
+
+    let { country }: Props = $props();
 </script>
 
 

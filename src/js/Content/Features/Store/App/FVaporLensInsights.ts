@@ -4,6 +4,7 @@ import Feature from "@Content/Modules/Context/Feature";
 import VaporLensApiFacade from "@Content/Modules/Facades/VaporLensApiFacade";
 import Settings from "@Options/Data/Settings";
 import type {TVaporLensResponse,} from "@Background/Modules/VaporLens/_types";
+import { mount } from "svelte";
 
 export default class FVaporLensInsights extends Feature<CApp> {
 
@@ -49,14 +50,14 @@ export default class FVaporLensInsights extends Feature<CApp> {
             return false;
         }
 
-        new self_({
-            target: summaries.parentElement!,
-            anchor: summaries.nextElementSibling!,
-            props: {
-                appid: this.context.appid,
-                data: this.data!
-            },
-        });
+        mount(self_, {
+                    target: summaries.parentElement!,
+                    anchor: summaries.nextElementSibling!,
+                    props: {
+                        appid: this.context.appid,
+                        data: this.data!
+                    },
+                });
         return true;
     }
 }

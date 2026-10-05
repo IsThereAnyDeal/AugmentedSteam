@@ -3,6 +3,7 @@ import SteamApi from "../../../Modules/SteamApi";
 import Settings from "@Options/Data/Settings";
 import Feature from "@Content/Modules/Context/Feature";
 import type CApp from "@Content/Features/Store/App/CApp";
+import { mount } from "svelte";
 
 export default class FAchievementBar extends Feature<CApp> {
 
@@ -25,14 +26,14 @@ export default class FAchievementBar extends Feature<CApp> {
 
         const target = document.querySelector("#my_activity")!;
 
-        (new self_({
-            target,
-            anchor: target.firstElementChild ?? undefined,
-            props: {
-                unlocked,
-                total,
-                percentage: Math.round(percentage)
-            }
-        }));
+        (mount(self_, {
+                    target,
+                    anchor: target.firstElementChild ?? undefined,
+                    props: {
+                        unlocked,
+                        total,
+                        percentage: Math.round(percentage)
+                    }
+                }));
     }
 }

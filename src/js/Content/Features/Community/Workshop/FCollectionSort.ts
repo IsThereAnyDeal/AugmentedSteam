@@ -2,6 +2,7 @@ import self_ from "./FCollectionSort.svelte";
 import type Context from "@Content/Modules/Context/Context";
 import Feature from "@Content/Modules/Context/Feature";
 import {type SortConfig, ESortCriteria} from "@Content/Features/Community/Workshop/CollectionSort/_types";
+import { mount } from "svelte";
 
 export default class FCollectionSort extends Feature<Context> {
 
@@ -21,13 +22,13 @@ export default class FCollectionSort extends Feature<Context> {
             ) as HTMLElement[];
         }
 
-        new self_({
-            target: collectionChildren.parentElement,
-            anchor: collectionChildren,
-            props: {
-                handler: (config: SortConfig) => this._sort(config)
-            }
-        });
+        mount(self_, {
+                    target: collectionChildren.parentElement,
+                    anchor: collectionChildren,
+                    props: {
+                        handler: (config: SortConfig) => this._sort(config)
+                    }
+                });
     }
 
     private _sort(config: SortConfig): void {

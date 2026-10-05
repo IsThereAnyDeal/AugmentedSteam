@@ -2,6 +2,7 @@ import self_ from "./FPlayers.svelte";
 import Settings from "@Options/Data/Settings";
 import Feature from "@Content/Modules/Context/Feature";
 import type CApp from "@Content/Features/Store/App/CApp";
+import { mount } from "svelte";
 
 export default class FPlayers extends Feature<CApp> {
     private _data: any;
@@ -28,14 +29,14 @@ export default class FPlayers extends Feature<CApp> {
             throw new Error("Node not found");
         }
 
-        (new self_({
-            target,
-            anchor: target.firstElementChild ?? undefined,
-            props: {
-                recent: Number(this._data.recent),
-                peakToday: Number(this._data.peak_today),
-                peakAll: Number(this._data.peak_all)
-            }
-        }));
+        (mount(self_, {
+                    target,
+                    anchor: target.firstElementChild ?? undefined,
+                    props: {
+                        recent: Number(this._data.recent),
+                        peakToday: Number(this._data.peak_today),
+                        peakAll: Number(this._data.peak_all)
+                    }
+                }));
     }
 }

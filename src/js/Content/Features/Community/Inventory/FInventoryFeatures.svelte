@@ -6,12 +6,16 @@
     import FEquipProfileItems from "@Content/Features/Community/Inventory/Components/FEquipProfileItems.svelte";
     import FQuickSellOptions from "@Content/Features/Community/Inventory/Components/FQuickSellOptions.svelte";
 
-    export let context: CInventory;
+    interface Props {
+        context: CInventory;
+    }
 
-    let marketInfo: MarketInfo|null;
-    let showQuickSell: boolean = false;
-    let showEquip: boolean = false;
-    let show1ClickGoo: boolean = false;
+    let { context }: Props = $props();
+
+    let marketInfo: MarketInfo|null = $state();
+    let showQuickSell: boolean = $state(false);
+    let showEquip: boolean = $state(false);
+    let show1ClickGoo: boolean = $state(false);
 
 
     onMount(() => {

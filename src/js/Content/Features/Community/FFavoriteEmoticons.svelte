@@ -1,20 +1,26 @@
 <svelte:options immutable={false} />
 
 <script lang="ts">
+    import { preventDefault } from 'svelte/legacy';
+
     import {__favEmoticonsDragging, __favEmoticonsNoAccess, __loading} from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
     import {onMount} from "svelte";
     import SyncedStorage from "@Core/Storage/SyncedStorage";
     import {handleDrag} from "@Content/Features/Community/FFavoriteEmoticons";
 
-    export let emoticonPopup: HTMLElement;
+    interface Props {
+        emoticonPopup: HTMLElement;
+    }
 
-    let promise: Promise<void> = Promise.resolve();
-    let favs: string[] = [];
+    let { emoticonPopup }: Props = $props();
 
-    let favBox: HTMLDivElement;
-    let overBox: boolean = false;
-    let overRemove: boolean = false;
+    let promise: Promise<void> = $state(Promise.resolve());
+    let favs: string[] = $state([]);
+
+    let favBox: HTMLDivElement = $state();
+    let overBox: boolean = $state(false);
+    let overRemove: boolean = $state(false);
 
     function handleClick(e: MouseEvent): void {
         if (!e.target) {
@@ -79,37 +85,37 @@
 
 
 <div class="emoticon_popup_content es_emoticons_content">
-    <!-- svelte-ignore a11y-no-static-element-interactions -->
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
     <div class="commentthread_entry_quotebox es_fav_remove"
          class:is-over={overRemove}
-         on:dragover|preventDefault={() => overRemove = true}
-         on:dragenter={() => overRemove = true}
-         on:dragleave={() => overRemove = false}
-         on:drop|preventDefault={removeFavorite}
+         ondragover={preventDefault(() => overRemove = true)}
+         ondragenter={() => overRemove = true}
+         ondragleave={() => overRemove = false}
+         ondrop={preventDefault(removeFavorite)}
     ></div>
 
-    <!-- svelte-ignore a11y-no-static-element-interactions -->
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
     <div bind:this={favBox}
          class="commentthread_entry_quotebox es_fav_emoticons"
          class:is-over={overBox}
-         on:dragover|preventDefault={() => overBox = true}
-         on:dragenter|preventDefault={() => overBox = true}
-         on:dragleave={leaveBox}
-         on:drop|preventDefault={addFavorite}
+         ondragover={preventDefault(() => overBox = true)}
+         ondragenter={preventDefault(() => overBox = true)}
+         ondragleave={leaveBox}
+         ondrop={preventDefault(addFavorite)}
     >
 
         {#await promise}
             {L(__loading)}
         {:then _}
             {#each favs as name}
-                <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
+                <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
                 <div class="emoticon_option es_fav"
                      data-emoticon={name}
                      draggable="true"
-                     on:dragstart={handleDrag}
-                     on:click={handleClick}>
+                     ondragstart={handleDrag}
+                     onclick={handleClick}>
 
-                    <!-- svelte-ignore a11y-missing-attribute -->
+                    <!-- svelte-ignore a11y_missing_attribute -->
                     <img src="//community.cloudflare.steamstatic.com/economy/emoticon/{name}"
                          class="emoticon"
                          draggable="false" />

@@ -3,10 +3,14 @@
     import {L} from "@Core/Localization/Localization";
     import {__earlyAccess} from "@Strings/_strings";
 
-    export let imageUrl: string;
-    export let imgHeader: HTMLImageElement;
+    interface Props {
+        imageUrl: string;
+        imgHeader: HTMLImageElement;
+    }
 
-    let container: HTMLSpanElement;
+    let { imageUrl, imgHeader }: Props = $props();
+
+    let container: HTMLSpanElement = $state();
 
     onMount(() => {
         container.append(imgHeader);

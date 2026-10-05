@@ -4,9 +4,13 @@
     import HTML from "@Core/Html/Html";
     import UrlUtils from "@Core/Utils/UrlUtils";
 
-    export let steamId: string;
-    export let clear: boolean;
-    export let language: string|undefined; // Add SteamRepCN link if language is Chinese
+    interface Props {
+        steamId: string;
+        clear: boolean;
+        language: string|undefined; // Add SteamRepCN link if language is Chinese
+    }
+
+    let { steamId, clear, language }: Props = $props();
 </script>
 
 

@@ -14,10 +14,19 @@
         return L(__hoursShort, {"hours": (minutes / 60).toFixed(1).toString()});
     }
 
-    export let story: number|null;
-    export let extras: number|null;
-    export let complete: number|null;
-    export let url: string;
+    interface Props {
+        story: number|null;
+        extras: number|null;
+        complete: number|null;
+        url: string;
+    }
+
+    let {
+        story,
+        extras,
+        complete,
+        url
+    }: Props = $props();
 </script>
 
 <div class="block responsive_apppage_details_right heading">{L(__hltb_title)}</div>

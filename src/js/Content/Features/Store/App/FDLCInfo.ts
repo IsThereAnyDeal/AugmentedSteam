@@ -2,6 +2,7 @@ import self_ from "./FDLCInfo.svelte";
 import type CApp from "@Content/Features/Store/App/CApp";
 import Feature from "@Content/Modules/Context/Feature";
 import AugmentedSteamApiFacade from "@Content/Modules/Facades/AugmentedSteamApiFacade";
+import { mount } from "svelte";
 
 export default class FDLCInfo extends Feature<CApp> {
 
@@ -24,12 +25,12 @@ export default class FDLCInfo extends Feature<CApp> {
         const anchor = document.querySelector("#category_block")!;
         const target = anchor.parentElement!;
 
-        (new self_({
-            target,
-            anchor,
-            props: {
-                dlcInfo: response
-            }
-        }));
+        (mount(self_, {
+                    target,
+                    anchor,
+                    props: {
+                        dlcInfo: response
+                    }
+                }));
     }
 }

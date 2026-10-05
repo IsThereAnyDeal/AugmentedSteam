@@ -2,7 +2,11 @@
     import {__inviteFriends} from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
 
-    export let groupId: string;
+    interface Props {
+        groupId: string;
+    }
+
+    let { groupId }: Props = $props();
 </script>
 
 

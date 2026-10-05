@@ -20,11 +20,15 @@
 
     const dispatch = createEventDispatcher<{syncEvent: void}>();
 
-    export let isConnected: boolean;
+    interface Props {
+        isConnected: boolean;
+    }
 
-    let loading: boolean = false;
-    let pullCount: number|null = null;
-    let pushStatus: TPushNotesStatus|null = null;
+    let { isConnected }: Props = $props();
+
+    let loading: boolean = $state(false);
+    let pullCount: number|null = $state(null);
+    let pushStatus: TPushNotesStatus|null = $state(null);
 
     async function pullNotes(): Promise<void> {
         if (loading || !isConnected) {
@@ -65,12 +69,12 @@
 
 
 <div class="buttons" class:is-disabled={loading || !isConnected}>
-    <button type="button" on:click={pushNotes}>
+    <button type="button" onclick={pushNotes}>
         <span>{L(__userNote_syncButtonPush)}</span>
         <SyncPushIcon />
     </button>
 
-    <button type="button" on:click={pullNotes}>
+    <button type="button" onclick={pullNotes}>
         <span>{L(__userNote_syncButtonPull)}</span>
         <SyncPullIcon />
     </button>

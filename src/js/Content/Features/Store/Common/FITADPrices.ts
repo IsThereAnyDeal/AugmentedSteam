@@ -7,6 +7,7 @@ import Prices from "@Content/Modules/Prices/Prices";
 import type {TBundle, TPriceOverview} from "@Background/Modules/AugmentedSteam/_types";
 import type CSub from "@Content/Features/Store/Sub/CSub";
 import type CApp from "@Content/Features/Store/App/CApp";
+import { mount } from "svelte";
 
 export default class FITADPrices extends Feature<CApp|CSub|CBundle> {
 
@@ -29,22 +30,22 @@ export default class FITADPrices extends Feature<CApp|CSub|CBundle> {
         }
 
         if (anchor) {
-            new PriceOverview({
-                target: anchor.parentElement!,
-                anchor,
-                props: {data}
-            });
+            mount(PriceOverview, {
+                            target: anchor.parentElement!,
+                            anchor,
+                            props: {data}
+                        });
         }
     }
 
     private insertBundles(data: TBundle[]) {
         const anchor = document.querySelector("#game_area_purchase")?.nextElementSibling;
         if (anchor) {
-            new BundleOverview({
-                target: anchor.parentElement!,
-                anchor,
-                props: {data}
-            });
+            mount(BundleOverview, {
+                            target: anchor.parentElement!,
+                            anchor,
+                            props: {data}
+                        });
         }
     }
 

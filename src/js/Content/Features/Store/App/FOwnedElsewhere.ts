@@ -3,6 +3,7 @@ import type CApp from "@Content/Features/Store/App/CApp";
 import Feature from "@Content/Modules/Context/Feature";
 import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";
 import Settings from "@Options/Data/Settings";
+import { mount } from "svelte";
 
 export default class FOwnedElsewhere extends Feature<CApp> {
 
@@ -19,13 +20,13 @@ export default class FOwnedElsewhere extends Feature<CApp> {
 
         const node = document.querySelector<HTMLElement>(".queue_overflow_ctn")!;
 
-        new self_({
-            target: node.parentElement!,
-            anchor: node.nextElementSibling!,
-            props: {
-                appName: this.context.appName,
-                copies:  response
-            }
-        });
+        mount(self_, {
+                    target: node.parentElement!,
+                    anchor: node.nextElementSibling!,
+                    props: {
+                        appName: this.context.appName,
+                        copies:  response
+                    }
+                });
     }
 }

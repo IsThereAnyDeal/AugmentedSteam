@@ -4,12 +4,16 @@
     import UserNotes from "@Content/Features/Store/Common/UserNotes/UserNotes";
     import {onMount} from "svelte";
 
-    export let notes: UserNotes;
-    export let appName: string;
-    export let appid: number;
+    interface Props {
+        notes: UserNotes;
+        appName: string;
+        appid: number;
+    }
 
-    let note: string|null = null;
-    let el: HTMLElement;
+    let { notes, appName, appid }: Props = $props();
+
+    let note: string|null = $state(null);
+    let el: HTMLElement = $state();
 
     async function handleEdit(): Promise<void> {
         let newNote: string|null = await notes.showModalDialog2(appName, appid,);
@@ -29,8 +33,8 @@
 </script>
 
 
-<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
-<div class="as-note" data-appid={appid} bind:this={el} class:is-empty={!note} on:click={handleEdit}>
+<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
+<div class="as-note" data-appid={appid} bind:this={el} class:is-empty={!note} onclick={handleEdit}>
     {#if note !== undefined}
         {note ?? L(__userNote_add)}
     {/if}

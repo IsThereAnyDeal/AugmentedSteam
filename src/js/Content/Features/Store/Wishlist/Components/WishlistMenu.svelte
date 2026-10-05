@@ -1,5 +1,5 @@
 <script lang="ts">
-    let node: HTMLElement;
+    let node: HTMLElement = $state();
     let itemNodes: Array<[number, HTMLElement]> = [];
 
     export function getTarget(targetPosition: number): HTMLElement {

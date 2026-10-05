@@ -49,7 +49,7 @@
 
     const Contributors: Record<string, string[]> = untypedContributors;
 
-    let localeMap: Array<[string, string]> = [
+    let localeMap: Array<[string, string]> = $state([
         ["bg", __options_lang_bulgarian],
         ["cs", __options_lang_czech],
         ["da", __options_lang_danish],
@@ -78,7 +78,7 @@
         ["vi", __options_lang_vietnamese],
         ["zh-CN", __options_lang_schinese],
         ["zh-TW", __options_lang_tchinese],
-    ];
+    ]);
     localeMap = localeMap.sort((a, b) => L(a[1]).localeCompare(L(b[1])));
 
     async function getCoverage(code: string): Promise<number> {

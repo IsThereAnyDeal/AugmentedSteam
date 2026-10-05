@@ -16,7 +16,11 @@
     import Toggle from "../Components/Toggle.svelte";
     import ContextMenu, {type ContextMenuKeys} from "@Background/Modules/ContextMenu/ContextMenu";
 
-    export let settings: Writable<SettingsSchema>;
+    interface Props {
+        settings: Writable<SettingsSchema>;
+    }
+
+    let { settings }: Props = $props();
 
     async function handleChange(key: ContextMenuKeys, value: boolean): Promise<void> {
         $settings[key] = value;

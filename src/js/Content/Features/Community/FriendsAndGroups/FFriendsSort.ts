@@ -7,6 +7,7 @@ import SyncedStorage from "@Core/Storage/SyncedStorage";
 import RequestData from "@Content/Modules/RequestData";
 import HTML from "@Core/Html/Html";
 import type {SortboxChangeEvent} from "@Content/Modules/Widgets/SortboxChangeEvent";
+import { mount } from "svelte";
 
 export default class FFriendsSort extends Feature<CFriendsAndGroups> {
 
@@ -41,18 +42,18 @@ export default class FFriendsSort extends Feature<CFriendsAndGroups> {
             return;
         }
 
-        const sortbox = new SortBox({
-            target: anchor.parentElement!,
-            anchor,
-            props: {
-                name: "friends",
-                options: [
-                    ["default", L(__theworddefault)],
-                    ["lastonline", L(__lastonline)]
-                ],
-                value: (await SyncedStorage.get("sortfriendsby") ?? "default_ASC")
-            }
-        });
+        const sortbox = mount(SortBox, {
+                    target: anchor.parentElement!,
+                    anchor,
+                    props: {
+                        name: "friends",
+                        options: [
+                            ["default", L(__theworddefault)],
+                            ["lastonline", L(__lastonline)]
+                        ],
+                        value: (await SyncedStorage.get("sortfriendsby") ?? "default_ASC")
+                    }
+                });
         sortbox.$on("change", (e: CustomEvent<SortboxChangeEvent>) => {
             const {value, key, direction} = e.detail;
             this._sortFriends(key, direction < 0);

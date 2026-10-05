@@ -3,6 +3,7 @@ import type CBundle from "@Content/Features/Store/Bundle/CBundle";
 import ContextType from "@Content/Modules/Context/ContextType";
 import CommonExtraLinks from "@Content/Features/Common/CommonExtraLinks.svelte";
 import type CSub from "@Content/Features/Store/Sub/CSub";
+import { mount } from "svelte";
 
 export default class FExtraLinksCommon extends Feature<CSub|CBundle> {
 
@@ -26,10 +27,10 @@ export default class FExtraLinksCommon extends Feature<CSub|CBundle> {
             throw new Error("Node not found");
         }
 
-        (new CommonExtraLinks({
-            target,
-            anchor: target.firstElementChild!,
-            props: {type, gameid}
-        }));
+        (mount(CommonExtraLinks, {
+                    target,
+                    anchor: target.firstElementChild!,
+                    props: {type, gameid}
+                }));
     }
 }

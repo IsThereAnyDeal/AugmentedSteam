@@ -3,7 +3,11 @@
     import {__itad_noSyncEvents} from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
 
-    export let events: TSyncEvent[];
+    interface Props {
+        events: TSyncEvent[];
+    }
+
+    let { events }: Props = $props();
 </script>
 
 

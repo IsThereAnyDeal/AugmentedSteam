@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { run } from 'svelte/legacy';
+
     import {__equipOnProfile, __saved, __saving} from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
     import ServiceFactory from "@Protobufs/ServiceFactory";
@@ -6,14 +8,18 @@
     import type {MarketInfo} from "@Content/Features/Community/Inventory/CInventory";
     import LoadingElement from "@Content/Features/Common/LoadingElement.svelte";
 
-    export let user: UserInterface;
-    export let marketInfo: MarketInfo;
+    interface Props {
+        user: UserInterface;
+        marketInfo: MarketInfo;
+    }
 
-    let assetId: string;
-    let appid: number;
-    let itemType: string;
-    let saving: boolean;
-    let equipped: boolean;
+    let { user, marketInfo }: Props = $props();
+
+    let assetId: string = $state();
+    let appid: number = $state();
+    let itemType: string = $state();
+    let saving: boolean = $state();
+    let equipped: boolean = $state();
 
     async function onclick(e: Event): Promise<void> {
         e.preventDefault();
@@ -58,7 +64,7 @@
     // const player = ServiceFactory.PlayerService(user);
     // const equipped = await player.getProfileItemsEquipped({steamid: Long.fromString(user.steamId), language: "en"});
 
-    $: {
+    run(() => {
         marketInfo;
         assetId = marketInfo.assetId;
         appid = marketInfo.appid;
@@ -66,7 +72,7 @@
 
         saving = false;
         equipped = false;
-    }
+    });
 </script>
 
 
@@ -76,7 +82,7 @@
     {:else if equipped}
         {L(__saved)}
     {:else}
-        <button type="button" class="as-inv-btn as-blue" on:click={onclick}>
+        <button type="button" class="as-inv-btn as-blue" {onclick}>
             {L(__equipOnProfile)}
         </button>
     {/if}

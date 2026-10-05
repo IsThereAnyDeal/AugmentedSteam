@@ -2,6 +2,7 @@ import {__cancel, __ok} from "@Strings/_strings";
 import {L} from "@Core/Localization/Localization";
 import Modal from "@Core/Modals/Contained/Modal.svelte";
 import type {EModalAction} from "@Core/Modals/Contained/EModalAction";
+import { mount, unmount } from "svelte";
 
 export default class ConfirmDialog {
 
@@ -20,17 +21,17 @@ export default class ConfirmDialog {
 
     show(): Promise<EModalAction> {
         return new Promise(resolve => {
-            const modal = new Modal({
-                target: document.body,
-                props: {
-                    title: this.title,
-                    body: this.body,
-                    buttons: this.buttons
-                }
-            });
+            const modal = mount(Modal, {
+                            target: document.body,
+                            props: {
+                                title: this.title,
+                                body: this.body,
+                                buttons: this.buttons
+                            }
+                        });
             modal.$on("button", (e: CustomEvent<EModalAction>) => {
                 resolve(e.detail);
-                modal.$destroy();
+                unmount(modal);
             });
         });
     }

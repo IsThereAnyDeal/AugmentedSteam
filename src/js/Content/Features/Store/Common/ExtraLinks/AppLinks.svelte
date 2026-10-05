@@ -7,10 +7,19 @@
     import CommonExtraLinks from "@Content/Features/Common/CommonExtraLinks.svelte";
     import UrlUtils from "@Core/Utils/UrlUtils";
 
-    export let appid: number;
-    export let communityAppid: number;
-    export let appName: string = "";
-    export let appPage: boolean = false;
+    interface Props {
+        appid: number;
+        communityAppid: number;
+        appName?: string;
+        appPage?: boolean;
+    }
+
+    let {
+        appid,
+        communityAppid,
+        appName = "",
+        appPage = false
+    }: Props = $props();
 
     function slugify(value: string, separator: string): string {
         return value.replaceAll(/\W+/g, separator);

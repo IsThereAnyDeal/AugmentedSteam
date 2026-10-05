@@ -6,11 +6,15 @@
     import LanguageWarning from "@Content/Modules/Widgets/AugmentedSteam/Components/LanguageWarning.svelte";
     import LocalStorage from "@Core/Storage/LocalStorage";
 
-    export let language: Language;
-    export let react: boolean;
+    interface Props {
+        language: Language;
+        react: boolean;
+    }
 
-    let languageWarning: Language|null = null;
-    let loginWarning: "store"|"community"|null = null;
+    let { language, react }: Props = $props();
+
+    let languageWarning: Language|null = $state(null);
+    let loginWarning: "store"|"community"|null = $state(null);
 
     onMount(() => {
         document.addEventListener("asRequestError", async (e) => {

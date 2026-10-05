@@ -2,8 +2,12 @@
     import {__previewBackground} from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
 
-    export let profileUrl: string;
-    export let background: string;
+    interface Props {
+        profileUrl: string;
+        background: string;
+    }
+
+    let { profileUrl, background }: Props = $props();
 </script>
 
 

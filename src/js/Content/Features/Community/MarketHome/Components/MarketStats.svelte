@@ -45,15 +45,19 @@
         }>
     }
 
-    export let loadOnMount: boolean = false;
+    interface Props {
+        loadOnMount?: boolean;
+    }
 
-    let promise: Promise<void>|null = null;
-    let totalEvents: number = 0;
+    let { loadOnMount = false }: Props = $props();
+
+    let promise: Promise<void>|null = $state(null);
+    let totalEvents: number = $state(0);
 
     let latestId: string|null = null;
-    let events: number = 0;
-    let buyTotal: number = 0;
-    let sellTotal: number = 0;
+    let events: number = $state(0);
+    let buyTotal: number = $state(0);
+    let sellTotal: number = $state(0);
 
     async function fetchPage(start: number, pagesize: number): Promise<TMarketPage> {
         const url = "https://steamcommunity.com/market/myhistory/render/?"+(new URLSearchParams({
@@ -170,7 +174,7 @@
         {#if !promise}
             <div id="es_market_summary_status">
                 <button type="button" class="btnv6_grey_black ico_hover btn_small_thin" id="es_market_summary_button"
-                        on:click={() => promise = load()}>
+                        onclick={() => promise = load()}>
                     <span>{L(__loadMarketStats)}</span>
                 </button>
             </div>
@@ -189,7 +193,7 @@
                     {L(e instanceof Errors.HTTPError && e.code === 429 ? __toomanyrequests : __error)}
 
                     <button type="button" class="btnv6_grey_black ico_hover btn_small_thin" id="es_market_summary_button"
-                            on:click={() => promise = load()}>
+                            onclick={() => promise = load()}>
                         <span>{L(__retry)}</span>
                     </button>
                 </div>

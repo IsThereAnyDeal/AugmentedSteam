@@ -11,9 +11,13 @@
         close: void
     }>();
 
-    export let lastVersion: Version;
+    interface Props {
+        lastVersion: Version;
+    }
 
-    let promise: Promise<[string, string][]>
+    let { lastVersion }: Props = $props();
+
+    let promise: Promise<[string, string][]> = $state()
 
     onMount(() => {
         promise = (async () => {

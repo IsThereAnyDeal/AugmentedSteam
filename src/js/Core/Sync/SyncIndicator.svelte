@@ -1,7 +1,11 @@
 <script lang="ts">
     import ESyncStatus from "@Core/Sync/ESyncStatus";
 
-    export let status: ESyncStatus = ESyncStatus.OK;
+    interface Props {
+        status?: ESyncStatus;
+    }
+
+    let { status = ESyncStatus.OK }: Props = $props();
 </script>
 
 

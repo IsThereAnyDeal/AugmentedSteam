@@ -3,6 +3,7 @@ import StringUtils from "@Core/Utils/StringUtils";
 import AppLinks from "@Content/Features/Store/Common/ExtraLinks/AppLinks.svelte";
 import type CApp from "@Content/Features/Store/App/CApp";
 import Settings from "@Options/Data/Settings";
+import { mount } from "svelte";
 
 export default class FExtraLinksApp extends Feature<CApp> {
 
@@ -29,15 +30,15 @@ export default class FExtraLinksApp extends Feature<CApp> {
             throw new Error("Node not found");
         }
 
-        (new AppLinks({
-            target,
-            anchor: target.firstElementChild ?? undefined,
-            props: {
-                appid: this.context.appid,
-                communityAppid: this.context.communityAppid,
-                appName: StringUtils.clearSpecialSymbols(this.context.appName),
-                appPage: true
-            }
-        }));
+        (mount(AppLinks, {
+                    target,
+                    anchor: target.firstElementChild ?? undefined,
+                    props: {
+                        appid: this.context.appid,
+                        communityAppid: this.context.communityAppid,
+                        appName: StringUtils.clearSpecialSymbols(this.context.appName),
+                        appPage: true
+                    }
+                }));
     }
 }

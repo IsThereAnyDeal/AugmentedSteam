@@ -4,6 +4,7 @@ import AppId from "@Core/GameId/AppId";
 import Language from "@Core/Localization/Language";
 import ExtensionResources from "@Core/ExtensionResources";
 import AugmentedSteamApiFacade from "@Content/Modules/Facades/AugmentedSteamApiFacade";
+import { mount } from "svelte";
 
 export default class EarlyAccessUtils {
 
@@ -93,14 +94,14 @@ export default class EarlyAccessUtils {
             const imgHeader = node.querySelector("img");
             if (!imgHeader) { continue; }
 
-            new EarlyAccess({
-                target: imgHeader.parentElement!,
-                anchor: imgHeader, // Render the component "before" the original image
-                props: {
-                    imageUrl,
-                    imgHeader,
-                },
-            });
+            mount(EarlyAccess, {
+                            target: imgHeader.parentElement!,
+                            anchor: imgHeader, // Render the component "before" the original image
+                            props: {
+                                imageUrl,
+                                imgHeader,
+                            },
+                        });
         }
     }
 

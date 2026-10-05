@@ -1,5 +1,9 @@
 <script lang="ts">
-    export let down: boolean = false;
+    interface Props {
+        down?: boolean;
+    }
+
+    let { down = false }: Props = $props();
 </script>
 
 <i class:down></i>

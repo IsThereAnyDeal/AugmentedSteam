@@ -3,9 +3,13 @@
     import {__oneclickgoo} from "@Strings/_strings";
     import DOMHelper from "@Content/Modules/DOMHelper";
 
-    export let appid: number;
-    export let sessionId: string;
-    export let assetId: string
+    interface Props {
+        appid: number;
+        sessionId: string;
+        assetId: string;
+    }
+
+    let { appid, sessionId, assetId }: Props = $props();
 
     function onclick(e: Event): void {
         e.preventDefault();
@@ -15,7 +19,7 @@
 
 
 <div>
-    <button type="button" class="as-inv-btn" on:click={onclick}>
+    <button type="button" class="as-inv-btn" {onclick}>
         {L(__oneclickgoo)}
     </button>
 </div>

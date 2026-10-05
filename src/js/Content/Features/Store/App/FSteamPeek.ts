@@ -2,6 +2,7 @@ import self_ from "./FSteamPeek.svelte";
 import type CApp from "@Content/Features/Store/App/CApp";
 import Feature from "@Content/Modules/Context/Feature";
 import Settings from "@Options/Data/Settings";
+import { mount } from "svelte";
 
 export default class FSteamPeek extends Feature<CApp> {
 
@@ -21,14 +22,14 @@ export default class FSteamPeek extends Feature<CApp> {
             return;
         }
 
-        new self_({
-            target: this._moreLikeThis,
-            anchor: this._moreLikeThis.firstElementChild ?? undefined,
-            props: {
-                user: this.context.user,
-                language: this.context.language?.name ?? "english",
-                appid: this.context.appid
-            }
-        });
+        mount(self_, {
+                    target: this._moreLikeThis,
+                    anchor: this._moreLikeThis.firstElementChild ?? undefined,
+                    props: {
+                        user: this.context.user,
+                        language: this.context.language?.name ?? "english",
+                        appid: this.context.appid
+                    }
+                });
     }
 }

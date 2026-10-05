@@ -2,13 +2,18 @@
     import AnglesUpIcon from "@Content/Icons/ChevronUpIcon.svelte";
     import AnglesDownIcon from "@Content/Icons/ChevronDownIcon.svelte";
 
-    export let onclick: () => void;
-    export  let expanded: boolean
+    interface Props {
+        onclick: () => void;
+        expanded: boolean;
+        children?: import('svelte').Snippet;
+    }
+
+    let { onclick, expanded, children }: Props = $props();
 </script>
 
 
-<button type="button" on:click={onclick}>
-    <slot></slot>{#if expanded}<AnglesUpIcon />{:else}<AnglesDownIcon />{/if}
+<button type="button" {onclick}>
+    {@render children?.()}{#if expanded}<AnglesUpIcon />{:else}<AnglesDownIcon />{/if}
 </button>
 
 

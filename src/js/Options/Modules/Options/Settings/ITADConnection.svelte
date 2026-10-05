@@ -20,13 +20,17 @@
 
     const dispatch = createEventDispatcher<{connection: void}>();
 
-    export let settings: Writable<SettingsSchema>;
-    export let isConnected: boolean = false;
+    interface Props {
+        settings: Writable<SettingsSchema>;
+        isConnected?: boolean;
+    }
 
-    let promise: Promise<void>;
+    let { settings, isConnected = $bindable(false) }: Props = $props();
 
-    let statusComponent: ITADSyncStatus;
-    let status: ESyncStatus|undefined = undefined;
+    let promise: Promise<void> = $state();
+
+    let statusComponent: ITADSyncStatus = $state();
+    let status: ESyncStatus|undefined = $state(undefined);
 
     function handleAuthorize(): void {
         promise = (async () => {
@@ -59,12 +63,12 @@
     {L(__loading)}
 {:then _}
     {#if isConnected}
-        <button type="button" on:click={handleDisconnect}>
+        <button type="button" onclick={handleDisconnect}>
             <span class="label">{L(__status)}</span>
             <span class="status is-connected">{L(__connected)}</span>
         </button>
     {:else}
-        <button type="button" on:click={handleAuthorize}>
+        <button type="button" onclick={handleAuthorize}>
             <span class="label">{L(__status)}</span>
             <span class="status">{L(__disconnected)}</span>
         </button>

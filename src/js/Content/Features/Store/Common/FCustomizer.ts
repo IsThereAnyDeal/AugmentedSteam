@@ -20,6 +20,7 @@ import DOMHelper from "@Content/Modules/DOMHelper";
 import Customizer from "@Content/Features/Store/Common/Customizer/Customizer.svelte";
 import type CApp from "@Content/Features/Store/App/CApp";
 import type {CustomizerSetup} from "@Content/Features/Store/Common/Customizer/CustomizerSetup";
+import { mount } from "svelte";
 
 export default class FCustomizer extends Feature<CApp|CStoreFront> {
 
@@ -32,25 +33,25 @@ export default class FCustomizer extends Feature<CApp|CStoreFront> {
         const anchor = target.firstElementChild ?? undefined;
 
         if (this.context.type === ContextType.APP) {
-            (new Customizer({
-                target,
-                anchor,
-                props: {
-                    type: "app",
-                    setup: this.getAppPageSetup()
-                }
-            }));
+            (mount(Customizer, {
+                            target,
+                            anchor,
+                            props: {
+                                type: "app",
+                                setup: this.getAppPageSetup()
+                            }
+                        }));
         } else if (this.context.type === ContextType.STORE_FRONT) {
             document.addEventListener("renderComplete", () => {
-                (new Customizer({
-                    target,
-                    anchor,
-                    props: {
-                        type: "frontpage",
-                        setup: this.getFrontPageSetup(),
-                        dynamicSelector: ".home_page_body_ctn .home_ctn:not(.esi-customizer), .home_pagecontent_ctn"
-                    }
-                }));
+                (mount(Customizer, {
+                                    target,
+                                    anchor,
+                                    props: {
+                                        type: "frontpage",
+                                        setup: this.getFrontPageSetup(),
+                                        dynamicSelector: ".home_page_body_ctn .home_ctn:not(.esi-customizer), .home_pagecontent_ctn"
+                                    }
+                                }));
             });
             DOMHelper.insertScript("scriptlets/Store/Common/storeFrontCustomizer.js");
         }

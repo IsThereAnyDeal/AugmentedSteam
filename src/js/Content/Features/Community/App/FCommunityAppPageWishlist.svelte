@@ -4,11 +4,15 @@
     import SteamStoreApiFacade from "@Content/Modules/Facades/SteamStoreApiFacade";
     import ExtensionResources from "@Core/ExtensionResources";
 
-    export let appid: number;
-    export let wishlisted: boolean;
+    interface Props {
+        appid: number;
+        wishlisted: boolean;
+    }
 
-    let isLoading: boolean = false;
-    let isError: boolean = false;
+    let { appid, wishlisted = $bindable() }: Props = $props();
+
+    let isLoading: boolean = $state(false);
+    let isError: boolean = $state(false);
 
     async function handleClick(): Promise<void> {
         if (isLoading) { return; }
@@ -35,8 +39,8 @@
 </script>
 
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class="wl_btn btnv6_blue_hoverfade btn_medium" on:click={handleClick} role="button" tabindex="0">
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<span class="wl_btn btnv6_blue_hoverfade btn_medium" onclick={handleClick} role="button" tabindex="0">
     <span>
         {#if isLoading}
             <img class="loading_img" src="https://community.cloudflare.steamstatic.com/public/images/login/throbber.gif" alt="" />

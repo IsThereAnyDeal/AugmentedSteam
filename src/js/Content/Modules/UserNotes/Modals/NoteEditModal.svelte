@@ -11,10 +11,14 @@
         cancel: void
     }>();
 
-    export let appName: string;
-    export let note: string;
+    interface Props {
+        appName: string;
+        note: string;
+    }
 
-    let textareaNode: HTMLTextAreaElement;
+    let { appName, note = $bindable() }: Props = $props();
+
+    let textareaNode: HTMLTextAreaElement = $state();
 
     async function handleButton(e: CustomEvent<EModalAction>): Promise<void> {
         const action = e.detail;
@@ -80,7 +84,7 @@
     cancel: L(__cancel)
 }} on:button={handleButton}>
     <div>
-        <textarea bind:this={textareaNode} bind:value={note} on:focus={onfocus} on:blur={onblur} />
+        <textarea bind:this={textareaNode} bind:value={note} {onfocus} {onblur}></textarea>
     </div>
 
     <label><input type="checkbox" bind:checked={Settings.user_notes_simple}> {L(__options_userNotes_saveWithEnter)}</label>

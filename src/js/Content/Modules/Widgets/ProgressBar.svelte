@@ -1,25 +1,33 @@
 <script lang="ts">
+    import { run } from 'svelte/legacy';
+
     import {onMount} from "svelte";
     import {__ready_failed, __ready_loading, __ready_ready, __ready_serverOutage} from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
 
-    export let react: boolean;
-
-    let started: number = 0;
-    let done: number = 0;
-    let failed: number = 0;
-
-    let progress: number = 0;
-    let isLoading: boolean = false;
-
-    let hasWarning: boolean = false;
-    let hasError: boolean = false;
-
-    $: if (started > 0) {
-        progress = Math.min(100, 100 * (done / started));
-
-        isLoading = (done + failed) < started;
+    interface Props {
+        react: boolean;
     }
+
+    let { react }: Props = $props();
+
+    let started: number = $state(0);
+    let done: number = $state(0);
+    let failed: number = $state(0);
+
+    let progress: number = $state(0);
+    let isLoading: boolean = $state(false);
+
+    let hasWarning: boolean = $state(false);
+    let hasError: boolean = $state(false);
+
+    run(() => {
+        if (started > 0) {
+            progress = Math.min(100, 100 * (done / started));
+
+            isLoading = (done + failed) < started;
+        }
+    });
 
     onMount(() => {
         function onStart(): void {

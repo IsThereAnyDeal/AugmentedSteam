@@ -1,8 +1,12 @@
 <script lang="ts">
-    export let appid: number;
-    export let rank: number|undefined;
+    interface Props {
+        appid: number;
+        rank: number|undefined;
+    }
 
-    let node: HTMLElement;
+    let { appid, rank }: Props = $props();
+
+    let node: HTMLElement = $state();
 
     export function isConnected(): boolean {
         return node.isConnected;

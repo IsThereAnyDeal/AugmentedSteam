@@ -4,7 +4,11 @@
     import type {TDlcInfo} from "@Background/Modules/AugmentedSteam/_types";
     import ExtensionResources from "@Core/ExtensionResources";
 
-    export let dlcInfo: TDlcInfo;
+    interface Props {
+        dlcInfo: TDlcInfo;
+    }
+
+    let { dlcInfo }: Props = $props();
 </script>
 
 <div class="block responsive_apppage_details_right heading">{L(__dlcDetails)}</div>
@@ -18,7 +22,7 @@
                         <div class="icon">
                             <img src={ExtensionResources.getURL(`/img/dlcicons/${encodeURIComponent(item.icon)}`)} alt="">
                         </div>
-                        <!-- svelte-ignore a11y-missing-attribute -->
+                        <!-- svelte-ignore a11y_missing_attribute -->
                         <a class="name" title={item.description}>{item.name}</a>
                     </div>
                 {/each}

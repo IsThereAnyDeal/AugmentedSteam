@@ -19,8 +19,12 @@
 
     const optionsUrl = ExtensionResources.getURL("html/options.html") + "#llm";
 
-    export let appid: number;
-    export let data: TVaporLensResponse;
+    interface Props {
+        appid: number;
+        data: TVaporLensResponse;
+    }
+
+    let { appid, data }: Props = $props();
 
     let hasDetails = (data.positives ?? []).length > 0
                   || (data.negatives ?? []).length > 0
@@ -34,7 +38,7 @@
         LocalStorage.set("expand_vaporlens", expand);
     }
 
-    let expand: boolean = false;
+    let expand: boolean = $state(false);
 
     onMount(() => {
         (async () => {

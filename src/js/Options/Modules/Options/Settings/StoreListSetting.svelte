@@ -12,10 +12,14 @@
     import {L} from "@Core/Localization/Localization";
     import type {Writable} from "svelte/store";
 
-    export let settings: Writable<SettingsSchema>;
+    interface Props {
+        settings: Writable<SettingsSchema>;
+    }
 
-    let promise: Promise<TGetStoreListResponse>|null = null;
-    let excludedStores: SettingsSchema['excluded_stores'] = [];
+    let { settings }: Props = $props();
+
+    let promise: Promise<TGetStoreListResponse>|null = $state(null);
+    let excludedStores: SettingsSchema['excluded_stores'] = $state([]);
 
     function toggle(id: number) {
         let set = new Set(excludedStores);
@@ -57,7 +61,7 @@
                         <label>
                             <input type="checkbox"
                                    checked={!excludedStores.includes(id)}
-                                   on:change={() => toggle(id)}>
+                                   onchange={() => toggle(id)}>
                             {title}
                         </label>
                     </div>

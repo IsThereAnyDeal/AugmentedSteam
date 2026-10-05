@@ -7,11 +7,11 @@
     import HTML from "@Core/Html/Html";
     import SteamFacade from "@Content/Modules/Facades/SteamFacade";
     import RequestData from "@Content/Modules/RequestData";
-    import {onMount} from "svelte";
+    import {onMount, mount } from "svelte";
     import AddTagForm from "./Components/AddTagForm.svelte";
     import CustomModal from "@Core/Modals/CustomModal";
 
-    let customTags: Set<string> = new Set(); // Use Set to enforce unique tags
+    let customTags: Set<string> = $state(new Set()); // Use Set to enforce unique tags
 
     async function addTags(): Promise<void> {
 
@@ -46,10 +46,10 @@
         const response = await CustomModal({
             title: L(__customTags),
             modalFn: (target) => {
-                form = new AddTagForm({
-                    target,
-                    props: {tag}
-                });
+                form = mount(AddTagForm, {
+                                    target,
+                                    props: {tag}
+                                });
                 form.$on("change", () => {
                     tag = form!.tag;
                 });
@@ -95,8 +95,8 @@
             {tag}
         </div>
     {/each}
-    <!-- svelte-ignore a11y-click-events-have-key-events a11y-missing-attribute -->
-    <a class="btn_blue_white_innerfade btn_small_thin as_add_tag" on:click={showDialog} role="button" tabindex="0">
+    <!-- svelte-ignore a11y_click_events_have_key_events, a11y_missing_attribute -->
+    <a class="btn_blue_white_innerfade btn_small_thin as_add_tag" onclick={showDialog} role="button" tabindex="0">
         <span>{L(__addTag)}</span>
     </a>
 </div>

@@ -4,7 +4,11 @@
     import {__itad_expired, __itad_reauthorize} from "@Strings/_strings";
     import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";
 
-    export let onclose: () => void;
+    interface Props {
+        onclose: () => void;
+    }
+
+    let { onclose }: Props = $props();
 
     async function reauthorize(): Promise<void> {
         await ITADApiFacade.authorize();
@@ -19,7 +23,7 @@
 
 
 <Modal title={L(__itad_expired)} showClose on:button={oncancel}>
-    <button type="button" on:click={reauthorize}>
+    <button type="button" onclick={reauthorize}>
         {L(__itad_reauthorize)}
     </button>
 </Modal>

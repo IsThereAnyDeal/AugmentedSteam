@@ -2,8 +2,13 @@
     import ProfileLinkIcon from "@Icons/ProfileLinkIcon.svelte";
     import type {SettingsSchema} from "@Options/Data/_types";
 
-    export let id: string;
-    export let type: SettingsSchema['show_profile_link_images'];
+    interface Props {
+        id: string;
+        type: SettingsSchema['show_profile_link_images'];
+        children?: import('svelte').Snippet;
+    }
+
+    let { id, type, children }: Props = $props();
 </script>
 
 
@@ -11,7 +16,7 @@
     {#if type !== "none"}
         <ProfileLinkIcon {id} gray={type === "gray"} />
     {/if}
-    <slot></slot>
+    {@render children?.()}
 </span>
 
 
@@ -21,7 +26,7 @@
         align-items: center;
         position: relative;
     }
-    span:has(i) {
+    span:has(:global(i)) {
         top: 2px;
     }
 </style>

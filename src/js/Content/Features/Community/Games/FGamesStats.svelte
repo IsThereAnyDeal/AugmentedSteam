@@ -14,10 +14,19 @@
     } from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
 
-    export let countTotal: string;
-    export let countPlayed: string;
-    export let countNeverPlayed: string;
-    export let totalTime: string;
+    interface Props {
+        countTotal: string;
+        countPlayed: string;
+        countNeverPlayed: string;
+        totalTime: string;
+    }
+
+    let {
+        countTotal,
+        countPlayed,
+        countNeverPlayed,
+        totalTime
+    }: Props = $props();
 
     let isOpen: boolean = false;
 </script>

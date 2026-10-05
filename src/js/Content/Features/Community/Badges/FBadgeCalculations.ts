@@ -3,6 +3,7 @@ import type CBadges from "@Content/Features/Community/Badges/CBadges";
 import HTML from "@Core/Html/Html";
 import RequestData from "@Content/Modules/RequestData";
 import DropStats from "@Content/Features/Community/Badges/Components/DropStats.svelte";
+import { mount } from "svelte";
 
 export default class FBadgeCalculations extends Feature<CBadges> {
 
@@ -32,14 +33,14 @@ export default class FBadgeCalculations extends Feature<CBadges> {
     async _addCalculations(): Promise<void> {
         const target = document.querySelector(".profile_xp_block_right")!;
 
-        (new DropStats({
-            target,
-            props: {
-                multipage: this.context.hasMultiplePages,
-                getDropCounts: () => this._countDrops(),
-                getBoosterCountEligibility: () => this._getBoosterCountEligibility()
-            }
-        }));
+        (mount(DropStats, {
+                    target,
+                    props: {
+                        multipage: this.context.hasMultiplePages,
+                        getDropCounts: () => this._countDrops(),
+                        getBoosterCountEligibility: () => this._getBoosterCountEligibility()
+                    }
+                }));
     }
 
     async _countDrops(): Promise<[number, number]> {

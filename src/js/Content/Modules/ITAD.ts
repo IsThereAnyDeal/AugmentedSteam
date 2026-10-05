@@ -3,6 +3,7 @@ import ITADSyncMenu from "@Content/Modules/Widgets/ITADSync/ITADSyncMenu.svelte"
 import type UserInterface from "@Core/User/UserInterface";
 import ITADDisconnectModal from "@Content/Modules/Widgets/ITADSync/ITADDisconnectModal.svelte";
 import Settings from "@Options/Data/Settings";
+import { mount, unmount } from "svelte";
 
 export default class ITAD {
 
@@ -10,15 +11,15 @@ export default class ITAD {
 
         if (Settings.itad_disconnect_popup && await ITADApiFacade.isExpired()) {
             await (new Promise<void>(resolve => {
-                const modal = new ITADDisconnectModal({
-                    target: document.body,
-                    props: {
-                        onclose: () => {
-                            resolve();
-                            modal.$destroy();
-                        }
-                    }
-                });
+                const modal = mount(ITADDisconnectModal, {
+                                    target: document.body,
+                                    props: {
+                                        onclose: () => {
+                                            resolve();
+                                            unmount(modal);
+                                        }
+                                    }
+                                });
             }))
         }
 
@@ -32,10 +33,10 @@ export default class ITAD {
 
         const menu = document.querySelector(".as-menu");
         if (menu) {
-            (new ITADSyncMenu({
-                target: menu.parentElement!,
-                anchor: menu
-            }));
+            (mount(ITADSyncMenu, {
+                            target: menu.parentElement!,
+                            anchor: menu
+                        }));
         }
     }
 

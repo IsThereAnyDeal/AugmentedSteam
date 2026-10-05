@@ -1,6 +1,7 @@
 import self_ from "./FCustomTags.svelte";
 import Feature from "@Content/Modules/Context/Feature";
 import type CEditGuide from "@Content/Features/Community/EditGuide/CEditGuide";
+import { mount } from "svelte";
 
 export default class FCustomTags extends Feature<CEditGuide> {
 
@@ -15,9 +16,9 @@ export default class FCustomTags extends Feature<CEditGuide> {
             tag.type = "checkbox";
         }
 
-        new self_({
-            target: anchor.parentElement!,
-            anchor: anchor.nextElementSibling ?? undefined,
-        });
+        mount(self_, {
+                    target: anchor.parentElement!,
+                    anchor: anchor.nextElementSibling ?? undefined,
+                });
     }
 }

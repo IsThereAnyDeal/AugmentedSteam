@@ -1,7 +1,11 @@
 <script lang="ts">
     import ProfileLink from "@Content/Modules/Community/ProfileLink.svelte";
 
-    export let groupId: string;
+    interface Props {
+        groupId: string;
+    }
+
+    let { groupId }: Props = $props();
 </script>
 
 

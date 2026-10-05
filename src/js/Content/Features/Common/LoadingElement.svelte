@@ -1,9 +1,14 @@
-<script lang="ts"></script>
+<script lang="ts">
+    interface Props {
+        children?: import('svelte').Snippet;
+    }
+
+    let { children }: Props = $props();</script>
 
 
 <div>
     <img src="https://community.cloudflare.steamstatic.com/public/images/login/throbber.gif" alt="">
-    <span><slot></slot></span>
+    <span>{@render children?.()}</span>
 </div>
 
 <style>

@@ -5,8 +5,8 @@
     import {__all, __hide, __show, __thewordunknown, __wl_label, __year} from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
 
-    const total: Record<string, number> = {};
-    const yearly: Record<string, Record<string, number>> = {};
+    const total: Record<string, number> = $state({});
+    const yearly: Record<string, Record<string, number>> = $state({});
 
     for (const item of document.querySelectorAll(".account_table tr")) {
         const dateStr = item.querySelector("td.license_date_col")?.textContent?.trim();
@@ -19,7 +19,7 @@
         (yearly[year] ??= {})[type] = (yearly[year]![type] ?? 0) + 1;
     }
 
-    let isOpen: boolean = false;
+    let isOpen: boolean = $state(false);
 </script>
 
 

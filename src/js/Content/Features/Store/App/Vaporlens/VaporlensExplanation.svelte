@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
     import {type Writable, writable} from "svelte/store";
 
     let counter = 0;
@@ -12,11 +12,15 @@
 <script lang="ts">
     import {onMount} from "svelte";
 
-    export let importance: number;
-    export let point: string;
-    export let explanation: string;
+    interface Props {
+        importance: number;
+        point: string;
+        explanation: string;
+    }
 
-    let id: string;
+    let { importance, point, explanation }: Props = $props();
+
+    let id: string = $state();
 
     function stopPropagation(e: Event): void {
         e.stopPropagation();
@@ -45,7 +49,7 @@
 
 
 {#if explanation}
-    <button type="button" on:click={e => togglePopover(e, id)}>
+    <button type="button" onclick={e => togglePopover(e, id)}>
         <span class="importance-badge"
             class:high={importance > 0.6}
             class:mid={importance <= 0.6 && importance > 0.4}
@@ -54,8 +58,8 @@
     </button>
 
     {#if $openPopover === id}
-        <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
-        <div class="popover" aria-label="{point} details" on:click={stopPropagation}>{explanation}</div>
+        <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
+        <div class="popover" aria-label="{point} details" onclick={stopPropagation}>{explanation}</div>
     {/if}
 {:else}
     <div class="point-static">

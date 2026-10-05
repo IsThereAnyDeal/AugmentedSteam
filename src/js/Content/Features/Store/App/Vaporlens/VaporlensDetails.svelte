@@ -2,8 +2,12 @@
     import type {TVaporLensEntry} from "@Background/Modules/VaporLens/_types";
     import VaporlensExplanation from "@Content/Features/Store/App/Vaporlens/VaporlensExplanation.svelte";
 
-    export let label: string;
-    export let entries: TVaporLensEntry[];
+    interface Props {
+        label: string;
+        entries: TVaporLensEntry[];
+    }
+
+    let { label, entries }: Props = $props();
 </script>
 
 

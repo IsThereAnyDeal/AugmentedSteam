@@ -3,6 +3,8 @@ import type CMarketListing from "@Content/Features/Community/MarketListing/CMark
 import Feature from "@Content/Modules/Context/Feature";
 import SteamFacade from "@Content/Modules/Facades/SteamFacade";
 import {util} from "protobufjs";
+import { mount } from "svelte";
+
 import resolve = util.path.resolve;
 
 export default class FBackgroundPreviewLink extends Feature<CMarketListing> {
@@ -88,13 +90,13 @@ export default class FBackgroundPreviewLink extends Feature<CMarketListing> {
         }
 
         if (src) {
-            new self_({
-                target: target.parentElement!,
-                props: {
-                    profileUrl: this.context.user.profileUrl,
-                    background: src
-                }
-            });
+            mount(self_, {
+                            target: target.parentElement!,
+                            props: {
+                                profileUrl: this.context.user.profileUrl,
+                                background: src
+                            }
+                        });
         }
     }
 }

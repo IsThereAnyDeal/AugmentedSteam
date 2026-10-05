@@ -2,9 +2,13 @@
     import {__achievements_summary} from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
 
-    export let unlocked: number;
-    export let total: number;
-    export let percentage: number;
+    interface Props {
+        unlocked: number;
+        total: number;
+        percentage: number;
+    }
+
+    let { unlocked, total, percentage }: Props = $props();
 
     let achievementStr = L(__achievements_summary, {
         "unlocked": unlocked,

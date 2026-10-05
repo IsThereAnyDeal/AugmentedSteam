@@ -1,10 +1,12 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
     import MarketPrices from "@Content/Features/Community/Inventory/Components/MarketPrices";
 
     const marketPrices: Map<string, MarketPrices> = new Map();
 </script>
 
 <script lang="ts">
+    import { run } from 'svelte/legacy';
+
     import {
         __error,
         __instantSell,
@@ -22,15 +24,19 @@
     import LoadingElement from "@Content/Features/Common/LoadingElement.svelte";
     import RequestData from "@Content/Modules/RequestData";
 
-    export let marketInfo: MarketInfo;
+    interface Props {
+        marketInfo: MarketInfo;
+    }
+
+    let { marketInfo }: Props = $props();
 
     const diff = Settings.quickinv_diff;
 
-    let selling: boolean = false;
-    let status: string|null = null;
+    let selling: boolean = $state(false);
+    let status: string|null = $state(null);
 
-    let qs_node: HTMLElement;
-    let is_node: HTMLElement;
+    let qs_node: HTMLElement = $state();
+    let is_node: HTMLElement = $state();
 
     async function clickHandler(e: MouseEvent, price: number): Promise<void> {
         e.preventDefault();
@@ -92,12 +98,16 @@
         return prices;
     }
 
-    $: if (qs_node) {
-        SteamFacade.vTooltip(`#as_qsell`);
-    }
-    $: if (is_node) {
-        SteamFacade.vTooltip(`#as_isell`);
-    }
+    run(() => {
+        if (qs_node) {
+            SteamFacade.vTooltip(`#as_qsell`);
+        }
+    });
+    run(() => {
+        if (is_node) {
+            SteamFacade.vTooltip(`#as_isell`);
+        }
+    });
 </script>
 
 
@@ -115,7 +125,7 @@
                     {#if price.high > 0 && price.high > price.low}
                         <button id="as_qsell" class="as-inv-btn"
                            data-tooltip-text={L(__quickSellDesc, {"modifier": diff})}
-                           on:click={e => clickHandler(e, price.high)}
+                           onclick={e => clickHandler(e, price.high)}
                            bind:this={qs_node}
                         >{L(__quickSell, {amount: price.highFormatted})}</button>
                     {/if}
@@ -123,7 +133,7 @@
                     {#if price.low > 0}
                         <button id="as_isell" class="as-inv-btn as-blue"
                            data-tooltip-text={L(__instantSellDesc)}
-                           on:click={e => clickHandler(e, price.low)}
+                           onclick={e => clickHandler(e, price.low)}
                            bind:this={is_node}
                         >{L(__instantSell, {amount: price.lowFormatted})}</button>
                     {/if}

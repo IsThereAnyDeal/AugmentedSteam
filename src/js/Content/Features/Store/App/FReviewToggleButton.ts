@@ -1,6 +1,7 @@
 import self_ from "./FReviewToggleButton.svelte";
 import type CApp from "@Content/Features/Store/App/CApp";
 import Feature from "@Content/Modules/Context/Feature";
+import { mount } from "svelte";
 
 /**
  * Adds button that shows/hides "Write a review" form on app pages,
@@ -29,11 +30,11 @@ export default class FReviewToggleButton extends Feature<CApp> {
 
         target.after(reviewSection);
 
-        (new self_({
-            target,
-            props: {
-                reviewSection
-            }
-        }));
+        (mount(self_, {
+                    target,
+                    props: {
+                        reviewSection
+                    }
+                }));
     }
 }

@@ -3,7 +3,12 @@
     import {__hide, __update_dontShow} from "@Strings/_strings";
     import {createEventDispatcher} from "svelte";
 
-    export let react: boolean;
+    interface Props {
+        react: boolean;
+        children?: import('svelte').Snippet;
+    }
+
+    let { react, children }: Props = $props();
 
     const dispatch = createEventDispatcher<{
         close: void,
@@ -14,10 +19,10 @@
 
 <div class="es_warn" class:is-react={react}>
     <div class="es_warn__cnt">
-        <div><slot></slot></div>
+        <div>{@render children?.()}</div>
         <div class="es_warn__control">
-            <button type="button" class="es_warn__btn" on:click={() => dispatch("close")}>{L(__update_dontShow)}</button>
-            <button type="button" class="es_warn__btn" on:click={() => dispatch("hide")}>{L(__hide)}</button>
+            <button type="button" class="es_warn__btn" onclick={() => dispatch("close")}>{L(__update_dontShow)}</button>
+            <button type="button" class="es_warn__btn" onclick={() => dispatch("hide")}>{L(__hide)}</button>
         </div>
     </div>
 </div>

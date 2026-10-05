@@ -19,17 +19,27 @@
     ] as const;
 
     // export let country: string;
-    // export let currency: string;
-    export let appid: number;
-    export let cardName: string;
-    export let foil: boolean;
-    export let onprice: (price: Price) => void;
+    
+    interface Props {
+        // export let currency: string;
+        appid: number;
+        cardName: string;
+        foil: boolean;
+        onprice: (price: Price) => void;
+    }
+
+    let {
+        appid,
+        cardName,
+        foil,
+        onprice
+    }: Props = $props();
 
     let marketHashName = `${appid}-${cardName}`;
     let cacheName = marketHashName + (foil ? "-foil" : "");
 
-    let uriPath: string = `${appid}-${encodeURIComponent(cardName)}`;
-    let promise: Promise<Price|null>|null = null;
+    let uriPath: string = $state(`${appid}-${encodeURIComponent(cardName)}`);
+    let promise: Promise<Price|null>|null = $state(null);
 
     async function loadFromCache(): Promise<Price|null> {
         const cached = await SessionCacheApiFacade.get<TCacheData|null>(CachePrefix, cacheName);
@@ -122,7 +132,7 @@
 
 <span>
     {#if !promise}
-        <button type="button" on:click={load}>
+        <button type="button" onclick={load}>
             {L(__loadCardPrice)}
         </button>
     {:else}
@@ -134,7 +144,7 @@
             </a>
             {price?.toString() ?? "N/A"}
         {:catch e}
-            <button type="button" on:click={load}>
+            <button type="button" onclick={load}>
                 {#if e instanceof Errors.HTTPError && e.code === 429}
                     {L(__toomanyrequests)}
                 {:else}

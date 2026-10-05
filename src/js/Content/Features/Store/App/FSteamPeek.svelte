@@ -16,11 +16,15 @@
         purchase: string|null
     }>;
 
-    export let user: UserInterface;
-    export let language: string;
-    export let appid: number;
+    interface Props {
+        user: UserInterface;
+        language: string;
+        appid: number;
+    }
 
-    let promise: Promise<TSimilarGames> = new Promise(() => {});
+    let { user, language, appid }: Props = $props();
+
+    let promise: Promise<TSimilarGames> = $state(new Promise(() => {}));
 
     onMount(() => {
         promise = (async () => {

@@ -8,14 +8,25 @@
         button: EModalAction
     }>();
 
-    export let title: string;
-    export let body: string = "";
-    export let showClose: boolean = false;
-    export let buttons: {
+    interface Props {
+        title: string;
+        body?: string;
+        showClose?: boolean;
+        buttons?: {
         primary?: string,
         secondary?: string,
         cancel?: string
-    }|undefined = undefined;
+    }|undefined;
+        children?: import('svelte').Snippet;
+    }
+
+    let {
+        title,
+        body = "",
+        showClose = false,
+        buttons = undefined,
+        children
+    }: Props = $props();
 </script>
 
 <div class="container">
@@ -25,13 +36,13 @@
         <div>
             <div class="header">
                 {#if showClose}
-                    <button type="button" on:click={() => dispatch("button", EModalAction.Cancel)}></button>
+                    <button type="button" onclick={() => dispatch("button", EModalAction.Cancel)}></button>
                 {/if}
                 <div class="title">{title}</div>
             </div>
         </div>
         <div class="content">
-            <slot>{@html body}</slot>
+            {#if children}{@render children()}{:else}{@html body}{/if}
 
             {#if buttons && (buttons?.primary || buttons?.secondary || buttons?.cancel)}
                 <div class="buttons">

@@ -5,8 +5,8 @@
     import {onMount} from "svelte";
     import ExtensionResources from "@Core/ExtensionResources";
 
-    let log: Array<[string, string]> = [];
-    let promise: Promise<void>|null = null;
+    let log: Array<[string, string]> = $state([]);
+    let promise: Promise<void>|null = $state(null);
 
     onMount(() => {
         promise = (async () => {

@@ -5,6 +5,7 @@ import {__communityHub} from "@Strings/_strings";
 import AppLinks from "@Content/Features/Store/Common/ExtraLinks/AppLinks.svelte";
 import type CApp from "@Content/Features/Store/App/CApp";
 import Settings from "@Options/Data/Settings";
+import { mount } from "svelte";
 
 /**
  * See: https://store.steampowered.com/app/102810/Gatling_Gears/?cc=fr
@@ -33,13 +34,13 @@ export default class FExtraLinksAppError extends Feature<CApp> {
             return;
         }
 
-        (new AppLinks({
-            target: document.querySelector("#error_box")!,
-            props: {
-                appid: this.context.appid,
-                communityAppid: this.context.appid,
-                appPage: false
-            }
-        }));
+        (mount(AppLinks, {
+                    target: document.querySelector("#error_box")!,
+                    props: {
+                        appid: this.context.appid,
+                        communityAppid: this.context.appid,
+                        appPage: false
+                    }
+                }));
     }
 }

@@ -1,6 +1,7 @@
 import self_ from "./FNewQueue.svelte";
 import type CApp from "@Content/Features/Store/App/CApp";
 import Feature from "@Content/Modules/Context/Feature";
+import { mount } from "svelte";
 
 export default class FNewQueue extends Feature<CApp> {
 
@@ -14,9 +15,9 @@ export default class FNewQueue extends Feature<CApp> {
             return;
         }
 
-        new self_({
-            target: next.parentElement!,
-            anchor: next
-        });
+        mount(self_, {
+                    target: next.parentElement!,
+                    anchor: next
+                });
     }
 }
