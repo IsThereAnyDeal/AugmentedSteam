@@ -2,8 +2,8 @@ import esbuild from "esbuild"
 import pluginSvelte from "esbuild-svelte";
 import {marked} from "marked";
 import path from "path";
-import sveltePreprocess from "svelte-preprocess";
 import fs from "node:fs/promises";
+import {sveltePreprocess} from "svelte-preprocess";
 import YAML from "yaml";
 import ManifestBuilder from "./manifestBuilder.mjs";
 import manifestPreprocess from "./manifestPreprocess.mjs";
