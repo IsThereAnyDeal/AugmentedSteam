@@ -3,7 +3,7 @@ import type Context from "@Content/Modules/Context/Context";
 export default abstract class Feature<C extends Context> {
 
     public constructor(
-        protected context: C,
+        protected context: C
     ) {}
 
     public checkPrerequisites(): boolean|Promise<boolean> {

@@ -6,10 +6,6 @@ import ReactUser from "@Core/User/ReactUser";
 
 export default class UserFactory {
 
-    constructor(
-        private readonly appConfig: AppConfig
-    ) {}
-
     async createFromLegacy(): Promise<LegacyUser> {
         const user = new LegacyUser();
 
@@ -68,18 +64,17 @@ export default class UserFactory {
         return user;
     }
 
-
-    async createFromReact(): Promise<ReactUser> {
+    async createFromReact(appConfig: AppConfig): Promise<ReactUser> {
         const user = new ReactUser();
 
-        if (this.appConfig.steamId && this.appConfig.steamId !== "0") {
-            user.steamId = this.appConfig.steamId;
+        if (appConfig.steamId && appConfig.steamId !== "0") {
+            user.steamId = appConfig.steamId;
         }
 
-        user.storeCountry = this.appConfig.countryCode!;
+        user.storeCountry = appConfig.countryCode!;
 
-        if (this.appConfig.webApiToken) {
-            user.webApiToken = this.appConfig.webApiToken;
+        if (appConfig.webApiToken) {
+            user.webApiToken = appConfig.webApiToken;
         }
 
         return user;

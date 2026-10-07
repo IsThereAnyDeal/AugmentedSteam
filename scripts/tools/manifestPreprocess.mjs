@@ -57,8 +57,8 @@ export default function() {
         plugin: {
             name: "manifest",
             setup(build) {
-                build.onLoad({ filter: /[\\/]P.+?\.(js|ts)$/ }, async (args) => {
-                    let contents = await fs.readFile(args.path, "utf8")
+                build.onLoad({filter: /Features([\\/].+)*[\\/]C[^\\/]+?\.ts$/}, async (args) => {
+                    const contents = await fs.readFile(args.path, "utf8")
                     const doc = contents.match(/\/\*\*.+?@contentScript.+?\*\//s);
 
                     if (doc && doc[0]) {

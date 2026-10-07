@@ -1,13 +1,15 @@
-import Context, {type ContextParams} from "@Content/Modules/Context/Context";
+import Context from "@Content/Modules/Context/Context";
 import FLicensesSummary from "./FLicensesSummary";
-import ContextType from "@Content/Modules/Context/ContextType";
+import {EBootstrapMode, bootstrap, features} from "@Content/bootstrap";
 
-export default class CLicenses extends Context {
+export default class CLicenses extends Context {}
 
-    constructor(params: ContextParams) {
-
-        super(params, ContextType.LICENSES, [
-            FLicensesSummary
-        ]);
-    }
-}
+/**
+ * @contentScript
+ * @match *://store.steampowered.com/account/licenses
+ */
+(async function(): Promise<void> {
+    const params = await bootstrap({mode: EBootstrapMode.Legacy});
+    const context: CLicenses = new CLicenses(params);
+    await features(context, [FLicensesSummary]);
+})();

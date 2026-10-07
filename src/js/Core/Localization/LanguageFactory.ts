@@ -1,17 +1,12 @@
 import Language from "@Core/Localization/Language";
 import CookieReader from "@Core/Storage/CookieReader";
-import type AppConfig from "@Core/AppConfig/AppConfig";
 
 export default class LanguageFactory {
 
-    constructor(
-        private readonly config: AppConfig
-    ) {}
+    createFromLegacy(language: string|undefined): Language|null {
 
-    createFromLegacy(): Language|null {
-
-        if (this.config.language) {
-            return new Language(this.config.language);
+        if (language) {
+            return new Language(language);
         }
 
         for (const script of document.querySelectorAll<HTMLScriptElement>("script[src]")) {
@@ -30,9 +25,9 @@ export default class LanguageFactory {
         return null;
     }
 
-    createFromReact(): Language|null {
-        if (this.config.language) {
-            return new Language(this.config.language);
+    createFromReact(language: string|undefined): Language|null {
+        if (language) {
+            return new Language(language);
         }
 
         return null;
