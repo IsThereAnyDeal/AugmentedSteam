@@ -4,6 +4,7 @@ import CStoreBase from "@Content/Features/Store/Common/CStoreBase";
 import ContextType from "@Content/Modules/Context/ContextType";
 import type {ContextParams} from "@Content/Modules/Context/Context";
 import FHighlightsTags from "@Content/Features/Common/FHighlightsTags";
+import HighlightsTagsUtils from "@Content/Modules/Highlights/HighlightsTagsUtils";
 
 export default class CStoreFront extends CStoreBase {
 
@@ -21,6 +22,8 @@ export default class CStoreFront extends CStoreBase {
     }
 
     private monitorStoreFront(): void {
+
+        this.monitorReactSections();
 
         /**
          * Lazy-loaded sections
@@ -99,12 +102,42 @@ export default class CStoreFront extends CStoreBase {
                     if (addedNodes.length > 1) {
                         // @ts-ignore
                         const nodes: HTMLElement[] = Array.from(addedNodes)
-                            .filter(el => el instanceof HTMLElement && el.classList.contains("tab_item"));
+                            .filter(el => el instanceof HTMLElement
+                                && (el.classList.contains("tab_item") || el.classList.contains("tab_row_item")));
 
                         this.decorateStoreCapsules(nodes);
                     }
                 }
             }).observe(topSellersTab.querySelector(".tab_content_items")!, {"childList": true});
         }
+    }
+
+    /**
+     * The "Discounts & Events" carousel and "Your Personal Calendar" are rendered client-side after load, and its slides are
+     * re-rendered as the carousel moves, so it can't be handled by the initial highlighting pass alone.
+     */
+    private monitorReactSections(): void {
+
+        const selector = HighlightsTagsUtils.reactSectionsSelector;
+
+        new MutationObserver(mutations => {
+            const nodes: HTMLElement[] = [];
+            for (const {addedNodes} of mutations) {
+                for (const node of addedNodes) {
+                    if (!(node instanceof HTMLElement)) { continue; }
+
+                    if (node.matches(selector)) {
+                        nodes.push(node);
+                    } else {
+                        nodes.push(...node.querySelectorAll<HTMLElement>(selector));
+                    }
+                }
+            }
+
+            // Already-processed tiles are skipped through es_highlight_checked
+            if (nodes.length > 0) {
+                HighlightsTagsUtils.highlightAndTag(nodes);
+            }
+        }).observe(document.querySelector(".home_page_body_ctn") ?? document.body, {"childList": true, "subtree": true});
     }
 }
