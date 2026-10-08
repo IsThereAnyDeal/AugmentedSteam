@@ -36,6 +36,22 @@ export default class HighlightsTagsUtils {
     private static _highlightCssLoaded: boolean = false;
     private static _tagCssLoaded: boolean = false;
 
+    /**
+     * "Discounts & Events" carousel on the storefront. Steam now renders it with React: its tiles have
+     * build-generated class names and no data-ds-appid, so the only stable hooks are the component's
+     * own class and the app link inside each tile (the app id is read from the link's href).
+     */
+    private static readonly _discountsEventsSelector = '.DiscountsAndEventsReady a[href*="/app/"]';
+
+    /**
+     * "Your Personal Calendar" on the storefront: also React with generated class names, but its
+     * tiles keep data-ds-appid. Tiles are bare images, so there is nowhere to put a tag.
+     */
+    private static readonly _personalCalendarSelector = ".personal_calendar_ctn [data-ds-appid]";
+
+    /** Storefront sections rendered client-side by React, which need observing as they appear */
+    static readonly reactSectionsSelector = `${this._discountsEventsSelector},${this._personalCalendarSelector}`;
+
     // Note: select the node which has DS info, and traverse later when highlighting if needed
     private static readonly _selector = [
         ".tab_item", // Item rows on storefront (pre-2026 markup)
@@ -43,7 +59,8 @@ export default class HighlightsTagsUtils {
         ".newonsteam_headercap", // explore/new/
         ".comingsoon_headercap", // explore/upcoming/
         ".store_capsule",
-        ".sale_capsule", // "Discounts & Events" carousel on the storefront
+        ".sale_capsule", // Capsules in the storefront carousels
+        HighlightsTagsUtils.reactSectionsSelector,
         ".dailydeal_ctn",
         ".special.special_img_ctn", // explore/new, cart/
         ".special > .special_img_ctn",
@@ -276,6 +293,9 @@ export default class HighlightsTagsUtils {
                 node.querySelector(".buttons")!.before(container);
             } else if (node.classList.contains("community_recommendation_capsule")) {
                 node.parentElement!.querySelector(".right_col")!.prepend(container);
+            } else if (node.matches(this._discountsEventsSelector)) {
+                // Price block sits below the image; tiles without a discount still render one
+                (node.querySelector("[role=link]") ?? node).prepend(container);
             } else if (node.classList.contains("friendplaytime_game")) {
                 node.querySelector(".friendplaytime_buttons")!.before(container);
             }
@@ -322,6 +342,7 @@ export default class HighlightsTagsUtils {
                     .curator_giant_capsule.es_highlighted_${name},
                     .blotter_userstatus_game.es_highlighted_${name},
                     #curator_avatar_image.es_highlighted_${name} .curator_avatar,
+                    .personal_calendar_ctn [data-ds-appid].es_highlighted_${name},
                     .app_header.es_highlighted_${name} {
                         outline: solid ${color};
                     }
