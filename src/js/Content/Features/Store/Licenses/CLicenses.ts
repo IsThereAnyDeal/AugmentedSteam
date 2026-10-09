@@ -8,8 +8,8 @@ export default class CLicenses extends Context {}
  * @contentScript
  * @match *://store.steampowered.com/account/licenses
  */
-(async function(): Promise<void> {
+export async function run(): Promise<void> {
     const params = await bootstrap({mode: EBootstrapMode.Legacy});
     const context: CLicenses = new CLicenses(params);
     await features(context, [FLicensesSummary]);
-})();
+}

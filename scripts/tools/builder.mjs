@@ -6,7 +6,7 @@ import fs from "node:fs/promises";
 import {sveltePreprocess} from "svelte-preprocess";
 import YAML from "yaml";
 import ManifestBuilder from "./manifestBuilder.mjs";
-import manifestPreprocess from "./manifestPreprocess.mjs";
+import {process} from "./manifestPreprocess2.mjs";
 
 const __dirname = import.meta.dirname;
 
@@ -64,6 +64,7 @@ export default async function(options) {
     const rootDir = path.resolve(__dirname, "../../");
     const srcDir = path.resolve(rootDir, "src");
     const distDir = path.resolve(rootDir, `dist/${options.dev ? "dev" : "prod"}.${options.browser}`);
+    const tmpDir = path.resolve(rootDir, `${distDir}/.tmp`);
 
     try {
         await fs.rm(distDir, {recursive: true});
@@ -76,7 +77,33 @@ export default async function(options) {
     }
     await fs.cp(`${rootDir}/LICENSE`, `${distDir}/LICENSE`);
 
-    let manifestPlugin = manifestPreprocess();
+    // TODO make pretty
+    const pages = {
+        "store/licences": `Store/Licenses/CLicenses.ts`
+    };
+
+    let manifestMap = new Map();
+    let contentEntryPoints = [];
+    try {
+        await fs.rm(tmpDir, {recursive: true})
+    } catch {}
+    for (const [out, file] of Object.entries(pages)) {
+        const tmpOut = `${tmpDir}/${out}.ts`;
+        try {
+            await fs.mkdir(path.dirname(tmpOut), {recursive: true});
+        } catch {}
+
+        const importPath = path.normalize(`${srcDir}/js/Content/Features/${file}`).replaceAll("\\", "\\\\");
+        await fs.writeFile(tmpOut, `import {run} from "${importPath}";\nrun();\n`);
+        contentEntryPoints.push({out, in: tmpOut});
+
+        const manifestConfig = await process(importPath);
+        if (manifestConfig) {
+            manifestMap.set(tmpOut, manifestConfig);
+        } else {
+            // TODO warning or error or something
+        }
+    }
 
     let result = await esbuild.build({
         target: ["es2023", "firefox115"],
@@ -89,6 +116,7 @@ export default async function(options) {
             {out: "background", in: `${srcDir}/js/Background/background.ts`},
             {out: "offscreen_domparser", in: `${srcDir}/js/Background/offscreen_domparser.ts`},
             // content
+            ...contentEntryPoints,
 //            {out: "community/app", in: `${srcDir}/js/Content/Pages/Community/App/PApp.ts`},
 //            {out: "community/badges", in: `${srcDir}/js/Content/Pages/Community/Badges/PBadges.ts`},
 //            {out: "community/booster_creator", in: `${srcDir}/js/Content/Pages/Community/BoosterCreator/PBoosterCreator.ts`},
@@ -122,7 +150,7 @@ export default async function(options) {
 //            {out: "store/default", in: `${srcDir}/js/Content/Pages/Store/PDefaultStore.ts`},
 //            {out: "store/frontpage", in: `${srcDir}/js/Content/Pages/Store/Storefront/PStoreFront.ts`},
 //            {out: "store/funds", in: `${srcDir}/js/Content/Pages/Store/Funds/PFunds.ts`},
-            {out: "store/licences", in: `${srcDir}/js/Content/Features/Store/Licenses/CLicenses.ts`},
+//            {out: "store/licences", in: `${srcDir}/js/Content/Features/Store/Licenses/CLicenses.ts`},
 //            {out: "store/points_shop", in: `${srcDir}/js/Content/Pages/Store/PointsShop/PPointsShop.ts`},
 //            {out: "store/registerkey", in: `${srcDir}/js/Content/Pages/Store/RegisterKey/PRegisterKey.ts`},
 //            {out: "store/search", in: `${srcDir}/js/Content/Pages/Store/Search/PSearch.ts`},
@@ -177,7 +205,7 @@ export default async function(options) {
                     })
                 },
             },
-            manifestPlugin.plugin
+            // manifestPlugin.plugin
         ],
         define: {
             "__FIREFOX": JSON.stringify(options.browser === "firefox"),
@@ -192,6 +220,11 @@ export default async function(options) {
         }
     });
 
+    // clean tmpDir
+    try {
+        await fs.rm(tmpDir, {recursive: true})
+    } catch {}
+
     /**
      * Build changelog
      */
@@ -203,7 +236,7 @@ export default async function(options) {
      */
     let builder = new ManifestBuilder();
     builder.version(version)
-    for (let script of contentScripts(srcDir, distDir, result.metafile, manifestPlugin.map)) {
+    for (let script of contentScripts(srcDir, distDir, result.metafile, manifestMap)) {
         builder.contentScript(script);
     }
     let manifest = builder.build({
