@@ -1,13 +1,15 @@
-import Context, {type ContextParams} from "@Content/Modules/Context/Context";
+import Context from "@Content/Modules/Context/Context";
 import FUsefulLinks from "./FUsefulLinks";
-import ContextType from "@Content/Modules/Context/ContextType";
+import {bootstrapLegacy, features} from "@Content/bootstrap";
 
-export default class CAccount extends Context {
+export default class CAccount extends Context {}
 
-    constructor(params: ContextParams) {
-
-        super(params, ContextType.ACCOUNT, [
-            FUsefulLinks,
-        ]);
-    }
+/**
+ * @contentScript
+ * @match *://*.steampowered.com/account
+ */
+export async function run() {
+    const params = await bootstrapLegacy();
+    const context = new CAccount(params);
+    await features(context, [FUsefulLinks]);
 }

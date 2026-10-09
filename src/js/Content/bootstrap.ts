@@ -158,6 +158,9 @@ export async function bootstrap(config: {
 
     return new ContextParams(language, user);
 }
+// shortcuts
+export const bootstrapLegacy = () => bootstrap({mode: EBootstrapMode.Legacy});
+export const bootstrapReact = () => bootstrap({mode: EBootstrapMode.React});
 
 export async function features<C extends Context>(context: C, features: (typeof Feature<C>)[]) {
     const stats = {
