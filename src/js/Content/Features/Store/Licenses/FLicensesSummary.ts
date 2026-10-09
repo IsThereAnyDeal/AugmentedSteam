@@ -11,9 +11,9 @@ export default class FLicensesSummary extends Feature<CLicenses> {
             throw new Error("Node not found");
         }
 
-        (mount(self_, {
-                    target,
-                    anchor: target.firstElementChild ?? undefined,
-                }));
+        mount(self_, {
+            target,
+            anchor: target.firstElementChild ?? undefined,
+        });
     }
 }
