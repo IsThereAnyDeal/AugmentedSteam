@@ -5,7 +5,11 @@ import { mount } from "svelte";
 
 export default class FLicensesSummary extends Feature<CLicenses> {
 
-    override apply(): void {
+    override async checkPrerequisites(): Promise<boolean> {
+        return true;
+    }
+
+    override async apply(): Promise<void> {
         let target = document.querySelector(".youraccount_page");
         if (!target) {
             throw new Error("Node not found");

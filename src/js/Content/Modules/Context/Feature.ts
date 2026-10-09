@@ -6,11 +6,8 @@ export default abstract class Feature<C extends Context> {
         protected context: C
     ) {}
 
-    public checkPrerequisites(): boolean|Promise<boolean> {
-        return true;
-    }
-
-    public abstract apply(): void|Promise<void>;
+    public abstract checkPrerequisites(): Promise<boolean>;
+    public abstract apply(): Promise<void>;
 
     protected logError(err: unknown, msg: unknown, ...args: unknown[]): void {
         console.group(this.constructor.name);
