@@ -1,4 +1,3 @@
-import FSkipAgecheck from "../../Common/FSkipAgecheck";
 import FCommunityAppPageLinks from "./FCommunityAppPageLinks";
 import FCommunityAppPageWishlist from "./FCommunityAppPageWishlist";
 import CCommunityBase from "@Content/Features/Community/CCommunityBase";
@@ -7,6 +6,7 @@ import AppId from "@Core/GameId/AppId";
 import type Feature from "@Content/Modules/Context/Feature";
 import Context, {type ContextParams} from "@Content/Modules/Context/Context";
 import HighlightsTagsUtils from "@Content/Modules/Highlights/HighlightsTagsUtils";
+import FSkipAgecheck from "@Content/Features/Community/App/FSkipAgecheck";
 
 export default class CApp extends CCommunityBase {
 
