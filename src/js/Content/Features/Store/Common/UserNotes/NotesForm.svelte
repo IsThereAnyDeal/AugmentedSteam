@@ -1,5 +1,3 @@
-<svelte:options />
-
 <script lang="ts">
     import { createBubbler } from 'svelte/legacy';
 

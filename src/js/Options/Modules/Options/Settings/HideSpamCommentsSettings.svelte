@@ -1,5 +1,3 @@
-<svelte:options immutable={false} />
-
 <script lang="ts">
     import {L} from "@Core/Localization/Localization";
     import {__options_hidespamcomments, __options_spamcommentregex, __theworddefault} from "@Strings/_strings";

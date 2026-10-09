@@ -1,5 +1,3 @@
-<svelte:options />
-
 <script lang="ts">
     import PriceWithAlt from "./PriceWithAlt.svelte";
     import type {TPriceOverview} from "@Background/Modules/AugmentedSteam/_types";

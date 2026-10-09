@@ -1,5 +1,3 @@
-<svelte:options immutable={false} />
-
 <script lang="ts">
     import { preventDefault } from 'svelte/legacy';
 

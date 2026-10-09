@@ -1,5 +1,3 @@
-<svelte:options immutable={false} />
-
 <script lang="ts">
     import {__addTag, __customTags} from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";

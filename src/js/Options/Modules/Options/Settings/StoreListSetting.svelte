@@ -1,5 +1,3 @@
-<svelte:options immutable={false} />
-
 <script lang="ts">
     import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";
     import {onMount} from "svelte";

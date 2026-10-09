@@ -1,5 +1,3 @@
-<svelte:options />
-
 <script lang="ts">
     import {__wait} from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
