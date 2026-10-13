@@ -1,22 +1,22 @@
 <script lang="ts">
-    import { createBubbler } from 'svelte/legacy';
+    import type {Snippet} from "svelte";
 
-    const bubble = createBubbler();
     interface Props {
-        type: "primary"|"secondary"|"cancel";
-        children?: import('svelte').Snippet;
+        type: "primary"|"secondary"|"cancel",
+        onclick: () => void,
+        children: Snippet
     }
 
-    let { type, children }: Props = $props();
+    let { type, onclick, children }: Props = $props();
 </script>
 
 
-<button type="button"
-        class:primary={type === "primary"}
-        class:secondary={type === "secondary"}
-        class:cancel={type === "cancel"}
-        onclick={bubble('click')}>
-    <span>{@render children?.()}</span>
+<button type="button" class={{
+        primary: type === "primary",
+        secondary: type === "secondary",
+        cancel: type === "cancel"
+    }} {onclick}>
+    <span>{@render children()}</span>
 </button>
 
 
@@ -35,31 +35,35 @@
         box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
         background-size: 330% 100%;
     }
+
     .primary {
-        background-image: linear-gradient( to right, #75b022 5%, #588a1b 95%);
+        background-image: linear-gradient(to right, #75b022 5%, #588a1b 95%);
         color: #d2efa9;
-    }
-    .primary:hover {
-        background-image: linear-gradient( to right, #8ed629 5%, #6aa621 95%);
-        color: white;
+
+        &:hover {
+            background-image: linear-gradient(to right, #8ed629 5%, #6aa621 95%);
+            color: white;
+        }
     }
 
     .secondary {
-        background-image: linear-gradient( to right, #47bfff 5%, #1a44c2 60%);
+        background-image: linear-gradient(to right, #47bfff 5%, #1a44c2 60%);
         color: #c3e1f8;
-    }
-    .secondary:hover {
-        background-image: linear-gradient( to right, #47bfff 5%, #1a44c2 60%);
-        color: white;
+
+        &:hover {
+            background-image: linear-gradient(to right, #47bfff 5%, #1a44c2 60%);
+            color: white;
+        }
     }
 
     .cancel {
-        background-image: linear-gradient( to right, #32363f 5%, #32363f 95%);
+        background-image: linear-gradient(to right, #32363f 5%, #32363f 95%);
         color: #dfe3e6;
-    }
-    .cancel:hover {
-        background-image: linear-gradient( to right, #464d58 5%, #464d58 95%);
-        color: white;
+
+        &:hover {
+            background-image: linear-gradient(to right, #464d58 5%, #464d58 95%);
+            color: white;
+        }
     }
 
     span {

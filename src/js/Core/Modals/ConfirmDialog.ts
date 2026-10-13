@@ -4,6 +4,7 @@ import Modal from "@Core/Modals/Contained/Modal.svelte";
 import type {EModalAction} from "@Core/Modals/Contained/EModalAction";
 import { mount, unmount } from "svelte";
 
+/** @deprecated */
 export default class ConfirmDialog {
 
     constructor(
