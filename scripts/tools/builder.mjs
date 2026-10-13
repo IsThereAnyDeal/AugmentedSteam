@@ -106,7 +106,7 @@ export default async function(options) {
 //            {out: "community/workshop_browse", in: `${srcDir}/js/Content/Pages/Community/WorkshopBrowse/PWorkshopBrowse.ts`},
           "store/account": "Store/Account/CAccount.ts",
           "store/agecheck": "Store/AgeCheck/CAgecheck.ts",
-//            {out: "store/app", in: `${srcDir}/js/Content/Pages/Store/App/PApp.ts`},
+          "store/app": "Store/App/CApp.ts",
 //            {out: "store/bundle", in: `${srcDir}/js/Content/Pages/Store/Bundle/PBundle.ts`},
 //            {out: "store/cart", in: `${srcDir}/js/Content/Pages/Store/Cart/PCart.ts`},
 //            {out: "store/default", in: `${srcDir}/js/Content/Pages/Store/PDefaultStore.ts`},

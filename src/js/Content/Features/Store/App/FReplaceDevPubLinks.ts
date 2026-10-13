@@ -7,7 +7,12 @@ import SteamFacade from "@Content/Modules/Facades/SteamFacade";
 
 export default class FReplaceDevPubLinks extends Feature<CApp> {
 
-    override apply(): void {
+    public override async checkPrerequisites(): Promise<boolean> {
+        // FIXME setting
+        return true;
+    }
+
+    public override async apply(): Promise<void> {
 
         const devs = [...document.querySelectorAll<HTMLAnchorElement>("#genresAndManufacturer > .dev_row:first-of-type > a")];
 
@@ -24,8 +29,8 @@ export default class FReplaceDevPubLinks extends Feature<CApp> {
             pubs.push(...glancePubRow.querySelectorAll("a"));
         }
 
-        let franchiseRow = document.querySelector<HTMLAnchorElement>(".details_block > .dev_row:nth-of-type(3) > a");
-        let franchise = franchiseRow ? [franchiseRow] : [];
+        const franchiseRow = document.querySelector<HTMLAnchorElement>(".details_block > .dev_row:nth-of-type(3) > a");
+        const franchise = franchiseRow ? [franchiseRow] : [];
 
         for (const node of [...devs, ...pubs, ...franchise]) {
             const homepageLink = new URL(node.href);

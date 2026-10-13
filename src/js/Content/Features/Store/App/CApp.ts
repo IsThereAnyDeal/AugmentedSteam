@@ -38,15 +38,16 @@ import AugmentedSteamApiFacade from "@Content/Modules/Facades/AugmentedSteamApiF
 import type {TStorePageData} from "@Background/Modules/AugmentedSteam/_types";
 import FWaitlistDropdown from "@Content/Features/Store/App/FWaitlistDropdown";
 import FHighlightTitle from "@Content/Features/Store/App/FHighlightTitle";
-import type {ContextParams} from "@Content/Modules/Context/Context";
+import Context, {type ContextParams} from "@Content/Modules/Context/Context";
 import FPreventVideoPause from "@Content/Features/Store/App/FPreventVideoPause";
 import FAppTitle from "@Content/Features/Store/App/FAppTitle";
 import FHorizontalScrolling from "@Content/Features/Store/App/FHorizontalScrolling";
 import FReleaseCountdown from "@Content/Features/Store/App/FReleaseCountdown";
 import FRestorePriceCut from "@Content/Features/Store/Common/FRestorePriceCut";
 import FHighlightsTags from "@Content/Features/Common/FHighlightsTags";
+import {bootstrapLegacy, features} from "@Content/bootstrap";
 
-export default class CApp extends CStoreBase {
+export default class CApp extends Context {
 
     public readonly appid: number;
     public readonly storeid: string;
@@ -66,56 +67,8 @@ export default class CApp extends CStoreBase {
 
     public readonly data: Promise<TStorePageData|null> = Promise.resolve(null);
 
-    constructor(params: ContextParams) {
-
-        // Check if there's an error message (e.g. region-locked, age-gated)
-        const isErrorPage = document.getElementById("error_box") !== null;
-
-        super(params, ContextType.APP, isErrorPage
-            ? [
-                FExtraLinksAppError
-            ] : [
-                FHighlightsTags,
-                FReplaceDevPubLinks,
-                FUserNotes,
-                FWaitlistDropdown,
-                FNewQueue,
-                FFullscreenScreenshotView,
-                FITADPrices,
-                FDLCInfo,
-                FDRMWarnings,
-                FMetacriticUserScore,
-                FOpenCritic,
-                FOwnedElsewhere,
-                FPurchaseDate,
-                FSteamPeek,
-                FWidescreenCertification,
-                FHowLongToBeat,
-                FExtraLinksApp,
-                FFamilySharingNotice,
-                FPackageInfoButton,
-                FPlayers,
-                FCustomizer,
-                FDLCCheckboxes,
-                FBadgeProgress,
-                FAchievementBar,
-                FRegionalPricing,
-                FReviewToggleButton,
-                FOwnedActionsButtons,
-                FSupportInfo,
-                FPreventVideoPause,
-                FDemoAbovePurchase,
-                FSaveReviewFilters,
-                FHideReportedTags,
-                FPatchHighlightPlayer,
-                FRemoveDupeScreenshots,
-                FHighlightTitle,
-                FAppTitle,
-                FHorizontalScrolling,
-                FVaporLensInsights,
-                FReleaseCountdown,
-                FRestorePriceCut
-            ]);
+    constructor(params: ContextParams, isErrorPage: boolean) {
+        super(params);
 
         this.appid = AppId.fromUrl(window.location.host + window.location.pathname)!;
         this.storeid = `app/${this.appid}`;
@@ -159,4 +112,65 @@ export default class CApp extends CStoreBase {
                 return null;
             });
     }
+}
+
+
+/**
+ * @contentScript
+ * @match *://*.steampowered.com/app/*
+ */
+export async function run(): Promise<void> {
+    const params = await bootstrapLegacy();
+
+    // Check if there's an error message (e.g. region-locked, age-gated)
+    const isErrorPage = document.getElementById("error_box") !== null;
+    const context = new CApp(params, isErrorPage);
+
+    // TODO CBase features
+    // TODO CStoreBase features
+    await features(context, isErrorPage
+        ? [
+//            FExtraLinksAppError
+        ] : [
+//            FHighlightsTags,
+            FReplaceDevPubLinks,
+            FUserNotes,
+//            FWaitlistDropdown,
+//            FNewQueue,
+//            FFullscreenScreenshotView,
+//            FITADPrices,
+//            FDLCInfo,
+//            FDRMWarnings,
+//            FMetacriticUserScore,
+//            FOpenCritic,
+//            FOwnedElsewhere,
+//            FPurchaseDate,
+//            FSteamPeek,
+//            FWidescreenCertification,
+//            FHowLongToBeat,
+//            FExtraLinksApp,
+//            FFamilySharingNotice,
+//            FPackageInfoButton,
+//            FPlayers,
+//            FCustomizer,
+//            FDLCCheckboxes,
+//            FBadgeProgress,
+//            FAchievementBar,
+//            FRegionalPricing,
+//            FReviewToggleButton,
+//            FOwnedActionsButtons,
+//            FSupportInfo,
+//            FPreventVideoPause,
+//            FDemoAbovePurchase,
+//            FSaveReviewFilters,
+//            FHideReportedTags,
+//            FPatchHighlightPlayer,
+//            FRemoveDupeScreenshots,
+//            FHighlightTitle,
+//            FAppTitle,
+//            FHorizontalScrolling,
+//            FVaporLensInsights,
+//            FReleaseCountdown,
+//            FRestorePriceCut
+        ]);
 }
