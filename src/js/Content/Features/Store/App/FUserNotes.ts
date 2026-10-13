@@ -7,7 +7,7 @@ import { mount } from "svelte";
 
 export default class FUserNotes extends Feature<CApp> {
 
-    override checkPrerequisites(): boolean {
+    override async checkPrerequisites(): Promise<boolean> {
         return this.context.user.isSignedIn && Settings.user_notes_app;
     }
 
@@ -17,13 +17,13 @@ export default class FUserNotes extends Feature<CApp> {
             throw new Error("Node not found");
         }
 
-        (mount(self_, {
-                    target: queue,
-                    props: {
-                        notes: new UserNotes(),
-                        appid: this.context.appid,
-                        appName: this.context.appName
-                    }
-                }));
+        mount(self_, {
+            target: queue,
+            props: {
+                notes: new UserNotes(),
+                appid: this.context.appid,
+                appName: this.context.appName
+            }
+        });
     }
 }

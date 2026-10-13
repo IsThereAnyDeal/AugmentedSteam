@@ -16,7 +16,7 @@
     let el: HTMLElement = $state();
 
     async function handleEdit(): Promise<void> {
-        let newNote: string|null = await notes.showModalDialog2(appName, appid,);
+        let newNote: string|null = await notes.showModalDialog(appName, appid,);
         if (newNote === "") {
             newNote = null;
         }

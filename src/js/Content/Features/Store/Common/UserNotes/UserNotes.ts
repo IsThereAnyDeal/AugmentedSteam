@@ -3,9 +3,6 @@ import OutOfCapacityError from "@Content/Modules/UserNotes/OutOfCapacityError";
 import UserNotesAdapter from "@Content/Modules/UserNotes/UserNotesAdapter";
 import {L} from "@Core/Localization/Localization";
 import {
-    __save,
-    __userNote_add,
-    __userNote_addForGame,
     __userNote_closeOnStorage,
     __userNote_closeOnStorageDesc,
     __userNote_notEnoughSpace,
@@ -19,12 +16,11 @@ import type AdapterInterface from "@Content/Modules/UserNotes/Adapters/AdapterIn
 import Settings from "@Options/Data/Settings";
 import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";
 import SteamFacade from "@Content/Modules/Facades/SteamFacade";
-import NotesForm from "./NotesForm.svelte";
-import CustomModal from "@Core/Modals/CustomModal";
 import NoteEditModal from "@Content/Modules/UserNotes/Modals/NoteEditModal.svelte";
 import ConfirmDialog from "@Core/Modals/ConfirmDialog";
 import {EModalAction} from "@Core/Modals/Contained/EModalAction";
-import { mount, unmount } from "svelte";
+import {mount, unmount} from "svelte";
+import OutOfCapacityDialog from "@Content/Features/Store/Common/UserNotes/OutOfCapacityDialog.svelte";
 
 export default class UserNotes {
 
@@ -37,7 +33,7 @@ export default class UserNotes {
 
     async get(...appids: number[]): Promise<Map<number, string|null>> {
         const result: Map<number, string|null> = new Map();
-        let query: number[] = [];
+        const query: number[] = [];
 
         for (const appid of appids) {
             if (this.cache.has(appid)) {
@@ -105,62 +101,7 @@ export default class UserNotes {
         }
     }
 
-    /**
-     * @deprecated
-     */
-    async showModalDialog(
-        appName: string,
-        appid: number,
-        noteEl: HTMLElement,
-        onNoteUpdate: (noteEl: HTMLElement, hasNote: boolean) => void
-    ): Promise<void> {
-
-        let form: NotesForm|undefined;
-        const savedNote: string = (await this.get(appid))?.get(appid) ?? "";
-        let note: string = savedNote;
-
-        const response = await CustomModal({
-            title: L(__userNote_addForGame, {"gamename": appName}),
-            options: {
-                okButton: L(__save),
-                explicitDismissal: true
-            },
-            modalFn: (target) => {
-                form = mount(NotesForm, {
-                                    target,
-                                    props: {note}
-                                });
-                form.$on("change", () => {
-                    note = form!.note;
-                });
-                return form;
-            }
-        });
-
-        note = note.trim().replace(/\s\s+/g, " ");
-
-        if (response !== "OK") {
-            return;
-        }
-
-        if (note === savedNote) {
-            return;
-        }
-
-        if (note === "") {
-            this.delete(appid);
-            noteEl.textContent = L(__userNote_add);
-        } else {
-            if (!await this.set(appid, note)) {
-                return;
-            }
-            noteEl.textContent = `"${note}"`;
-        }
-
-        onNoteUpdate(noteEl, note !== "");
-    }
-
-    public async showModalDialog2(
+    public async showModalDialog(
         appName: string,
         appid: number
     ): Promise<string|null> {
@@ -168,56 +109,54 @@ export default class UserNotes {
 
         return new Promise(resolve => {
             const modal = mount(NoteEditModal, {
-                            target: document.body,
-                            props: {
-                                appName,
-                                note: savedNote
-                            }
-                        });
-            modal.$on("save", (e) => {
-                let note: string|null = e.detail.trim();
-                if (note === "") {
-                    note = null;
-                }
+                target: document.body,
+                props: {
+                    appName,
+                    note: savedNote,
+                    onsave: (note: string|null) => {
+                        note = note?.trim() ?? null;
+                        if (note === "") {
+                            note = null;
+                        }
 
-                if (!note) {
-                    this.delete(appid);
-                } else {
-                    this.set(appid, note);
-                }
+                        if (!note) {
+                            this.delete(appid);
+                        } else {
+                            this.set(appid, note);
+                        }
 
-                resolve(note);
-                unmount(modal);
-            });
-            modal.$on("cancel", () => {
-                resolve(savedNote);
-                unmount(modal);
+                        resolve(note);
+                        unmount(modal);
+                    },
+                    oncancel: () => {
+                        resolve(savedNote);
+                        unmount(modal);
+                    }
+                }
             });
         });
     }
 
     private async showOutOfCapacityDialog(exceeded: boolean, ratio: number): Promise<boolean> {
-
-        const desc
-            = `${L(exceeded ? __userNote_notEnoughSpaceDesc : __userNote_closeOnStorageDesc, {perc: (ratio * 100).toFixed(0)})}
-            <br>
-            ${L(__userNote_storageWarningDesc)}`;
-
-        const confirm = new ConfirmDialog(
-            L(exceeded ? __userNote_notEnoughSpace : __userNote_closeOnStorage),
-            desc,
-            {
-                primary: L(__userNote_saveLocal),
-                cancel: L(__userNote_saveSyncedStorage)
-            }
-        )
-        const response = await confirm.show();
-
-        if (response === EModalAction.OK) {
-            this.adapter = await UserNotesAdapter.changeAdapter("idb");
-            return true;
-        }
-
-        return false;
+        return new Promise(resolve => {
+            const modal = mount(OutOfCapacityDialog, {
+                target: document.body,
+                props: {
+                    exceeded,
+                    ratio,
+                    onconfirm: (): void => {
+                        (async () => {
+                            this.adapter = await UserNotesAdapter.changeAdapter("idb");
+                            resolve(true);
+                            unmount(modal);
+                        })();
+                    },
+                    oncancel: () => {
+                        resolve(false);
+                        unmount(modal);
+                    }
+                }
+            });
+        });
     }
 }

@@ -2,41 +2,32 @@
     import Modal from "@Core/Modals/Contained/Modal.svelte";
     import {__cancel, __options_userNotes_saveWithEnter, __save, __userNote_addForGame} from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
-    import {EModalAction} from "@Core/Modals/Contained/EModalAction";
-    import {createEventDispatcher, onMount, tick} from "svelte";
+    import {onMount, tick} from "svelte";
     import Settings from "@Options/Data/Settings";
-
-    const dispatch = createEventDispatcher<{
-        save: string,
-        cancel: void
-    }>();
 
     interface Props {
         appName: string;
         note: string;
+        onsave: (note: string|null) => void,
+        oncancel: () => void
     }
 
-    let { appName, note = $bindable() }: Props = $props();
+    let {
+        appName,
+        note,
+        onsave,
+        oncancel
+    }: Props = $props();
 
-    let textareaNode: HTMLTextAreaElement = $state();
-
-    async function handleButton(e: CustomEvent<EModalAction>): Promise<void> {
-        const action = e.detail;
-
-        if (action === EModalAction.OK) {
-            dispatch("save", note);
-        } else {
-            dispatch("cancel");
-        }
-    }
+    let textareaNode  = $state() as HTMLTextAreaElement;
 
     function escapeListener(e: KeyboardEvent) {
         if (e.code === "Escape") {
-            dispatch("cancel");
+            oncancel();
         }
     }
 
-    function textareaListener(e: KeyboardEvent) {
+    async function textareaListener(e: KeyboardEvent): Promise<void> {
         if (e.code !== "Enter" && e.code !== "NumpadEnter") {
             return;
         }
@@ -46,17 +37,14 @@
             if (e.shiftKey) {
                 const cursor = textareaNode.selectionEnd;
                 note = note.substring(0, cursor) + "\n" + note.substring(cursor);
-                tick().then(() => {
-                    textareaNode.selectionEnd = cursor+1;
-                });
+                await tick();
+                textareaNode.selectionEnd = cursor+1;
             } else {
-                dispatch("save", note);
+                onsave(note);
             }
-        } else {
-            if (e.shiftKey) {
-                e.preventDefault();
-                dispatch("save", note);
-            }
+        } else if (e.shiftKey) {
+            e.preventDefault();
+            onsave(note);
         }
     }
 
@@ -70,8 +58,8 @@
 
     onMount(() => {
         textareaNode.focus();
-        document.addEventListener("keyup", escapeListener);
 
+        document.addEventListener("keyup", escapeListener);
         return () => {
             document.removeEventListener("keyup", escapeListener);
         };
@@ -82,11 +70,8 @@
 <Modal title={L(__userNote_addForGame, {"gamename": appName})} buttons={{
     primary: L(__save),
     cancel: L(__cancel)
-}} on:button={handleButton}>
-    <div>
-        <textarea bind:this={textareaNode} bind:value={note} {onfocus} {onblur}></textarea>
-    </div>
-
+}} onprimary={() => onsave(note)} {oncancel}>
+    <div><textarea bind:this={textareaNode} bind:value={note} {onfocus} {onblur}></textarea></div>
     <label><input type="checkbox" bind:checked={Settings.user_notes_simple}> {L(__options_userNotes_saveWithEnter)}</label>
 </Modal>
 

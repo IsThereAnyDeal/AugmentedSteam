@@ -17,27 +17,33 @@
     let note: string|null = $state(null);
 
     async function handleNote(): Promise<void> {
-        let newNote: string|null = await notes.showModalDialog2(appName, appid);
+        let newNote: string|null = await notes.showModalDialog(appName, appid);
         if (newNote === "") {
             newNote = null;
         }
         note = newNote;
     }
 
-    onMount(() => {
-        notes.get(appid).then(n => note = n.get(appid) ?? null);
-    });
-
     function parseNote(note: string): string {
         return DOMPurify.sanitize(note, {ALLOWED_TAGS: []}) // remove all potential HTML first
             .replaceAll(/(https?:\/\/\S+)/g, "<a href='$1' target='_blank' rel='noopener'>$1</a>"); // then convert links
     }
+
+    onMount(() => {
+        (async () => {
+            note = (await notes.get(appid))
+                .get(appid) ?? null;
+        })();
+    });
 </script>
 
 
 <div class="container">
     <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
-    <span class="label" onclick={handleNote}><UserNoteIcon /> {L(note ? __userNote_update : __userNote_add)}</span>
+    <span class="label" onclick={handleNote}>
+        <UserNoteIcon />
+        {L(note ? __userNote_update : __userNote_add)}
+    </span>
 
     {#if note}
         <span class="note">{@html parseNote(note)}</span>
@@ -59,13 +65,15 @@
         cursor: pointer;
         margin-right: 16px;
         color: #67c1f5;
-    }
-    .label:hover {
-        color: #fff;
-    }
-    .label :global(i) {
-        fill: #67c1f5;
-        width: 1.6em;
+
+        &:hover {
+            color: #fff;
+        }
+
+        & :global(i) {
+            fill: #67c1f5;
+            width: 1.6em;
+        }
     }
 
     .note {
