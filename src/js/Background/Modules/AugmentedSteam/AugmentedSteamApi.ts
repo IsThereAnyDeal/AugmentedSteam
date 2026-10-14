@@ -3,7 +3,6 @@ import Config from "config";
 import Api from "../Api";
 import type {
     TProfileData,
-    TDlcInfo,
     TFetchMarketCardAveragePricesResponse,
     TFetchMarketCardPricesResponse,
     TFetchPricesResponse,

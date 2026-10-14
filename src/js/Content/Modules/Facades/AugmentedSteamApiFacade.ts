@@ -1,6 +1,5 @@
 import Background from "@Core/Background";
 import type {
-    TDlcInfo,
     TFetchMarketCardAveragePricesResponse,
     TFetchMarketCardPricesResponse,
     TFetchPricesResponse,

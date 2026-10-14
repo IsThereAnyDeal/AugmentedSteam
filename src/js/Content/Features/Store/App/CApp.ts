@@ -8,8 +8,10 @@ import FNewQueue from "@Content/Features/Store/App/FNewQueue";
 import Context, {type ContextParams} from "@Content/Modules/Context/Context";
 import {bootstrapLegacy, features} from "@Content/bootstrap";
 import FITADPrices from "@Content/Features/Store/Common/FITADPrices";
+import FDRMWarnings from "@Content/Features/Store/Common/FDRMWarnings";
+import type IProductPageContext from "@Content/Features/Store/IProductPageContext";
 
-export default class CApp extends Context {
+export default class CApp extends Context implements IProductPageContext {
 
     public readonly appid: number;
     public readonly storeid: string;
@@ -100,7 +102,7 @@ export async function run(): Promise<void> {
             FWaitlistToggle,
             FNewQueue,
             FITADPrices,
-//            FDRMWarnings,
+            FDRMWarnings,
 //            FMetacriticUserScore,
 //            FOpenCritic,
 //            FOwnedElsewhere,

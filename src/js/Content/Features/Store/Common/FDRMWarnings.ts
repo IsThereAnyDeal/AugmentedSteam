@@ -2,25 +2,26 @@ import self_ from "./FDRMWarnings.svelte";
 import Feature from "@Content/Modules/Context/Feature";
 import {L} from "@Core/Localization/Localization";
 import {__drmThirdParty, __drmThirdPartySub} from "@Strings/_strings";
-import type CBundle from "@Content/Features/Store/Bundle/CBundle";
 import Settings from "@Options/Data/Settings";
-import ContextType from "@Content/Modules/Context/ContextType";
-import type CSub from "@Content/Features/Store/Sub/CSub";
+import {mount} from "svelte";
+import type IProductPageContext from "@Content/Features/Store/IProductPageContext";
 import type CApp from "@Content/Features/Store/App/CApp";
-import { mount } from "svelte";
+import type CSub from "@Content/Features/Store/Sub/CSub";
+import type CBundle from "@Content/Features/Store/Bundle/CBundle";
 
-export default class FDRMWarnings extends Feature<CApp|CSub|CBundle> {
+export default class FDRMWarnings extends Feature<(CApp|CSub|CBundle) & IProductPageContext> {
 
     // Exclude false-positives
-    private readonly excludedAppids: number[] = [
+    readonly #excludedAppids: number[] = [
         21690 // Resident Evil 5, at Capcom's request
     ];
 
-    override checkPrerequisites(): boolean {
-        return Settings.showdrm && (!this.context.appid || !this.excludedAppids.includes(this.context.appid));
+    override async checkPrerequisites(): Promise<boolean> {
+        return Settings.showdrm
+            && (!this.context.appid || !this.#excludedAppids.includes(this.context.appid));
     }
 
-    private getTextFromDRMNotices(): string[] {
+    #getTextFromDRMNotices(): string[] {
         const value: string[] = [];
         for (const node of document.querySelectorAll<HTMLElement>(".DRM_notice")) {
             if (node.querySelector("a[onclick^=ShowEULA]")) { continue; }
@@ -38,7 +39,7 @@ export default class FDRMWarnings extends Feature<CApp|CSub|CBundle> {
         return value;
     }
 
-    private getTextFromGameDetails(): string {
+    #getTextFromGameDetails(): string {
         let value = "";
         let node: Node|null = document.querySelector(".language_list");
         if (!node) { return ""; }
@@ -50,9 +51,8 @@ export default class FDRMWarnings extends Feature<CApp|CSub|CBundle> {
         return value;
     }
 
-    override apply(): void {
-
-        const isAppPage = this.context.type === ContextType.APP;
+    override async apply(): Promise<void> {
+        const isAppPage = this.context.appid !== null;
 
         let text = "";
         for (const node of document.querySelectorAll<HTMLElement>(".game_area_sys_req, #game_area_legal")) {
@@ -62,11 +62,11 @@ export default class FDRMWarnings extends Feature<CApp|CSub|CBundle> {
         let drmNotices: string[] = [];
         let gameDetails: string = "";
         if (isAppPage) {
-            drmNotices = this.getTextFromDRMNotices();
+            drmNotices = this.#getTextFromDRMNotices();
             text += drmNotices.join("");
         } else {
             // Only bundle/sub pages have DRM info in game details
-            gameDetails = this.getTextFromGameDetails();
+            gameDetails = this.#getTextFromGameDetails();
             text += gameDetails;
         }
 
@@ -150,10 +150,10 @@ export default class FDRMWarnings extends Feature<CApp|CSub|CBundle> {
             }
 
             (mount(self_, {
-                            target,
-                            anchor: target.firstElementChild!,
-                            props: {drmString}
-                        }));
+                target,
+                anchor: target.firstElementChild!,
+                props: {drmString}
+            }));
         }
     }
 }
