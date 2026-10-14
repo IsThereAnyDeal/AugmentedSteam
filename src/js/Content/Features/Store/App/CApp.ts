@@ -8,8 +8,6 @@ import FNewQueue from "@Content/Features/Store/App/FNewQueue";
 import Context, {type ContextParams} from "@Content/Modules/Context/Context";
 import {bootstrapLegacy, features} from "@Content/bootstrap";
 import FITADPrices from "@Content/Features/Store/Common/FITADPrices";
-import StorePageUtils from "@Content/Features/Store/StorePageUtils";
-import FDLCInfo from "@Content/Features/Store/App/FDLCInfo";
 
 export default class CApp extends Context {
 
