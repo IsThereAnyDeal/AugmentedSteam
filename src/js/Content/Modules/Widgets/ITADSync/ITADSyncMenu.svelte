@@ -21,7 +21,7 @@
         <div class="asi__content">
             <ITADSyncStatus isConnected
                             enableSync={Settings.itad_sync_library || Settings.itad_sync_wishlist || Settings.itad_sync_ignored}
-                            bind:status bind:this={statusComponent} />
+                            {status} bind:this={statusComponent} />
         </div>
     </div>
 </div>

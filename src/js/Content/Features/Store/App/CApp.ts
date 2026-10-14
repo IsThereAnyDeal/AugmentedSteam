@@ -1,50 +1,10 @@
 import AppId from "@Core/GameId/AppId";
-import FCustomizer from "../Common/FCustomizer";
-import FDRMWarnings from "../Common/FDRMWarnings";
-import FITADPrices from "../Common/FITADPrices";
-import FRegionalPricing from "../Common/FRegionalPricing";
-import FAchievementBar from "./FAchievementBar";
-import FBadgeProgress from "./FBadgeProgress";
-import FDemoAbovePurchase from "./FDemoAbovePurchase";
-import FDLCCheckboxes from "./FDLCCheckboxes";
-import FDLCInfo from "./FDLCInfo";
-import FFamilySharingNotice from "./FFamilySharingNotice";
-import FFullscreenScreenshotView from "./FFullscreenScreenshotView";
-import FHideReportedTags from "./FHideReportedTags";
-import FHowLongToBeat from "./FHowLongToBeat";
-import FMetacriticUserScore from "./FMetacriticUserScore";
-import FNewQueue from "./FNewQueue";
-import FOpenCritic from "./FOpenCritic";
-import FOwnedActionsButtons from "./FOwnedActionsButtons";
-import FOwnedElsewhere from "./FOwnedElsewhere";
-import FPackageInfoButton from "./FPackageInfoButton";
-import FPatchHighlightPlayer from "./FPatchHighlightPlayer";
-import FPlayers from "./FPlayers";
-import FPurchaseDate from "./FPurchaseDate";
-import FRemoveDupeScreenshots from "./FRemoveDupeScreenshots";
 import FReplaceDevPubLinks from "./FReplaceDevPubLinks";
-import FReviewToggleButton from "./FReviewToggleButton";
-import FVaporLensInsights from "./FVaporLensInsights";
-import FSaveReviewFilters from "./FSaveReviewFilters";
-import FSteamPeek from "./FSteamPeek";
-import FSupportInfo from "./FSupportInfo";
 import FUserNotes from "./FUserNotes";
-import FWidescreenCertification from "./FWidescreenCertification";
-import ContextType from "@Content/Modules/Context/ContextType";
-import FExtraLinksApp from "@Content/Features/Store/Common/FExtraLinksApp";
-import FExtraLinksAppError from "@Content/Features/Store/Common/FExtraLinksAppError";
-import CStoreBase from "@Content/Features/Store/Common/CStoreBase";
 import AugmentedSteamApiFacade from "@Content/Modules/Facades/AugmentedSteamApiFacade";
 import type {TStorePageData} from "@Background/Modules/AugmentedSteam/_types";
-import FWaitlistDropdown from "@Content/Features/Store/App/FWaitlistDropdown";
-import FHighlightTitle from "@Content/Features/Store/App/FHighlightTitle";
+import FWaitlistToggle from "@Content/Features/Store/App/FWaitlistToggle";
 import Context, {type ContextParams} from "@Content/Modules/Context/Context";
-import FPreventVideoPause from "@Content/Features/Store/App/FPreventVideoPause";
-import FAppTitle from "@Content/Features/Store/App/FAppTitle";
-import FHorizontalScrolling from "@Content/Features/Store/App/FHorizontalScrolling";
-import FReleaseCountdown from "@Content/Features/Store/App/FReleaseCountdown";
-import FRestorePriceCut from "@Content/Features/Store/Common/FRestorePriceCut";
-import FHighlightsTags from "@Content/Features/Common/FHighlightsTags";
 import {bootstrapLegacy, features} from "@Content/bootstrap";
 
 export default class CApp extends Context {
@@ -135,7 +95,7 @@ export async function run(): Promise<void> {
 //            FHighlightsTags,
             FReplaceDevPubLinks,
             FUserNotes,
-//            FWaitlistDropdown,
+            FWaitlistToggle,
 //            FNewQueue,
 //            FFullscreenScreenshotView,
 //            FITADPrices,
