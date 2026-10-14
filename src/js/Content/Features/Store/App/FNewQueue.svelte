@@ -27,9 +27,9 @@
 <style>
     #es_new_queue {
         width: 150px;
-    }
 
-    .btn_next_in_queue::after {
-        display: none;
+        &::after {
+            display: none;
+        }
     }
 </style>

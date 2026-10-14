@@ -5,19 +5,21 @@ import { mount } from "svelte";
 
 export default class FNewQueue extends Feature<CApp> {
 
-    override checkPrerequisites(): boolean {
+    override async checkPrerequisites(): Promise<boolean> {
+        // FIXME settings
         return document.querySelector(".finish_queue_text") !== null;
     }
 
-    override apply(): void {
+    override async apply(): Promise<void> {
+
         const next = document.querySelector(".btn_next_in_queue");
         if (!next) {
             return;
         }
 
         mount(self_, {
-                    target: next.parentElement!,
-                    anchor: next
-                });
+            target: next.parentElement!,
+            anchor: next
+        });
     }
 }
