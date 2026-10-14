@@ -37,7 +37,7 @@
         return tierPrice;
     }
 
-    let appName: string|null = $state();
+    let appName: string|null = $state(null);
 
     function getBundlePrice(bundle: TBundle): TPrice|null {
         return bundle.tiers
@@ -49,6 +49,7 @@
         appName = document.querySelector(".apphub_AppName")?.textContent ?? null;
     });
 </script>
+
 
 {#if data.length > 0 && data.some(v => !v.expiry || Date.parse(v.expiry) > Date.now())}
     <h2 class="gradientbg es_external_icon">{L(__bundle_header)}</h2>
@@ -117,6 +118,7 @@
         {/if}
     {/each}
 {/if}
+
 
 <style>
     .highlight {

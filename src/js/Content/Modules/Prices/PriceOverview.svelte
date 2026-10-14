@@ -14,50 +14,45 @@
     import external from "@Content/externalLink";
 
     interface Props {
-        data: TPriceOverview;
-        marginTop?: string|undefined;
-        marginBottom?: string|undefined;
+        data: TPriceOverview,
+        marginTop?: string,
+        marginBottom?: string
     }
 
-    let { data, marginTop = undefined, marginBottom = undefined }: Props = $props();
+    let {
+        data,
+        marginTop,
+        marginBottom
+    }: Props = $props();
 
-    let node: HTMLElement = $state();
-    let currentDrms: string[] = $state();
-
-    if (data.current) {
-        currentDrms = data.current.drm
+    let currentDrms: string[] = $derived(
+        (data.current?.drm
             .filter(d => d.id !== 61) // 61 = Steam
-            .map(d => d.name);
-    }
-
-    export {
-    	data,
-    	marginTop,
-    	marginBottom,
-    }
+            .map(d => d.name)) ?? []
+    );
 </script>
 
 
-<div class="itad-pricing" bind:this={node} style:margin-top={marginTop} style:margin-bottom={marginBottom}>
+<div class="itad-pricing" style:margin-top={marginTop} style:margin-bottom={marginBottom}>
     {#if data.current}
         <a href={data.urls.info} use:external>{L(__pricing_lowestPrice)}</a>
 
-        <span class="itad-pricing__price">
+        <span class="price">
             <PriceWithAlt price={data.current.price} />
         </span>
 
-        <a href={data.current.url} class="itad-pricing__main" use:external>
+        <a href={data.current.url} class="main" use:external>
             {#if data.current.cut > 0}
-                <span class="itad-pricing__cut">-{data.current.cut}%</span>
+                <span class="cut">-{data.current.cut}%</span>
             {/if}
 
             {#if data.current.voucher}
-                <span class="itad-pricing__voucher">{L(__pricing_withVoucher, {"voucher": data.current.voucher})}</span>
+                <span class="voucher">{L(__pricing_withVoucher, {"voucher": data.current.voucher})}</span>
             {/if}
 
             {@html L(__pricing_store, {"store": HTML.escape(data.current.shop.name)})}
             {#if currentDrms.length > 0}
-                <span class="itad-pricing__drm">({currentDrms.join(", ")})</span>
+                <span class="drm">({currentDrms.join(", ")})</span>
             {/if}
         </a>
     {/if}
@@ -65,13 +60,13 @@
     {#if data.lowest}
         <a href={data.urls.history} use:external>{L(__pricing_historicalLow)}</a>
 
-        <span class="itad-pricing__price">
+        <span class="price">
             <PriceWithAlt price={data.lowest.price} />
         </span>
 
-        <div class="itad-pricing__main">
+        <div class="main">
             {#if data.lowest.cut > 0}
-                <span class="itad-pricing__cut">-{data.lowest.cut}%</span>
+                <span class="cut">-{data.lowest.cut}%</span>
             {/if}
             {@html L(__pricing_store, {"store": HTML.escape(data.lowest.shop.name)})}
             {new Date(data.lowest.timestamp).toLocaleDateString()}
@@ -80,7 +75,7 @@
 
     {#if data.bundled}
         <a href={data.urls.info} use:external>{L(__pricing_bundled)}</a>
-        <div class="itad-pricing__bundled">{L(__pricing_bundleCount, {"count": data.bundled})}</div>
+        <div class="bundled">{L(__pricing_bundleCount, {"count": data.bundled})}</div>
     {/if}
 </div>
 
@@ -89,9 +84,10 @@
     a {
         color: white;
         text-decoration: none;
-    }
-    a:hover {
-        color: #66c0f4;
+
+        &:hover {
+            color: #66c0f4;
+        }
     }
 
     /* Fix space between prices and the purchase container when an "ADVANCED ACCESS" banner is present */
@@ -116,25 +112,25 @@
         line-height: 1.5;
         align-items: baseline;
     }
-    .itad-pricing__main {
+    .main {
         white-space: normal;
     }
-    .itad-pricing__cut {
+    .cut {
         color: #a4d007;
     }
-    .itad-pricing__price {
+    .price {
         font-size: 1.1em;
         color: #acdbf5;
         text-align: right;
     }
-    .itad-pricing__voucher {
+    .voucher {
         font-size: 1.1em;
     }
-    .itad-pricing__drm {
+    .drm {
         text-transform: uppercase;
         color: #626366;
     }
-    .itad-pricing__bundled {
+    .bundled {
         grid-column: 2 / span 2
     }
 </style>

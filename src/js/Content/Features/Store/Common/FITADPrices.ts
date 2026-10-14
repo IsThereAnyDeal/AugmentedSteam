@@ -8,51 +8,52 @@ import type {TBundle, TPriceOverview} from "@Background/Modules/AugmentedSteam/_
 import type CSub from "@Content/Features/Store/Sub/CSub";
 import type CApp from "@Content/Features/Store/App/CApp";
 import { mount } from "svelte";
+import StorePageUtils from "@Content/Features/Store/StorePageUtils";
 
 export default class FITADPrices extends Feature<CApp|CSub|CBundle> {
 
-    override checkPrerequisites(): boolean {
+    override async checkPrerequisites(): Promise<boolean> {
         return Settings.showlowestprice;
     }
 
-    private insertPrices(type: "app"|"sub"|"bundle", id: number, data: TPriceOverview) {
+    #insertPrices(type: "app"|"sub"|"bundle", id: number, data: TPriceOverview) {
         let anchor: HTMLElement|null = null;
 
         if (type === "sub") {
             const inputEl = document.querySelector(`input[name=subid][value="${id}"]`);
             if (inputEl) {
                 anchor = inputEl.closest(".game_area_purchase_game_wrapper") // Subs on app pages
-                    || inputEl.closest(".game_area_purchase_game"); // Subs on sub pages
+                      || inputEl.closest(".game_area_purchase_game"); // Subs on sub pages
             }
         } else if (type === "bundle") {
             anchor = document.querySelector(`.game_area_purchase_game_wrapper[data-ds-bundleid="${id}"]`) // Bundles on app pages
-                || document.querySelector(`.game_area_purchase_game[data-ds-bundleid="${id}"]`); // Bundles on bundle pages
+                  || document.querySelector(`.game_area_purchase_game[data-ds-bundleid="${id}"]`); // Bundles on bundle pages
         }
 
         if (anchor) {
             mount(PriceOverview, {
-                            target: anchor.parentElement!,
-                            anchor,
-                            props: {data}
-                        });
+                target: anchor.parentElement!,
+                anchor,
+                props: {data}
+            });
         }
     }
 
-    private insertBundles(data: TBundle[]) {
+    #insertBundles(data: TBundle[]) {
         const anchor = document.querySelector("#game_area_purchase")?.nextElementSibling;
         if (anchor) {
             mount(BundleOverview, {
-                            target: anchor.parentElement!,
-                            anchor,
-                            props: {data}
-                        });
+                target: anchor.parentElement!,
+                anchor,
+                props: {data}
+            });
         }
     }
 
     override async apply(): Promise<void> {
         const prices = new Prices(this.context.user);
 
-        let subs: number[] = this.context.getAllSubids().map(Number);
+        let subs: number[] = StorePageUtils.getAllSubids().map(Number);
         let bundles: number[] = [];
         for (const node of document.querySelectorAll<HTMLElement>("[data-ds-bundleid]")) {
             bundles.push(Number(node.dataset.dsBundleid));
@@ -72,9 +73,9 @@ export default class FITADPrices extends Feature<CApp|CSub|CBundle> {
                 bundles,
             }) => {
                 for (let {type, id, data} of prices) {
-                    this.insertPrices(type, id, data);
+                    this.#insertPrices(type, id, data);
                 }
-                this.insertBundles(bundles);
+                this.#insertBundles(bundles);
             });
     }
 }

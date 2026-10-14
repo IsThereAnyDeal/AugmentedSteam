@@ -4,8 +4,11 @@ import FUserNotes from "./FUserNotes";
 import AugmentedSteamApiFacade from "@Content/Modules/Facades/AugmentedSteamApiFacade";
 import type {TStorePageData} from "@Background/Modules/AugmentedSteam/_types";
 import FWaitlistToggle from "@Content/Features/Store/App/FWaitlistToggle";
+import FNewQueue from "@Content/Features/Store/App/FNewQueue";
 import Context, {type ContextParams} from "@Content/Modules/Context/Context";
 import {bootstrapLegacy, features} from "@Content/bootstrap";
+import FITADPrices from "@Content/Features/Store/Common/FITADPrices";
+import StorePageUtils from "@Content/Features/Store/StorePageUtils";
 
 export default class CApp extends Context {
 
@@ -96,9 +99,8 @@ export async function run(): Promise<void> {
             FReplaceDevPubLinks,
             FUserNotes,
             FWaitlistToggle,
-//            FNewQueue,
-//            FFullscreenScreenshotView,
-//            FITADPrices,
+            FNewQueue,
+            FITADPrices,
 //            FDLCInfo,
 //            FDRMWarnings,
 //            FMetacriticUserScore,
