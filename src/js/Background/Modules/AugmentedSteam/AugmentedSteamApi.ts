@@ -46,11 +46,6 @@ export default class AugmentedSteamApi extends Api implements MessageHandlerInte
         return this.fetchJson(url);
     }
 
-    private fetchDlcInfo(appid: number): Promise<TDlcInfo> {
-        const url = this.getUrl(`dlc/${appid}/v2`);
-        return this.fetchJson<TDlcInfo>(url);
-    }
-
     private fetchProfile(steamId: string): Promise<TProfileData> {
         const url = this.getUrl(`profile/${steamId}/v2`);
         return this.fetchJson(url);
@@ -180,9 +175,6 @@ export default class AugmentedSteamApi extends Api implements MessageHandlerInte
                 const {country, apps, subs, bundles, voucher, shops} = message.params;
                 return this.fetchPrices(country, apps, subs, bundles, voucher, shops);
             }
-
-            case EAction.DlcInfo:
-                return this.fetchDlcInfo(message.params.appid);
 
             case EAction.StorePageData:
                 return this.getStorePageData(message.params.appid);

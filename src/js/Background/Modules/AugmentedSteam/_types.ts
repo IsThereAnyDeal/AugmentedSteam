@@ -138,13 +138,6 @@ export interface TStorePageData {
     }
 }
 
-export type TDlcInfo = Array<{
-    id: number,
-    name: string,
-    description: string,
-    icon: string
-}>;
-
 export interface TIsEarlyAccessResponse {
     [appid: number]: boolean
 }

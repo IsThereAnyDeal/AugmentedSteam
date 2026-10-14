@@ -27,10 +27,6 @@ export default class AugmentedSteamApiFacade {
         return Background.send(EAction.Prices, {country, apps, subs, bundles, voucher, shops});
     }
 
-    static fetchDlcInfo(appid: number): Promise<TDlcInfo> {
-        return Background.send(EAction.DlcInfo, {appid});
-    }
-
     static getStorePageData(appid: number): Promise<TStorePageData> {
         return Background.send(EAction.StorePageData, {appid});
     }

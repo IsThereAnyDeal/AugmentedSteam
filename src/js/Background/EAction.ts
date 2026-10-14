@@ -1,7 +1,6 @@
 
 export const enum EAction {
     Prices = "prices",
-    DlcInfo = "dlcinfo",
     StorePageData = "storepagedata",
     StorePageData_Expire = "storepagedata.expiry",
     Rates = "rates",
