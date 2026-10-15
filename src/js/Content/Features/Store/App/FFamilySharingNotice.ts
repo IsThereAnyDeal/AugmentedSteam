@@ -7,27 +7,28 @@ import { mount } from "svelte";
 export default class FFamilySharingNotice extends Feature<CApp> {
 
     override async checkPrerequisites(): Promise<boolean> {
-        if (!Settings.exfgls) { return false; }
-
-        const comingSoon = document.querySelector(".game_area_comingsoon");
-        if (comingSoon) { // TODO temporary fix, return reason from server
-            return false;
-        }
-
-        const result = await this.context.data;
-        // Apply this feature if app is NOT family shareable
-        return result !== null && !result.family_sharing;
+        return Settings.exfgls;
     }
 
-    override apply(): void {
-        let anchor = document.querySelector("#game_area_purchase");
+    override async apply(): Promise<void> {
+        const comingSoonNode = document.querySelector(".game_area_comingsoon");
+        if (comingSoonNode) { // TODO temporary fix, return reason from server
+            return;
+        }
+
+        const familySharing = (await this.context.data)?.family_sharing;
+        if (!familySharing) {
+            return;
+        }
+
+        const anchor = document.querySelector("#game_area_purchase");
         if (!anchor) {
             throw new Error("Node not found");
         }
 
         (mount(self_, {
-                    target: anchor.parentElement!,
-                    anchor,
-                }));
+            target: anchor.parentElement!,
+            anchor,
+        }));
     }
 }

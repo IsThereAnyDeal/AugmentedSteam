@@ -16,6 +16,7 @@ import FPurchaseDate from "@Content/Features/Store/App/FPurchaseDate";
 import FSteamPeek from "@Content/Features/Store/App/FSteamPeek";
 import FWidescreenCertification from "@Content/Features/Store/App/FWidescreenCertification";
 import FHowLongToBeat from "@Content/Features/Store/App/FHowLongToBeat";
+import FFamilySharingNotice from "@Content/Features/Store/App/FFamilySharingNotice";
 
 export default class CApp extends Context implements IProductPageContext {
 
@@ -116,7 +117,7 @@ export async function run(): Promise<void> {
             FWidescreenCertification,
             FHowLongToBeat,
 //            FExtraLinksApp,
-//            FFamilySharingNotice,
+            FFamilySharingNotice,
 //            FPackageInfoButton,
 //            FPlayers,
 //            FCustomizer,
