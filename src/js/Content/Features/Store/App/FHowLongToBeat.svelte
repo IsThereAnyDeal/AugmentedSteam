@@ -9,6 +9,7 @@
     } from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
     import external from "@Content/externalLink";
+    import SidebarBox from "@Content/Features/Store/App/SidebarBox.svelte";
 
     function hrs(minutes: number): string {
         return L(__hoursShort, {"hours": (minutes / 60).toFixed(1).toString()});
@@ -29,45 +30,60 @@
     }: Props = $props();
 </script>
 
-<div class="block responsive_apppage_details_right heading">{L(__hltb_title)}</div>
-<div class="block underlined_links es_hltb">
-    <div class="block_content">
-        <div class="block_content_inner">
-            {#if story || extras || complete}
-                <div class="details_block">
-                    {#if story}
-                        <b>{L(__hltb_main)}:</b><span>{hrs(story)}</span><br>
-                    {/if}
-                    {#if extras}
-                        <b>{L(__hltb_mainE)}:</b><span>{hrs(extras)}</span><br>
-                    {/if}
-                    {#if complete}
-                        <b>{L(__hltb_compl)}:</b><span>{hrs(complete)}</span><br>
-                    {/if}
-                </div>
-                <br>
-            {/if}
-            <a class="linkbar es_external_icon" href={url} use:external>{L(__moreInformation)}</a>
-        </div>
+
+<SidebarBox title={L(__hltb_title)}>
+    <div class="container">
+        {#if story || extras || complete}
+            <ul>
+                {#if story}
+                    <li>
+                        <div>{hrs(story)}</div>
+                        {L(__hltb_main)}
+                    </li>
+                {/if}
+                {#if extras}
+                    <li>
+                        <div>{hrs(extras)}</div>
+                        {L(__hltb_mainE)}
+                    </li>
+                {/if}
+                {#if complete}
+                    <li>
+                        <div>{hrs(complete)}</div>
+                        {L(__hltb_compl)}
+                    </li>
+                {/if}
+            </ul>
+        {/if}
+        <a class="linkbar es_external_icon" href={url} use:external>{L(__moreInformation)}</a>
     </div>
-</div>
+</SidebarBox>
 
 
 <style>
-    .es_hltb {
+    .container {
         color: #8f98a0;
-        line-height: 20px;
     }
 
-    .es_hltb b {
-        font-family: Arial, Helvetica, sans-serif;
-        color: #556772;
-        font-weight: normal;
+    ul {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    li {
+        list-style-type: none;
+        text-align: center;
+        line-height: 1.2;
         text-transform: uppercase;
-        font-size: 10px;
-    }
+        font-size: 11px;
+        color: var(--summary-title-text-color, #798a95);
 
-    .es_hltb span {
-        float: right;
+        & div {
+            text-transform: lowercase;
+            font-size: 20px;
+            color: #c6d4df;
+        }
     }
 </style>

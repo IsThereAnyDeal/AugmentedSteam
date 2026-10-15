@@ -10,6 +10,7 @@
         __wsgf_unsupported,
     } from "@Strings/_strings";
     import ExtensionResources from "@Core/ExtensionResources";
+    import SidebarBox from "@Content/Features/Store/App/SidebarBox.svelte";
 
     interface Props {
         url: string,
@@ -42,21 +43,15 @@
     {/if}
 {/snippet}
 
-<div class="block responsive_apppage_details_right heading">{L(__wsgf_certifications)}</div>
-<div class="block underlined_links">
-    <div class="block_content">
-        <div class="block_content_inner">
-            <div class="details_block">
-                {@render rating(wsg, "ws", "Widescreen")}
-                {@render rating(mmg, "mm", "Multi-Monitor")}
-                {@render rating(uws, "uw", "Ultra-Widescreen")}
-                {@render rating(fkg, "4k", "4k UHD")}
-            </div>
-            <br>
-            <a class="linkbar es_external_icon" target="_blank" href={url}>{L(__ratingDetails)}</a>
-        </div>
+<SidebarBox title={L(__wsgf_certifications)}>
+    <div class="details_block">
+        {@render rating(wsg, "ws", "Widescreen")}
+        {@render rating(mmg, "mm", "Multi-Monitor")}
+        {@render rating(uws, "uw", "Ultra-Widescreen")}
+        {@render rating(fkg, "4k", "4k UHD")}
     </div>
-</div>
+    <a class="linkbar es_external_icon" target="_blank" href={url}>{L(__ratingDetails)}</a>
+</SidebarBox>
 
 
 <style>
@@ -66,6 +61,7 @@
         grid-template-columns: repeat(4, 1fr);
         justify-content: center;
         gap: 10px;
+        margin-bottom: 10px;
 
     }
     img {

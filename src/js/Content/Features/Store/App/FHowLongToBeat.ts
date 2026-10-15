@@ -1,41 +1,33 @@
 import self_ from "./FHowLongToBeat.svelte";
 import type CApp from "@Content/Features/Store/App/CApp";
 import Feature from "@Content/Modules/Context/Feature";
-import type {TStorePageData} from "@Background/Modules/AugmentedSteam/_types";
 import Settings from "@Options/Data/Settings";
-import { mount } from "svelte";
+import {mount} from "svelte";
 
 export default class FHowLongToBeat extends Feature<CApp> {
 
-    private hltb: TStorePageData['hltb']|null = null;
-
     override async checkPrerequisites(): Promise<boolean> {
-        if (!Settings.showhltb || this.context.isDlcLike || this.context.isVideoOrHardware) {
-            return false;
-        }
-
-        const result = await this.context.data;
-        if (!result || !result.hltb) {
-            return false;
-        }
-
-        this.hltb = result.hltb;
-        return true;
+        return Settings.showhltb
+            && !this.context.isDlcLike
+            && !this.context.isVideoOrHardware;
     }
 
-    apply() {
-        if (!this.hltb) { return }
+    override async apply(): Promise<void> {
+        const hltb = (await this.context.data)?.hltb;
+        if (!hltb) {
+            return;
+        }
 
         const anchor = document.querySelector("div.game_details")!.nextElementSibling!;
         mount(self_, {
-                    target: anchor.parentElement!,
-                    anchor,
-                    props: {
-                        story: this.hltb.story,
-                        extras: this.hltb.extras,
-                        complete: this.hltb.complete,
-                        url: this.hltb.url
-                    }
-                })
+            target: anchor.parentElement!,
+            anchor,
+            props: {
+                story: hltb.story,
+                extras: hltb.extras,
+                complete: hltb.complete,
+                url: hltb.url
+            }
+        });
     }
 }
