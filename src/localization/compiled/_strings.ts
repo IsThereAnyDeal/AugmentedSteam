@@ -277,6 +277,7 @@ export const __earlyAccess = "earlyAccess";
 export const __tagShort = "tagShort";
 export const __noPriceData = "noPriceData";
 export const __userScore = "userScore";
+export const __userScoreReviews = "userScoreReviews";
 export const __marketPopularItemsToggle = "marketPopularItemsToggle";
 export const __showProgressbar = "showProgressbar";
 export const __achievements_option = "achievements_option";

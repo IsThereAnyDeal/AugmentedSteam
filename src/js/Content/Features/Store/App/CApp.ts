@@ -10,6 +10,7 @@ import {bootstrapLegacy, features} from "@Content/bootstrap";
 import FITADPrices from "@Content/Features/Store/Common/FITADPrices";
 import FDRMWarnings from "@Content/Features/Store/Common/FDRMWarnings";
 import type IProductPageContext from "@Content/Features/Store/IProductPageContext";
+import FReviewScores from "@Content/Features/Store/App/FReviewScores";
 
 export default class CApp extends Context implements IProductPageContext {
 
@@ -103,8 +104,7 @@ export async function run(): Promise<void> {
             FNewQueue,
             FITADPrices,
             FDRMWarnings,
-//            FMetacriticUserScore,
-//            FOpenCritic,
+            FReviewScores
 //            FOwnedElsewhere,
 //            FPurchaseDate,
 //            FSteamPeek,
