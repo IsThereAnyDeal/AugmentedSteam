@@ -1062,27 +1062,6 @@ video.highlight_movie:hover + .html5_video_overlay {
   display: none;
 }
 
-/* .game_details styles from https://github.com/SteamDatabase/SteamTracking/blob/8719637a11e9e707f0adb4d07987cd9423d0d828/steamcommunity.com/public/shared/css/store_game_shared.css#L389 */
-
-.es_wsgf .details_block {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: center;
-  margin-top: -10px;
-  margin-right: -10px;
-}
-.es_wsgf .details_block img {
-  border: 0;
-  height: 120px;
-  cursor: help;
-  margin-top: 10px;
-  margin-right: 10px;
-}
-
-.es_dlc_info .details_block img {
-  vertical-align: top;
-}
-
 /***************************************
  * Global Steam Client button
  **************************************/
