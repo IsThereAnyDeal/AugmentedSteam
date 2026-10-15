@@ -8,28 +8,29 @@ import {__seeSinceWhenDate, __sinceDate} from "@Strings/_strings";
 
 export default class FPurchaseDate extends Feature<CApp> {
 
-    private _node: HTMLElement|null = null
-
-    override checkPrerequisites(): boolean {
-        if (this.context.user.isSignedIn && Settings.purchase_dates) {
-            this._node = document.querySelector(".game_area_already_owned .already_in_library");
-        }
-        return this._node !== null;
+    override async checkPrerequisites(): Promise<boolean> {
+        return Settings.purchase_dates && this.context.user.isSignedIn;
     }
 
-    async apply() {
+    override async apply(): Promise<void> {
+        const node = document.querySelector(".game_area_already_owned .already_in_library");
+        if (!node) {
+            return;
+        }
+
         const date = await SteamStoreApiFacade.getPurchaseDate(this.context.appid);
 
         if (date === 0) {
             const a = document.createElement("a");
             a.href = `https://help.steampowered.com/wizard/HelpWithGame?appid=${this.context.appid}`;
             a.innerText = ` (${L(__seeSinceWhenDate)})`
+            a.target = "_blank";
 
-            this._node?.appendChild(a);
+            node.appendChild(a);
         } else {
             const datetime = DateTime.fromSeconds(date);
 
-            this._node!.textContent += ` (${L(__sinceDate, {
+            node.textContent += ` (${L(__sinceDate, {
                 date: datetime.toLocaleString({
                     dateStyle: "medium"
                 }, {
