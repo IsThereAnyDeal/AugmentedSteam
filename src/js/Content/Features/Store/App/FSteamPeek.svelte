@@ -102,6 +102,7 @@
 <style>
     section {
         background: radial-gradient(62.67% 62.67% at 62.67% 100%, rgba(255, 255, 255, 0.15) 0%, rgba(116, 133, 140, 0.15) 100%);
+        box-shadow: 0 0 12px 0 rgba(0,0,0,.25);
         padding: 16px;
         border-radius: 5px;
         margin-bottom: 20px;

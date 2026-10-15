@@ -11,6 +11,9 @@ import FITADPrices from "@Content/Features/Store/Common/FITADPrices";
 import FDRMWarnings from "@Content/Features/Store/Common/FDRMWarnings";
 import type IProductPageContext from "@Content/Features/Store/IProductPageContext";
 import FReviewScores from "@Content/Features/Store/App/FReviewScores";
+import FOwnedElsewhere from "@Content/Features/Store/App/FOwnedElsewhere";
+import FPurchaseDate from "@Content/Features/Store/App/FPurchaseDate";
+import FSteamPeek from "@Content/Features/Store/App/FSteamPeek";
 
 export default class CApp extends Context implements IProductPageContext {
 
@@ -104,10 +107,10 @@ export async function run(): Promise<void> {
             FNewQueue,
             FITADPrices,
             FDRMWarnings,
-            FReviewScores
-//            FOwnedElsewhere,
-//            FPurchaseDate,
-//            FSteamPeek,
+            FReviewScores,
+            FOwnedElsewhere,
+            FPurchaseDate,
+            FSteamPeek,
 //            FWidescreenCertification,
 //            FHowLongToBeat,
 //            FExtraLinksApp,

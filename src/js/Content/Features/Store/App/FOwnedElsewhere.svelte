@@ -4,13 +4,14 @@
     import type {TCollectionCopy} from "@Background/Modules/IsThereAnyDeal/_types";
     import RedeemedIcon from "@Content/Icons/RedeemedIcon.svelte";
     import RedeemableIcon from "@Content/Icons/RedeemableIcon.svelte";
+    import Settings from "@Options/Data/Settings";
 
     interface Props {
         appName: string;
         copies: TCollectionCopy[];
     }
 
-    let { appName, copies }: Props = $props();
+    const { appName, copies }: Props = $props();
 </script>
 
 
@@ -75,10 +76,10 @@
         padding: 5px;
         color: #1b2838;
         fill: #1b2838;
-    }
-    .copy:last-child {
-        margin-bottom: 5px;
-        border-bottom: 1px dashed #856d0e;
+
+        &:last-child {
+            margin-bottom: 5px;
+        }
     }
 
     .shop {

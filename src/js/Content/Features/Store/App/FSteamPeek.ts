@@ -6,30 +6,24 @@ import { mount } from "svelte";
 
 export default class FSteamPeek extends Feature<CApp> {
 
-    private _moreLikeThis: HTMLElement|null = null;
-
     override async checkPrerequisites(): Promise<boolean> {
-        if (!Settings.show_steampeek) {
-            return false;
-        }
-
-        this._moreLikeThis = document.querySelector(".related_items_ctn .page_content");
-        return this._moreLikeThis !== null;
+        return Settings.show_steampeek;
     }
 
     async apply(): Promise<void> {
-        if (!this._moreLikeThis) {
+        const moreLikeThis = document.querySelector(".related_items_ctn .page_content");
+        if (!moreLikeThis) {
             return;
         }
 
         mount(self_, {
-                    target: this._moreLikeThis,
-                    anchor: this._moreLikeThis.firstElementChild ?? undefined,
-                    props: {
-                        user: this.context.user,
-                        language: this.context.language?.name ?? "english",
-                        appid: this.context.appid
-                    }
-                });
+            target: moreLikeThis,
+            anchor: moreLikeThis.firstElementChild ?? undefined,
+            props: {
+                user: this.context.user,
+                language: this.context.language?.name ?? "english",
+                appid: this.context.appid
+            }
+        });
     }
 }

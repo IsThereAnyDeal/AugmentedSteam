@@ -19,14 +19,17 @@ export default class FOwnedElsewhere extends Feature<CApp> {
         }
 
         const node = document.querySelector<HTMLElement>(".queue_overflow_ctn")!;
+        if (!node) {
+            return;
+        }
 
         mount(self_, {
-                    target: node.parentElement!,
-                    anchor: node.nextElementSibling!,
-                    props: {
-                        appName: this.context.appName,
-                        copies:  response
-                    }
-                });
+            target: node.parentElement!,
+            anchor: node.nextElementSibling!,
+            props: {
+                appName: this.context.appName,
+                copies:  response
+            }
+        });
     }
 }

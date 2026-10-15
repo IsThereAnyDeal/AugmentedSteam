@@ -1,14 +1,16 @@
 <script lang="ts">
+    import type {Snippet} from "svelte";
+
     interface Props {
         href: string;
-        children?: import('svelte').Snippet;
+        children: Snippet;
     }
 
     let { href, children }: Props = $props();
 </script>
 
 
-<a {href} target="_blank" rel="noopener noreferrer">{@render children?.()}</a>
+<a {href} target="_blank" rel="noopener noreferrer">{@render children()}</a>
 
 
 <style>
@@ -22,6 +24,7 @@
         font-weight: 500;
         white-space: nowrap;
         transition: background-color 0.2s ease-out;
+        border-radius: 2px;
 
         &:hover,
         &:focus-visible {
