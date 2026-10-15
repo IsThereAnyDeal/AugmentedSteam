@@ -21,8 +21,8 @@
         return null;
     }
 
-    let strPrice = (new Price(price.amount, price.currency)).toString();
-    let strPriceAlt = getAltPrice(price)?.toString();
+    let strPrice = $derived((new Price(price.amount, price.currency)).toString());
+    let strPriceAlt = $derived(getAltPrice(price)?.toString());
 </script>
 
 
