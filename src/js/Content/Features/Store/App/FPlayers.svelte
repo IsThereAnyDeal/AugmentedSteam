@@ -1,6 +1,7 @@
 <script lang="ts">
     import {__charts_current, __charts_peakall, __charts_peaktoday, __charts_playingNow} from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
+    import SidebarBox from "@Content/Features/Store/App/SidebarBox.svelte";
 
     interface Props {
         recent: number;
@@ -14,44 +15,43 @@
 </script>
 
 
-<div class="block responsive_apppage_details_right heading">{L(__charts_current)}</div>
-<div class="block responsive_apppage_details_right">
-    <div class="block_content_inner as_players">
-        <div class="as_stat">
+<SidebarBox title={L(__charts_current)}>
+    <ul>
+        <li>
             <span>{L(__charts_playingNow)}</span>
             {formatter.format(recent)}
-        </div>
-        <div class="as_stat">
+        </li>
+        <li>
             <span>{L(__charts_peaktoday)}</span>
             {formatter.format(peakToday)}
-        </div>
-        <div class="as_stat">
+        </li>
+        <li>
             <span>{L(__charts_peakall)}</span>
             {formatter.format(peakAll)}
-        </div>
-    </div>
-</div>
+        </li>
+    </ul>
+</SidebarBox>
 
 
 <style>
-    .as_players {
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
+    ul {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        justify-content: center;
+        gap: 10px;
     }
-    .as_stat {
+    li {
+        list-style-type: none;
         display: flex;
         flex-direction: column-reverse;
         align-items: center;
         color: #67c1f5;
-        font-size: 20px;
+        font-size: 22px;
     }
 
     span {
-        font-family: Arial, Helvetica, sans-serif;
-        color: #556772;
-        font-weight: normal;
+        color: var(--summary-title-text-color, #798a95);
         text-transform: uppercase;
-        font-size: 10px;
+        font-size: 11px;
     }
 </style>

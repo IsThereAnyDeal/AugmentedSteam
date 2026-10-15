@@ -5,38 +5,32 @@ import type CApp from "@Content/Features/Store/App/CApp";
 import { mount } from "svelte";
 
 export default class FPlayers extends Feature<CApp> {
-    private _data: any;
 
     override async checkPrerequisites(): Promise<boolean> {
-        if (this.context.isDlcLike
-            || this.context.isVideoOrHardware
-            || !Settings.show_players_info) {
-            return false;
-        }
-
-        const result = await this.context.data;
-        if (!result || !result.players) {
-            return false;
-        }
-
-        this._data = result.players;
-        return true;
+        return Settings.show_players_info
+            && !this.context.isDlcLike
+            && !this.context.isVideoOrHardware;
     }
 
-    override apply(): void {
-        let target = document.querySelector(".rightcol.game_meta_data");
+    override async apply(): Promise<void> {
+        const players = (await this.context.data)?.players;
+        if (!players) {
+            return;
+        }
+
+        const target = document.querySelector(".rightcol.game_meta_data");
         if (!target) {
             throw new Error("Node not found");
         }
 
-        (mount(self_, {
-                    target,
-                    anchor: target.firstElementChild ?? undefined,
-                    props: {
-                        recent: Number(this._data.recent),
-                        peakToday: Number(this._data.peak_today),
-                        peakAll: Number(this._data.peak_all)
-                    }
-                }));
+        mount(self_, {
+            target,
+            anchor: target.firstElementChild ?? undefined,
+            props: {
+                recent: players.recent,
+                peakToday: players.peak_today,
+                peakAll: players.peak_all
+            }
+        });
     }
 }

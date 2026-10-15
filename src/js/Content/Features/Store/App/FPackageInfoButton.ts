@@ -7,11 +7,11 @@ import {L} from "@Core/Localization/Localization";
 
 export default class FPackageInfoButton extends Feature<CApp> {
 
-    override checkPrerequisites(): boolean {
+    override async checkPrerequisites(): Promise<boolean> {
         return Settings.show_package_info;
     }
 
-    override apply(): void {
+    override async apply(): Promise<void> {
         const excluded = [
             ".bundle_hidden_by_preferences", // Bundles that are filtered due to preferences (e.g. no nudity)
             ".game_purchase_sub_dropdown", // Subscriptions (no subid)
@@ -29,7 +29,7 @@ export default class FPackageInfoButton extends Feature<CApp> {
             HTML.afterBegin(node.querySelector(".game_purchase_action"),
                 `<div class="game_purchase_action_bg">
                     <div class="btn_addtocart btn_packageinfo">
-                        <a class="btn_blue_steamui btn_medium" href="//store.steampowered.com/sub/${subid.value}/">
+                        <a class="btn_blue_steamui btn_medium" href="https://store.steampowered.com/sub/${subid.value}/">
                             <span>${L(__packageInfo)}</span>
                         </a>
                     </div>
