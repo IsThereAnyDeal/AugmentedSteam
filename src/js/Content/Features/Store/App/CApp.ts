@@ -20,6 +20,7 @@ import FFamilySharingNotice from "@Content/Features/Store/App/FFamilySharingNoti
 import FPackageInfoButton from "@Content/Features/Store/App/FPackageInfoButton";
 import FPlayers from "@Content/Features/Store/App/FPlayers";
 import FBadgeProgress from "@Content/Features/Store/App/FBadgeProgress";
+import FAchievementBar from "@Content/Features/Store/App/FAchievementBar";
 
 export default class CApp extends Context implements IProductPageContext {
 
@@ -29,7 +30,6 @@ export default class CApp extends Context implements IProductPageContext {
     public readonly appName: string = "";
 
     public readonly metalink: string|null = null;
-    public readonly hasAchievements: boolean = false;
 
     public readonly isOwned: boolean = false;
     public readonly isOwnedAndPlayed: boolean = false;
@@ -59,9 +59,6 @@ export default class CApp extends Context implements IProductPageContext {
         this.appName = document.querySelector(".apphub_AppName")?.textContent ?? "";
 
         this.metalink = document.querySelector<HTMLAnchorElement>("#game_area_metalink a")?.href ?? null;
-
-        // #achievement_block is also used for point shop items
-        this.hasAchievements = document.querySelector(".communitylink_achievement_images") !== null;
 
         this.isOwned = document.querySelector(".game_area_already_owned") !== null;
         this.isOwnedAndPlayed = this.isOwned && document.querySelector("#my_activity") !== null;
@@ -126,7 +123,7 @@ export async function run(): Promise<void> {
 //            FCustomizer,
 //            FDLCCheckboxes,
             FBadgeProgress,
-//            FAchievementBar,
+            FAchievementBar,
 //            FRegionalPricing,
 //            FReviewToggleButton,
 //            FOwnedActionsButtons,

@@ -9,35 +9,34 @@
     }
 
     let { unlocked, total, percentage }: Props = $props();
-
-    let achievementStr = L(__achievements_summary, {
-        "unlocked": unlocked,
-        "total": total,
-        "percentage": percentage
-    });
 </script>
 
 
-<div class="es_achievebar_ctn">
-    <div>{achievementStr}</div>
-    <div class="es_achievebar">
-        <div style:width="{percentage}%" class="es_achievebar_progress"></div>
+<div class="achievements">
+    <div>{L(__achievements_summary, {unlocked, total, percentage})}</div>
+
+    <div class="bar">
+        <div style:width="{percentage}%" class="progress"></div>
     </div>
 </div>
 
 
 <style>
-    .es_achievebar_ctn {
-        float: right;
+    .achievements {
+        color: var(--color-text-body-body);
+        background: #191d2580;
+        padding: 10px;
     }
-    .es_achievebar {
-        background: #3a3a3a;
-        padding: 1px;
-        border: 1px solid #aeaeae;
-        width: 176.9px;
+
+    .bar {
+        background: var(--color-dull-1);
+        width: 100%;
+        height: 10px;
+        border-radius: 5px;
+        overflow: hidden;
     }
-    .es_achievebar_progress {
-        height: 8px;
-        background-color: #aeaeae;
+    .progress {
+        height: 100%;
+        background: var(--color-blue-8);
     }
 </style>
