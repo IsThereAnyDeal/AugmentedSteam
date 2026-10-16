@@ -1,6 +1,6 @@
 import base64 = util.base64;
 import type UserInterface from "@Core/User/UserInterface";
-import {StoreBrowse, Wishlist, Player, Quest} from "@Protobufs/Compiled/proto.bundle";
+import {Player, Quest, StoreBrowse, Wishlist} from "@Protobufs/Compiled/proto.bundle";
 import {util} from "protobufjs";
 
 function WishlistService(user: UserInterface): Wishlist {
