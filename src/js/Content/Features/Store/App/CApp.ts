@@ -19,6 +19,7 @@ import FHowLongToBeat from "@Content/Features/Store/App/FHowLongToBeat";
 import FFamilySharingNotice from "@Content/Features/Store/App/FFamilySharingNotice";
 import FPackageInfoButton from "@Content/Features/Store/App/FPackageInfoButton";
 import FPlayers from "@Content/Features/Store/App/FPlayers";
+import FBadgeProgress from "@Content/Features/Store/App/FBadgeProgress";
 
 export default class CApp extends Context implements IProductPageContext {
 
@@ -124,7 +125,7 @@ export async function run(): Promise<void> {
             FPlayers,
 //            FCustomizer,
 //            FDLCCheckboxes,
-//            FBadgeProgress,
+            FBadgeProgress,
 //            FAchievementBar,
 //            FRegionalPricing,
 //            FReviewToggleButton,

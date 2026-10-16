@@ -7,89 +7,97 @@
         __badgeProgress,
         __cardsOwned, __viewBadge, __viewBadgeProgress
     } from "@Strings/_strings";
+    import SidebarBox from "@Content/Features/Store/App/SidebarBox.svelte";
 
     interface Props {
         data: TBadgeData;
     }
 
-    let { data }: Props = $props();
+    const { data }: Props = $props();
 
-    let cardOwned = data.rgCards.filter(c => c.owned !== 0).length;
-    let cardTotal = data.rgCards.length;
+    const cardOwned = $derived(data.rgCards.filter(c => c.owned !== 0).length);
+    const cardTotal = $derived(data.rgCards.length);
+
+    const empty = $derived(data.level === 0);
 </script>
 
 
-<div class="block responsive_apppage_details_right heading">{L(__badgeProgress)}</div>
-<div class="block responsive_apppage_details_right">
-    <div class="block_content_inner es_badges_progress_block">
-        {#if data.level === 0}
-            <div class="badge_empty_circle"></div>
-            <div class="badge_empty_right">
-                <div class="badge_empty_name">{data.nextlevelname}</div>
-                <div class="badge_empty_name">{L(__badgeNotUnlocked)}</div>
-            </div>
-        {:else}
-            <div class="badge_info_image">
-                <img src="{data.iconurl}" class="badge_icon" alt="Badge">
-            </div>
-            <div class="badge_info_description">
-                <div class="badge_info_title">{data.name}</div>
-                <div>{L(__badgeLevel, {"level": data.level})}</div>
-            </div>
-        {/if}
-        <div class="es_cards_numbers">
-            <div class="es_cards_owned">{L(__cardsOwned, {"owned": cardOwned, "possible": cardTotal})}</div>
+<SidebarBox title={L(__badgeProgress)}>
+    <div class="progress_block">
+        <div class={["badge", {empty}]}>
+            {#if empty}
+                <div class="circle"></div>
+                <div>
+                    <div>{data.nextlevelname}</div>
+                    <div>{L(__badgeNotUnlocked)}</div>
+                </div>
+            {:else}
+                <img src={data.iconurl} class="badge_icon" alt="Badge">
+                <div>
+                    <div class="title">{data.name}</div>
+                    <div>{L(__badgeLevel, {"level": data.level})}</div>
+                </div>
+            {/if}
         </div>
+
+        <div class="cards_numbers">
+            {L(__cardsOwned, {"owned": cardOwned, "possible": cardTotal})}
+        </div>
+
         <div class="game_area_details_specs">
-            <div class="icon"><img src="//store.steampowered.com/public/images/v6/ico/ico_cards.png" class="category_icon" alt="Cards icon"></div>
-            <a href="//steamcommunity.com/my/gamecards/{data.appid}/" class="name">{L(data.bMaxed ? __viewBadge : __viewBadgeProgress)}</a>
+            <div class="icon">
+                <img src="https:////store.steampowered.com/public/images/v6/ico/ico_cards.png" class="category_icon" alt="Cards icon">
+            </div>
+            <a href="https://steamcommunity.com/my/gamecards/{data.appid}/" class="name">
+                {L(data.bMaxed ? __viewBadge : __viewBadgeProgress)}
+            </a>
         </div>
     </div>
-</div>
+</SidebarBox>
 
 
 <style>
-    .es_badges_progress_block {
+    .progress_block {
         overflow: hidden;
     }
-    .badge_info_image {
-        float: left;
-        margin-right: 24px;
-        width: 80px;
-        height: 80px;
-    }
-    img.badge_icon {
-        width: 80px;
-        height: 80px;
-    }
-    .badge_info_description {
-        margin-top: 18px;
-    }
-    .badge_info_title {
-        color: #ffffff;
-    }
-    .badge_empty_circle {
-        margin: 0px 46px 14px 8px;
-        border-radius: 46px;
-        width: 46px;
-        height: 46px;
-        border: 2px dashed #656565;
-        float: left;
-    }
-    .badge_empty_right {
-        margin-top: 8px;
-    }
-    .badge_empty_name {
+
+    .badge {
+        display: grid;
+        grid-template-columns: 80px 1fr;
+        align-items: center;
+        border: 1px solid #2d2b2b;
+        border-radius: 3px;
+        gap: 8px;
+        font-size: 14px;
         color: #5c5c5c;
+        padding: 12px;
+
+        &.empty {
+            grid-template-columns: 58px 1fr;
+            padding: 0 12px;
+        }
+
+        & .circle {
+            margin: 6px;
+            border-radius: 23px;
+            width: 46px;
+            height: 46px;
+            border: 2px dashed #656565;
+        }
+
+        & img {
+            width: 80px;
+            height: 80px;
+            background: red;
+        }
+
+        & .title {
+            color: #ffffff;
+        }
     }
-    .es_cards_numbers {
-        padding-top: 10px;
-        padding-bottom: 10px;
-        margin-left: 44px;
+
+    .cards_numbers {
+        padding: 8px 0 8px 44px;
         color: #67c1f5;
-        clear: both;
-    }
-    .es_cards_owned {
-        padding-top: 8px;
     }
 </style>

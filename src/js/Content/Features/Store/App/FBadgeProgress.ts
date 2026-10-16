@@ -8,19 +8,19 @@ import { mount } from "svelte";
 
 export default class FBadgeProgress extends Feature<CApp> {
 
-    override checkPrerequisites(): boolean {
-        return !this.context.isDlcLike
+    override async checkPrerequisites(): Promise<boolean> {
+        return Settings.show_badge_progress
             && this.context.user.isSignedIn
-            && Settings.show_badge_progress;
+            && !this.context.isDlcLike;
     }
 
     override async apply(): Promise<void> {
-        let response: TFetchBadgeInfoResponse = await SteamCommunityApiFacade.fetchBadgeInfo(
+        const response: TFetchBadgeInfoResponse = await SteamCommunityApiFacade.fetchBadgeInfo(
             this.context.user.steamId,
             this.context.communityAppid
         );
 
-        let data = response.badgedata;
+        const data = response.badgedata;
 
         // No badge data if game doesn't have cards or not logged in
         if (!data) {
@@ -32,10 +32,10 @@ export default class FBadgeProgress extends Feature<CApp> {
             throw new Error("Node not found");
         }
 
-        (mount(self_, {
-                    target: categoryBlock.parentElement!,
-                    anchor: categoryBlock.nextElementSibling ?? undefined,
-                    props: {data}
-                }));
+        mount(self_, {
+            target: categoryBlock.parentElement!,
+            anchor: categoryBlock.nextElementSibling ?? undefined,
+            props: {data}
+        });
     }
 }
