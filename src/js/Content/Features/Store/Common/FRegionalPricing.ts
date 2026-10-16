@@ -1,36 +1,19 @@
 import self_ from "./FRegionalPricing.svelte";
-import type CSub from "@Content/Features/Store/Sub/CSub";
 import Feature from "@Content/Modules/Context/Feature";
-import RequestData from "@Content/Modules/RequestData";
 import Settings from "@Options/Data/Settings";
-import { mount } from "svelte";
+import ServiceFactory from "@Protobufs/ServiceFactory";
+import type CApp from "@Content/Features/Store/App/CApp";
+import type {CStoreBrowse_GetItems_Response, StoreItem_PurchaseOption} from "@Protobufs/Compiled/proto.bundle";
+import {mount} from "svelte";
 
-export interface PackageDetailsPrice {
-    currency: string,
-    initial: number,
-    final: number,
-    discount_percent: number,
-    individual: number
-}
+export default class FRegionalPricing extends Feature<CApp> {
 
-interface PackageDetails {
-    [K: string]: {
-        success: boolean,
-        data: {
-            price: PackageDetailsPrice
-        }
-    }
-}
-
-export default class FRegionalPricing extends Feature<CSub> {
-
-    override checkPrerequisites(): boolean {
+    override async checkPrerequisites(): Promise<boolean> {
         const countries = Settings.regional_countries;
         return countries && countries.length > 0 && Settings.showregionalprice !== "off";
     }
 
     override async apply(): Promise<void> {
-
         const countries = Settings.regional_countries;
         const localCountry = this.context.user.storeCountry.toLowerCase();
 
@@ -38,28 +21,35 @@ export default class FRegionalPricing extends Feature<CSub> {
             countries.push(localCountry);
         }
 
-        // Store errors to avoid duplicate console warnings
-        const errors = new Set<string>();
+        // [packageid][country] = price
+        const priceMap: Map<number, Map<string, StoreItem_PurchaseOption.$Properties>> = new Map();
 
-        for (const subid of this.context.getAllSubids()) {
-            const prices: Record<string, PackageDetailsPrice> = {};
+        await Promise.all(countries.map(async country => {
+            const data: CStoreBrowse_GetItems_Response = await ServiceFactory.StoreBrowseService(this.context.user).getItems({
+                context: {
+                    language: this.context.language?.name ?? "english",
+                    countryCode: country,
+                    steamRealm: 1
+                },
+                dataRequest: {
+                    includeAllPurchaseOptions: true
+                },
+                ids: [{appid: this.context.appid}]
+            });
 
-            await Promise.all(countries.map(async country => {
-                const result = await RequestData.getJson<PackageDetails>(
-                    `https://store.steampowered.com/api/packagedetails/?packageids=${subid}&cc=${country}`,
-                    {"credentials": "omit"}
-                );
-                if (!result) { return; }
+            for (const item of data.storeItems) {
+                for (const option of item.purchaseOptions ?? []) {
+                    if (!option.packageid) { continue; }
 
-                const data = result[subid];
-                if (!data || !data.success || !data.data.price) { return; }
+                    if (!priceMap.has(option.packageid)) {
+                        priceMap.set(option.packageid, new Map());
+                    }
+                    priceMap.get(option.packageid)!.set(country, option);
+                }
+            }
+        }));
 
-                prices[country] = data.data.price;
-            }));
-
-            // For paid titles that have F2P versions with their own subid (see #894)
-            if (prices[localCountry] === undefined) { continue; }
-
+        for (const [subid, prices] of priceMap.entries()) {
             const node = document.querySelector(`input[name=subid][value="${subid}"]`)
                 ?.closest(".game_area_purchase_game_wrapper, .game_area_purchase, #game_area_purchase")
                 ?.querySelector(".game_purchase_action")!;
@@ -69,34 +59,32 @@ export default class FRegionalPricing extends Feature<CSub> {
             }
 
             const purchaseArea = node.closest(".game_area_purchase_game")!;
-            purchaseArea.classList.add("es_regional_prices");
+            purchaseArea.classList.add("as_regional_prices");
 
             if (Settings.showregionalprice === "always") {
-                purchaseArea.classList.add("es_regional_always");
+                purchaseArea.classList.add("as_regional_always");
 
-                (mount(self_, {
-                                    target: node.parentElement!,
-                                    anchor: node,
-                                    props: {
-                                        user: this.context.user,
-                                        countries,
-                                        prices,
-                                        errors
-                                    }
-                                }));
+                mount(self_, {
+                    target: node.parentElement!,
+                    anchor: node,
+                    props: {
+                        user: this.context.user,
+                        countries,
+                        prices
+                    }
+                });
             } else if (Settings.showregionalprice === "mouse") {
                 const priceNode = node.querySelector(".price, .discount_prices")!;
 
-                (mount(self_, {
-                                    target: document.body,
-                                    props: {
-                                        user: this.context.user,
-                                        countries,
-                                        prices,
-                                        errors,
-                                        priceNode
-                                    }
-                                }));
+                mount(self_, {
+                    target: document.body,
+                    props: {
+                        user: this.context.user,
+                        countries,
+                        prices,
+                        priceNode
+                    }
+                });
             }
         }
     }
