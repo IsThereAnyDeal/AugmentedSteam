@@ -116,6 +116,7 @@ export interface SettingsSchema {
     showsupportinfo: boolean,
     showdrm: boolean,
     regional_hideworld: boolean,
+    regional_onwishlist: boolean,
     showinvnav: boolean,
     quickinv: boolean,
     quickinv_diff: number,

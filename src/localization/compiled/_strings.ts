@@ -369,6 +369,7 @@ export const __options_protondb = "options_protondb";
 export const __options_storeSteamcards = "options_storeSteamcards";
 export const __options_spamcommentregex = "options_spamcommentregex";
 export const __options_regionalHideworld = "options_regionalHideworld";
+export const __options_regionalOnwishlist = "options_regionalOnwishlist";
 export const __options_showAstatslink = "options_showAstatslink";
 export const __options_showYoutubegameplay = "options_showYoutubegameplay";
 export const __options_showYoutubereviews = "options_showYoutubereviews";

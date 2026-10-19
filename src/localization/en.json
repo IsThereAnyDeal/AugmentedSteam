@@ -407,6 +407,7 @@
         "store_steamcards": "Show SteamCardExchange links",
         "spamcommentregex": "Regular Expression string:",
         "regional_hideworld": "Hide globe indicator",
+        "regional_onwishlist": "Show regional price comparison when hovering over wishlist items",
         "show_astatslink": "Show AStats links",
         "show_youtubegameplay": "Show \"YouTube Gameplay\" links",
         "show_youtubereviews": "Show \"YouTube Reviews\" links",
