@@ -114,6 +114,7 @@ export const DefaultSettings: Readonly<SettingsSchema> = {
     showsupportinfo: true,
     showdrm: true,
     regional_hideworld: false,
+    regional_onwishlist: true,
     showinvnav: true,
     quickinv: true,
     quickinv_diff: -0.01,

@@ -13,6 +13,9 @@
     export let prices: Record<string, PackageDetailsPrice>;
     export let errors: Set<string>;
     export let priceNode: Element|null = null;
+    export let embedded: boolean = false;
+
+    const mode = embedded ? "embedded" : Settings.showregionalprice;
 
     let priceLocal: Price|null = null;
     try {
@@ -49,7 +52,7 @@
 
     let container: HTMLElement;
 
-    if (Settings.showregionalprice === "mouse") {
+    if (mode === "mouse") {
         priceNode!.classList.add("es_regional_onmouse");
 
         if (!Settings.regional_hideworld) {
@@ -71,11 +74,12 @@
 
 
 <div class="es_regional"
-     class:es_regional--always={Settings.showregionalprice === "always"}
-     class:es_regional--onmouse={Settings.showregionalprice === "mouse"}
+     class:es_regional--always={mode === "always"}
+     class:es_regional--onmouse={mode === "mouse"}
+     class:es_regional--embedded={mode === "embedded"}
      bind:this={container}
 >
-    {#if Settings.showregionalprice === "mouse"}
+    {#if mode === "mouse"}
         <div class="es_regional_arrow"></div>
     {/if}
     {#each countries as country}
@@ -147,6 +151,10 @@
         float: right;
         margin-top: auto;
         margin-top: 5px;
+    }
+    .es_regional--embedded {
+        background: none;
+        padding: 0;
     }
     .es_regional--onmouse {
         /**

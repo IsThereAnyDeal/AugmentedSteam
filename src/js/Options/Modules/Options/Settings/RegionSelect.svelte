@@ -4,7 +4,7 @@
     import {
         __always, __never,
         __options_addAnotherRegion,
-        __options_regionalHideworld, __options_regionalPriceMouse, __options_regionalPriceOn,
+        __options_regionalHideworld, __options_regionalOnwishlist, __options_regionalPriceMouse, __options_regionalPriceOn,
         __thewordclear,
         __theworddefault
     } from "@Strings/_strings";
@@ -78,6 +78,11 @@
 {/if}
 
 {#if $settings.showregionalprice !== "off"}
+    <div class="group" transition:slide={{axis: "y", duration: 200}}>
+        <OptionGroup>
+            <Toggle bind:value={$settings.regional_onwishlist}>{L(__options_regionalOnwishlist)}</Toggle>
+        </OptionGroup>
+    </div>
     <div class="group" transition:slide={{axis: "y", duration: 200}}>
         <OptionGroup>
             <div>
