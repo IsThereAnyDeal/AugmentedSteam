@@ -8,33 +8,39 @@ import { mount } from "svelte";
  * last state of the form is remembered across app pages
  */
 export default class FReviewToggleButton extends Feature<CApp> {
-    private node: HTMLElement|null = null;
 
-    override checkPrerequisites(): boolean {
-        this.node = document.getElementById("review_create");
-        return this.node !== null;
+    override async checkPrerequisites(): Promise<boolean> {
+        // FIXME setting
+        return true;
     }
 
-    override apply(): void {
-        const target = this.node!.querySelector("h2");
-        if (!target) {
+    override async apply(): Promise<void> {
+        const reviewForm = document.querySelector("#review_create");
+        if (!reviewForm) {
             throw new Error("Node not found");
         }
 
+        const target = reviewForm.querySelector("h2");
+        if (!target) {
+            throw new Error("Node not found");
+        }
+        target.style.display = "flex";
+        target.style.justifyContent = "space-between";
+
         // Reparent review section nodes
         const reviewSection = document.createElement("div");
-        reviewSection.classList.add("es_review_section");
+        reviewSection.classList.add("as_review_section");
         reviewSection.append(
-            ...this.node!.querySelectorAll("p, .avatar_block, .content")
+            ...reviewForm.querySelectorAll("p, .avatar_block, .content")
         );
 
         target.after(reviewSection);
 
-        (mount(self_, {
-                    target,
-                    props: {
-                        reviewSection
-                    }
-                }));
+        mount(self_, {
+            target,
+            props: {
+                reviewSection
+            }
+        });
     }
 }
