@@ -181,7 +181,7 @@ export async function features<C extends Context>(context: C, features: (typeof 
             await feature.apply();
             ++stats.completed;
         } catch(e) {
-            const featureName = feature.name;
+            const featureName = f.name;
 
             console.group(featureName);
             console.error("Error while applying feature %s", featureName);
