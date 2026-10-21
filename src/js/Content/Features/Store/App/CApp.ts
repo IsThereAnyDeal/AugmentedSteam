@@ -25,6 +25,7 @@ import FRegionalPricing from "@Content/Features/Store/Common/FRegionalPricing";
 import FReviewToggleButton from "./FReviewToggleButton";
 import FOwnedActionsButtons from "@Content/Features/Store/App/FOwnedActionsButtons";
 import FSupportInfo from "@Content/Features/Store/App/FSupportInfo";
+import FPreventVideoPause from "@Content/Features/Store/App/FPreventVideoPause";
 
 export default class CApp extends Context implements IProductPageContext {
 
@@ -132,7 +133,7 @@ export async function run(): Promise<void> {
             FReviewToggleButton,
             FOwnedActionsButtons,
             FSupportInfo,
-//            FPreventVideoPause,
+            FPreventVideoPause,
 //            FDemoAbovePurchase,
 //            FSaveReviewFilters,
 //            FHideReportedTags,
