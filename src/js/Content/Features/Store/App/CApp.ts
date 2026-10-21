@@ -24,6 +24,7 @@ import FAchievementBar from "@Content/Features/Store/App/FAchievementBar";
 import FRegionalPricing from "@Content/Features/Store/Common/FRegionalPricing";
 import FReviewToggleButton from "./FReviewToggleButton";
 import FOwnedActionsButtons from "@Content/Features/Store/App/FOwnedActionsButtons";
+import FSupportInfo from "@Content/Features/Store/App/FSupportInfo";
 
 export default class CApp extends Context implements IProductPageContext {
 
@@ -130,7 +131,7 @@ export async function run(): Promise<void> {
             FRegionalPricing,
             FReviewToggleButton,
             FOwnedActionsButtons,
-//            FSupportInfo,
+            FSupportInfo,
 //            FPreventVideoPause,
 //            FDemoAbovePurchase,
 //            FSaveReviewFilters,

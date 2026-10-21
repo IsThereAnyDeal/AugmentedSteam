@@ -1,26 +1,29 @@
+import self_ from "./FSupportInfo.svelte";
 import AppId from "@Core/GameId/AppId";
-import {L} from "@Core/Localization/Localization";
-import {__email, __getHelp, __support, __website} from "@Strings/_strings";
 import type CApp from "@Content/Features/Store/App/CApp";
 import Settings from "@Options/Data/Settings";
 import Feature from "@Content/Modules/Context/Feature";
-import HTML from "@Core/Html/Html";
 import LocalStorage from "@Core/Storage/LocalStorage";
 import SteamStoreApiFacade from "@Content/Modules/Facades/SteamStoreApiFacade";
 import type {TAppDetail} from "@Background/Modules/Store/_types";
+import {mount} from "svelte";
 
+/**
+ * Add Support links to the game info area (top right box next to media)
+ * Adds support Email, support URL where available, and generic Steam get help link
+ */
 export default class FSupportInfo extends Feature<CApp> {
 
-    private _supportInfo: any = null; // TODO fix type
-
     override async checkPrerequisites(): Promise<boolean> {
-        if (!Settings.showsupportinfo) { return false; }
+        return Settings.showsupportinfo;
+    }
 
-        let cache = (await LocalStorage.get("support_info")) ?? null;
+    override async apply(): Promise<void> {
+        let cached = (await LocalStorage.get("support_info")) ?? null;
 
         // todo IDB
-        if (!cache || !cache.expiry || cache.expiry < Date.now()) {
-            cache = {
+        if (!cached || !cached.expiry || cached.expiry < Date.now()) {
+            cached = {
                 data: {},
                 expiry: Date.now() + (31 * 86400 * 1000) // 31 days
             };
@@ -28,55 +31,36 @@ export default class FSupportInfo extends Feature<CApp> {
 
         // Attempt to get appid of parent app first for DLCs and Soundtracks
         const appid = AppId.fromElement(document.querySelector(".glance_details a")) || this.context.appid;
-        this._supportInfo = cache.data[appid];
+        let supportInfo = cached.data[appid];
 
-        if (!this._supportInfo) {
+        if (!supportInfo) {
             const response: TAppDetail|null = await SteamStoreApiFacade.fetchAppDetails(appid, "support_info");
             if (!response) {
-                console.warn("Failed to retrieve support info");
-                return false;
+                throw new Error("Failed to retrieve support info");
             }
 
-            this._supportInfo = response.support_info;
+            supportInfo = response.support_info;
 
-            cache.data[appid] = this._supportInfo;
-            LocalStorage.set("support_info", cache);
+            cached.data[appid] = supportInfo;
+            LocalStorage.set("support_info", cached);
         }
 
-        return Boolean(this._supportInfo.url || this._supportInfo.email);
-    }
-
-    override apply(): void {
-
-        let {url, email} = this._supportInfo;
-        const links = [];
-
-        if (url) {
-            url = HTML.formatUrl(url);
-            links.push(`<a href="${url}">${L(__website)}</a>`);
+        if (!supportInfo.url && !supportInfo.email) {
+            throw new Error("No support info found");
         }
 
-        if (email) {
-            email = email.replace("＠", "@"); // https://store.steampowered.com/app/2905790/PROJECT_TACHYON/
+        const target = document.querySelector(".glance_ctn_responsive_left");
+        if (!target) {
+            throw new Error("Node not found");
+        }
 
-            // From https://emailregex.com/
-            const emailRegex
-                = /(?:(?:[^<>()[\]\\.,;:\s@"]+(?:\.[^<>()[\]\\.,;:\s@"]+)*)|(?:".+"))@(?:(?:\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(?:(?:[a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/g;
-
-            const m = [...email.matchAll(emailRegex)];
-            if (m.length > 0) {
-                const mailto = m.join(";")
-                links.push(`<a href="mailto:${mailto}">${L(__email)}</a>`);
+        mount(self_, {
+            target,
+            props: {
+                appid: this.context.appid,
+                url: supportInfo.url,
+                email: supportInfo.email
             }
-        }
-
-        const help = `https://help.steampowered.com/wizard/HelpWithGameTechnicalIssue?appid=${this.context.appid}`;
-        links.push(`<a href="${help}">${L(__getHelp)}</a>`);
-
-        HTML.beforeEnd(".glance_ctn_responsive_left",
-            `<div class="release_date" style="padding-bottom: 0;">
-                <div class="subtitle column">${L(__support)}:</div>
-                <div class="summary column">${links.join(", ")}</div>
-            </div>`);
+        });
     }
 }
