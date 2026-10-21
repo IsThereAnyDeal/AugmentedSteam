@@ -1,57 +1,67 @@
+import self_ from "./FDemoAbovePurchase.svelte";
 import Feature from "@Content/Modules/Context/Feature";
 import type CApp from "@Content/Features/Store/App/CApp";
-import {__downloadDemoHeader, __export_download} from "@Strings/_strings";
-import {L} from "@Core/Localization/Localization";
-import HTML from "@Core/Html/Html";
+import {mount} from "svelte";
 
-/*
- * Try out with https://store.steampowered.com/app/220/HalfLife_2/
- * TODO Add "Add to Library" button
+/**
+ * Demo links may appear in the main section above purchase options, or in the right column as a small button.
+ * This feature will try to normalize this and add a demo link to the main section if there isn't one already.
+ *
+ * Demo in main section: https://store.steampowered.com/app/220/HalfLife_2/
+ * Demo link in sidebar: https://store.steampowered.com/app/1297900/Gothic_1_Remake/
  */
-
 export default class FDemoAbovePurchase extends Feature<CApp> {
 
-    private _demoLink: string|null = null;
-
-    override checkPrerequisites(): boolean {
-        // strip leading "javascript:"
-        this._demoLink = document.querySelector<HTMLAnchorElement>(".download_demo_button a.btn_medium")?.href.slice(11) ?? null;
-
-        // Check if there's a demo link in the right column, but no demo-above-purchase section
-        return Boolean(this._demoLink) && document.querySelector(".demo_above_purchase") === null;
+    override async checkPrerequisites(): Promise<boolean> {
+        // FIXME settings
+        return true;
     }
 
-    override apply(): void {
-
-        // Determine available platforms from system requirements
-        const winIcon = document.querySelector("[data-os=win]") ? '<span class="platform_img win"></span>' : "";
-        const macIcon = document.querySelector("[data-os=mac]") ? '<span class="platform_img mac"></span>' : "";
-        const linuxIcon = document.querySelector("[data-os=linux]") ? '<span class="platform_img linux"></span>' : "";
-
-        const html = `<div class="game_area_purchase_game demo_above_purchase">
-            <div class="game_area_purchase_platform">
-                ${winIcon}${macIcon}${linuxIcon}
-            </div>
-            <h1>${L(__downloadDemoHeader, {"gamename": this.context.appName})}</h1>
-            <div class="game_purchase_action">
-                <div class="game_purchase_action_bg">
-                    <div id="demoGameBtn" class="btn_addtocart">
-                        <span class="btn_green_steamui btn_medium">
-                            <span>${L(__export_download)}</span>
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>`;
-
-        const purchaseNote = document.getElementById("purchase_note");
-        if (purchaseNote) {
-            HTML.afterEnd(purchaseNote, html);
-        } else {
-            HTML.afterBegin(document.getElementById("game_area_purchase"), html);
+    override async apply(): Promise<void> {
+        const demoLink = document.querySelector<HTMLAnchorElement>(".download_demo_button a.btn_medium")?.href.slice(11) ?? null;
+        if (!demoLink) {
+            // no demo found
+            throw new Error("No demo found");
         }
 
-        // Prevent sanitizing inline javascript (comes from page, safe source)
-        document.querySelector("#demoGameBtn > .btn_green_steamui")!.setAttribute("onclick", this._demoLink!);
+        const demoAbovePurchase = document.querySelector(".demo_above_purchase") !== null;
+        if (demoAbovePurchase) {
+            // There already is a demo above purchase section.
+            return;
+        }
+
+        // Determine available platforms from system requirements
+        const windows: boolean = document.querySelector("[data-os=win]") !== null;
+        const mac: boolean     = document.querySelector("[data-os=mac]") !== null;
+        const linux: boolean   = document.querySelector("[data-os=linux]") !== null;
+
+        const purchaseNote = document.querySelector("#purchase_note");
+
+        let target: Element;
+        let anchor: Element|undefined;
+        if (purchaseNote) {
+            target = purchaseNote.parentElement!;
+            anchor = target.nextElementSibling ?? undefined;
+        } else {
+            const areaPurchase = document.querySelector("#game_area_purchase");
+            if (!areaPurchase) {
+                throw new Error("Node not found");
+            }
+
+            target = areaPurchase;
+            anchor = areaPurchase.firstElementChild ?? undefined;
+        }
+
+        mount(self_, {
+            target,
+            anchor,
+            props: {
+                appName: this.context.appName,
+                windows,
+                mac,
+                linux,
+                demoLink
+            }
+        });
     }
 }
