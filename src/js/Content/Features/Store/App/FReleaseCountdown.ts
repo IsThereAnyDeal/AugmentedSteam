@@ -3,16 +3,21 @@ import Feature from "@Content/Modules/Context/Feature";
 import ServiceFactory from "@Protobufs/ServiceFactory";
 import {DateTime} from "luxon";
 
+/**
+ * Adds exact release date to release countdown display in coming soon games
+ */
 export default class FReleaseCountdown extends Feature<CApp> {
 
-    private comingSoon: HTMLElement|null = null;
-
-    override checkPrerequisites(): boolean {
-        this.comingSoon = document.querySelector<HTMLDivElement>(".game_area_comingsoon");
-        return this.comingSoon !== null;
+    override async checkPrerequisites(): Promise<boolean> {
+        // FIXME setting
+        return true;
     }
 
     override async apply(): Promise<void> {
+        const comingSoon: HTMLElement|null = document.querySelector<HTMLDivElement>(".game_area_comingsoon");
+        if (!comingSoon) {
+            throw new Error("Node not found");
+        }
 
         const service = ServiceFactory.StoreBrowseService(this.context.user);
         const response = await service.getItems({
@@ -36,23 +41,26 @@ export default class FReleaseCountdown extends Feature<CApp> {
         }
 
         const {steamReleaseDate, comingSoonDisplay, isComingSoon} = release;
-        if (!isComingSoon) { return; }
+        if (!isComingSoon) {
+            return;
+        }
 
         // TODO what other values would be valid here?
-        if (comingSoonDisplay === "date_full") {
-            if (steamReleaseDate && Number.isInteger(steamReleaseDate)) {
+        if (comingSoonDisplay !== "date_full") {
+            return;
+        }
 
-                const date = (DateTime.fromSeconds(steamReleaseDate)).toLocaleString({
-                    dateStyle: "medium",
-                    timeStyle: "short"
-                }, {
-                    locale: this.context.language?.code ?? undefined
-                })
-                const str = ` (${date})`;
+        if (steamReleaseDate && Number.isInteger(steamReleaseDate)) {
+            const date = (DateTime.fromSeconds(steamReleaseDate)).toLocaleString({
+                dateStyle: "medium",
+                timeStyle: "short"
+            }, {
+                locale: this.context.language?.code ?? undefined
+            })
+            const str = ` (${date})`;
 
-                const target = this.comingSoon!.querySelector(".content p");
-                target?.append(str);
-            }
+            const target = comingSoon.querySelector(".content p");
+            target?.append(str);
         }
     }
 }
