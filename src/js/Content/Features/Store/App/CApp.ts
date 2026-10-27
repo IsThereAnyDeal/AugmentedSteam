@@ -27,6 +27,7 @@ import FOwnedActionsButtons from "@Content/Features/Store/App/FOwnedActionsButto
 import FSupportInfo from "@Content/Features/Store/App/FSupportInfo";
 import FPreventVideoPause from "@Content/Features/Store/App/FPreventVideoPause";
 import FDemoAbovePurchase from "@Content/Features/Store/App/FDemoAbovePurchase";
+import FAppTitle from "@Content/Features/Store/App/FAppTitle";
 
 export default class CApp extends Context implements IProductPageContext {
 
@@ -139,7 +140,7 @@ export async function run(): Promise<void> {
 //            FHideReportedTags,
 //            FRemoveDupeScreenshots,
 //            FHighlightTitle,
-//            FAppTitle,
+            FAppTitle,
 //            FHorizontalScrolling,
 //            FVaporLensInsights,
 //            FReleaseCountdown,
