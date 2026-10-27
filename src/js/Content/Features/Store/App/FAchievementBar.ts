@@ -28,7 +28,7 @@ export default class FAchievementBar extends Feature<CApp> {
             return;
         }
 
-        const target = document.querySelector(SelectorMap.app.achievementBar);
+        const target = document.querySelector(SelectorMap.store.app.achievementBar);
         if (!target) {
             throw new Error("Node not found");
         }

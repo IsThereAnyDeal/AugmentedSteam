@@ -1,43 +1,27 @@
 import Feature from "@Content/Modules/Context/Feature";
 import Settings from "@Options/Data/Settings";
 import type CApp from "@Content/Features/Store/App/CApp";
+import SelectorMap from "@Content/SelectorMap";
+import dynamicNode from "@Content/Modules/DynamicNode/DynamicNode";
 
 export default class FHorizontalScrolling extends Feature<CApp> {
 
-    override checkPrerequisites(): boolean {
+    override async checkPrerequisites(): Promise<boolean> {
         return Settings.horizontalscrolling;
     }
 
-    apply() {
+    override async apply(): Promise<void> {
         const parent = document.querySelector<HTMLElement>(".highlight_ctn");
         if (!parent) {
             console.error("Couldn't find highlights");
             return;
         }
 
-        const slider = this.#getSlider(parent);
-        if (slider) {
-            this.#setup(slider);
-        } else {
-            const observer = new MutationObserver(() => {
-                const slider = this.#getSlider(parent);
-                if (slider) {
-                    this.#setup(slider);
-                    observer.disconnect();
-                }
-            });
-            observer.observe(parent, {
-                childList: true,
-                subtree: true
-            });
-        }
-    }
+        const slider = await dynamicNode({
+            selector: () => parent.querySelector<HTMLElement>(SelectorMap.store.app.highlightSlider),
+            observable: parent
+        });
 
-    #getSlider(parent: HTMLElement): HTMLElement|null {
-        return parent.querySelector<HTMLElement>(".ZpjLn9D4rTIVnM4axYSoG");
-    }
-
-    #setup(slider: HTMLElement): void {
         let lastScroll = 0;
 
         slider.addEventListener("wheel", e => {
@@ -47,7 +31,7 @@ export default class FHorizontalScrolling extends Feature<CApp> {
             if (Date.now() - lastScroll < 200) { return; }
             lastScroll = Date.now();
 
-            const currentNode = slider.querySelector("._2Ose8zPg3MlKQQeG9nwv24._2uCL56lGO9iUUcLEtE83zG")
+            const currentNode = slider.querySelector(SelectorMap.store.app.highlightSliderCurrentNode)
             if (currentNode) {
                 const isScrollDown = e.deltaY > 0;
                 const sibling = isScrollDown
