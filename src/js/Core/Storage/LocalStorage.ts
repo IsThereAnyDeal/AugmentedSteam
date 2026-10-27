@@ -47,12 +47,6 @@ export interface LocalStorageSchema extends StorageSchema {
         data: any, // TODO fix type
         expiry: number
     },
-    review_filters: {
-        context?: string,
-        language?: string,
-        minPlaytime?: string,
-        maxPlaytime?: string
-    },
     cachedUser?: string,
     expand_vaporlens?: boolean
 }

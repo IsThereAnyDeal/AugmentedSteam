@@ -136,7 +136,6 @@ export async function run(): Promise<void> {
             FSupportInfo,
             FPreventVideoPause,
             FDemoAbovePurchase,
-//            FSaveReviewFilters,
 //            FHideReportedTags,
 //            FPatchHighlightPlayer,
 //            FRemoveDupeScreenshots,
