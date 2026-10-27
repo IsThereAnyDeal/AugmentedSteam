@@ -11,7 +11,7 @@ export default class Price {
 
         // remove separators
         let _price = price.trim()
-            .replace(format.thousand, "");
+            .replaceAll(format.thousand, "");
 
         if (format.decimal !== ".") {
             // as expected by parseFloat()
