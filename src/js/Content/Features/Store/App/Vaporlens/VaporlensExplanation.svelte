@@ -1,11 +1,9 @@
 <script lang="ts" module>
-    import {type Writable, writable} from "svelte/store";
-
     let counter = 0;
-    let openPopover: Writable<string|null> = writable(null);
+    let openPopover: string|null = $state(null);
 
     function handleDocumentClick(): void {
-        openPopover.set(null);
+        openPopover = null;
     }
 </script>
 
@@ -20,24 +18,24 @@
 
     let { importance, point, explanation }: Props = $props();
 
-    let id: string = $state();
+    let id = $state() as string;
 
     function stopPropagation(e: Event): void {
         e.stopPropagation();
     }
 
-    function togglePopover(e: Event, id: string): void {
+    function ontoggle(e: Event, id: string): void {
         e.stopPropagation();
 
-        if (!$openPopover) {
+        if (!openPopover) {
             document.addEventListener("click", handleDocumentClick, {once: true});
         }
 
-        if ($openPopover === id) {
+        if (openPopover === id) {
             document.removeEventListener("click", handleDocumentClick);
-            $openPopover = null;
+            openPopover = null;
         } else {
-            $openPopover = id;
+            openPopover = id;
         }
     }
 
@@ -48,26 +46,27 @@
 </script>
 
 
+{#snippet importanceBadge()}
+    <span class={["importance-badge", {
+            high: importance > 0.6,
+            mid: importance <= 0.6 && importance > 0.4,
+            low: importance <= 0.4
+        }]}>{Math.round(importance*100)}</span>
+    <span class="point-text">{point}</span>
+{/snippet}
+
 {#if explanation}
-    <button type="button" onclick={e => togglePopover(e, id)}>
-        <span class="importance-badge"
-            class:high={importance > 0.6}
-            class:mid={importance <= 0.6 && importance > 0.4}
-            class:low={importance <= 0.4}>{Math.round(importance*100)}</span>
-        <span class="point-text">{point}</span>
+    <button type="button" onclick={e => ontoggle(e, id)}>
+        {@render importanceBadge()}
     </button>
 
-    {#if $openPopover === id}
+    {#if openPopover === id}
         <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
         <div class="popover" aria-label="{point} details" onclick={stopPropagation}>{explanation}</div>
     {/if}
 {:else}
     <div class="point-static">
-        <span class="importance-badge"
-              class:high={importance > 0.6}
-              class:mid={importance <= 0.6 && importance > 0.4}
-              class:low={importance <= 0.4}>{Math.round(importance*100)}</span>
-        <span class="point-text">{point}</span>
+        {@render importanceBadge()}
     </div>
 {/if}
 
@@ -92,12 +91,13 @@
     button {
         cursor: pointer;
         transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-    }
-    button:hover,
-    button:focus-visible,
-    button:active {
-        color: #b3dcf7;
-        outline: none;
+
+        &:hover,
+        &:focus-visible,
+        &:active {
+            color: #b3dcf7;
+            outline: none;
+        }
     }
 
     .point-text {

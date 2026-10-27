@@ -11,7 +11,7 @@
 </script>
 
 
-<section class="section category-section">
+<section>
     <header>{label}</header>
     <ul>
         {#if !entries.length}

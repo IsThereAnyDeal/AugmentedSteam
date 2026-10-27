@@ -7,7 +7,8 @@
     import ViewOnButton from "@Content/Steam/ViewOnButton.svelte";
     import ExpandCollapseButton from "@Content/Steam/ExpandCollapseButton.svelte";
     import {
-        __vaporlens_hide, __vaporlens_learnMore,
+        __vaporlens_hide,
+        __vaporlens_learnMore,
         __vaporlens_llmNote,
         __vaporlens_show,
         __vaporlens_title,
@@ -24,21 +25,23 @@
         data: TVaporLensResponse;
     }
 
-    let { appid, data }: Props = $props();
+    const { appid, data }: Props = $props();
 
-    let hasDetails = (data.positives ?? []).length > 0
-                  || (data.negatives ?? []).length > 0
-                  || (data.gameplay ?? []).length > 0
-                  || (data.performance ?? []).length > 0
-                  || (data.recommendations ?? []).length > 0
-                  || (data.misc ?? []).length > 0
+    const hasDetails = $derived(
+         (data.positives ?? []).length > 0
+      || (data.negatives ?? []).length > 0
+      || (data.gameplay ?? []).length > 0
+      || (data.performance ?? []).length > 0
+      || (data.recommendations ?? []).length > 0
+      || (data.misc ?? []).length > 0
+    );
 
-    function toggle(): void {
+    let expand: boolean = $state(false);
+
+    function ontoggle(): void {
         expand = !expand;
         LocalStorage.set("expand_vaporlens", expand);
     }
-
-    let expand: boolean = $state(false);
 
     onMount(() => {
         (async () => {
@@ -67,7 +70,7 @@
             {L(__vaporlens_view)}
         </ViewOnButton>
 
-        <ExpandCollapseButton expanded={expand} onclick={toggle}>
+        <ExpandCollapseButton expanded={expand} onclick={ontoggle}>
             {L(expand ? __vaporlens_hide : __vaporlens_show)}
         </ExpandCollapseButton>
     </div>

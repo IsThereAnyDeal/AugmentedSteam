@@ -4,60 +4,41 @@ import Feature from "@Content/Modules/Context/Feature";
 import VaporLensApiFacade from "@Content/Modules/Facades/VaporLensApiFacade";
 import Settings from "@Options/Data/Settings";
 import type {TVaporLensResponse,} from "@Background/Modules/VaporLens/_types";
-import { mount } from "svelte";
+import {mount} from "svelte";
+import dynamicNode from "@Content/Modules/DynamicNode/DynamicNode";
+import SelectorMap from "@Content/SelectorMap";
 
 export default class FVaporLensInsights extends Feature<CApp> {
 
-    private data: TVaporLensResponse | null = null;
-
     override async checkPrerequisites(): Promise<boolean> {
-        if (!Settings.ai_enabled || !Settings.show_vaporlens_summary) {
-            return false;
-        }
+        return Settings.ai_enabled && Settings.show_vaporlens_summary;
+    }
 
+    override async apply(): Promise<void> {
+        let data: TVaporLensResponse|null;
         try {
-            this.data = await VaporLensApiFacade.fetchInsights(
-                this.context.appid
-            );
-
-            return this.data !== null;
-        } catch (error) {
-            this.logError(error, "Failed to fetch VaporLens insights");
-            return false;
-        }
-    }
-
-    override apply(): void {
-        if (this.#attach()) {
-            return;
+            data = await VaporLensApiFacade.fetchInsights(this.context.appid);
+        } catch (e) {
+            this.logError(e, "Failed to fetch VaporLens insights");
+            throw new Error("Failed to fetch VaporLens insights");
         }
 
-        const observer = new MutationObserver(() => {
-            if (this.#attach()) {
-                observer.disconnect();
-            }
+        if (data === null) {
+            throw new Error("No Vaporlens data");
+        }
+
+        const summaries = await dynamicNode({
+            selector: () => document.querySelector<HTMLElement>(SelectorMap.store.app.reviewSummary),
+            observable: document
         });
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
-    }
-
-    #attach(): boolean {
-        const selector = "._2pLm-6qnTQoI2Ir1Btg_id";
-        const summaries = document.querySelector(selector);
-        if (!summaries) {
-            return false;
-        }
 
         mount(self_, {
-                    target: summaries.parentElement!,
-                    anchor: summaries.nextElementSibling!,
-                    props: {
-                        appid: this.context.appid,
-                        data: this.data!
-                    },
-                });
-        return true;
+            target: summaries.parentElement!,
+            anchor: summaries.nextElementSibling!,
+            props: {
+                appid: this.context.appid,
+                data
+            },
+        });
     }
 }

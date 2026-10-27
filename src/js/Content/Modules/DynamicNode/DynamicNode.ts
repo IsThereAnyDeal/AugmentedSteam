@@ -1,7 +1,7 @@
 
 export default function dynamicNode<T extends HTMLElement = HTMLElement>(params: {
     selector: () => T|null,
-    observable: HTMLElement
+    observable: Node
 }): Promise<T> {
 
     return new Promise<T>(resolve => {
