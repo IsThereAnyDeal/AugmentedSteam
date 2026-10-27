@@ -29,7 +29,7 @@
 
     let { options }: Props = $props();
 
-    let node: HTMLElement = $state();
+    let node = $state() as HTMLElement;
 
     export function isConnected(): boolean {
         return node.isConnected;
@@ -37,7 +37,7 @@
 </script>
 
 
-<div class="as-tags" class:is-short={short} bind:this={node}>
+<div class={["as-tags", {"is-short": short}]} bind:this={node}>
     {#each options as option}
         {@const [locale, color] = setup[option]}
         <span style:background-color={color}>{L(locale)}</span>

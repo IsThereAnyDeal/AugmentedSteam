@@ -4,11 +4,11 @@ import ITAD from "@Content/Modules/ITAD";
 import DOMHelper from "@Content/Modules/DOMHelper";
 import Tags from "@Content/Modules/Highlights/Tags.svelte";
 import type GameId from "@Core/GameId/GameId";
-import { mount } from "svelte";
+import {mount, unmount} from "svelte";
 
 export const enum EHighlightStyle {
     BgGradient,
-    BgColor,
+    Color,
     Outline
 }
 
@@ -27,6 +27,8 @@ export type ItemSetup = {
     t?: Array<keyof Options>
 }|null
 
+export type HighlightMap = Map<string, ItemSetup>;
+
 export default class HighlightsTagsUtils2 {
 
     private readonly settings: Options;
@@ -38,7 +40,7 @@ export default class HighlightsTagsUtils2 {
         let settings: Options = {
             owned:        Settings.highlight_owned         || Settings.tag_owned,
             wishlisted:   Settings.highlight_wishlist      || Settings.tag_wishlist,
-            followed:   Settings.highlight_followed        || Settings.tag_followed,
+            followed:     Settings.highlight_followed      || Settings.tag_followed,
             ignored:      Settings.highlight_notinterested || Settings.tag_notinterested,
             ignoredOwned: Settings.highlight_ignored_owned || Settings.tag_ignored_owned,
             collected:    Settings.highlight_collection    || Settings.tag_collection,
@@ -82,7 +84,7 @@ export default class HighlightsTagsUtils2 {
                 .ash-${name}-outline {
                     outline: solid ${color};
                 }
-                .ash-${name}-bg-color {
+                .ash-${name}-color {
                     background: none !important; color: ${color};
                 }`
             );
@@ -91,7 +93,7 @@ export default class HighlightsTagsUtils2 {
         DOMHelper.insertCSS(css.join("\n"));
     }
 
-    public async query(ids: GameId[]): Promise<Map<string, ItemSetup>> {
+    public async query(ids: GameId[]): Promise<HighlightMap> {
         const result: Map<string, ItemSetup> = new Map();
 
         if (ids.length === 0) {
@@ -191,15 +193,15 @@ export default class HighlightsTagsUtils2 {
         return result;
     }
 
-    public highlight(options: Array<keyof Options>, style: EHighlightStyle, node: HTMLElement): void {
-        if (options.length === 0) {
+    public highlight(options: Array<keyof Options>|undefined, style: EHighlightStyle, node: HTMLElement): void {
+        if (!options || options.length === 0) {
             return;
         }
 
         let suffix = "";
         switch(style) {
             case EHighlightStyle.BgGradient: suffix = "bg";       break;
-            case EHighlightStyle.BgColor:    suffix = "bg-color"; break;
+            case EHighlightStyle.Color:      suffix = "color"; break;
             case EHighlightStyle.Outline:    suffix = "outline";  break;
         }
 
@@ -209,11 +211,11 @@ export default class HighlightsTagsUtils2 {
     }
 
     public tags(
-        options: Array<keyof Options>,
-        target: HTMLElement,
+        options: Array<keyof Options>|undefined,
+        target: Element,
         anchor: HTMLElement|undefined=undefined
     ): void {
-        if (options.length === 0) {
+        if (!options || options.length === 0) {
             return;
         }
 
@@ -222,10 +224,10 @@ export default class HighlightsTagsUtils2 {
         }
 
         const tags = mount(Tags, {
-                    target,
-                    anchor,
-                    props: {options}
-                });
+            target,
+            anchor,
+            props: {options}
+        });
 
         this.tagsComponents.push(tags);
     }
@@ -234,7 +236,7 @@ export default class HighlightsTagsUtils2 {
         this.tagsComponents = this.tagsComponents.filter(tags => {
             const connected = tags.isConnected();
             if (!connected) {
-                tags.$destroy();
+                unmount(tags);
             }
             return connected;
         })
