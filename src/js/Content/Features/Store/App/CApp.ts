@@ -132,7 +132,6 @@ export async function run(): Promise<void> {
             FFamilySharingNotice,
             FPackageInfoButton,
             FPlayers,
-//            FCustomizer,
 //            FDLCCheckboxes,
             FBadgeProgress,
             FAchievementBar,
