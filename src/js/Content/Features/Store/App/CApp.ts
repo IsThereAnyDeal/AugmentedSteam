@@ -31,6 +31,7 @@ import FAppTitle from "@Content/Features/Store/App/FAppTitle";
 import FHorizontalScrolling from "@Content/Features/Store/App/FHorizontalScrolling";
 import FVaporLensInsights from "@Content/Features/Store/App/FVaporLensInsights";
 import FReleaseCountdown from "@Content/Features/Store/App/FReleaseCountdown";
+import FRestorePriceCut from "@Content/Features/Store/Common/FRestorePriceCut";
 
 export default class CApp extends Context implements IProductPageContext {
 
@@ -147,6 +148,6 @@ export async function run(): Promise<void> {
             FHorizontalScrolling,
             FVaporLensInsights,
             FReleaseCountdown,
-//            FRestorePriceCut
+            FRestorePriceCut
         ]);
 }
