@@ -5,11 +5,9 @@ import {__drmThirdParty, __drmThirdPartySub} from "@Strings/_strings";
 import Settings from "@Options/Data/Settings";
 import {mount} from "svelte";
 import type IProductPageContext from "@Content/Features/Store/IProductPageContext";
-import type CApp from "@Content/Features/Store/App/CApp";
-import type CSub from "@Content/Features/Store/Sub/CSub";
-import type CBundle from "@Content/Features/Store/Bundle/CBundle";
+import type Context from "@Content/Modules/Context/Context";
 
-export default class FDRMWarnings extends Feature<(CApp|CSub|CBundle) & IProductPageContext> {
+export default class FDRMWarnings extends Feature<Context & IProductPageContext> {
 
     // Exclude false-positives
     readonly #excludedAppids: number[] = [

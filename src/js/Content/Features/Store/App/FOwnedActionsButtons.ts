@@ -4,8 +4,8 @@ import Settings from "@Options/Data/Settings";
 import {__viewinclient} from "@Strings/_strings";
 import {L} from "@Core/Localization/Localization";
 import {mount} from "svelte";
-import ViewInLibraryButton from "@Content/Features/Store/App/OwnedActionsButtons/ViewInLibraryButton.svelte";
-import GetHelpButton from "@Content/Features/Store/App/OwnedActionsButtons/GetHelpButton.svelte";
+import ViewInLibraryButton from "@Content/Features/Store/App/Components/OwnedActionsButtons/ViewInLibraryButton.svelte";
+import GetHelpButton from "@Content/Features/Store/App/Components/OwnedActionsButtons/GetHelpButton.svelte";
 
 /**
  * Handles buttons in the owned section of app page

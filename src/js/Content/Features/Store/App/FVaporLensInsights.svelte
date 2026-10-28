@@ -1,6 +1,6 @@
 <script lang="ts">
     import type {TVaporLensResponse} from "@Background/Modules/VaporLens/_types";
-    import VaporlensDetails from "@Content/Features/Store/App/Vaporlens/VaporlensDetails.svelte";
+    import VaporlensDetails from "@Content/Features/Store/App/Components/Vaporlens/VaporlensDetails.svelte";
     import {slide} from "svelte/transition";
     import LocalStorage from "@Core/Storage/LocalStorage";
     import {onMount} from "svelte";

@@ -1,6 +1,6 @@
 <script lang="ts">
     import SubId from "@Core/GameId/SubId";
-    import {selectedDlcs} from "@Content/Features/Store/App/DLCCheckboxes/DLCStores.svelte";
+    import {selectedDlcs} from "@Content/Features/Store/App/Components/DLCCheckboxes/DLCStores.svelte.js";
 
     interface Props {
         subid: SubId

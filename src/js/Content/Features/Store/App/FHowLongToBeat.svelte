@@ -9,7 +9,7 @@
     } from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
     import external from "@Content/externalLink";
-    import SidebarBox from "@Content/Features/Store/App/SidebarBox.svelte";
+    import SidebarBox from "@Content/Features/Store/App/Components/SidebarBox.svelte";
 
     function hrs(minutes: number): string {
         return L(__hoursShort, {"hours": (minutes / 60).toFixed(1).toString()});

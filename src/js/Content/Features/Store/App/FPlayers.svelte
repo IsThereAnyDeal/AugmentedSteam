@@ -1,7 +1,7 @@
 <script lang="ts">
     import {__charts_current, __charts_peakall, __charts_peaktoday, __charts_playingNow} from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
-    import SidebarBox from "@Content/Features/Store/App/SidebarBox.svelte";
+    import SidebarBox from "@Content/Features/Store/App/Components/SidebarBox.svelte";
 
     interface Props {
         recent: number;

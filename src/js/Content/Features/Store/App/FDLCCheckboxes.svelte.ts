@@ -2,16 +2,16 @@ import Feature from "@Content/Modules/Context/Feature";
 import type CApp from "@Content/Features/Store/App/CApp";
 import Price from "@Content/Modules/Currency/Price";
 import {mount} from "svelte";
-import DLCCheckbox from "@Content/Features/Store/App/DLCCheckboxes/DLCCheckbox.svelte";
-import SelectOptions from "@Content/Features/Store/App/DLCCheckboxes/SelectOptions.svelte";
+import DLCCheckbox from "@Content/Features/Store/App/Components/DLCCheckboxes/DLCCheckbox.svelte";
+import SelectOptions from "@Content/Features/Store/App/Components/DLCCheckboxes/SelectOptions.svelte";
 import SubId from "@Core/GameId/SubId";
 import {
     allDlcs,
     dlcPriceMap,
     ownedDlcs,
     wishlistedDlcs
-} from "@Content/Features/Store/App/DLCCheckboxes/DLCStores.svelte";
-import AddToCart from "@Content/Features/Store/App/DLCCheckboxes/AddToCart.svelte";
+} from "@Content/Features/Store/App/Components/DLCCheckboxes/DLCStores.svelte";
+import AddToCart from "@Content/Features/Store/App/Components/DLCCheckboxes/AddToCart.svelte";
 
 export default class FDLCCheckboxes extends Feature<CApp> {
 

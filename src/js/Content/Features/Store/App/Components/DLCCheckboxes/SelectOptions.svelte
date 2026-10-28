@@ -6,7 +6,7 @@
         ownedDlcs,
         selectedDlcs,
         wishlistedDlcs
-    } from "@Content/Features/Store/App/DLCCheckboxes/DLCStores.svelte";
+    } from "@Content/Features/Store/App/Components/DLCCheckboxes/DLCStores.svelte.js";
 
     function onselectUnowned() {
         for (const subid of allDlcs) {

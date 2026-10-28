@@ -2,7 +2,7 @@
     import {__addSelectedDlcToCart} from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
     import Price from "@Content/Modules/Currency/Price";
-    import {dlcPriceMap, selectedDlcs} from "@Content/Features/Store/App/DLCCheckboxes/DLCStores.svelte";
+    import {dlcPriceMap, selectedDlcs} from "@Content/Features/Store/App/Components/DLCCheckboxes/DLCStores.svelte.js";
     import DOMHelper from "@Content/Modules/DOMHelper";
 
     function onclick(): void {

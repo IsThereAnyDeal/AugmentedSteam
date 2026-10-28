@@ -1,6 +1,6 @@
 <script lang="ts">
     import type {TVaporLensEntry} from "@Background/Modules/VaporLens/_types";
-    import VaporlensExplanation from "@Content/Features/Store/App/Vaporlens/VaporlensExplanation.svelte";
+    import VaporlensExplanation from "@Content/Features/Store/App/Components/Vaporlens/VaporlensExplanation.svelte";
 
     interface Props {
         label: string;

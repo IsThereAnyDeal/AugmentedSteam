@@ -8,7 +8,7 @@ import type {TBundle, TPriceOverview} from "@Background/Modules/AugmentedSteam/_
 import type CSub from "@Content/Features/Store/Sub/CSub";
 import type CApp from "@Content/Features/Store/App/CApp";
 import { mount } from "svelte";
-import StorePageUtils from "@Content/Features/Store/StorePageUtils";
+import StorePageUtils from "@Content/Features/Store/storeUtils";
 
 export default class FITADPrices extends Feature<CApp|CSub|CBundle> {
 

@@ -2,8 +2,8 @@ import type CApp from "@Content/Features/Store/App/CApp";
 import Feature from "@Content/Modules/Context/Feature";
 import Settings from "@Options/Data/Settings";
 import {mount} from "svelte";
-import MetacriticUserScore from "@Content/Features/Store/App/ReviewScores/MetacriticUserScore.svelte";
-import OpenCriticScore from "@Content/Features/Store/App/ReviewScores/OpenCriticScore.svelte";
+import MetacriticUserScore from "@Content/Features/Store/App/Components/ReviewScores/MetacriticUserScore.svelte";
+import OpenCriticScore from "@Content/Features/Store/App/Components/ReviewScores/OpenCriticScore.svelte";
 import type { TStorePageData } from "@Background/Modules/AugmentedSteam/_types";
 
 export default class FReviewScores extends Feature<CApp> {

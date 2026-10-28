@@ -10,7 +10,7 @@
         __wsgf_unsupported,
     } from "@Strings/_strings";
     import ExtensionResources from "@Core/ExtensionResources";
-    import SidebarBox from "@Content/Features/Store/App/SidebarBox.svelte";
+    import SidebarBox from "@Content/Features/Store/App/Components/SidebarBox.svelte";
 
     interface Props {
         url: string,

@@ -7,7 +7,7 @@
         __badgeProgress,
         __cardsOwned, __viewBadge, __viewBadgeProgress
     } from "@Strings/_strings";
-    import SidebarBox from "@Content/Features/Store/App/SidebarBox.svelte";
+    import SidebarBox from "@Content/Features/Store/App/Components/SidebarBox.svelte";
 
     interface Props {
         data: TBadgeData;
