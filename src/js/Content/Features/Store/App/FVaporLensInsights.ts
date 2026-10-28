@@ -43,7 +43,7 @@ export default class FVaporLensInsights extends Feature<CApp> {
     }
 
     #attach(): boolean {
-        const selector = "._2pLm-6qnTQoI2Ir1Btg_id";
+        const selector = ".d57g2l1FXWk-";
         const summaries = document.querySelector(selector);
         if (!summaries) {
             return false;
