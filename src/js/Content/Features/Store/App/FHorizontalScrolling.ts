@@ -34,7 +34,7 @@ export default class FHorizontalScrolling extends Feature<CApp> {
     }
 
     #getSlider(parent: HTMLElement): HTMLElement|null {
-        return parent.querySelector<HTMLElement>(".ZpjLn9D4rTIVnM4axYSoG");
+        return parent.querySelector<HTMLElement>(".PXfzURLcJGs-");
     }
 
     #setup(slider: HTMLElement): void {
@@ -47,7 +47,7 @@ export default class FHorizontalScrolling extends Feature<CApp> {
             if (Date.now() - lastScroll < 200) { return; }
             lastScroll = Date.now();
 
-            const currentNode = slider.querySelector("._2Ose8zPg3MlKQQeG9nwv24._2uCL56lGO9iUUcLEtE83zG")
+            const currentNode = slider.querySelector(".OX1oObP8BBs-.HxQpo4wzmz8-")
             if (currentNode) {
                 const isScrollDown = e.deltaY > 0;
                 const sibling = isScrollDown
