@@ -1,6 +1,7 @@
 
 const map = {
     store: {
+        searchbox: "input[name='term']",
         app: {
             achievementBar: ".uZGVdQKYKa0-",
             highlightSlider: ".PXfzURLcJGs-",

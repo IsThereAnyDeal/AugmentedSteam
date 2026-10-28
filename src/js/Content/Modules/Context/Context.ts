@@ -1,6 +1,6 @@
 import type Language from "@Core/Localization/Language";
 import type UserInterface from "@Core/User/UserInterface";
-import type {EBootstrapMode} from "@Content/bootstrap";
+import {EBootstrapMode} from "@Content/bootstrap";
 
 export class ContextParams {
     constructor(
@@ -17,8 +17,8 @@ export default class Context {
         this.#params = params;
     }
 
-    get mode(): EBootstrapMode {
-        return this.#params.mode;
+    get isReact(): boolean {
+        return this.#params.mode === EBootstrapMode.React;
     }
 
     get language(): Language|null {

@@ -1,7 +1,6 @@
 import type Context from "@Content/Modules/Context/Context";
 import Feature from "@Content/Modules/Context/Feature";
 import Settings from "@Options/Data/Settings";
-import {EBootstrapMode} from "@Content/bootstrap";
 import {__viewinclient} from "@Strings/_strings";
 import {L} from "@Core/Localization/Localization";
 import "./FInstallSteamButton.css";
@@ -13,7 +12,7 @@ export default class FInstallSteamButton extends Feature<Context> {
     }
 
     public override async apply(): Promise<void> {
-        const react = this.context.mode === EBootstrapMode.React;
+        const react = this.context.isReact;
 
         const btn = document.querySelector<HTMLAnchorElement>(react
             ? "header nav ~ div a[href*='/about/']"
