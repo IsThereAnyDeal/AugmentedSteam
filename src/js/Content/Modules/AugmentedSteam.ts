@@ -108,36 +108,6 @@ export default class AugmentedSteam {
         }
     }
 
-    private handleInstallSteamButton(): void {
-        const option = Settings.installsteam;
-        if (option === "show") { return; }
-
-        const btn = document.querySelector<HTMLAnchorElement>(this.react
-            ? "header nav ~ div a[href*='/about/']"
-            : "a.header_installsteam_btn"
-        );
-        if (!btn) {
-            console.error(`Couldn't find "Install Steam" button element.`);
-            return;
-        }
-
-        if (option === "hide") {
-            btn.remove();
-        } else if (option === "replace") {
-
-            if (this.react) {
-                btn.textContent = L(__viewinclient);
-                btn.classList.add("is-react");
-            } else {
-                btn.querySelector("div")!.textContent = L(__viewinclient);
-            }
-
-            btn.href = `steam://openurl/${window.location.href}`;
-            btn.classList.add("es_steamclient_btn");
-
-        }
-    }
-
     private addRedeemLink(): void {
 
         let node: HTMLAnchorElement|null;
@@ -173,7 +143,6 @@ export default class AugmentedSteam {
         this.focusSearchBox();
         this.addMenu();
         this.addWarnings();
-        this.handleInstallSteamButton();
 
         if (this.user.isSignedIn) {
             this.addRedeemLink();

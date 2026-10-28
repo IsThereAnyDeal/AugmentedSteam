@@ -1,0 +1,7 @@
+
+.as_steamclient_btn .header_installsteam_btn_content,
+.as_steamclient_btn.is-react {
+    background-image: url('https://store.cloudflare.steamstatic.com/public/images/v6/icon_platform_linux.png');
+    background-position: 5px;
+    padding-left: 28px;
+}
