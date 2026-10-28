@@ -35,6 +35,8 @@ import FRestorePriceCut from "@Content/Features/Store/Common/FRestorePriceCut";
 import FHighlightsTags from "@Content/Features/Common/FHighlightsTags";
 import FDLCCheckboxes from "@Content/Features/Store/App/FDLCCheckboxes.svelte";
 import FHideReportedTags from "@Content/Features/Store/App/FHideReportedTags";
+import FExtraLinksApp from "@Content/Features/Store/Common/FExtraLinksApp";
+import FExtraLinksAppError from "@Content/Features/Store/Common/FExtraLinksAppError";
 
 export default class CApp extends Context implements IProductPageContext {
 
@@ -115,7 +117,7 @@ export async function run(): Promise<void> {
     // TODO CStoreBase features
     await features(context, isErrorPage
         ? [
-//            FExtraLinksAppError
+            FExtraLinksAppError
         ] : [
             FHighlightsTags,
             FReplaceDevPubLinks,
@@ -130,7 +132,7 @@ export async function run(): Promise<void> {
             FSteamPeek,
             FWidescreenCertification,
             FHowLongToBeat,
-//            FExtraLinksApp,
+            FExtraLinksApp,
             FFamilySharingNotice,
             FPackageInfoButton,
             FPlayers,

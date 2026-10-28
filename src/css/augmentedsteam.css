@@ -786,17 +786,6 @@ video.highlight_movie:hover + .html5_video_overlay {
 
 
 /***************************************
- * App pages
- * Common/FExtraLinks
- **************************************/
-
-/* Copied from apphub.css, which isn't loaded on error pages */
-.es_apphub_OtherSiteInfo {
-  position: relative;
-  float: right;
-}
-
-/***************************************
  * Common
  * FHighlightsTags
  **************************************/

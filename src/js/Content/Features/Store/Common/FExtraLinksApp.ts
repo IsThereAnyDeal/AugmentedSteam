@@ -7,7 +7,9 @@ import { mount } from "svelte";
 
 export default class FExtraLinksApp extends Feature<CApp> {
 
-    override checkPrerequisites(): boolean | Promise<boolean> {
+    // FIXME refactor links to be fully dynamic, without predefined ones
+
+    override async checkPrerequisites(): Promise<boolean> {
         return Settings.showitadlinks
             || Settings.showsteamdb
             || Settings.showsteamcardexchange
@@ -24,21 +26,21 @@ export default class FExtraLinksApp extends Feature<CApp> {
     }
 
     // Even if the user disabled extra links, the position of the share/embed links is changed
-    override apply(): void {
+    override async apply(): Promise<void> {
         const target = document.querySelector("div.rightcol.game_meta_data");
         if (!target) {
             throw new Error("Node not found");
         }
 
         (mount(AppLinks, {
-                    target,
-                    anchor: target.firstElementChild ?? undefined,
-                    props: {
-                        appid: this.context.appid,
-                        communityAppid: this.context.communityAppid,
-                        appName: StringUtils.clearSpecialSymbols(this.context.appName),
-                        appPage: true
-                    }
-                }));
+            target,
+            anchor: target.firstElementChild ?? undefined,
+            props: {
+                appid: this.context.appid,
+                communityAppid: this.context.communityAppid,
+                appName: StringUtils.clearSpecialSymbols(this.context.appName),
+                appPage: true
+            }
+        }));
     }
 }
