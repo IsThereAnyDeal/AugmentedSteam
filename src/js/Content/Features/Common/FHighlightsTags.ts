@@ -7,6 +7,7 @@ import HighlightsTagsUtils2, {
 import type CApp from "@Content/Features/Store/App/CApp";
 import GameId from "@Core/GameId/GameId";
 import AppId from "@Core/GameId/AppId";
+import {tick} from "svelte";
 
 export default class FHighlightsTags extends Feature<CApp> {
 
@@ -50,6 +51,7 @@ export default class FHighlightsTags extends Feature<CApp> {
         this.#highlightTitle(setup, appid);
         this.#highlightDlcs(setup, dlcNodeMap);
 
+        await tick();
         this.#highlighter.clearDisconnectedTags();
     }
 

@@ -1,6 +1,3 @@
-import {L} from "@Core/Localization/Localization";
-import {__activate, __viewinclient,} from "@Strings/_strings";
-import Settings from "@Options/Data/Settings";
 import AugmentedSteamMenu from "@Content/Modules/Widgets/AugmentedSteam/AugmentedSteamMenu.svelte";
 import CacheApiFacade from "@Content/Facades/CacheApiFacade";
 import AugmentedSteamWarnings from "@Content/Modules/Widgets/AugmentedSteam/AugmentedSteamWarnings.svelte";
