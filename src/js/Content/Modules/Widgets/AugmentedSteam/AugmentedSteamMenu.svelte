@@ -16,11 +16,11 @@
         __website
     } from "@Strings/_strings";
     import Config from "config";
-    import SteamStoreApiFacade from "@Content/Modules/Facades/SteamStoreApiFacade";
+    import SteamStoreApiFacade from "@Content/Facades/SteamStoreApiFacade";
     import DynamicStore from "@Content/Modules/Data/DynamicStore";
     import external from "@Content/externalLink";
     import type UserInterface from "@Core/User/UserInterface";
-    import CacheApiFacade from "@Content/Modules/Facades/CacheApiFacade";
+    import CacheApiFacade from "@Content/Facades/CacheApiFacade";
     import {onMount} from "svelte";
     import {fade} from "svelte/transition";
     import ConfirmDialog from "@Core/Modals/ConfirmDialog";

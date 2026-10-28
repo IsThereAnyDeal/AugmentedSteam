@@ -3,7 +3,7 @@
     import {L} from "@Core/Localization/Localization";
     import Price from "@Content/Modules/Currency/Price";
     import {dlcPriceMap, selectedDlcs} from "@Content/Features/Store/App/Components/DLCCheckboxes/DLCStores.svelte.js";
-    import DOMHelper from "@Content/Modules/DOMHelper";
+    import DOMHelper from "@Content/Modules/DOM/DOMHelper";
 
     function onclick(): void {
         // TODO replace with protobuf call

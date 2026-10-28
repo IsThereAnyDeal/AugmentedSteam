@@ -5,7 +5,7 @@ import Feature from "@Content/Modules/Context/Feature";
 import HTML from "@Core/Html/Html";
 import LocalStorage from "@Core/Storage/LocalStorage";
 import ContextType from "@Content/Modules/Context/ContextType";
-import DOMHelper from "@Content/Modules/DOMHelper";
+import DOMHelper from "@Content/Modules/DOM/DOMHelper";
 import type CApp from "@Content/Features/Store/App/CApp";
 
 export default class FMediaExpander extends Feature<CApp|CSharedFiles> {

@@ -16,7 +16,7 @@ import Settings from "@Options/Data/Settings";
 import DynamicStore from "@Content/Modules/Data/DynamicStore";
 import ITAD from "@Content/Modules/ITAD";
 import HTML from "@Core/Html/Html";
-import DOMHelper from "../DOMHelper";
+import DOMHelper from "../DOM/DOMHelper";
 
 type Options = {
     owned: boolean,

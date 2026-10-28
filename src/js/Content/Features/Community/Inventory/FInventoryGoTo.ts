@@ -4,7 +4,7 @@ import type CInventory from "@Content/Features/Community/Inventory/CInventory";
 import Feature from "@Content/Modules/Context/Feature";
 import Settings from "@Options/Data/Settings";
 import HTML from "@Core/Html/Html";
-import DOMHelper from "@Content/Modules/DOMHelper";
+import DOMHelper from "@Content/Modules/DOM/DOMHelper";
 
 export default class FInventoryGoTo extends Feature<CInventory> {
 

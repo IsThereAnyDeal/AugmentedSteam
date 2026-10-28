@@ -1,6 +1,6 @@
 import self_ from "./FBadgeProgress.svelte";
 import type {TFetchBadgeInfoResponse} from "@Background/Modules/Community/_types";
-import SteamCommunityApiFacade from "../../../Modules/Facades/SteamCommunityApiFacade";
+import SteamCommunityApiFacade from "@Content/Facades/SteamCommunityApiFacade";
 import Settings from "@Options/Data/Settings";
 import Feature from "@Content/Modules/Context/Feature";
 import type CApp from "@Content/Features/Store/App/CApp";

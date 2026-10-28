@@ -15,7 +15,7 @@
     } from "@Strings/_strings";
     import LocalStorage from "@Core/Storage/LocalStorage";
     import Price from "@Content/Modules/Currency/Price";
-    import RequestData from "@Content/Modules/RequestData";
+    import RequestData from "@Content/Modules/Data/RequestData";
     import Errors from "@Core/Errors/Errors";
     import {onMount} from "svelte";
 

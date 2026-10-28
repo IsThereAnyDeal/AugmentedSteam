@@ -1,6 +1,6 @@
-import AugmentedSteamApiFacade from "../Facades/AugmentedSteamApiFacade";
+import AugmentedSteamApiFacade from "@Content/Facades/AugmentedSteamApiFacade";
 import type {TBundle, TPriceOverview} from "@Background/Modules/AugmentedSteam/_types";
-import ITADApiFacade from "../Facades/ITADApiFacade";
+import ITADApiFacade from "@Content/Facades/ITADApiFacade";
 import Settings from "@Options/Data/Settings";
 import type UserInterface from "@Core/User/UserInterface";
 

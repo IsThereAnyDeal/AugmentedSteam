@@ -2,7 +2,7 @@ import Feature from "@Content/Modules/Context/Feature";
 import FHighlightsTags from "../../Common/FHighlightsTags";
 import Settings from "@Options/Data/Settings";
 import type CMarketSearch from "@Content/Features/Community/MarketSearch/CMarketSearch";
-import InventoryApiFacade from "@Content/Modules/Facades/InventoryApiFacade";
+import InventoryApiFacade from "@Content/Facades/InventoryApiFacade";
 import HighlightsTagsUtils from "@Content/Modules/Highlights/HighlightsTagsUtils";
 
 export default class FHighlightMarketItems extends Feature<CMarketSearch> {

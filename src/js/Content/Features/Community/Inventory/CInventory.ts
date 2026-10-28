@@ -3,8 +3,8 @@ import FInventoryGoTo from "./FInventoryGoTo";
 import FPriceHistoryZoomYear from "../FPriceHistoryZoomYear";
 import ContextType from "@Content/Modules/Context/ContextType";
 import CommunityUtils from "@Content/Modules/Community/CommunityUtils";
-import DOMHelper from "@Content/Modules/DOMHelper";
-import ASEventHandler from "@Content/Modules/ASEventHandler";
+import DOMHelper from "@Content/Modules/DOM/DOMHelper";
+import ASEventHandler from "@Content/Modules/Events/ASEventHandler";
 import type {ContextParams} from "@Content/Modules/Context/Context";
 import FInventoryFeatures from "@Content/Features/Community/Inventory/FInventoryFeatures";
 

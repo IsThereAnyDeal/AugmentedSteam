@@ -1,5 +1,5 @@
 <script lang="ts">
-    import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";
+    import ITADApiFacade from "@Content/Facades/ITADApiFacade";
     import UserNotesAdapter from "@Content/Modules/UserNotes/UserNotesAdapter";
     import SyncPushIcon from "@Options/Modules/Icons/SyncPushIcon.svelte";
     import SyncPullIcon from "@Options/Modules/Icons/SyncPullIcon.svelte";

@@ -4,7 +4,7 @@
     import WaitlistIcon from "@Content/Icons/WaitlistIcon.svelte";
     import Settings from "@Options/Data/Settings";
     import {onMount} from "svelte";
-    import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";
+    import ITADApiFacade from "@Content/Facades/ITADApiFacade";
 
     interface Props {
         appid: number,

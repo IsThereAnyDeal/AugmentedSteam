@@ -11,7 +11,7 @@ import NegativeSearchFilter from "@Content/Features/Store/Search/Filters/Negativ
 import ReviewsScoreSearchFilter from "@Content/Features/Store/Search/Filters/ReviewsScoreSearchFilter";
 import ReviewsCountSearchFilter from "@Content/Features/Store/Search/Filters/ReviewsCountSearchFilter";
 import DiscountPercentSearchFilter from "@Content/Features/Store/Search/Filters/DiscountPercentSearchFilter";
-import DOMHelper from "@Content/Modules/DOMHelper";
+import DOMHelper from "@Content/Modules/DOM/DOMHelper";
 import EarlyAccessUtils from "@Content/Modules/EarlyAccess/EarlyAccessUtils";
 import HighlightsTagsUtils from "@Content/Modules/Highlights/HighlightsTagsUtils";
 

@@ -14,7 +14,7 @@ import Config from "config";
 import {L} from "@Core/Localization/Localization";
 import Feature from "@Content/Modules/Context/Feature";
 import type CProfileEdit from "@Content/Features/Community/ProfileEdit/CProfileEdit";
-import AugmentedSteamApiFacade from "@Content/Modules/Facades/AugmentedSteamApiFacade";
+import AugmentedSteamApiFacade from "@Content/Facades/AugmentedSteamApiFacade";
 
 export default class FBackgroundSelection extends Feature<CProfileEdit> {
 

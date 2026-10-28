@@ -1,6 +1,6 @@
 import HTMLParser from "@Core/Html/HtmlParser";
 import StringUtils from "@Core/Utils/StringUtils";
-import SteamStoreApiFacade from "@Content/Modules/Facades/SteamStoreApiFacade";
+import SteamStoreApiFacade from "@Content/Facades/SteamStoreApiFacade";
 import type UserInterface from "@Core/User/UserInterface";
 
 export default class ReactUser implements UserInterface {

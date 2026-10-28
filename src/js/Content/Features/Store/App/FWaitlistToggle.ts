@@ -3,7 +3,7 @@ import Feature from "@Content/Modules/Context/Feature";
 import type CApp from "@Content/Features/Store/App/CApp";
 import AppId from "@Core/GameId/AppId";
 import {mount} from "svelte";
-import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";
+import ITADApiFacade from "@Content/Facades/ITADApiFacade";
 import Settings from "@Options/Data/Settings";
 
 export default class FWaitlistToggle extends Feature<CApp> {

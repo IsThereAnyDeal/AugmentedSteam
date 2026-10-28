@@ -1,6 +1,6 @@
 import type CBoosterCreator from "@Content/Features/Community/BoosterCreator/CBoosterCreator";
 import Feature from "@Content/Modules/Context/Feature";
-import SteamFacade from "@Content/Modules/Facades/SteamFacade";
+import SteamFacade from "@Content/Facades/SteamFacade";
 
 type BoosterData = Record<string, {
     appid: number,

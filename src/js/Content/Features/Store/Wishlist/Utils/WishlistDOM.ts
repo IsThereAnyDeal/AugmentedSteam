@@ -1,4 +1,4 @@
-import ASEventHandler from "@Content/Modules/ASEventHandler";
+import ASEventHandler from "@Content/Modules/Events/ASEventHandler";
 import AppId from "@Core/GameId/AppId";
 
 interface TDOMGame {

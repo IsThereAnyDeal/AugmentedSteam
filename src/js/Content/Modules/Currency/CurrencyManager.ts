@@ -2,8 +2,8 @@ import HTMLParser from "@Core/Html/HtmlParser";
 import type {TCurrency} from "@Core/Currencies";
 import Currencies from "@Core/Currencies";
 import Settings from "@Options/Data/Settings";
-import AugmentedSteamApiFacade from "@Content/Modules/Facades/AugmentedSteamApiFacade";
-import SteamStoreApiFacade from "@Content/Modules/Facades/SteamStoreApiFacade";
+import AugmentedSteamApiFacade from "@Content/Facades/AugmentedSteamApiFacade";
+import SteamStoreApiFacade from "@Content/Facades/SteamStoreApiFacade";
 
 export default class CurrencyManager {
 

@@ -1,5 +1,5 @@
 import HTMLParser from "@Core/Html/HtmlParser";
-import SteamCommunityApiFacade from "@Content/Modules/Facades/SteamCommunityApiFacade";
+import SteamCommunityApiFacade from "@Content/Facades/SteamCommunityApiFacade";
 import LegacyUser from "@Core/User/LegacyUser";
 import type AppConfig from "@Core/AppConfig/AppConfig";
 import ReactUser from "@Core/User/ReactUser";

@@ -1,7 +1,7 @@
 import AppId from "@Core/GameId/AppId";
 import FReplaceDevPubLinks from "./FReplaceDevPubLinks";
 import FUserNotes from "./FUserNotes";
-import AugmentedSteamApiFacade from "@Content/Modules/Facades/AugmentedSteamApiFacade";
+import AugmentedSteamApiFacade from "@Content/Facades/AugmentedSteamApiFacade";
 import type {TStorePageData} from "@Background/Modules/AugmentedSteam/_types";
 import FWaitlistToggle from "@Content/Features/Store/App/FWaitlistToggle";
 import FNewQueue from "@Content/Features/Store/App/FNewQueue";

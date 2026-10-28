@@ -3,7 +3,7 @@ import {L} from "@Core/Localization/Localization";
 import type CProfileHome from "@Content/Features/Community/ProfileHome/CProfileHome";
 import Feature from "@Content/Modules/Context/Feature";
 import HTML from "@Core/Html/Html";
-import DOMHelper from "@Content/Modules/DOMHelper";
+import DOMHelper from "@Content/Modules/DOM/DOMHelper";
 
 export default class FProfileDropdownOptions extends Feature<CProfileHome> {
 

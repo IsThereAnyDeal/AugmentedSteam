@@ -1,11 +1,11 @@
 import self_ from "./FVaporLensInsights.svelte";
 import type CApp from "@Content/Features/Store/App/CApp";
 import Feature from "@Content/Modules/Context/Feature";
-import VaporLensApiFacade from "@Content/Modules/Facades/VaporLensApiFacade";
+import VaporLensApiFacade from "@Content/Facades/VaporLensApiFacade";
 import Settings from "@Options/Data/Settings";
 import type {TVaporLensResponse,} from "@Background/Modules/VaporLens/_types";
 import {mount} from "svelte";
-import dynamicNode from "@Content/Modules/DynamicNode/DynamicNode";
+import dynamicNode from "@Content/Modules/DOM/DynamicNode";
 import SelectorMap from "@Content/SelectorMap";
 
 export default class FVaporLensInsights extends Feature<CApp> {

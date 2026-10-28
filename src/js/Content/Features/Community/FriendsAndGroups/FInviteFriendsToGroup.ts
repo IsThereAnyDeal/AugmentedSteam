@@ -3,7 +3,7 @@ import Feature from "@Content/Modules/Context/Feature";
 import {__inviteToGroup} from "@Strings/_strings";
 import {L} from "@Core/Localization/Localization";
 import HTML from "@Core/Html/Html";
-import DOMHelper from "@Content/Modules/DOMHelper";
+import DOMHelper from "@Content/Modules/DOM/DOMHelper";
 
 export default class FInviteButton extends Feature<CFriendsAndGroups> {
 

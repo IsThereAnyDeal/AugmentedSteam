@@ -5,7 +5,7 @@ import Feature from "@Content/Modules/Context/Feature";
 import type CProfileEdit from "@Content/Features/Community/ProfileEdit/CProfileEdit";
 import HTML from "@Core/Html/Html";
 import ExtensionResources from "@Core/ExtensionResources";
-import AugmentedSteamApiFacade from "@Content/Modules/Facades/AugmentedSteamApiFacade";
+import AugmentedSteamApiFacade from "@Content/Facades/AugmentedSteamApiFacade";
 
 export default class FStyleSelection extends Feature<CProfileEdit> {
 

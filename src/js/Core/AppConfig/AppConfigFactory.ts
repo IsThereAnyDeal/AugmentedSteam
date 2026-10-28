@@ -1,4 +1,4 @@
-import SteamFacade from "@Content/Modules/Facades/SteamFacade";
+import SteamFacade from "@Content/Facades/SteamFacade";
 import AppConfig, {type AppConfigData} from "@Core/AppConfig/AppConfig";
 
 export default class AppConfigFactory {

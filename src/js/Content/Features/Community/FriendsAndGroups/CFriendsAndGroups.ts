@@ -7,7 +7,7 @@ import FFriendsAppendNickname from "./FFriendsAppendNickname";
 import ContextType from "@Content/Modules/Context/ContextType";
 import CommunityUtils from "@Content/Modules/Community/CommunityUtils";
 import HTML from "@Core/Html/Html";
-import DOMHelper from "@Content/Modules/DOMHelper";
+import DOMHelper from "@Content/Modules/DOM/DOMHelper";
 import type {ContextParams} from "@Content/Modules/Context/Context";
 
 export default class CFriendsAndGroups extends CCommunityBase {

@@ -3,7 +3,7 @@ import {L} from "@Core/Localization/Localization";
 import Feature from "@Content/Modules/Context/Feature";
 import type CCommunityBase from "@Content/Features/Community/CCommunityBase";
 import Settings from "@Options/Data/Settings";
-import DOMHelper from "@Content/Modules/DOMHelper";
+import DOMHelper from "@Content/Modules/DOM/DOMHelper";
 
 export default class FConfirmDeleteComment extends Feature<CCommunityBase> {
 

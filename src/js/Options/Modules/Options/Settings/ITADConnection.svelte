@@ -10,7 +10,7 @@
     } from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
     import {createEventDispatcher, onMount} from "svelte";
-    import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";
+    import ITADApiFacade from "@Content/Facades/ITADApiFacade";
     import ITADSyncStatus from "@Content/Modules/Widgets/ITADSync/ITADSyncStatus.svelte";
     import ESyncStatus from "@Core/Sync/ESyncStatus";
     import {type Writable} from "svelte/store";

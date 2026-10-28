@@ -10,9 +10,9 @@ import {L} from "@Core/Localization/Localization";
 import type CMyWorkshop from "@Content/Features/Community/MyWorkshop/CMyWorkshop";
 import Feature from "@Content/Modules/Context/Feature";
 import HTML from "@Core/Html/Html";
-import RequestData from "@Content/Modules/RequestData";
-import SteamFacade from "@Content/Modules/Facades/SteamFacade";
-import SteamCommunityApiFacade from "@Content/Modules/Facades/SteamCommunityApiFacade";
+import RequestData from "@Content/Modules/Data/RequestData";
+import SteamFacade from "@Content/Facades/SteamFacade";
+import SteamCommunityApiFacade from "@Content/Facades/SteamCommunityApiFacade";
 import BlockingWaitDialog from "@Core/Modals/BlockingWaitDialog";
 
 export default class FWorkshopFileSizes extends Feature<CMyWorkshop> {

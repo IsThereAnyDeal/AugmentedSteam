@@ -1,5 +1,5 @@
 <script lang="ts">
-    import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";
+    import ITADApiFacade from "@Content/Facades/ITADApiFacade";
     import {onMount} from "svelte";
     import Settings from "../../../Data/Settings";
     import type {TGetStoreListResponse} from "@Background/Modules/IsThereAnyDeal/_types";

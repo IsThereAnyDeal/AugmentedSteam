@@ -1,4 +1,4 @@
-import SteamFacade from "@Content/Modules/Facades/SteamFacade";
+import SteamFacade from "@Content/Facades/SteamFacade";
 import {
     __workshop_failed,
     __workshop_finished,
@@ -15,7 +15,7 @@ import Workshop from "./Workshop";
 import Feature from "@Content/Modules/Context/Feature";
 import type CWorkshopBrowse from "@Content/Features/Community/WorkshopBrowse/CWorkshopBrowse";
 import HTML from "@Core/Html/Html";
-import RequestData from "@Content/Modules/RequestData";
+import RequestData from "@Content/Modules/Data/RequestData";
 import BlockingWaitDialog from "@Core/Modals/BlockingWaitDialog";
 
 export default class FWorkshopSubscriberButtons extends Feature<CWorkshopBrowse> {

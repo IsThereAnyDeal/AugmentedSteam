@@ -1,7 +1,7 @@
 import type CProfileHome from "@Content/Features/Community/ProfileHome/CProfileHome";
 import Feature from "@Content/Modules/Context/Feature";
 import Settings from "@Options/Data/Settings";
-import DOMHelper from "@Content/Modules/DOMHelper";
+import DOMHelper from "@Content/Modules/DOM/DOMHelper";
 import HTML from "@Core/Html/Html";
 import ExtensionResources from "@Core/ExtensionResources";
 

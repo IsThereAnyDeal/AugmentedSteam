@@ -2,7 +2,7 @@
     import {__close, __copied, __steamidOfUser, __viewSteamid} from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
     import ExtensionResources from "@Core/ExtensionResources";
-    import SteamFacade from "@Content/Modules/Facades/SteamFacade";
+    import SteamFacade from "@Content/Facades/SteamFacade";
     import Clipboard from "@Content/Modules/Clipboard";
 
     interface Props {

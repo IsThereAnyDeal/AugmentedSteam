@@ -4,7 +4,7 @@ import type CApp from "@Content/Features/Store/App/CApp";
 import Settings from "@Options/Data/Settings";
 import Feature from "@Content/Modules/Context/Feature";
 import LocalStorage from "@Core/Storage/LocalStorage";
-import SteamStoreApiFacade from "@Content/Modules/Facades/SteamStoreApiFacade";
+import SteamStoreApiFacade from "@Content/Facades/SteamStoreApiFacade";
 import type {TAppDetail} from "@Background/Modules/Store/_types";
 import {mount} from "svelte";
 

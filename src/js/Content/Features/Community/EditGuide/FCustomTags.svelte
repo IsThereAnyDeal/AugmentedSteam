@@ -3,8 +3,8 @@
     import {L} from "@Core/Localization/Localization";
     import LocalStorage from "@Core/Storage/LocalStorage";
     import HTML from "@Core/Html/Html";
-    import SteamFacade from "@Content/Modules/Facades/SteamFacade";
-    import RequestData from "@Content/Modules/RequestData";
+    import SteamFacade from "@Content/Facades/SteamFacade";
+    import RequestData from "@Content/Modules/Data/RequestData";
     import {onMount, mount } from "svelte";
     import AddTagForm from "./Components/AddTagForm.svelte";
     import CustomModal from "@Core/Modals/CustomModal";

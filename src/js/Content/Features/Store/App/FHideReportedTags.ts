@@ -1,7 +1,7 @@
 import HTMLParser from "@Core/Html/HtmlParser";
 import type CApp from "@Content/Features/Store/App/CApp";
 import Feature from "@Content/Modules/Context/Feature";
-import DOMHelper from "@Content/Modules/DOMHelper";
+import DOMHelper from "@Content/Modules/DOM/DOMHelper";
 
 export default class FHideReportedTags extends Feature<CApp> {
 

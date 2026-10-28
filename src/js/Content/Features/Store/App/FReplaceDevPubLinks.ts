@@ -3,7 +3,7 @@ import {__options_homepage} from "@Strings/_strings";
 import Feature from "@Content/Modules/Context/Feature";
 import type CApp from "@Content/Features/Store/App/CApp";
 import HTML from "@Core/Html/Html";
-import SteamFacade from "@Content/Modules/Facades/SteamFacade";
+import SteamFacade from "@Content/Facades/SteamFacade";
 
 export default class FReplaceDevPubLinks extends Feature<CApp> {
 

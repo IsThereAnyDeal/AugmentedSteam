@@ -1,7 +1,7 @@
 <script lang="ts">
     import {L} from "@Core/Localization/Localization";
     import {__addToWishlist, __error, __onWishlist} from "@Strings/_strings";
-    import SteamStoreApiFacade from "@Content/Modules/Facades/SteamStoreApiFacade";
+    import SteamStoreApiFacade from "@Content/Facades/SteamStoreApiFacade";
     import ExtensionResources from "@Core/ExtensionResources";
 
     interface Props {

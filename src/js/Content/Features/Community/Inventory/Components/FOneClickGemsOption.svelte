@@ -1,7 +1,7 @@
 <script lang="ts">
     import {L} from "@Core/Localization/Localization";
     import {__oneclickgoo} from "@Strings/_strings";
-    import DOMHelper from "@Content/Modules/DOMHelper";
+    import DOMHelper from "@Content/Modules/DOM/DOMHelper";
 
     interface Props {
         appid: number;

@@ -1,7 +1,7 @@
 import Feature from "@Content/Modules/Context/Feature";
 import Settings from "@Options/Data/Settings";
 import ExtensionResources from "@Core/ExtensionResources";
-import DOMHelper from "@Content/Modules/DOMHelper";
+import DOMHelper from "@Content/Modules/DOM/DOMHelper";
 import type Context from "@Content/Modules/Context/Context";
 
 export default class FAlternativeLinuxIcon extends Feature<Context> {

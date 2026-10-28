@@ -20,7 +20,7 @@
     import ITADConnection from "./Settings/ITADConnection.svelte";
     import type {SettingsSchema} from "../../Data/_types";
     import NotesSyncControls from "@Options/Modules/Options/Settings/NotesSyncControls.svelte";
-    import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";
+    import ITADApiFacade from "@Content/Facades/ITADApiFacade";
     import SyncEvents from "@Options/Modules/Options/Settings/SyncEvents.svelte";
     import {onMount} from "svelte";
     import type {TSyncEvent} from "@Background/Modules/IsThereAnyDeal/_types";

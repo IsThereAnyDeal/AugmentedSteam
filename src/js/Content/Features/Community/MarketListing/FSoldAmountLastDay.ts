@@ -3,7 +3,7 @@ import {L} from "@Core/Localization/Localization";
 import Feature from "@Content/Modules/Context/Feature";
 import type CMarketListing from "@Content/Features/Community/MarketListing/CMarketListing";
 import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
-import RequestData from "@Content/Modules/RequestData";
+import RequestData from "@Content/Modules/Data/RequestData";
 import HTML from "@Core/Html/Html";
 
 export default class FSoldAmountLastDay extends Feature<CMarketListing> {

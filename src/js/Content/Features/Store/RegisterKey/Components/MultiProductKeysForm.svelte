@@ -20,7 +20,7 @@
     import Modal from "@Core/Modals/Contained/Modal.svelte";
     import type UserInterface from "@Core/User/UserInterface";
     import {EModalAction} from "@Core/Modals/Contained/EModalAction";
-    import RequestData from "@Content/Modules/RequestData";
+    import RequestData from "@Content/Modules/Data/RequestData";
 
     interface TActivationResult {
         success: number,

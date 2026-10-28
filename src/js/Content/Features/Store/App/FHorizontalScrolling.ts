@@ -2,7 +2,7 @@ import Feature from "@Content/Modules/Context/Feature";
 import Settings from "@Options/Data/Settings";
 import type CApp from "@Content/Features/Store/App/CApp";
 import SelectorMap from "@Content/SelectorMap";
-import dynamicNode from "@Content/Modules/DynamicNode/DynamicNode";
+import dynamicNode from "@Content/Modules/DOM/DynamicNode";
 
 export default class FHorizontalScrolling extends Feature<CApp> {
 

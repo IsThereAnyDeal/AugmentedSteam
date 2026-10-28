@@ -1,7 +1,7 @@
 import Settings from "@Options/Data/Settings";
 import DynamicStore from "@Content/Modules/Data/DynamicStore";
 import ITAD from "@Content/Modules/ITAD";
-import DOMHelper from "@Content/Modules/DOMHelper";
+import DOMHelper from "@Content/Modules/DOM/DOMHelper";
 import Tags from "@Content/Modules/Highlights/Tags.svelte";
 import type GameId from "@Core/GameId/GameId";
 import {mount, unmount} from "svelte";

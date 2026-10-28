@@ -1,5 +1,5 @@
 import HTMLParser from "@Core/Html/HtmlParser";
-import RequestData from "@Content/Modules/RequestData";
+import RequestData from "@Content/Modules/Data/RequestData";
 import type UserInterface from "@Core/User/UserInterface";
 
 export default class LegacyUser implements UserInterface {

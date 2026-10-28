@@ -5,7 +5,7 @@ import FHideActiveListings from "./FHideActiveListings";
 import FMarketSort from "./FMarketSort";
 import FPopularRefreshToggle from "./FPopularRefreshToggle";
 import FMarketLowestPrice from "./FMarketLowestPrice";
-import ASEventHandler from "@Content/Modules/ASEventHandler";
+import ASEventHandler from "@Content/Modules/Events/ASEventHandler";
 import type {ContextParams} from "@Content/Modules/Context/Context";
 
 export default class CMarketHome extends CCommunityBase {

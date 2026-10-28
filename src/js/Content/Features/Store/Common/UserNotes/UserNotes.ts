@@ -14,8 +14,8 @@ import {
 } from "@Strings/_strings";
 import type AdapterInterface from "@Content/Modules/UserNotes/Adapters/AdapterInterface";
 import Settings from "@Options/Data/Settings";
-import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";
-import SteamFacade from "@Content/Modules/Facades/SteamFacade";
+import ITADApiFacade from "@Content/Facades/ITADApiFacade";
+import SteamFacade from "@Content/Facades/SteamFacade";
 import NoteEditModal from "@Content/Modules/UserNotes/Modals/NoteEditModal.svelte";
 import ConfirmDialog from "@Core/Modals/ConfirmDialog";
 import {EModalAction} from "@Core/Modals/Contained/EModalAction";

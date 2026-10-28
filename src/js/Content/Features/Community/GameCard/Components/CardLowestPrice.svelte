@@ -1,9 +1,9 @@
 <script lang="ts">
     import {L} from "@Core/Localization/Localization";
     import {__error, __loadCardPrice, __loading, __lowestPrice, __retry, __toomanyrequests} from "@Strings/_strings";
-    import RequestData from "@Content/Modules/RequestData";
+    import RequestData from "@Content/Modules/Data/RequestData";
     import {onMount} from "svelte";
-    import SessionCacheApiFacade from "@Content/Modules/Facades/SessionCacheApiFacade";
+    import SessionCacheApiFacade from "@Content/Facades/SessionCacheApiFacade";
     import Errors from "@Core/Errors/Errors";
     import Price from "@Content/Modules/Currency/Price";
     import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";

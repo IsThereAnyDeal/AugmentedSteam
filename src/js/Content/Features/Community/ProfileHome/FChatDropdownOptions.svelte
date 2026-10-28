@@ -1,7 +1,7 @@
 <script lang="ts">
     import {__steamClientChat, __webBrowserChat} from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
-    import SteamFacade from "@Content/Modules/Facades/SteamFacade";
+    import SteamFacade from "@Content/Facades/SteamFacade";
     import {onMount} from "svelte";
 
     interface Props {

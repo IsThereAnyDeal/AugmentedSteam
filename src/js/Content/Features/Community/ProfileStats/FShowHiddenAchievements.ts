@@ -4,7 +4,7 @@ import {L} from "@Core/Localization/Localization";
 import Feature from "@Content/Modules/Context/Feature";
 import type CProfileStats from "@Content/Features/Community/ProfileStats/CProfileStats";
 import HTML from "@Core/Html/Html";
-import RequestData from "@Content/Modules/RequestData";
+import RequestData from "@Content/Modules/Data/RequestData";
 
 export default class FShowHiddenAchievements extends Feature<CProfileStats> {
 

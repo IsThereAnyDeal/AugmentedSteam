@@ -3,7 +3,7 @@ import Settings from "@Options/Data/Settings";
 import AppId from "@Core/GameId/AppId";
 import Language from "@Core/Localization/Language";
 import ExtensionResources from "@Core/ExtensionResources";
-import AugmentedSteamApiFacade from "@Content/Modules/Facades/AugmentedSteamApiFacade";
+import AugmentedSteamApiFacade from "@Content/Facades/AugmentedSteamApiFacade";
 import { mount } from "svelte";
 
 export default class EarlyAccessUtils {

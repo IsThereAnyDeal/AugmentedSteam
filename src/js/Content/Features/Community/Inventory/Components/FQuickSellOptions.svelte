@@ -18,11 +18,11 @@
         __selling
     } from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
-    import SteamFacade from "@Content/Modules/Facades/SteamFacade";
+    import SteamFacade from "@Content/Facades/SteamFacade";
     import type {MarketInfo} from "@Content/Features/Community/Inventory/CInventory";
     import Settings from "@Options/Data/Settings";
     import LoadingElement from "@Content/Features/Common/LoadingElement.svelte";
-    import RequestData from "@Content/Modules/RequestData";
+    import RequestData from "@Content/Modules/Data/RequestData";
 
     interface Props {
         marketInfo: MarketInfo;

@@ -6,7 +6,7 @@ import {__loading, __lowest, __noData, __theworderror, __toomanyrequests} from "
 import type CMarketHome from "@Content/Features/Community/MarketHome/CMarketHome";
 import Feature from "@Content/Modules/Context/Feature";
 import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
-import RequestData from "@Content/Modules/RequestData";
+import RequestData from "@Content/Modules/Data/RequestData";
 import Errors from "@Core/Errors/Errors";
 import Price from "@Content/Modules/Currency/Price";
 

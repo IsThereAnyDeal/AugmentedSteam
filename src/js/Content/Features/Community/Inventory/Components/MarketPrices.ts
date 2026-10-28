@@ -1,6 +1,6 @@
-import RequestData from "@Content/Modules/RequestData";
+import RequestData from "@Content/Modules/Data/RequestData";
 import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
-import SteamFacade from "@Content/Modules/Facades/SteamFacade";
+import SteamFacade from "@Content/Facades/SteamFacade";
 import type {MarketInfo} from "@Content/Features/Community/Inventory/CInventory";
 import Settings from "@Options/Data/Settings";
 

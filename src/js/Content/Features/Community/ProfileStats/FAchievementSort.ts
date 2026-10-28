@@ -5,7 +5,7 @@ import HTML from "@Core/Html/Html";
 import Feature from "@Content/Modules/Context/Feature";
 import type CProfileStats from "@Content/Features/Community/ProfileStats/CProfileStats";
 import SortBox from "@Content/Modules/Widgets/SortBox.svelte";
-import RequestData from "@Content/Modules/RequestData";
+import RequestData from "@Content/Modules/Data/RequestData";
 import { mount } from "svelte";
 
 interface DateFormatSettings {

@@ -4,7 +4,7 @@ import type CMarketHome from "@Content/Features/Community/MarketHome/CMarketHome
 import Feature from "@Content/Modules/Context/Feature";
 import HTML from "@Core/Html/Html";
 import LocalStorage from "@Core/Storage/LocalStorage";
-import SteamFacade from "@Content/Modules/Facades/SteamFacade";
+import SteamFacade from "@Content/Facades/SteamFacade";
 
 export default class FPopularRefreshToggle extends Feature<CMarketHome> {
 

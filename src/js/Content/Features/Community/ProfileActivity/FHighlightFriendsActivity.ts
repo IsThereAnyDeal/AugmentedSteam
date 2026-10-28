@@ -1,7 +1,7 @@
 import AppId from "@Core/GameId/AppId";
 import type CProfileActivity from "@Content/Features/Community/ProfileActivity/CProfileActivity";
 import Feature from "@Content/Modules/Context/Feature";
-import type {ASEvent} from "@Content/Modules/ASEventHandler";
+import type {ASEvent} from "@Content/Modules/Events/ASEventHandler";
 import HighlightsTagsUtils from "@Content/Modules/Highlights/HighlightsTagsUtils";
 
 export default class FHighlightFriendsActivity extends Feature<CProfileActivity> {

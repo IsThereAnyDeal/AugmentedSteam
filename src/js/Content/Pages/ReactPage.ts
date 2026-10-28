@@ -1,6 +1,6 @@
 import Page from "@Content/Pages/Page";
 import TimeUtils from "@Core/Utils/TimeUtils";
-import SteamFacade from "@Content/Modules/Facades/SteamFacade";
+import SteamFacade from "@Content/Facades/SteamFacade";
 import type Language from "@Core/Localization/Language";
 import type UserInterface from "@Core/User/UserInterface";
 import AppConfigFactory from "@Core/AppConfig/AppConfigFactory";

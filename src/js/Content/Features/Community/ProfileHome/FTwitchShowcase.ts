@@ -4,7 +4,7 @@ import Feature from "@Content/Modules/Context/Feature";
 import type CProfileHome from "@Content/Features/Community/ProfileHome/CProfileHome";
 import Settings from "@Options/Data/Settings";
 import HTML from "@Core/Html/Html";
-import AugmentedSteamApiFacade from "@Content/Modules/Facades/AugmentedSteamApiFacade";
+import AugmentedSteamApiFacade from "@Content/Facades/AugmentedSteamApiFacade";
 
 export default class FTwitchShowcase extends Feature<CProfileHome> {
 

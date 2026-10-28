@@ -2,7 +2,7 @@ import FSearchFilters from "./FSearchFilters";
 import CStoreBase from "@Content/Features/Store/Common/CStoreBase";
 import ContextType from "@Content/Modules/Context/ContextType";
 import type {ContextParams} from "@Content/Modules/Context/Context";
-import DOMHelper from "@Content/Modules/DOMHelper";
+import DOMHelper from "@Content/Modules/DOM/DOMHelper";
 import FIFeelLucky from "@Content/Features/Store/Search/FIFeelLucky";
 import FSearchHighlights from "@Content/Features/Store/Search/FSearchHighlights";
 

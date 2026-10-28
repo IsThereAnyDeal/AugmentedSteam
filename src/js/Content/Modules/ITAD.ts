@@ -1,4 +1,4 @@
-import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";
+import ITADApiFacade from "@Content/Facades/ITADApiFacade";
 import ITADSyncMenu from "@Content/Modules/Widgets/ITADSync/ITADSyncMenu.svelte";
 import type UserInterface from "@Core/User/UserInterface";
 import ITADDisconnectModal from "@Content/Modules/Widgets/ITADSync/ITADDisconnectModal.svelte";
@@ -12,14 +12,14 @@ export default class ITAD {
         if (Settings.itad_disconnect_popup && await ITADApiFacade.isExpired()) {
             await (new Promise<void>(resolve => {
                 const modal = mount(ITADDisconnectModal, {
-                                    target: document.body,
-                                    props: {
-                                        onclose: () => {
-                                            resolve();
-                                            unmount(modal);
-                                        }
-                                    }
-                                });
+                    target: document.body,
+                    props: {
+                        onclose: () => {
+                            resolve();
+                            unmount(modal);
+                        }
+                    }
+                });
             }))
         }
 
@@ -33,10 +33,10 @@ export default class ITAD {
 
         const menu = document.querySelector(".as-menu");
         if (menu) {
-            (mount(ITADSyncMenu, {
-                            target: menu.parentElement!,
-                            anchor: menu
-                        }));
+            mount(ITADSyncMenu, {
+                target: menu.parentElement!,
+                anchor: menu
+            });
         }
     }
 

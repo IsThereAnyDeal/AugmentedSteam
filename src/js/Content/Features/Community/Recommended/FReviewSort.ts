@@ -16,7 +16,7 @@ import Feature from "@Content/Modules/Context/Feature";
 import type CRecommended from "@Content/Features/Community/Recommended/CRecommended";
 import SortBox from "@Content/Modules/Widgets/SortBox.svelte";
 import SyncedStorage from "@Core/Storage/SyncedStorage";
-import SteamCommunityApiFacade from "@Content/Modules/Facades/SteamCommunityApiFacade";
+import SteamCommunityApiFacade from "@Content/Facades/SteamCommunityApiFacade";
 import type {TReview} from "@Background/Modules/Community/_types";
 import HTML from "@Core/Html/Html";
 import BlockingWaitDialog from "@Core/Modals/BlockingWaitDialog";

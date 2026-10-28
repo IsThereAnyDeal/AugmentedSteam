@@ -1,7 +1,7 @@
 import self_ from "./FOwnedElsewhere.svelte";
 import type CApp from "@Content/Features/Store/App/CApp";
 import Feature from "@Content/Modules/Context/Feature";
-import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";
+import ITADApiFacade from "@Content/Facades/ITADApiFacade";
 import Settings from "@Options/Data/Settings";
 import { mount } from "svelte";
 

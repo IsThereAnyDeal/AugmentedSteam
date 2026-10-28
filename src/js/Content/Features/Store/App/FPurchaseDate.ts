@@ -2,7 +2,7 @@ import {L} from "@Core/Localization/Localization";
 import type CApp from "@Content/Features/Store/App/CApp";
 import Feature from "@Content/Modules/Context/Feature";
 import Settings from "@Options/Data/Settings";
-import SteamStoreApiFacade from "@Content/Modules/Facades/SteamStoreApiFacade";
+import SteamStoreApiFacade from "@Content/Facades/SteamStoreApiFacade";
 import {DateTime} from "luxon";
 import {__seeSinceWhenDate, __sinceDate} from "@Strings/_strings";
 

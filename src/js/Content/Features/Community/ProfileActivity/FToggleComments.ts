@@ -9,7 +9,7 @@ import type CProfileActivity from "@Content/Features/Community/ProfileActivity/C
 import Feature from "@Content/Modules/Context/Feature";
 import HTML from "@Core/Html/Html";
 import Settings, {SettingsStore} from "@Options/Data/Settings";
-import SteamFacade from "@Content/Modules/Facades/SteamFacade";
+import SteamFacade from "@Content/Facades/SteamFacade";
 
 export default class FToggleComments extends Feature<CProfileActivity> {
 

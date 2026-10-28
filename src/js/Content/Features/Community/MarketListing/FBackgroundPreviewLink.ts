@@ -1,7 +1,7 @@
 import self_ from "./FBackgroundPreviewLink.svelte";
 import type CMarketListing from "@Content/Features/Community/MarketListing/CMarketListing";
 import Feature from "@Content/Modules/Context/Feature";
-import SteamFacade from "@Content/Modules/Facades/SteamFacade";
+import SteamFacade from "@Content/Facades/SteamFacade";
 import {util} from "protobufjs";
 import { mount } from "svelte";
 

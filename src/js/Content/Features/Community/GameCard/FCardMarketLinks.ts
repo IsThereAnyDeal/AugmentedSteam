@@ -2,7 +2,7 @@ import type CGameCard from "@Content/Features/Community/GameCard/CGameCard";
 import Feature from "@Content/Modules/Context/Feature";
 import Price from "@Content/Modules/Currency/Price";
 import CommunityUtils from "@Content/Modules/Community/CommunityUtils";
-import DOMHelper from "@Content/Modules/DOMHelper";
+import DOMHelper from "@Content/Modules/DOM/DOMHelper";
 import CardLowestPrice from "@Content/Features/Community/GameCard/Components/CardLowestPrice.svelte";
 import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
 import BadgeCompletion from "@Content/Features/Community/GameCard/Components/BadgeCompletion.svelte";

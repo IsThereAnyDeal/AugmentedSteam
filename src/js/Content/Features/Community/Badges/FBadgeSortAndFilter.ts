@@ -13,8 +13,8 @@ import {
 import {L} from "@Core/Localization/Localization";
 import Feature from "@Content/Modules/Context/Feature";
 import type CBadges from "@Content/Features/Community/Badges/CBadges";
-import SteamFacade from "@Content/Modules/Facades/SteamFacade";
-import DOMHelper from "@Content/Modules/DOMHelper";
+import SteamFacade from "@Content/Facades/SteamFacade";
+import DOMHelper from "@Content/Modules/DOM/DOMHelper";
 import HTML from "@Core/Html/Html";
 
 // TODO this whole feature needs a proper big refactor - good start would be to split things out to components

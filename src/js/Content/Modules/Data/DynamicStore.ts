@@ -1,5 +1,5 @@
-import SteamStoreApiFacade from "@Content/Modules/Facades/SteamStoreApiFacade";
-import DOMHelper from "@Content/Modules/DOMHelper";
+import SteamStoreApiFacade from "@Content/Facades/SteamStoreApiFacade";
+import DOMHelper from "@Content/Modules/DOM/DOMHelper";
 import {MessageHandler} from "@Content/Modules/Messaging/MessageHandler";
 import Messenger from "@Content/Modules/Messaging/Messenger";
 

@@ -2,7 +2,7 @@
     import Modal from "@Core/Modals/Contained/Modal.svelte";
     import {L} from "@Core/Localization/Localization";
     import {__itad_expired, __itad_reauthorize} from "@Strings/_strings";
-    import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";
+    import ITADApiFacade from "@Content/Facades/ITADApiFacade";
 
     interface Props {
         onclose: () => void;

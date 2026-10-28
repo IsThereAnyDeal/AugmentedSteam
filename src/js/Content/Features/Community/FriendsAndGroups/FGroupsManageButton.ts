@@ -1,4 +1,4 @@
-import SteamFacade from "@Content/Modules/Facades/SteamFacade";
+import SteamFacade from "@Content/Facades/SteamFacade";
 import {
     __all,
     __groups_actionGroups,
@@ -16,10 +16,10 @@ import {L} from "@Core/Localization/Localization";
 import type CFriendsAndGroups from "@Content/Features/Community/FriendsAndGroups/CFriendsAndGroups";
 import Feature from "@Content/Modules/Context/Feature";
 import HTML from "@Core/Html/Html";
-import RequestData from "@Content/Modules/RequestData";
+import RequestData from "@Content/Modules/Data/RequestData";
 import Messenger from "@Content/Modules/Messaging/Messenger";
 import {MessageHandler} from "@Content/Modules/Messaging/MessageHandler";
-import DOMHelper from "@Content/Modules/DOMHelper";
+import DOMHelper from "@Content/Modules/DOM/DOMHelper";
 
 export default class FGroupsManageButton extends Feature<CFriendsAndGroups> {
 

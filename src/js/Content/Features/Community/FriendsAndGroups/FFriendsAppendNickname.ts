@@ -1,7 +1,7 @@
 import Feature from "@Content/Modules/Context/Feature";
 import type CFriendsAndGroups from "@Content/Features/Community/FriendsAndGroups/CFriendsAndGroups";
 import Settings from "@Options/Data/Settings";
-import RequestData from "@Content/Modules/RequestData";
+import RequestData from "@Content/Modules/Data/RequestData";
 import "./FFriendsAppendNickname.css";
 
 export default class FFriendsAppendNickname extends Feature<CFriendsAndGroups> {

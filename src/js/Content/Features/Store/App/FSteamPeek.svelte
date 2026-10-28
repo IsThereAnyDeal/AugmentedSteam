@@ -1,11 +1,11 @@
 <script lang="ts">
-    import AugmentedSteamApiFacade from "@Content/Modules/Facades/AugmentedSteamApiFacade";
+    import AugmentedSteamApiFacade from "@Content/Facades/AugmentedSteamApiFacade";
     import {onMount} from "svelte";
     import ServiceFactory from "@Protobufs/ServiceFactory";
     import type UserInterface from "@Core/User/UserInterface";
     import {__moreOnSteampeek} from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
-    import SessionCacheApiFacade from "@Content/Modules/Facades/SessionCacheApiFacade";
+    import SessionCacheApiFacade from "@Content/Facades/SessionCacheApiFacade";
     import type {TSimilarResponse} from "@Background/Modules/AugmentedSteam/_types";
     import ViewOnButton from "@Content/Steam/ViewOnButton.svelte";
 

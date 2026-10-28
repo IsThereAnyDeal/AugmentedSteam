@@ -1,7 +1,7 @@
 import Settings from "@Options/Data/Settings";
 import ExtensionResources from "@Core/ExtensionResources";
 import Language from "@Core/Localization/Language";
-import SteamStoreApiFacade from "@Content/Modules/Facades/SteamStoreApiFacade";
+import SteamStoreApiFacade from "@Content/Facades/SteamStoreApiFacade";
 
 export interface TLocale {
     stats: {

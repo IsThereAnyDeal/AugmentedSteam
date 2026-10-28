@@ -1,7 +1,7 @@
 <script lang="ts">
     import {__queue_new, __queue_newTooltip} from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
-    import DOMHelper from "@Content/Modules/DOMHelper";
+    import DOMHelper from "@Content/Modules/DOM/DOMHelper";
     import {onMount} from "svelte";
 
     onMount(() => {

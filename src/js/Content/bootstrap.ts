@@ -19,7 +19,7 @@ import ChangelogHandler from "@Core/Update/ChangelogHandler";
 import ITAD from "@Content/Modules/ITAD";
 import ReactDOM from "@Content/Steam/ReactDOM";
 import TimeUtils from "@Core/Utils/TimeUtils";
-import SteamFacade from "@Content/Modules/Facades/SteamFacade";
+import SteamFacade from "@Content/Facades/SteamFacade";
 
 Environment.CurrentContext = ContextType.ContentScript;
 

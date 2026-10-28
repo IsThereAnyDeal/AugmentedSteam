@@ -1,5 +1,5 @@
 import type {MessageHandler} from "@Content/Modules/Messaging/MessageHandler";
-import DOMHelper from "@Content/Modules/DOMHelper";
+import DOMHelper from "@Content/Modules/DOM/DOMHelper";
 
 export default class Messenger {
 

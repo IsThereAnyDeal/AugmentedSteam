@@ -1,7 +1,7 @@
 import ContextType from "@Content/Modules/Context/ContextType";
 import FGamesStats from "./FGamesStats";
 import type {ContextParams} from "@Content/Modules/Context/Context";
-import SteamFacade from "@Content/Modules/Facades/SteamFacade";
+import SteamFacade from "@Content/Facades/SteamFacade";
 import type {TReactQueryData} from "@Content/Features/_types";
 import CBase from "@Content/Features/Common/CBase";
 

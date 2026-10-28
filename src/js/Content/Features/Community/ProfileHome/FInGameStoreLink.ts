@@ -3,7 +3,7 @@ import {__viewInStore} from "@Strings/_strings";
 import {L} from "@Core/Localization/Localization";
 import type CProfileHome from "@Content/Features/Community/ProfileHome/CProfileHome";
 import Feature from "@Content/Modules/Context/Feature";
-import RequestData from "@Content/Modules/RequestData";
+import RequestData from "@Content/Modules/Data/RequestData";
 import HTML from "@Core/Html/Html";
 
 export default class FInGameStoreLink extends Feature<CProfileHome> {

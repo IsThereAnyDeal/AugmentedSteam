@@ -1,5 +1,5 @@
 <script lang="ts">
-    import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";
+    import ITADApiFacade from "@Content/Facades/ITADApiFacade";
     import {L} from "@Core/Localization/Localization";
     import {__itad_from, __itad_lastImport, __itad_syncNow, __itad_to, __loading, __never} from "@Strings/_strings";
     import ESyncStatus from "@Core/Sync/ESyncStatus";

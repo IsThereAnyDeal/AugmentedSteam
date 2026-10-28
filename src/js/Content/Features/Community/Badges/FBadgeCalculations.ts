@@ -1,7 +1,7 @@
 import Feature from "@Content/Modules/Context/Feature";
 import type CBadges from "@Content/Features/Community/Badges/CBadges";
 import HTML from "@Core/Html/Html";
-import RequestData from "@Content/Modules/RequestData";
+import RequestData from "@Content/Modules/Data/RequestData";
 import DropStats from "@Content/Features/Community/Badges/Components/DropStats.svelte";
 import { mount } from "svelte";
 

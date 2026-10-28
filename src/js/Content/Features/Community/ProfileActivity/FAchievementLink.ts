@@ -2,7 +2,7 @@ import AppId from "@Core/GameId/AppId";
 import type CProfileActivity from "@Content/Features/Community/ProfileActivity/CProfileActivity";
 import Feature from "@Content/Modules/Context/Feature";
 import HTML from "@Core/Html/Html";
-import type {ASEvent} from "@Content/Modules/ASEventHandler";
+import type {ASEvent} from "@Content/Modules/Events/ASEventHandler";
 
 export default class FAchievementLink extends Feature<CProfileActivity> {
 

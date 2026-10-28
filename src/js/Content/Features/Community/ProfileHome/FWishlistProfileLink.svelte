@@ -3,7 +3,7 @@
     import {__wishlist} from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
     import Settings from "@Options/Data/Settings";
-    import RequestData from "@Content/Modules/RequestData";
+    import RequestData from "@Content/Modules/Data/RequestData";
 
     interface Props {
         steamid: string;

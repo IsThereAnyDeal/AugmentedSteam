@@ -4,7 +4,7 @@ import Feature from "@Content/Modules/Context/Feature";
 import type CFriendsAndGroups from "@Content/Features/Community/FriendsAndGroups/CFriendsAndGroups";
 import SortBox from "@Content/Modules/Widgets/SortBox.svelte";
 import SyncedStorage from "@Core/Storage/SyncedStorage";
-import RequestData from "@Content/Modules/RequestData";
+import RequestData from "@Content/Modules/Data/RequestData";
 import HTML from "@Core/Html/Html";
 import type {SortboxChangeEvent} from "@Content/Modules/Widgets/SortboxChangeEvent";
 import { mount } from "svelte";

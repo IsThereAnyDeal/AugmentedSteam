@@ -2,7 +2,7 @@ import {L} from "@Core/Localization/Localization";
 import {__activate, __viewinclient,} from "@Strings/_strings";
 import Settings from "@Options/Data/Settings";
 import AugmentedSteamMenu from "@Content/Modules/Widgets/AugmentedSteam/AugmentedSteamMenu.svelte";
-import CacheApiFacade from "@Content/Modules/Facades/CacheApiFacade";
+import CacheApiFacade from "@Content/Facades/CacheApiFacade";
 import AugmentedSteamWarnings from "@Content/Modules/Widgets/AugmentedSteam/AugmentedSteamWarnings.svelte";
 import Language from "@Core/Localization/Language";
 import type UserInterface from "@Core/User/UserInterface";
@@ -35,13 +35,13 @@ export default class AugmentedSteam {
             : "#global_action_menu"
         )!;
 
-        (mount(AugmentedSteamMenu, {
-                    target,
-                    anchor: target.firstElementChild!,
-                    props: {
-                        user: this.user
-                    }
-                }));
+        mount(AugmentedSteamMenu, {
+            target,
+            anchor: target.firstElementChild!,
+            props: {
+                user: this.user
+            }
+        });
     }
 
     private addBackToTop(): void {
@@ -97,18 +97,6 @@ export default class AugmentedSteam {
         });
     }
 
-    private getWarningComponent(): AugmentedSteamWarnings {
-
-        if (!this.warningComponent) {
-            const header = document.querySelector("#global_header")!;
-            this.warningComponent = mount(AugmentedSteamWarnings, {
-                            target: header.parentElement!,
-                            anchor: header.nextElementSibling!
-                        });
-        }
-        return this.warningComponent;
-    }
-
     private addWarnings(): void {
 
         let target: Element|null;
@@ -124,13 +112,13 @@ export default class AugmentedSteam {
 
         if (target && anchor) {
             mount(AugmentedSteamWarnings, {
-                            target,
-                            anchor,
-                            props: {
-                                react: this.react,
-                                language: this.language
-                            }
-                        });
+                target,
+                anchor,
+                props: {
+                    react: this.react,
+                    language: this.language
+                }
+            });
         } else {
             console.error("Did not find element for warnings");
         }

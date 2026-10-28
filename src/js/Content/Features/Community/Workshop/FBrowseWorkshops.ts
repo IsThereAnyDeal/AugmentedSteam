@@ -3,8 +3,8 @@ import type CWorkshop from "@Content/Features/Community/Workshop/CWorkshop";
 import Feature from "@Content/Modules/Context/Feature";
 import HTML from "@Core/Html/Html";
 import LocalStorage from "@Core/Storage/LocalStorage";
-import RequestData from "@Content/Modules/RequestData";
-import DOMHelper from "@Content/Modules/DOMHelper";
+import RequestData from "@Content/Modules/Data/RequestData";
+import DOMHelper from "@Content/Modules/DOM/DOMHelper";
 
 export default class FBrowseWorkshops extends Feature<CWorkshop> {
 

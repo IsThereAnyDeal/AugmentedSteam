@@ -6,12 +6,12 @@ import FEmptyWishlist from "./FEmptyWishlist";
 import FExportWishlist from "./FExportWishlist";
 import ContextType from "@Content/Modules/Context/ContextType";
 import Context, {type ContextParams} from "@Content/Modules/Context/Context";
-import SteamFacade from "@Content/Modules/Facades/SteamFacade";
+import SteamFacade from "@Content/Facades/SteamFacade";
 import {WishlistDOM} from "@Content/Features/Store/Wishlist/Utils/WishlistDOM";
 import type {TReactQueryData} from "@Content/Features/_types";
 import Long from "long";
 import ServiceFactory from "@Protobufs/ServiceFactory";
-import ASEventHandler from "@Content/Modules/ASEventHandler";
+import ASEventHandler from "@Content/Modules/Events/ASEventHandler";
 import FWishlistRestorePriceCut from "@Content/Features/Store/Wishlist/FWishlistRestorePriceCut";
 
 export interface WishlistEntry {

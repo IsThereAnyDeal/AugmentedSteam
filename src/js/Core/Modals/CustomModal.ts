@@ -1,4 +1,4 @@
-import SteamFacade from "@Content/Modules/Facades/SteamFacade";
+import SteamFacade from "@Content/Facades/SteamFacade";
 import type {SvelteComponent} from "svelte";
 
 let counter = 0;
