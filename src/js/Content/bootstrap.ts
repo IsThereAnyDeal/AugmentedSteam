@@ -162,13 +162,13 @@ export async function bootstrap(config: {
 export const bootstrapLegacy = () => bootstrap({mode: EBootstrapMode.Legacy});
 export const bootstrapReact = () => bootstrap({mode: EBootstrapMode.React});
 
-export async function features<C extends Context>(context: C, features: (typeof Feature<C>)[]) {
+export async function features<C extends Context>(context: C, features: (typeof Feature<Context>)[]) {
     const stats = {
         completed: 0,
         failed: 0
     };
 
-    await Promise.allSettled(features.map(async (f: typeof Feature<C>): Promise<void> => {
+    await Promise.allSettled(features.map(async (f: typeof Feature<Context>): Promise<void> => {
         // @ts-expect-error
         const feature = new f(context);
 

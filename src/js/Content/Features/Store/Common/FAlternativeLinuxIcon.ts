@@ -1,22 +1,21 @@
 import Feature from "@Content/Modules/Context/Feature";
-import type CStoreBase from "@Content/Features/Store/Common/CStoreBase";
 import Settings from "@Options/Data/Settings";
 import ExtensionResources from "@Core/ExtensionResources";
-import ContextType from "@Content/Modules/Context/ContextType";
 import DOMHelper from "@Content/Modules/DOMHelper";
+import type Context from "@Content/Modules/Context/Context";
 
-export default class FAlternativeLinuxIcon extends Feature<CStoreBase> {
+export default class FAlternativeLinuxIcon extends Feature<Context> {
 
-    override checkPrerequisites(): boolean {
+    override async checkPrerequisites(): Promise<boolean> {
         return Settings.show_alternative_linux_icon;
     }
 
-    override apply(): void {
+    override async apply(): Promise<void> {
         const url = ExtensionResources.getURL("img/alternative_linux_icon.png");
 
         let cssText = "";
 
-        // react page, alternatively, use react class: .wIs-huKXogw-.EdGS6nZmIig-
+        // react page
         cssText += `
             span[title*='Linux'] svg {
               visibility:hidden
@@ -34,14 +33,6 @@ export default class FAlternativeLinuxIcon extends Feature<CStoreBase> {
               background-image: url(${url}) !important;
             }
         `;
-
-        if (this.context.type === ContextType.STORE_FRONT) {
-            cssText += `
-              .tab_item.focus .tab_item_details span.platform_img.linux {
-                filter: brightness(0%);
-              }
-            `;
-        }
 
         DOMHelper.insertCSS(cssText);
     }

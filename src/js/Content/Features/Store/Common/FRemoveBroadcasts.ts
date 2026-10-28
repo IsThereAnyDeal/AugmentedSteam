@@ -1,15 +1,15 @@
 import Feature from "@Content/Modules/Context/Feature";
 import Settings from "@Options/Data/Settings";
 import DOMHelper from "@Content/Modules/DOMHelper";
-import type CStoreBase from "@Content/Features/Store/Common/CStoreBase";
+import type Context from "@Content/Modules/Context/Context";
 
-export default class FRemoveBroadcasts extends Feature<CStoreBase> {
+export default class FRemoveBroadcasts extends Feature<Context> {
 
-    override checkPrerequisites(): boolean {
+    override async checkPrerequisites(): Promise<boolean> {
         return Settings.removebroadcasts;
     }
 
-    override apply(): void {
+    override async apply(): Promise<void> {
         const observer = new MutationObserver(() => {
             const broadcastNode = document.querySelector("[data-featuretarget=broadcast-embed],.SaleBroadcastSection_trgt");
             if (!broadcastNode) {

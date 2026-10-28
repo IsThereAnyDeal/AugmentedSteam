@@ -37,6 +37,7 @@ import FDLCCheckboxes from "@Content/Features/Store/App/FDLCCheckboxes.svelte";
 import FHideReportedTags from "@Content/Features/Store/App/FHideReportedTags";
 import FExtraLinksApp from "@Content/Features/Store/Common/FExtraLinksApp";
 import FExtraLinksAppError from "@Content/Features/Store/Common/FExtraLinksAppError";
+import storeFeatures from "@Content/Features/Store/storeFeatures";
 
 export default class CApp extends Context implements IProductPageContext {
 
@@ -119,6 +120,7 @@ export async function run(): Promise<void> {
         ? [
             FExtraLinksAppError
         ] : [
+            ...storeFeatures(),
             FHighlightsTags,
             FReplaceDevPubLinks,
             FUserNotes,
