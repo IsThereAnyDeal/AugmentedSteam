@@ -1,10 +1,10 @@
 import self_ from "./FAchievementBar.svelte";
-import SteamApi from "../../../Modules/SteamApi";
 import Settings from "@Options/Data/Settings";
 import Feature from "@Content/Modules/Context/Feature";
 import type CApp from "@Content/Features/Store/App/CApp";
 import {mount} from "svelte";
 import SelectorMap from "@Content/SelectorMap";
+import ServiceFactory, {EOrigin} from "@Protobufs/ServiceFactory";
 
 export default class FAchievementBar extends Feature<CApp> {
 
@@ -19,10 +19,16 @@ export default class FAchievementBar extends Feature<CApp> {
     }
 
     override async apply(): Promise<void> {
-        const {unlocked, total, percentage} = await SteamApi.getAchievementsProgress(
-            this.context.user,
-            this.context.communityAppid
-        );
+        const { achievementProgress } = await ServiceFactory.PlayerService(this.context.user, EOrigin.Store).getAchievementsProgress({
+            steamid: this.context.user.steamIdLong,
+            appids: [this.context.communityAppid]
+        });
+
+        if (!achievementProgress || achievementProgress.length === 0) {
+            return;
+        }
+
+        const {unlocked, total, percentage} = achievementProgress[0]!;
 
         if (total === 0) {
             return;
@@ -36,9 +42,9 @@ export default class FAchievementBar extends Feature<CApp> {
         mount(self_, {
             target,
             props: {
-                unlocked,
-                total,
-                percentage: Math.round(percentage)
+                unlocked: unlocked!,
+                total: total!,
+                percentage: Math.round(percentage!)
             }
         });
     }

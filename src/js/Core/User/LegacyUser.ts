@@ -1,6 +1,7 @@
 import HTMLParser from "@Core/Html/HtmlParser";
 import RequestData from "@Content/Modules/Data/RequestData";
 import type UserInterface from "@Core/User/UserInterface";
+import Long from "long";
 
 export default class LegacyUser implements UserInterface {
 
@@ -27,6 +28,10 @@ export default class LegacyUser implements UserInterface {
 
     get steamId(): string {
         return this._steamId!;
+    }
+
+    get steamIdLong(): Long {
+        return Long.fromString(this._steamId!);
     }
 
     set storeCountry(value: string) {
