@@ -6,10 +6,9 @@ import CacheApiFacade from "@Content/Facades/CacheApiFacade";
 import AugmentedSteamWarnings from "@Content/Modules/Widgets/AugmentedSteam/AugmentedSteamWarnings.svelte";
 import Language from "@Core/Localization/Language";
 import type UserInterface from "@Core/User/UserInterface";
-import BackToTop from "@Content/Modules/Widgets/AugmentedSteam/BackToTop.svelte";
 import DynamicStore from "@Content/Modules/Data/DynamicStore";
 import LocalStorage from "@Core/Storage/LocalStorage";
-import { mount } from "svelte";
+import {mount} from "svelte";
 
 export default class AugmentedSteam {
 
@@ -42,21 +41,6 @@ export default class AugmentedSteam {
                 user: this.user
             }
         });
-    }
-
-    private addBackToTop(): void {
-        if (!Settings.show_backtotop) { return; }
-
-        const scrollTarget = this.react
-            ? document.querySelector<HTMLElement>("#StoreTemplate,#CommunityTemplate")
-            : null;
-
-        (mount(BackToTop, {
-                    target: document.body,
-                    props: {
-                        target: scrollTarget ?? undefined
-                    }
-                }))
     }
 
     private focusSearchBox() {
@@ -186,7 +170,6 @@ export default class AugmentedSteam {
             await LocalStorage.set("cachedUser", userId);
         }
 
-        this.addBackToTop();
         this.focusSearchBox();
         this.addMenu();
         this.addWarnings();

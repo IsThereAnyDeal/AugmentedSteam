@@ -38,6 +38,7 @@ import FHideReportedTags from "@Content/Features/Store/App/FHideReportedTags";
 import FExtraLinksApp from "@Content/Features/Store/Common/FExtraLinksApp";
 import FExtraLinksAppError from "@Content/Features/Store/Common/FExtraLinksAppError";
 import storeFeatures from "@Content/Features/Store/storeFeatures";
+import commonFeatures from "@Content/Features/Common/commonFeatures";
 
 export default class CApp extends Context implements IProductPageContext {
 
@@ -120,6 +121,7 @@ export async function run(): Promise<void> {
         ? [
             FExtraLinksAppError
         ] : [
+            ...commonFeatures(),
             ...storeFeatures(),
             FHighlightsTags,
             FReplaceDevPubLinks,

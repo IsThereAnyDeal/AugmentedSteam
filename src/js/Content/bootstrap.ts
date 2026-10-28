@@ -156,7 +156,7 @@ export async function bootstrap(config: {
     await ChangelogHandler.checkVersion();
     await ITAD.init(user);
 
-    return new ContextParams(language, user);
+    return new ContextParams(config.mode, language, user);
 }
 // shortcuts
 export const bootstrapLegacy = () => bootstrap({mode: EBootstrapMode.Legacy});
