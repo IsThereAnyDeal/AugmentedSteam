@@ -34,6 +34,7 @@ import FReleaseCountdown from "@Content/Features/Store/App/FReleaseCountdown";
 import FRestorePriceCut from "@Content/Features/Store/Common/FRestorePriceCut";
 import FHighlightsTags from "@Content/Features/Common/FHighlightsTags";
 import FDLCCheckboxes from "@Content/Features/Store/App/FDLCCheckboxes.svelte";
+import FHideReportedTags from "@Content/Features/Store/App/FHideReportedTags";
 
 export default class CApp extends Context implements IProductPageContext {
 
@@ -142,7 +143,7 @@ export async function run(): Promise<void> {
             FSupportInfo,
             FPreventVideoPause,
             FDemoAbovePurchase,
-//            FHideReportedTags,
+            FHideReportedTags,
             FAppTitle,
             FHorizontalScrolling,
             FVaporLensInsights,

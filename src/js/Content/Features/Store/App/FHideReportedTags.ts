@@ -5,16 +5,17 @@ import DOMHelper from "@Content/Modules/DOMHelper";
 
 export default class FHideReportedTags extends Feature<CApp> {
 
-    // @ts-ignore
-    private _yourTags: NodeListOf<HTMLElement>;
-
-    override checkPrerequisites(): boolean {
-        // This feature intends to remove reported tags mistakenly shown as user-defined, see #1423
-        this._yourTags = document.querySelectorAll<HTMLElement>(".app_tag.user_defined");
-        return this._yourTags.length > 0;
+    override async checkPrerequisites(): Promise<boolean> {
+        // FIXME settings
+        return true;
     }
 
-    override apply(): void {
+    override async apply(): Promise<void> {
+        // This feature intends to remove reported tags mistakenly shown as user-defined, see #1423
+        const yourTags = document.querySelectorAll<HTMLElement>(".app_tag.user_defined");
+        if (yourTags.length === 0) {
+            return;
+        }
 
         /**
          * The second argument passed to `InitAppTagModal()` is an array of user tags
@@ -36,7 +37,7 @@ export default class FHideReportedTags extends Feature<CApp> {
 
         if (reportedTagNames.size === 0) { return; }
 
-        for (const tagNode of this._yourTags) {
+        for (const tagNode of yourTags) {
             if (reportedTagNames.has(tagNode.textContent!.trim())) {
                 tagNode.remove();
             }
