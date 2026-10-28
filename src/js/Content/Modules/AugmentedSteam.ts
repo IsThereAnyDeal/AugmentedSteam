@@ -70,27 +70,6 @@ export default class AugmentedSteam {
         }
     }
 
-    private addRedeemLink(): void {
-
-        let node: HTMLAnchorElement|null;
-
-        node = document.querySelector(
-            this.react
-                ? "header a[href*='/account/preferences/']"
-                : "#account_dropdown a[href*='/account/preferences/']"
-        );
-        if (!node) {
-            console.error("Didn't find node to copy for adding redeem link");
-            return;
-        }
-
-        const cloned = node.cloneNode(true) as HTMLAnchorElement;
-        cloned.href = "https://store.steampowered.com/account/registerkey";
-        cloned.textContent = L(__activate);
-
-        node.insertAdjacentElement("afterend", cloned);
-    }
-
     async build(): Promise<void> {
 
         const userId = this.user.steamId ?? "0";
@@ -106,8 +85,6 @@ export default class AugmentedSteam {
         this.addWarnings();
 
         if (this.user.isSignedIn) {
-            this.addRedeemLink();
-
             // TODO probably doesn't used on React pages?
             DynamicStore.invalidateCacheHandler();
         }
