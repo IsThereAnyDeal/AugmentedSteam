@@ -13,6 +13,9 @@ export default class FLicensesSummary extends Feature<CLicenses> {
         (new self_({
             target,
             anchor: target.firstElementChild ?? undefined,
+            props: {
+                steamId: this.context.user.steamId
+            }
         }));
     }
 }

@@ -38,6 +38,14 @@ export interface LocalStorageSchema extends StorageSchema {
         buyTotal: number,
         sellTotal: number,
     },
+    licenses_summary: {
+        steamId: string,
+        language: string,
+        latest: string,
+        count: number,
+        totalCount: number|null,
+        yearly: Record<string, Record<string, number>>
+    },
     popular_refresh: boolean,
     expand_slider: boolean,
     workshop_state: string,
