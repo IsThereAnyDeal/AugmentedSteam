@@ -22,7 +22,7 @@ export default class FHighlightsTags extends Feature<CApp> {
         return this.#highlighter.isEnabled();
     }
 
-    override async apply(): Promise<void> {
+    override async apply(): Promise<string|null> {
         const ids: GameId[] = [];
 
         const appid = new AppId(this.context.appid);
@@ -41,7 +41,7 @@ export default class FHighlightsTags extends Feature<CApp> {
         }
 
         if (ids.length === 0) {
-            return;
+            return null;
         }
 
         await DynamicStore.onReady();
@@ -53,6 +53,7 @@ export default class FHighlightsTags extends Feature<CApp> {
 
         await tick();
         this.#highlighter.clearDisconnectedTags();
+        return null;
     }
 
     #highlightTitle(setup: HighlightMap, appid: AppId) {

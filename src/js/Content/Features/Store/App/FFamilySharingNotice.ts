@@ -3,6 +3,7 @@ import type CApp from "@Content/Features/Store/App/CApp";
 import Feature from "@Content/Modules/Context/Feature";
 import Settings from "@Options/Data/Settings";
 import { mount } from "svelte";
+import {MountTargetError} from "@Core/Errors/Errors";
 
 export default class FFamilySharingNotice extends Feature<CApp> {
 
@@ -10,25 +11,26 @@ export default class FFamilySharingNotice extends Feature<CApp> {
         return Settings.exfgls;
     }
 
-    override async apply(): Promise<void> {
+    override async apply(): Promise<string|null> {
         const comingSoonNode = document.querySelector(".game_area_comingsoon");
         if (comingSoonNode) { // TODO temporary fix, return reason from server
-            return;
+            return null;
         }
 
         const familySharing = (await this.context.data)?.family_sharing;
         if (!familySharing) {
-            return;
+            return null;
         }
 
         const anchor = document.querySelector("#game_area_purchase");
         if (!anchor) {
-            throw new Error("Node not found");
+            throw new MountTargetError();
         }
 
-        (mount(self_, {
+        mount(self_, {
             target: anchor.parentElement!,
             anchor,
-        }));
+        });
+        return null;
     }
 }

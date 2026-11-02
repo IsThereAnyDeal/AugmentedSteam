@@ -10,13 +10,13 @@ export default class FBackToTop extends Feature<Context> {
         return Settings.show_backtotop;
     }
 
-    override async apply(): Promise<void> {
+    override async apply(): Promise<string|null> {
         mount(self_, {
             target: document.body,
             props: {
                 target: document.querySelector<HTMLElement>("#StoreTemplate,#CommunityTemplate") ?? undefined
             }
         });
+        return null;
     }
-
 }

@@ -8,9 +8,9 @@ export default class FRestorePriceCut extends Feature<CApp> { // StoreBase
         return Settings.restore_price_cut;
     }
 
-    override async apply(): Promise<void> {
-
+    override async apply(): Promise<string|null> {
         const discountNodes = document.querySelectorAll<HTMLDivElement>(".game_purchase_discount:has(.discount_icon)");
+
         for (const node of discountNodes) {
             const discount = parseInt(node.dataset.discount ?? "");
             if (!Number.isFinite(discount) || discount <= 0 || discount >= 100) {
@@ -44,5 +44,6 @@ export default class FRestorePriceCut extends Feature<CApp> { // StoreBase
 
             finalPriceNode.closest(".generic_discount")?.classList.remove("generic_discount");
         }
+        return null;
     }
 }

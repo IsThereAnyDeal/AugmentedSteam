@@ -20,13 +20,10 @@ export default class FDLCCheckboxes extends Feature<CApp> {
         return true;
     }
 
-    override async apply(): Promise<void> {
-        // check if the page has at least one purchasable DLC available
-        const dlcs = document.querySelector(".game_area_dlc_section .game_area_dlc_list input[name^=subid]");
-
+    override async apply(): Promise<string|null> {
         const dlcSection = document.querySelector(".game_area_dlc_section");
         if (!dlcSection) {
-            return;
+            return "DLC Section not found";
         }
 
         for (const dlcRow of dlcSection.querySelectorAll(".game_area_dlc_row")) {
@@ -72,5 +69,6 @@ export default class FDLCCheckboxes extends Feature<CApp> {
         mount(AddToCart, {
             target: dlcForm,
         });
+        return null;
     }
 }

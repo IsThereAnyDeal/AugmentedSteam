@@ -5,6 +5,7 @@ import Settings from "@Options/Data/Settings";
 import Feature from "@Content/Modules/Context/Feature";
 import type CApp from "@Content/Features/Store/App/CApp";
 import { mount } from "svelte";
+import {MountTargetError} from "@Core/Errors/Errors";
 
 export default class FBadgeProgress extends Feature<CApp> {
 
@@ -14,7 +15,7 @@ export default class FBadgeProgress extends Feature<CApp> {
             && !this.context.isDlcLike;
     }
 
-    override async apply(): Promise<void> {
+    override async apply(): Promise<string|null> {
         const response: TFetchBadgeInfoResponse = await SteamCommunityApiFacade.fetchBadgeInfo(
             this.context.user.steamId,
             this.context.communityAppid
@@ -24,12 +25,12 @@ export default class FBadgeProgress extends Feature<CApp> {
 
         // No badge data if game doesn't have cards or not logged in
         if (!data) {
-            return;
+            return "No badge data found";
         }
 
         const categoryBlock = document.querySelector<HTMLElement>("#category_block");
         if (!categoryBlock) {
-            throw new Error("Node not found");
+            throw new MountTargetError();
         }
 
         mount(self_, {
@@ -37,5 +38,6 @@ export default class FBadgeProgress extends Feature<CApp> {
             anchor: categoryBlock.nextElementSibling ?? undefined,
             props: {data}
         });
+        return null;
     }
 }

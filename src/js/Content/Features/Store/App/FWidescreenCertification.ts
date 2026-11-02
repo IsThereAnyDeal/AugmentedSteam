@@ -3,6 +3,7 @@ import type CApp from "@Content/Features/Store/App/CApp";
 import Feature from "@Content/Modules/Context/Feature";
 import Settings from "@Options/Data/Settings";
 import {mount} from "svelte";
+import {MountTargetError} from "@Core/Errors/Errors";
 
 export default class FWidescreenCertification extends Feature<CApp> {
 
@@ -10,15 +11,15 @@ export default class FWidescreenCertification extends Feature<CApp> {
         return Settings.showwsgf && !this.context.isDlcLike && !this.context.isVideoOrHardware;
     }
 
-    override async apply(): Promise<void> {
+    override async apply(): Promise<string|null> {
         const wsgf = (await this.context.data)?.wsgf;
         if (!wsgf) {
-            return;
+            return "No data";
         }
 
         const detailsNode = document.querySelector("div.game_details");
         if (!detailsNode) {
-            return;
+            throw new MountTargetError();
         }
 
         mount(self_, {
@@ -32,5 +33,6 @@ export default class FWidescreenCertification extends Feature<CApp> {
                 uws: wsgf.ultrawide
             }
         });
+        return null;
     }
 }

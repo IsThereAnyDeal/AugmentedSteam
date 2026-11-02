@@ -5,6 +5,7 @@ import type CApp from "@Content/Features/Store/App/CApp";
 import {mount} from "svelte";
 import SelectorMap from "@Content/SelectorMap";
 import ServiceFactory, {EOrigin} from "@Protobufs/ServiceFactory";
+import {MountTargetError} from "@Core/Errors/Errors";
 
 export default class FAchievementBar extends Feature<CApp> {
 
@@ -18,25 +19,25 @@ export default class FAchievementBar extends Feature<CApp> {
             && this.context.isOwnedAndPlayed;
     }
 
-    override async apply(): Promise<void> {
+    override async apply(): Promise<string|null> {
         const { achievementProgress } = await ServiceFactory.PlayerService(this.context.user, EOrigin.Store).getAchievementsProgress({
             steamid: this.context.user.steamIdLong,
             appids: [this.context.communityAppid]
         });
 
         if (!achievementProgress || achievementProgress.length === 0) {
-            return;
+            return "No achievement progress found";
         }
 
         const {unlocked, total, percentage} = achievementProgress[0]!;
 
         if (total === 0) {
-            return;
+            return "No achievements found";
         }
 
         const target = document.querySelector(SelectorMap.store.app.achievementBar);
         if (!target) {
-            throw new Error("Node not found");
+            throw new MountTargetError();
         }
 
         mount(self_, {
@@ -47,5 +48,6 @@ export default class FAchievementBar extends Feature<CApp> {
                 percentage: Math.round(percentage!)
             }
         });
+        return null;
     }
 }

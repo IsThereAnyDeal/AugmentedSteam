@@ -10,11 +10,11 @@ export default class FHideReportedTags extends Feature<CApp> {
         return true;
     }
 
-    override async apply(): Promise<void> {
+    override async apply(): Promise<string|null> {
         // This feature intends to remove reported tags mistakenly shown as user-defined, see #1423
         const yourTags = document.querySelectorAll<HTMLElement>(".app_tag.user_defined");
         if (yourTags.length === 0) {
-            return;
+            return "No reported tags founds";
         }
 
         /**
@@ -25,7 +25,9 @@ export default class FHideReportedTags extends Feature<CApp> {
             is_reported: boolean,
             name: string
         }>(/\[{"tagid".+}\],\s*(\[{"tagid".+}\])/);
-        if (!userTags) { return; }
+        if (!userTags) {
+            return "No reported tags founds";
+        }
 
         const reportedTagNames = new Set();
 
@@ -35,7 +37,9 @@ export default class FHideReportedTags extends Feature<CApp> {
             }
         }
 
-        if (reportedTagNames.size === 0) { return; }
+        if (reportedTagNames.size === 0) {
+            return "No reported tags founds";
+        }
 
         for (const tagNode of yourTags) {
             if (reportedTagNames.has(tagNode.textContent!.trim())) {
@@ -45,5 +49,6 @@ export default class FHideReportedTags extends Feature<CApp> {
 
         // trigger displaying additional popular tags
         DOMHelper.insertScript("scriptlets/Store/App/triggerResize.js");
+        return null;
     }
 }

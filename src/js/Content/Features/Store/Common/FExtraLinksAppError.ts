@@ -4,6 +4,7 @@ import type CApp from "@Content/Features/Store/App/CApp";
 import Settings from "@Options/Data/Settings";
 import {mount} from "svelte";
 import CommunityHubButton from "@Content/Features/Store/Common/ExtraLinks/CommunityHubButton.svelte";
+import {MountTargetError} from "@Core/Errors/Errors";
 
 /**
  * See: https://store.steampowered.com/app/102810/Gatling_Gears/?cc=fr
@@ -15,8 +16,11 @@ export default class FExtraLinksAppError extends Feature<CApp> {
         return true;
     }
 
-    override async apply(): Promise<void> {
+    override async apply(): Promise<string|null> {
         const header = document.querySelector("h2.pageheader")!;
+        if (!header) {
+            throw new MountTargetError();
+        }
 
         mount(CommunityHubButton, {
             target: header.parentElement!,
@@ -44,5 +48,6 @@ export default class FExtraLinksAppError extends Feature<CApp> {
                 }
             });
         }
+        return null;
     }
 }

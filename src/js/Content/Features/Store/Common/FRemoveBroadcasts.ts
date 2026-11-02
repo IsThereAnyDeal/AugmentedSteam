@@ -9,7 +9,7 @@ export default class FRemoveBroadcasts extends Feature<Context> {
         return Settings.removebroadcasts;
     }
 
-    override async apply(): Promise<void> {
+    override async apply(): Promise<string|null> {
         const observer = new MutationObserver(() => {
             const broadcastNode = document.querySelector("[data-featuretarget=broadcast-embed],.SaleBroadcastSection_trgt");
             if (!broadcastNode) {
@@ -26,5 +26,6 @@ export default class FRemoveBroadcasts extends Feature<Context> {
             subtree: true,
             childList: true,
         });
+        return null;
     }
 }

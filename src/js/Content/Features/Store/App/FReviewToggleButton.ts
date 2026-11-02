@@ -2,6 +2,7 @@ import self_ from "./FReviewToggleButton.svelte";
 import type CApp from "@Content/Features/Store/App/CApp";
 import Feature from "@Content/Modules/Context/Feature";
 import { mount } from "svelte";
+import {MountTargetError} from "@Core/Errors/Errors";
 
 /**
  * Adds button that shows/hides "Write a review" form on app pages,
@@ -14,15 +15,15 @@ export default class FReviewToggleButton extends Feature<CApp> {
         return true;
     }
 
-    override async apply(): Promise<void> {
+    override async apply(): Promise<string|null> {
         const reviewForm = document.querySelector("#review_create");
         if (!reviewForm) {
-            throw new Error("Node not found");
+            throw new MountTargetError();
         }
 
         const target = reviewForm.querySelector("h2");
         if (!target) {
-            throw new Error("Node not found");
+            throw new MountTargetError();
         }
         target.style.display = "flex";
         target.style.justifyContent = "space-between";
@@ -42,5 +43,6 @@ export default class FReviewToggleButton extends Feature<CApp> {
                 reviewSection
             }
         });
+        return null;
     }
 }

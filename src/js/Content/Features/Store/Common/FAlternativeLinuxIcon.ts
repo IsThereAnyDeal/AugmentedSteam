@@ -10,7 +10,7 @@ export default class FAlternativeLinuxIcon extends Feature<Context> {
         return Settings.show_alternative_linux_icon;
     }
 
-    override async apply(): Promise<void> {
+    override async apply(): Promise<string|null> {
         const url = ExtensionResources.getURL("img/alternative_linux_icon.png");
 
         let cssText = "";
@@ -35,5 +35,6 @@ export default class FAlternativeLinuxIcon extends Feature<Context> {
         `;
 
         DOMHelper.insertCSS(cssText);
+        return null;
     }
 }

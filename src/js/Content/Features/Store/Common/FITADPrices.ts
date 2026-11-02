@@ -50,7 +50,7 @@ export default class FITADPrices extends Feature<CApp|CSub|CBundle> {
         }
     }
 
-    override async apply(): Promise<void> {
+    override async apply(): Promise<string|null> {
         const prices = new Prices(this.context.user);
 
         let subs: number[] = StorePageUtils.getAllSubids().map(Number);
@@ -60,7 +60,7 @@ export default class FITADPrices extends Feature<CApp|CSub|CBundle> {
         }
 
         if (subs.length === 0 && bundles.length === 0) {
-            return;
+            return null;
         }
 
         prices
@@ -77,5 +77,7 @@ export default class FITADPrices extends Feature<CApp|CSub|CBundle> {
                 }
                 this.#insertBundles(bundles);
             });
+
+        return null;
     }
 }

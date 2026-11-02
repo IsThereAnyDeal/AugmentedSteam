@@ -14,17 +14,16 @@ export default class FVaporLensInsights extends Feature<CApp> {
         return Settings.ai_enabled && Settings.show_vaporlens_summary;
     }
 
-    override async apply(): Promise<void> {
+    override async apply(): Promise<string|null> {
         let data: TVaporLensResponse|null;
         try {
             data = await VaporLensApiFacade.fetchInsights(this.context.appid);
         } catch (e) {
-            this.logError(e, "Failed to fetch VaporLens insights");
             throw new Error("Failed to fetch VaporLens insights");
         }
 
         if (data === null) {
-            throw new Error("No Vaporlens data");
+            return "No Vaporlens data";
         }
 
         const summaries = await dynamicNode({
@@ -40,5 +39,6 @@ export default class FVaporLensInsights extends Feature<CApp> {
                 data
             },
         });
+        return null;
     }
 }

@@ -14,10 +14,10 @@ export default class FReviewScores extends Feature<CApp> {
         return Settings.showmcus || Settings.showoc;
     }
 
-    override async apply(): Promise<void> {
+    override async apply(): Promise<string|null> {
         this.#reviews = (await this.context.data)?.reviews ?? null;
         if (!this.#reviews) {
-            return;
+            return "No data";
         }
 
         const metascoreNode = document.querySelector("#game_area_metascore");
@@ -29,6 +29,7 @@ export default class FReviewScores extends Feature<CApp> {
         if (Settings.showmcus) {
             this.#mountMetacritic(metascoreNode);
         }
+        return null;
     }
 
     #mountOpencritic(metascoreNode: Element|null) {

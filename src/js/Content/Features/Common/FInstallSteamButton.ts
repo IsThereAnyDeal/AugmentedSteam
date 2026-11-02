@@ -4,6 +4,7 @@ import Settings from "@Options/Data/Settings";
 import {__viewinclient} from "@Strings/_strings";
 import {L} from "@Core/Localization/Localization";
 import "./FInstallSteamButton.css";
+import {MountTargetError} from "@Core/Errors/Errors";
 
 export default class FInstallSteamButton extends Feature<Context> {
 
@@ -11,7 +12,7 @@ export default class FInstallSteamButton extends Feature<Context> {
         return Settings.installsteam !== "show";
     }
 
-    public override async apply(): Promise<void> {
+    public override async apply(): Promise<string|null> {
         const react = this.context.isReact;
 
         const btn = document.querySelector<HTMLAnchorElement>(react
@@ -19,8 +20,7 @@ export default class FInstallSteamButton extends Feature<Context> {
             : "a.header_installsteam_btn"
         );
         if (!btn) {
-            console.error(`Couldn't find "Install Steam" button element.`);
-            return;
+            throw new MountTargetError(`Couldn't find "Install Steam" button element.`);
         }
 
         if (Settings.installsteam === "hide") {
@@ -36,5 +36,6 @@ export default class FInstallSteamButton extends Feature<Context> {
             btn.href = `steam://openurl/${window.location.href}`;
             btn.classList.add("as_steamclient_btn");
         }
+        return null;
     }
 }

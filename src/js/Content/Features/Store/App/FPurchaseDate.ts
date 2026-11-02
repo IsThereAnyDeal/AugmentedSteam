@@ -12,10 +12,10 @@ export default class FPurchaseDate extends Feature<CApp> {
         return Settings.purchase_dates && this.context.user.isSignedIn;
     }
 
-    override async apply(): Promise<void> {
+    override async apply(): Promise<string|null> {
         const node = document.querySelector(".game_area_already_owned .already_in_library");
         if (!node) {
-            return;
+            return "Not owned or we didn't find an HTML node";
         }
 
         const date = await SteamStoreApiFacade.getPurchaseDate(this.context.appid);
@@ -38,5 +38,6 @@ export default class FPurchaseDate extends Feature<CApp> {
                 })
             })})`;
         }
+        return null;
     }
 }

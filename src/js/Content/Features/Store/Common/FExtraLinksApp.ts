@@ -4,6 +4,7 @@ import AppLinks from "@Content/Features/Store/Common/ExtraLinks/AppLinks.svelte"
 import type CApp from "@Content/Features/Store/App/CApp";
 import Settings from "@Options/Data/Settings";
 import { mount } from "svelte";
+import {MountTargetError} from "@Core/Errors/Errors";
 
 export default class FExtraLinksApp extends Feature<CApp> {
 
@@ -26,13 +27,13 @@ export default class FExtraLinksApp extends Feature<CApp> {
     }
 
     // Even if the user disabled extra links, the position of the share/embed links is changed
-    override async apply(): Promise<void> {
+    override async apply(): Promise<string|null> {
         const target = document.querySelector("div.rightcol.game_meta_data");
         if (!target) {
-            throw new Error("Node not found");
+            throw new MountTargetError();
         }
 
-        (mount(AppLinks, {
+        mount(AppLinks, {
             target,
             anchor: target.firstElementChild ?? undefined,
             props: {
@@ -41,6 +42,7 @@ export default class FExtraLinksApp extends Feature<CApp> {
                 appName: StringUtils.clearSpecialSymbols(this.context.appName),
                 appPage: true
             }
-        }));
+        });
+        return null;
     }
 }

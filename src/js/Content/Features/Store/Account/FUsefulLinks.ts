@@ -2,6 +2,7 @@ import self_ from "./FUsefulLinks.svelte";
 import type CAccount from "./CAccount";
 import Feature from "@Content/Modules/Context/Feature";
 import {mount} from "svelte";
+import {MountTargetError} from "@Core/Errors/Errors";
 
 export default class FUsefulLinks extends Feature<CAccount> {
 
@@ -10,15 +11,17 @@ export default class FUsefulLinks extends Feature<CAccount> {
         return true;
     }
 
-    public override async apply(): Promise<void> {
+    public override async apply(): Promise<string|null> {
         const anchor = document.querySelector(".account_setting_block_short");
         if (!anchor) {
-            return;
+            throw new MountTargetError();
         }
 
         mount(self_, {
             target: anchor.parentElement!,
             anchor
-        })
+        });
+
+        return null;
     }
 }

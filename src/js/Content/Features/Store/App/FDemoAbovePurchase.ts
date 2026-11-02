@@ -2,6 +2,7 @@ import self_ from "./FDemoAbovePurchase.svelte";
 import Feature from "@Content/Modules/Context/Feature";
 import type CApp from "@Content/Features/Store/App/CApp";
 import {mount} from "svelte";
+import {MountTargetError} from "@Core/Errors/Errors";
 
 /**
  * Demo links may appear in the main section above purchase options, or in the right column as a small button.
@@ -17,17 +18,15 @@ export default class FDemoAbovePurchase extends Feature<CApp> {
         return true;
     }
 
-    override async apply(): Promise<void> {
+    override async apply(): Promise<string|null> {
         const demoLink = document.querySelector<HTMLAnchorElement>(".download_demo_button a.btn_medium")?.href.slice(11) ?? null;
         if (!demoLink) {
-            // no demo found
-            throw new Error("No demo found");
+            return "No demo found";
         }
 
         const demoAbovePurchase = document.querySelector(".demo_above_purchase") !== null;
         if (demoAbovePurchase) {
-            // There already is a demo above purchase section.
-            return;
+            return "Demo is natively listed above purchase section";
         }
 
         // Determine available platforms from system requirements
@@ -45,7 +44,7 @@ export default class FDemoAbovePurchase extends Feature<CApp> {
         } else {
             const areaPurchase = document.querySelector("#game_area_purchase");
             if (!areaPurchase) {
-                throw new Error("Node not found");
+                throw new MountTargetError();
             }
 
             target = areaPurchase;
@@ -63,5 +62,7 @@ export default class FDemoAbovePurchase extends Feature<CApp> {
                 demoLink
             }
         });
+
+        return null;
     }
 }

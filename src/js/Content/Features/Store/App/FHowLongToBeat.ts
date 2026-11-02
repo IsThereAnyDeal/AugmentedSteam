@@ -3,6 +3,7 @@ import type CApp from "@Content/Features/Store/App/CApp";
 import Feature from "@Content/Modules/Context/Feature";
 import Settings from "@Options/Data/Settings";
 import {mount} from "svelte";
+import {MountTargetError} from "@Core/Errors/Errors";
 
 export default class FHowLongToBeat extends Feature<CApp> {
 
@@ -12,13 +13,17 @@ export default class FHowLongToBeat extends Feature<CApp> {
             && !this.context.isVideoOrHardware;
     }
 
-    override async apply(): Promise<void> {
+    override async apply(): Promise<string|null> {
         const hltb = (await this.context.data)?.hltb;
         if (!hltb) {
-            return;
+            return "No HLTB data";
         }
 
         const anchor = document.querySelector("div.game_details")!.nextElementSibling!;
+        if (!anchor) {
+            throw new MountTargetError();
+        }
+
         mount(self_, {
             target: anchor.parentElement!,
             anchor,
@@ -29,5 +34,7 @@ export default class FHowLongToBeat extends Feature<CApp> {
                 url: hltb.url
             }
         });
+
+        return null;
     }
 }

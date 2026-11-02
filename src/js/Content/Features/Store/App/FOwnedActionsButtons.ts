@@ -6,6 +6,8 @@ import {L} from "@Core/Localization/Localization";
 import {mount} from "svelte";
 import ViewInLibraryButton from "@Content/Features/Store/App/Components/OwnedActionsButtons/ViewInLibraryButton.svelte";
 import GetHelpButton from "@Content/Features/Store/App/Components/OwnedActionsButtons/GetHelpButton.svelte";
+import {MountTargetError} from "@Core/Errors/Errors";
+import DynamicStore from "@Content/Modules/Data/DynamicStore";
 
 /**
  * Handles buttons in the owned section of app page
@@ -21,11 +23,10 @@ export default class FOwnedActionsButtons extends Feature<CApp> {
         ;
     }
 
-    override async apply(): Promise<void> {
+    override async apply(): Promise<string|null> {
         const node = document.querySelector(".game_area_play_stats .already_owned_actions")!;
         if (!node) {
-            // wrong selector or not owned
-            throw new Error("Node not found");
+            return "Game is not owned, or we couldn't find an HTML target";
         }
 
         const appid = this.context.appid;
@@ -55,5 +56,6 @@ export default class FOwnedActionsButtons extends Feature<CApp> {
             anchor: node.nextElementSibling ?? undefined,
             props: { appid }
         });
+        return null;
     }
 }

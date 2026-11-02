@@ -3,6 +3,7 @@ import Settings from "@Options/Data/Settings";
 import type CApp from "@Content/Features/Store/App/CApp";
 import SelectorMap from "@Content/SelectorMap";
 import dynamicNode from "@Content/Modules/DOM/DynamicNode";
+import {MountTargetError} from "@Core/Errors/Errors";
 
 export default class FHorizontalScrolling extends Feature<CApp> {
 
@@ -10,11 +11,10 @@ export default class FHorizontalScrolling extends Feature<CApp> {
         return Settings.horizontalscrolling;
     }
 
-    override async apply(): Promise<void> {
+    override async apply(): Promise<string|null> {
         const parent = document.querySelector<HTMLElement>(".highlight_ctn");
         if (!parent) {
-            console.error("Couldn't find highlights");
-            return;
+            throw new MountTargetError("Couldn't find highlights")
         }
 
         const slider = await dynamicNode({
@@ -43,5 +43,6 @@ export default class FHorizontalScrolling extends Feature<CApp> {
                 }
             }
         });
+        return null;
     }
 }

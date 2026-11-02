@@ -12,7 +12,8 @@ export default class FPreventVideoPause extends Feature<CApp> {
         return Settings.prevent_video_pause;
     }
 
-    override async apply(): Promise<void> {
+    override async apply(): Promise<string|null> {
         DOMHelper.insertScript("scriptlets/Store/App/preventVideoPauseScriptlet.js");
+        return null;
     }
 }

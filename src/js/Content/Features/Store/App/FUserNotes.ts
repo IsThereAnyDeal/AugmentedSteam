@@ -4,6 +4,7 @@ import type CApp from "@Content/Features/Store/App/CApp";
 import Feature from "@Content/Modules/Context/Feature";
 import UserNotes from "@Content/Features/Store/Common/UserNotes/UserNotes";
 import { mount } from "svelte";
+import {MountTargetError} from "@Core/Errors/Errors";
 
 export default class FUserNotes extends Feature<CApp> {
 
@@ -11,10 +12,10 @@ export default class FUserNotes extends Feature<CApp> {
         return this.context.user.isSignedIn && Settings.user_notes_app;
     }
 
-    override async apply(): Promise<void> {
+    override async apply(): Promise<string|null> {
         const queue = document.querySelector("#queueCtn");
         if (!queue) {
-            throw new Error("Node not found");
+            throw new MountTargetError();
         }
 
         mount(self_, {
@@ -25,5 +26,6 @@ export default class FUserNotes extends Feature<CApp> {
                 appName: this.context.appName
             }
         });
+        return null;
     }
 }

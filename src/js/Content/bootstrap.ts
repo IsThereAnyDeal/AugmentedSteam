@@ -188,7 +188,7 @@ export async function features<C extends Context>(context: C, features: (typeof 
             desc.loading = true;
 
             try {
-                await feature.apply();
+                desc.message = await feature.apply();
                 ++report.loaded;
             } catch(e) {
                 console.group(feature.name);

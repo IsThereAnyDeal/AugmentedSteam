@@ -3,6 +3,7 @@ import type CApp from "@Content/Features/Store/App/CApp";
 import Feature from "@Content/Modules/Context/Feature";
 import Settings from "@Options/Data/Settings";
 import { mount } from "svelte";
+import {MountTargetError} from "@Core/Errors/Errors";
 
 export default class FSteamPeek extends Feature<CApp> {
 
@@ -10,10 +11,10 @@ export default class FSteamPeek extends Feature<CApp> {
         return Settings.show_steampeek;
     }
 
-    async apply(): Promise<void> {
+    async apply(): Promise<string|null> {
         const moreLikeThis = document.querySelector(".related_items_ctn .page_content");
         if (!moreLikeThis) {
-            return;
+            throw new MountTargetError();
         }
 
         mount(self_, {
@@ -25,5 +26,6 @@ export default class FSteamPeek extends Feature<CApp> {
                 appid: this.context.appid
             }
         });
+        return null;
     }
 }

@@ -9,7 +9,7 @@ export default class FFocusSearchBox extends Feature<Context> {
         return true;
     }
 
-    override async apply(): Promise<void> {
+    override async apply(): Promise<string|null> {
 
         const selectors = this.context.isReact
             ? [
@@ -25,7 +25,9 @@ export default class FFocusSearchBox extends Feature<Context> {
             ];
 
         const node = document.querySelector<HTMLElement>(selectors.join(","));
-        if (!node) { return; }
+        if (!node) {
+            return "No searchbox found";
+        }
 
         function isContentEditable(el: Element): boolean {
             return el.tagName === "INPUT"
@@ -46,5 +48,6 @@ export default class FFocusSearchBox extends Feature<Context> {
             e.preventDefault();
             node.focus();
         });
+        return null;
     }
 }

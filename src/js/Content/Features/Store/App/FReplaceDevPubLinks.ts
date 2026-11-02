@@ -12,8 +12,7 @@ export default class FReplaceDevPubLinks extends Feature<CApp> {
         return true;
     }
 
-    public override async apply(): Promise<void> {
-
+    public override async apply(): Promise<string|null> {
         const devs = [...document.querySelectorAll<HTMLAnchorElement>("#genresAndManufacturer > .dev_row:first-of-type > a")];
 
         // We need to use this element to locate the row that contains developer info, see #1346
@@ -59,5 +58,6 @@ export default class FReplaceDevPubLinks extends Feature<CApp> {
         }
 
         SteamFacade.collapseLongStrings(".dev_row .summary.column");
+        return null;
     }
 }

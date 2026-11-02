@@ -2,6 +2,7 @@ import type CApp from "@Content/Features/Store/App/CApp";
 import Feature from "@Content/Modules/Context/Feature";
 import ServiceFactory from "@Protobufs/ServiceFactory";
 import {DateTime} from "luxon";
+import {MountTargetError} from "@Core/Errors/Errors";
 
 /**
  * Adds exact release date to release countdown display in coming soon games
@@ -13,10 +14,10 @@ export default class FReleaseCountdown extends Feature<CApp> {
         return true;
     }
 
-    override async apply(): Promise<void> {
+    override async apply(): Promise<string|null> {
         const comingSoon: HTMLElement|null = document.querySelector<HTMLDivElement>(".game_area_comingsoon");
         if (!comingSoon) {
-            throw new Error("Node not found");
+            throw new MountTargetError();
         }
 
         const service = ServiceFactory.StoreBrowseService(this.context.user);
@@ -32,22 +33,22 @@ export default class FReleaseCountdown extends Feature<CApp> {
         });
 
         if (response.storeItems.length === 0) {
-            return;
+            return null;
         }
 
         const release = response.storeItems[0]!.release;
         if (!release) {
-            return;
+            return null;
         }
 
         const {steamReleaseDate, comingSoonDisplay, isComingSoon} = release;
         if (!isComingSoon) {
-            return;
+            return null;
         }
 
         // TODO what other values would be valid here?
         if (comingSoonDisplay !== "date_full") {
-            return;
+            return null;
         }
 
         if (steamReleaseDate && Number.isInteger(steamReleaseDate)) {
@@ -62,5 +63,6 @@ export default class FReleaseCountdown extends Feature<CApp> {
             const target = comingSoon.querySelector(".content p");
             target?.append(str);
         }
+        return null;
     }
 }

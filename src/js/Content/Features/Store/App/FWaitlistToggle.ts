@@ -5,6 +5,7 @@ import AppId from "@Core/GameId/AppId";
 import {mount} from "svelte";
 import ITADApiFacade from "@Content/Facades/ITADApiFacade";
 import Settings from "@Options/Data/Settings";
+import {MountTargetError} from "@Core/Errors/Errors";
 
 export default class FWaitlistToggle extends Feature<CApp> {
 
@@ -14,11 +15,10 @@ export default class FWaitlistToggle extends Feature<CApp> {
             && (await ITADApiFacade.isConnected());
     }
 
-    override async apply(): Promise<void> {
-
+    override async apply(): Promise<string|null> {
         const parent = document.querySelector<HTMLElement>(".queue_actions_ctn");
         if (!parent) {
-            return;
+            throw new MountTargetError();
         }
 
         /**
@@ -40,7 +40,7 @@ export default class FWaitlistToggle extends Feature<CApp> {
         // queueBtnFollow
         const followButton = parent.querySelector("#queueBtnFollow");
         if (!followButton) {
-            return;
+            throw new MountTargetError();
         }
 
         mount(self_, {
@@ -50,6 +50,7 @@ export default class FWaitlistToggle extends Feature<CApp> {
                 appid,
                 storeid
             }
-        })
+        });
+        return null;
     }
 }

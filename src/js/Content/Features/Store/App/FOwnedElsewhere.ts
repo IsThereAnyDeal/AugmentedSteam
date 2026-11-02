@@ -4,6 +4,7 @@ import Feature from "@Content/Modules/Context/Feature";
 import ITADApiFacade from "@Content/Facades/ITADApiFacade";
 import Settings from "@Options/Data/Settings";
 import { mount } from "svelte";
+import {MountTargetError} from "@Core/Errors/Errors";
 
 export default class FOwnedElsewhere extends Feature<CApp> {
 
@@ -12,15 +13,15 @@ export default class FOwnedElsewhere extends Feature<CApp> {
             && await ITADApiFacade.isConnected();
     }
 
-    override async apply(): Promise<void> {
+    override async apply(): Promise<string|null> {
         const response = await ITADApiFacade.getFromCollection(this.context.storeid);
         if (response === null) {
-            return;
+            return null;
         }
 
         const node = document.querySelector<HTMLElement>(".queue_overflow_ctn")!;
         if (!node) {
-            return;
+            throw new MountTargetError();
         }
 
         mount(self_, {
@@ -31,5 +32,6 @@ export default class FOwnedElsewhere extends Feature<CApp> {
                 copies:  response
             }
         });
+        return null;
     }
 }

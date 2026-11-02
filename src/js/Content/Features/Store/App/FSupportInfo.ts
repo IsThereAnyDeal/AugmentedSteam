@@ -7,6 +7,7 @@ import LocalStorage from "@Core/Storage/LocalStorage";
 import SteamStoreApiFacade from "@Content/Facades/SteamStoreApiFacade";
 import type {TAppDetail} from "@Background/Modules/Store/_types";
 import {mount} from "svelte";
+import {MountTargetError} from "@Core/Errors/Errors";
 
 /**
  * Add Support links to the game info area (top right box next to media)
@@ -18,7 +19,7 @@ export default class FSupportInfo extends Feature<CApp> {
         return Settings.showsupportinfo;
     }
 
-    override async apply(): Promise<void> {
+    override async apply(): Promise<string|null> {
         let cached = (await LocalStorage.get("support_info")) ?? null;
 
         // todo IDB
@@ -51,7 +52,7 @@ export default class FSupportInfo extends Feature<CApp> {
 
         const target = document.querySelector(".glance_ctn_responsive_left");
         if (!target) {
-            throw new Error("Node not found");
+            throw new MountTargetError();
         }
 
         mount(self_, {
@@ -62,5 +63,6 @@ export default class FSupportInfo extends Feature<CApp> {
                 email: supportInfo.email
             }
         });
+        return null;
     }
 }

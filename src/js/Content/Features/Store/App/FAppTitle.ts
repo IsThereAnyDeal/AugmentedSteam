@@ -11,10 +11,11 @@ export default class FAppTitle extends Feature<CApp> {
         return Settings.tabtitle_appname_first;
     }
 
-    override async apply(): Promise<void> {
+    override async apply(): Promise<string|null> {
         const appName = this.context.appName;
         if (!document.title.startsWith(appName)) {
             document.title = appName + " - " + document.title;
         }
+        return null;
     }
 }

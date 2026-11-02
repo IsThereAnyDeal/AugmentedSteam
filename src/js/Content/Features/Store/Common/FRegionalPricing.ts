@@ -13,7 +13,7 @@ export default class FRegionalPricing extends Feature<CApp> {
         return countries && countries.length > 0 && Settings.showregionalprice !== "off";
     }
 
-    override async apply(): Promise<void> {
+    override async apply(): Promise<string|null> {
         const countries = Settings.regional_countries;
         const localCountry = this.context.user.storeCountry.toLowerCase();
 
@@ -87,5 +87,7 @@ export default class FRegionalPricing extends Feature<CApp> {
                 });
             }
         }
+
+        return null;
     }
 }

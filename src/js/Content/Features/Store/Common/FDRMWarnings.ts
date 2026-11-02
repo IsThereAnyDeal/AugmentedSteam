@@ -6,6 +6,7 @@ import Settings from "@Options/Data/Settings";
 import {mount} from "svelte";
 import type IProductPageContext from "@Content/Features/Store/IProductPageContext";
 import type Context from "@Content/Modules/Context/Context";
+import {MountTargetError} from "@Core/Errors/Errors";
 
 export default class FDRMWarnings extends Feature<Context & IProductPageContext> {
 
@@ -49,7 +50,7 @@ export default class FDRMWarnings extends Feature<Context & IProductPageContext>
         return value;
     }
 
-    override async apply(): Promise<void> {
+    override async apply(): Promise<string|null> {
         const isAppPage = this.context.appid !== null;
 
         let text = "";
@@ -144,14 +145,15 @@ export default class FDRMWarnings extends Feature<Context & IProductPageContext>
         if (drmString) {
             const target = document.querySelector("#game_area_purchase, #game_area_purchase_top");
             if (!target) {
-                throw new Error("Node not found");
+                throw new MountTargetError();
             }
 
-            (mount(self_, {
+            mount(self_, {
                 target,
                 anchor: target.firstElementChild!,
                 props: {drmString}
-            }));
+            });
         }
+        return null;
     }
 }
