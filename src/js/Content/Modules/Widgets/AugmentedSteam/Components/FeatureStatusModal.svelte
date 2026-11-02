@@ -1,6 +1,6 @@
 <script lang="ts">
     import Modal from "@Core/Modals/Contained/Modal.svelte";
-    import FeatureReport from "@Content/FeatureReport.svelte.js";
+    import FeatureReport, {FeatureDesc} from "@Content/FeatureReport.svelte.js";
     import YesIcon from "@Content/Icons/Status/EnabledIcon.svelte";
     import NoIcon from "@Content/Icons/Status/DisabledIcon.svelte";
     import ErrorIcon from "@Content/Icons/Status/ErrorIcon.svelte";
@@ -11,12 +11,18 @@
     }
 
     let { report, onclose }: Props = $props();
+
+    const features: FeatureDesc[] = $derived.by(() => {
+        let result: Array<[string, FeatureDesc]> = report.features.map(desc => [desc.name, desc])
+        result.sort((a, b) => a[0].localeCompare(b[0]));
+        return result.map(a => a[1]);
+    });
 </script>
 
 
 <Modal title="Status" showClose oncancel={onclose}>
     <ul>
-        {#each report.features as feature}
+        {#each features as feature}
             <li class={{
                 enabled: feature.enabled,
                 failed: feature.failed
