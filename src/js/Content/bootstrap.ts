@@ -12,7 +12,6 @@ import Config from "config";
 import Info from "@Core/Info";
 import Feature from "@Content/Modules/Context/Feature";
 import Context, {ContextParams} from "@Content/Modules/Context/Context";
-import ProgressBar from "@Content/Modules/Widgets/ProgressBar";
 import AugmentedSteam from "@Content/Modules/AugmentedSteam";
 import ChangelogHandler from "@Core/Update/ChangelogHandler";
 import ITAD from "@Content/Modules/ITAD";
@@ -149,12 +148,6 @@ export async function bootstrap(config: {
         "background: #000000; color: #ffffff",
         "",
     );
-
-    if (config.mode === EBootstrapMode.Legacy) {
-        ProgressBar.buildLegacy();
-    } else {
-        ProgressBar.buildReact();
-    }
 
     await (new AugmentedSteam(language, user, config.mode === EBootstrapMode.React)).build();
     await ChangelogHandler.checkVersion();

@@ -160,7 +160,7 @@ export interface SettingsSchema {
     show_badge_progress: boolean,
     show_wishlist_link: boolean,
     show_wishlist_count: boolean,
-    show_progressbar: boolean,
+    show_progressbar: boolean, // FIXME removed
     show_backtotop: boolean,
 
     profile_showcase_twitch: boolean,
