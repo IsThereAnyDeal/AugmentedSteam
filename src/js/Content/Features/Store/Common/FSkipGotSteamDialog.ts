@@ -5,7 +5,7 @@ import type Context from "@Content/Modules/Context/Context";
 
 export default class FSkipGotSteamDialog extends Feature<Context> {
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         return Settings.skip_got_steam;
     }
 

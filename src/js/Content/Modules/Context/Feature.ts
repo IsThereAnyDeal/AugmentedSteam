@@ -6,7 +6,7 @@ export default abstract class Feature<C extends Context> {
         protected context: C
     ) {}
 
-    public abstract checkPrerequisites(): Promise<boolean>;
+    public abstract isEnabled(): Promise<boolean>;
     public abstract apply(): Promise<void>;
 
     public get name(): string {

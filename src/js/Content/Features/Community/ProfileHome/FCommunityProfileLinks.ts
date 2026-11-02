@@ -6,7 +6,7 @@ import { mount } from "svelte";
 
 export default class FCommunityProfileLinks extends Feature<CProfileHome> {
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return this.context.steamId !== null;
     }
 

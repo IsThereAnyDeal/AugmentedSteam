@@ -12,7 +12,7 @@ import {mount} from "svelte";
  */
 export default class FDemoAbovePurchase extends Feature<CApp> {
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         // FIXME settings
         return true;
     }

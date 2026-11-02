@@ -4,7 +4,7 @@ import Settings from "@Options/Data/Settings";
 
 export default class FHideActiveListings extends Feature<CMarketHome> {
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return Settings.hideactivelistings;
     }
 

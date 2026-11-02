@@ -12,7 +12,7 @@ export default class FBackgroundPreviewLink extends Feature<CMarketListing> {
     private itemInfoNode: HTMLElement|null = null;
     private link: string|null = null;
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         if (this.context.appid !== 753 || !this.context.user.isSignedIn) {
             return false;
         }

@@ -6,7 +6,7 @@ import HTML from "@Core/Html/Html";
 
 export default class FBadgePageLink extends Feature<CMarketListing> {
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return this.context.appid === 753;
     }
 

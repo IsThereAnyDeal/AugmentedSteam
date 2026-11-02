@@ -5,7 +5,7 @@ import type Context from "@Content/Modules/Context/Context";
 
 export default class FRemoveBroadcasts extends Feature<Context> {
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         return Settings.removebroadcasts;
     }
 

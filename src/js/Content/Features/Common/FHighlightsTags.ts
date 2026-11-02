@@ -18,7 +18,7 @@ export default class FHighlightsTags extends Feature<CApp> {
         this.#highlighter = new HighlightsTagsUtils2()
     }
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         return this.#highlighter.isEnabled();
     }
 

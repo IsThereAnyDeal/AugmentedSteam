@@ -5,7 +5,7 @@ import SpamComments from "@Content/Modules/Community/SpamComments";
 
 export default class FHideSpamComments extends Feature<CCommunityBase> {
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return Settings.hidespamcomments;
     }
 

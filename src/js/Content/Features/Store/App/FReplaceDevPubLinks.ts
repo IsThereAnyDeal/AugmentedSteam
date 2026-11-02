@@ -7,7 +7,7 @@ import SteamFacade from "@Content/Facades/SteamFacade";
 
 export default class FReplaceDevPubLinks extends Feature<CApp> {
 
-    public override async checkPrerequisites(): Promise<boolean> {
+    public override async isEnabled(): Promise<boolean> {
         // FIXME setting
         return true;
     }

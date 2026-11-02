@@ -17,7 +17,7 @@ export default class FMarketLowestPrice extends Feature<CMarketHome> {
     private _delay = false; // Whether to put a delay between requests
     private _timeout = false; // Whether the user has been timed-out
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return Settings.showlowestmarketprice
             && !Settings.hideactivelistings
             // Check if the user is signed in, and has active listings

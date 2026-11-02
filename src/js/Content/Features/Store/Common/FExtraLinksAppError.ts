@@ -10,7 +10,7 @@ import CommunityHubButton from "@Content/Features/Store/Common/ExtraLinks/Commun
  */
 export default class FExtraLinksAppError extends Feature<CApp> {
 
-    public override async checkPrerequisites(): Promise<boolean> {
+    public override async isEnabled(): Promise<boolean> {
         // FIXME settings?
         return true;
     }

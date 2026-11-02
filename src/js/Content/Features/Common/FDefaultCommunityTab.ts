@@ -4,7 +4,7 @@ import Settings from "@Options/Data/Settings";
 
 export default class FDefaultCommunityTab extends Feature<CBase> {
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return Settings.community_default_tab !== ""; // Default value is an empty string
     }
 

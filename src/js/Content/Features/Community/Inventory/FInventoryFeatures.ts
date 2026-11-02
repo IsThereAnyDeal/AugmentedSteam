@@ -5,7 +5,7 @@ import { mount } from "svelte";
 
 export default class FInventoryFeatures extends Feature<CInventory> {
 
-    override checkPrerequisites(): boolean | Promise<boolean> {
+    override isEnabled(): boolean | Promise<boolean> {
         return this.context.myInventory;
     }
 

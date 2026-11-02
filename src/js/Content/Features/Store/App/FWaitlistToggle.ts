@@ -8,7 +8,7 @@ import Settings from "@Options/Data/Settings";
 
 export default class FWaitlistToggle extends Feature<CApp> {
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         return Settings.add_to_waitlist
             && document.querySelector("#add_to_wishlist_area") !== null
             && (await ITADApiFacade.isConnected());

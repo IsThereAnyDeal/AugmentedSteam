@@ -5,7 +5,7 @@ import { mount } from "svelte";
 
 export default class FNewQueue extends Feature<CApp> {
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         // FIXME settings
         return document.querySelector(".finish_queue_text") !== null;
     }

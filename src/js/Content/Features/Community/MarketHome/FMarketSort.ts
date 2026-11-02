@@ -12,7 +12,7 @@ export default class FMarketSort extends Feature<CMarketHome> {
 
     private sortbox: SortBox|undefined;
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         // Check if user is logged in and has more than 1 active listing
         return document.querySelectorAll("#tabContentsMyActiveMarketListingsRows .market_listing_row").length > 1;
     }

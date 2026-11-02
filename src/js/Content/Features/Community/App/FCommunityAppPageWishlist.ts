@@ -7,7 +7,7 @@ import { mount } from "svelte";
 
 export default class FCommunityAppPageWishlist extends Feature<CApp> {
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return this.context.user.isSignedIn
             && Settings.wlbuttoncommunityapp
             && document.querySelector(".apphub_OtherSiteInfo") !== null;

@@ -5,7 +5,7 @@ import { mount } from "svelte";
 
 export default class FFriendsInviteButton extends Feature<CGroupHome> {
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return this.context.user.isSignedIn
             && this.context.groupId !== null
             && document.querySelector(".grouppage_join_area") === null;

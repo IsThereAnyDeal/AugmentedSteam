@@ -4,7 +4,7 @@ import type CStoreBase from "@Content/Features/Store/Common/CStoreBase";
 
 export default class FHorizontalScrolling extends Feature<CStoreBase> {
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return Settings.horizontalscrolling;
     }
 

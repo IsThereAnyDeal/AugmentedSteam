@@ -12,7 +12,7 @@ export default class FStyleSelection extends Feature<CProfileEdit> {
     private active: boolean = false;
     private currentStyle: string|null = null;
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
 
         const result = await this.context.data;
         if (!result) { return false; }

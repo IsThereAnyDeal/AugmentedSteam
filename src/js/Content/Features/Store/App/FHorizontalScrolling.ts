@@ -6,7 +6,7 @@ import dynamicNode from "@Content/Modules/DOM/DynamicNode";
 
 export default class FHorizontalScrolling extends Feature<CApp> {
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         return Settings.horizontalscrolling;
     }
 

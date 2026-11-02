@@ -8,7 +8,7 @@ import DOMHelper from "@Content/Modules/DOM/DOMHelper";
  */
 export default class FPreventVideoPause extends Feature<CApp> {
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         return Settings.prevent_video_pause;
     }
 

@@ -27,7 +27,7 @@ export default class FCustomStyle extends Feature<CProfileHome> {
 
     private style: string = "";
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         if (this.context.isPrivateProfile || !Settings.show_custom_themes) {
             return false;
         }

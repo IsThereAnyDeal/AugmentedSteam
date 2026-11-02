@@ -5,7 +5,7 @@ import {mount} from "svelte";
 
 export default class FUsefulLinks extends Feature<CAccount> {
 
-    public override async checkPrerequisites(): Promise<boolean> {
+    public override async isEnabled(): Promise<boolean> {
         // FIXME add settings
         return true;
     }

@@ -10,7 +10,7 @@ export default class FReviewScores extends Feature<CApp> {
 
     #reviews: TStorePageData['reviews']|null = null
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         return Settings.showmcus || Settings.showoc;
     }
 

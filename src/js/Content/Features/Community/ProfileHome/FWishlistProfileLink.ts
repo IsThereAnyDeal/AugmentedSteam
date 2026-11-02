@@ -6,7 +6,7 @@ import { mount } from "svelte";
 
 export default class FWishlistProfileLink extends Feature<CProfileHome> {
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return !this.context.isPrivateProfile
             && this.context.steamId !== null
             && Settings.show_wishlist_link;

@@ -5,7 +5,7 @@ import Settings from "@Options/Data/Settings";
 
 export default class FSkipAgecheckPage extends Feature<CApp|CAgeCheck> {
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         return Settings.send_age_info;
     }
 

@@ -7,7 +7,7 @@ import { mount } from "svelte";
 
 export default class FUserNotes extends Feature<CApp> {
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         return this.context.user.isSignedIn && Settings.user_notes_app;
     }
 

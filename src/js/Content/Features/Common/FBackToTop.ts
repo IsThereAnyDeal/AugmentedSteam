@@ -6,7 +6,7 @@ import {mount} from "svelte";
 
 export default class FBackToTop extends Feature<Context> {
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         return Settings.show_backtotop;
     }
 

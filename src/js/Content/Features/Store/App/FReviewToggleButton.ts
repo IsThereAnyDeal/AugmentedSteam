@@ -9,7 +9,7 @@ import { mount } from "svelte";
  */
 export default class FReviewToggleButton extends Feature<CApp> {
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         // FIXME setting
         return true;
     }

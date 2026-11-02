@@ -11,10 +11,10 @@ export default class ProgressBar {
         }
 
         mount(self_, {
-                    target: node.parentElement!,
-                    anchor: node.nextElementSibling ?? undefined,
-                    props: {react}
-                });
+            target: node.parentElement!,
+            anchor: node.nextElementSibling ?? undefined,
+            props: {react}
+        });
     }
 
     static buildLegacy(): void {

@@ -20,7 +20,7 @@ import { mount } from "svelte";
 
 export default class FEmptyWishlist extends Feature<CWishlist> {
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return this.context.isMyWishlist && Settings.showemptywishlist;
     }
 

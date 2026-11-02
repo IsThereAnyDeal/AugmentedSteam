@@ -31,7 +31,7 @@ export default class FReviewSort extends Feature<CRecommended> {
     private _pages: number = 0;
     private _reviews: TReview[]|undefined = undefined;
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         // Total number of reviews. Passed to background script for fetching reviews.
         this._reviewCount = Number(document.querySelector<HTMLElement>("#rightContents .review_stat .giantNumber")?.textContent?.trim());
 

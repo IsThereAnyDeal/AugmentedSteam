@@ -10,7 +10,7 @@ export default class FWishlistUserNotes extends Feature<CWishlist> {
     private notes: UserNotes|undefined;
     private components: UserNote[] = [];
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return this.context.isMyWishlist && Settings.user_notes_wishlist;
     }
 

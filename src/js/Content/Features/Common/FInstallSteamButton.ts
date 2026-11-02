@@ -7,7 +7,7 @@ import "./FInstallSteamButton.css";
 
 export default class FInstallSteamButton extends Feature<Context> {
 
-    public override async checkPrerequisites(): Promise<boolean> {
+    public override async isEnabled(): Promise<boolean> {
         return Settings.installsteam !== "show";
     }
 

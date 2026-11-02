@@ -9,7 +9,7 @@ export default class FExtraLinksApp extends Feature<CApp> {
 
     // FIXME refactor links to be fully dynamic, without predefined ones
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         return Settings.showitadlinks
             || Settings.showsteamdb
             || Settings.showsteamcardexchange

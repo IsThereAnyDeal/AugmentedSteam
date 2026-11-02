@@ -7,7 +7,7 @@ import DOMHelper from "@Content/Modules/DOM/DOMHelper";
 
 export default class FConfirmDeleteComment extends Feature<CCommunityBase> {
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return this.context.user.isSignedIn && Settings.confirmdeletecomment;
     }
 

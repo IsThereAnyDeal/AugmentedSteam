@@ -8,7 +8,7 @@ import AugmentedSteamApiFacade from "@Content/Facades/AugmentedSteamApiFacade";
 
 export default class FTwitchShowcase extends Feature<CProfileHome> {
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         if (!Settings.profile_showcase_twitch) {
             return false;
         }

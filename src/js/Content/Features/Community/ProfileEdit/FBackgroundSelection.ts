@@ -30,7 +30,7 @@ export default class FBackgroundSelection extends Feature<CProfileEdit> {
         levenshtein: number
     }>|undefined = undefined;
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
 
         const result = await this.context.data;
         if (!result) { return false; }

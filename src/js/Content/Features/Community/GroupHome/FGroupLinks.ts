@@ -6,7 +6,7 @@ import { mount } from "svelte";
 
 export default class FGroupLinks extends Feature<CGroupHome> {
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return Settings.group_steamgifts && this.context.groupId !== null;
     }
 

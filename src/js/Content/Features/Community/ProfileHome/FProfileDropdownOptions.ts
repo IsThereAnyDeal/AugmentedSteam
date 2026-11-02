@@ -9,7 +9,7 @@ export default class FProfileDropdownOptions extends Feature<CProfileHome> {
 
     private _node: HTMLElement|null = null;
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         this._node = document.querySelector("#profile_action_dropdown .popup_body .profile_actions_follow");
         return this._node !== null;
     }

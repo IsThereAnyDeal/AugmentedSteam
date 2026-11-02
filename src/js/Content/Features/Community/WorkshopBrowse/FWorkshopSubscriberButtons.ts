@@ -26,7 +26,7 @@ export default class FWorkshopSubscriberButtons extends Feature<CWorkshopBrowse>
     private _failed: number = 0;
     private _statusTitle: string = "";
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return this.context.user.isSignedIn
             && document.querySelector(".workshopBrowseItems") !== null
             && document.querySelector(".workshopBrowsePagingInfo") !== null;

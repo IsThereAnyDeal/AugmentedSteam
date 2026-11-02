@@ -15,7 +15,7 @@ import AddToCart from "@Content/Features/Store/App/Components/DLCCheckboxes/AddT
 
 export default class FDLCCheckboxes extends Feature<CApp> {
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         // FIXME setting
         return true;
     }

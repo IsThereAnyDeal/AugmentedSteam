@@ -4,7 +4,7 @@ import Settings from "@Options/Data/Settings";
 
 export default class FDisableLinkFilter extends Feature<CBase> {
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return Settings.disablelinkfilter;
     }
 

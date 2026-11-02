@@ -6,7 +6,7 @@ import { mount } from "svelte";
 
 export default class FGamesStats extends Feature<CGames> {
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         return Settings.showallstats
             && this.context.games.length > 0;
     }

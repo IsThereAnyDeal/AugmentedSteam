@@ -6,7 +6,7 @@ import { mount } from "svelte";
 
 export default class FMarketStats extends Feature<CMarketHome> {
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return this.context.user.isSignedIn;
     }
 

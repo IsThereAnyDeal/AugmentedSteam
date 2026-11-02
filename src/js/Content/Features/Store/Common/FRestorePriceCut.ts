@@ -4,7 +4,7 @@ import type CApp from "@Content/Features/Store/App/CApp";
 
 export default class FRestorePriceCut extends Feature<CApp> { // StoreBase
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         return Settings.restore_price_cut;
     }
 

@@ -4,7 +4,7 @@ import Settings from "@Options/Data/Settings";
 
 export default class FReplaceCommunityHubLinks extends Feature<CProfileActivity> {
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return Settings.replacecommunityhublinks;
     }
 

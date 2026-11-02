@@ -8,7 +8,7 @@ import HTML from "@Core/Html/Html";
 
 export default class FSoldAmountLastDay extends Feature<CMarketListing> {
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return document.getElementById("pricehistory") !== null;
     }
 

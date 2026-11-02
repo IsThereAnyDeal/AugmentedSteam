@@ -12,7 +12,7 @@ import StorePageUtils from "@Content/Features/Store/storeUtils";
 
 export default class FITADPrices extends Feature<CApp|CSub|CBundle> {
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         return Settings.showlowestprice;
     }
 

@@ -5,7 +5,7 @@ import { mount } from "svelte";
 
 export default class FLicensesSummary extends Feature<CLicenses> {
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         return true; // FIXME add setting
     }
 

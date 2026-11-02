@@ -25,7 +25,7 @@ export default class FGroupsManageButton extends Feature<CFriendsAndGroups> {
 
     private _endpoint: URL|undefined;
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return this.context.myProfile;
     }
 

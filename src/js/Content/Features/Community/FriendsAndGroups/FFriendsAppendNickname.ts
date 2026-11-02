@@ -7,7 +7,7 @@ import "./FFriendsAppendNickname.css";
 export default class FFriendsAppendNickname extends Feature<CFriendsAndGroups> {
 
     // Apply this feature on all profiles to support common friends
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return this.context.user.isSignedIn && Settings.friends_append_nickname;
     }
 

@@ -4,7 +4,7 @@ import SelectorMap from "@Content/SelectorMap";
 
 export default class FFocusSearchBox extends Feature<Context> {
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         // FIXME setting
         return true;
     }

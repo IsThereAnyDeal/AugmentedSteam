@@ -10,7 +10,7 @@ export default class FInGameStoreLink extends Feature<CProfileHome> {
 
     private gameNameNode: HTMLElement|null = null;
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         if (this.context.isPrivateProfile) {
             return false;
         }

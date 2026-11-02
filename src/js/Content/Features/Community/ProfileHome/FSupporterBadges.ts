@@ -8,7 +8,7 @@ export default class FSupporterBadges extends Feature<CProfileHome> {
 
     private _data: TProfileData["badges"]|undefined;
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         if (this.context.isPrivateProfile) {
             return false;
         }

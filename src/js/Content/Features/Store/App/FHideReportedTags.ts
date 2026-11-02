@@ -5,7 +5,7 @@ import DOMHelper from "@Content/Modules/DOM/DOMHelper";
 
 export default class FHideReportedTags extends Feature<CApp> {
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         // FIXME settings
         return true;
     }

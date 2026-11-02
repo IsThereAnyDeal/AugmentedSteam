@@ -7,7 +7,7 @@ import {L} from "@Core/Localization/Localization";
 
 export default class FPackageInfoButton extends Feature<CApp> {
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         return Settings.show_package_info;
     }
 

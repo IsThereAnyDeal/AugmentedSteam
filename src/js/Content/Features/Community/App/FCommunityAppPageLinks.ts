@@ -7,7 +7,7 @@ export default class FCommunityAppPageLinks extends Feature<CApp> {
 
     private node: HTMLElement | null = null;
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return (this.node = document.querySelector(".apphub_OtherSiteInfo")) !== null
             && this.context.appid !== null;
     }

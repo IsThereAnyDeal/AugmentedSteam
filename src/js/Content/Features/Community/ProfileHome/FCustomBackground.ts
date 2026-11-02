@@ -6,7 +6,7 @@ export default class FCustomBackground extends Feature<CProfileHome> {
 
     private _bg: string = "";
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
 
         if (window.location.hash.startsWith("#previewBackground")) {
             let hash: RegExpMatchArray|null = window.location.hash.match(/#previewBackground\/(\d+)\/([a-z0-9.]+)/i);

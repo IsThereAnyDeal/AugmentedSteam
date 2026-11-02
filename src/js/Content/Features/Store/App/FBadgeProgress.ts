@@ -8,7 +8,7 @@ import { mount } from "svelte";
 
 export default class FBadgeProgress extends Feature<CApp> {
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         return Settings.show_badge_progress
             && this.context.user.isSignedIn
             && !this.context.isDlcLike;

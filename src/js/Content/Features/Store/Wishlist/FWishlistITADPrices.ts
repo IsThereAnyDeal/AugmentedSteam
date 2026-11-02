@@ -17,7 +17,7 @@ export default class FWishlistITADPrices extends Feature<CWishlist> {
     private currentHoverAppid: number|null = null;
     private currentElement: PriceOverview|null = null;
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return Settings.showlowestprice_onwishlist;
     }
 

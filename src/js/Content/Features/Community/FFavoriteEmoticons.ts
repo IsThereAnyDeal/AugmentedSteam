@@ -22,7 +22,7 @@ export function handleDrag(e: DragEvent): void {
 
 export default class FFavoriteEmoticons extends Feature<CCommunityBase> {
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return document.querySelector(".emoticon_button") !== null;
     }
 

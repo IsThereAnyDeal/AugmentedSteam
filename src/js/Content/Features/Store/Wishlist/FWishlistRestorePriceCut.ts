@@ -5,7 +5,7 @@ import Price from "@Content/Modules/Currency/Price";
 
 export default class FWishlistRestorePriceCut extends Feature<CWishlist> {
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return Settings.restore_price_cut;
     }
 

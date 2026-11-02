@@ -6,7 +6,7 @@ import {mount} from "svelte";
 
 export default class FWidescreenCertification extends Feature<CApp> {
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         return Settings.showwsgf && !this.context.isDlcLike && !this.context.isVideoOrHardware;
     }
 

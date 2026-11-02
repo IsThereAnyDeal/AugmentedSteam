@@ -7,7 +7,7 @@ import DOMHelper from "@Content/Modules/DOM/DOMHelper";
 
 export default class FInviteButton extends Feature<CFriendsAndGroups> {
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return this.context.myProfile;
     }
 

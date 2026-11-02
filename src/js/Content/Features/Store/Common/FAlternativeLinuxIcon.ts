@@ -6,7 +6,7 @@ import type Context from "@Content/Modules/Context/Context";
 
 export default class FAlternativeLinuxIcon extends Feature<Context> {
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         return Settings.show_alternative_linux_icon;
     }
 

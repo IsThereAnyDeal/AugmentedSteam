@@ -8,7 +8,7 @@ import {__seeSinceWhenDate, __sinceDate} from "@Strings/_strings";
 
 export default class FPurchaseDate extends Feature<CApp> {
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         return Settings.purchase_dates && this.context.user.isSignedIn;
     }
 

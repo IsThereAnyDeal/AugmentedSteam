@@ -8,7 +8,7 @@ import ServiceFactory, {EOrigin} from "@Protobufs/ServiceFactory";
 
 export default class FAchievementBar extends Feature<CApp> {
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         /**
          * If you don't own the game, all values will be 0,
          * just as if you own the game but have no achievements,

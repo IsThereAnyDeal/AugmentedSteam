@@ -13,7 +13,7 @@ export default class FMediaExpander extends Feature<CApp|CSharedFiles> {
     private _details: HTMLElement|null = null;
     private _sliderToggle: HTMLElement|null = null;
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         const widestore = document.querySelector(".widestore");
         if (widestore) {
             return false;

@@ -22,7 +22,7 @@ export default class FWorkshopFileSizes extends Feature<CMyWorkshop> {
     private _totalSize: number = 0;
     private _total: number = 0;
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         // Check if the user is signed in, viewing own profile, and has subscribed to at least one item
         return document.querySelector(".primary_panel") !== null
             && document.querySelector(".workshopBrowsePagingInfo") !== null;

@@ -7,7 +7,7 @@ import { mount } from "svelte";
 
 export default class FBadgeCalculations extends Feature<CBadges> {
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return this.context.myProfile;
     }
 

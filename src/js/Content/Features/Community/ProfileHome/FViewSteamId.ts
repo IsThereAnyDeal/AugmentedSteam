@@ -6,7 +6,7 @@ import { mount } from "svelte";
 
 export default class FViewSteamId extends Feature<CProfileHome> {
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return Settings.profile_steamid && this.context.steamId !== null;
     }
 

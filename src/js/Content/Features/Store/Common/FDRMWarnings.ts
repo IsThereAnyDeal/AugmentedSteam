@@ -14,7 +14,7 @@ export default class FDRMWarnings extends Feature<Context & IProductPageContext>
         21690 // Resident Evil 5, at Capcom's request
     ];
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         return Settings.showdrm
             && (!this.context.appid || !this.#excludedAppids.includes(this.context.appid));
     }

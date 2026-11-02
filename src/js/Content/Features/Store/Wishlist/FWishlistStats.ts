@@ -11,7 +11,7 @@ import { mount } from "svelte";
 
 export default class FWishlistStats extends Feature<CWishlist> {
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return Settings.showwishliststats;
     }
 

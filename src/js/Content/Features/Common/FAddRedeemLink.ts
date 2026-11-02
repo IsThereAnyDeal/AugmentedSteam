@@ -5,7 +5,7 @@ import {L} from "@Core/Localization/Localization";
 
 export default class FAddRedeemLink extends Feature<Context> {
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         // FIXME setting
         return this.context.user.isSignedIn;
     }

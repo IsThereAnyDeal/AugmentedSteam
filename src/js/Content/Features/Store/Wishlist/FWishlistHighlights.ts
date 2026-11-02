@@ -11,7 +11,7 @@ export default class FWishlistHighlights extends Feature<CWishlist> {
     // @ts-expect-error
     private map: Map<string, ItemSetup>;
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return this.context.user.isSignedIn; // TODO ITAD status
     }
 

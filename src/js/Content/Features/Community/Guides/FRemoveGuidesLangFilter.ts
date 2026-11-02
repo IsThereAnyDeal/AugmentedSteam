@@ -5,7 +5,7 @@ import HTML from "@Core/Html/Html";
 
 export default class FRemoveGuidesLangFilter extends Feature<CGuides> {
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return Settings.removeguideslanguagefilter;
     }
 

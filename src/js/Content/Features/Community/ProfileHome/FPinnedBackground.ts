@@ -4,7 +4,7 @@ import Settings from "@Options/Data/Settings";
 
 export default class FPinnedBackground extends Feature<CProfileHome> {
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return Settings.profile_pinned_bg;
     }
 

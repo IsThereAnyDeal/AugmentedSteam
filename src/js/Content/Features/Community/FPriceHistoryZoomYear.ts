@@ -8,7 +8,7 @@ import type CMarketListing from "@Content/Features/Community/MarketListing/CMark
 
 export default class FPriceHistoryZoomYear extends Feature<CInventory|CMarketListing> {
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return document.getElementById("pricehistory") !== null;
     }
 

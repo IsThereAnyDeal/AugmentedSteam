@@ -8,7 +8,7 @@ export default class FCollectionSort extends Feature<Context> {
 
     private originalOrder: HTMLElement[] = [];
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return document.querySelector('.collectionItem') !== null;
     }
 

@@ -13,7 +13,7 @@ import GetHelpButton from "@Content/Features/Store/App/Components/OwnedActionsBu
  */
 export default class FOwnedActionsButtons extends Feature<CApp> {
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         return (this.context.user.isSignedIn
                 && (Settings.installsteam !== "show" || Settings.showviewinlibrary)
             )

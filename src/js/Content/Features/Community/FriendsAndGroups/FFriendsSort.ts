@@ -14,7 +14,7 @@ export default class FFriendsSort extends Feature<CFriendsAndGroups> {
     private _friendsFetched: boolean = false;
     private _offlineFriends: HTMLElement[] = [];
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return this.context.myProfile;
     }
 

@@ -8,7 +8,7 @@ import DOMHelper from "@Content/Modules/DOM/DOMHelper";
 
 export default class FInventoryGoTo extends Feature<CInventory> {
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return Settings.showinvnav;
     }
 

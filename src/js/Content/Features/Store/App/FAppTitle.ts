@@ -7,7 +7,7 @@ import Settings from "@Options/Data/Settings";
  */
 export default class FAppTitle extends Feature<CApp> {
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         return Settings.tabtitle_appname_first;
     }
 

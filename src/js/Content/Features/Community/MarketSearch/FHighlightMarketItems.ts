@@ -7,7 +7,7 @@ import HighlightsTagsUtils from "@Content/Modules/Highlights/HighlightsTagsUtils
 
 export default class FHighlightMarketItems extends Feature<CMarketSearch> {
 
-    override checkPrerequisites(): boolean{
+    override isEnabled(): boolean{
         return Settings.highlight_owned;
     }
 

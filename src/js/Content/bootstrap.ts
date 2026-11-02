@@ -184,7 +184,7 @@ export async function features<C extends Context>(context: C, features: (typeof 
         const feature = new f(context);
         const desc = new FeatureDesc(feature);
 
-        const enabled: boolean = await feature.checkPrerequisites();
+        const enabled: boolean = await feature.isEnabled();
 
         desc.enabled = enabled;
         report.features.push(desc);

@@ -22,7 +22,7 @@ export default class FAchievementSort extends Feature<CProfileStats> {
     private defaultSort: Element[] = [];
     private unlockedMap: Map<Element, number> = new Map();
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
 
         // Check if the user has unlocked more than 1 achievement
         return document.querySelectorAll("#personalAchieve .achieveUnlockTime").length > 1;

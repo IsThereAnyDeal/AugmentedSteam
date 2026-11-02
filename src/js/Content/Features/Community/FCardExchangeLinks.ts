@@ -8,7 +8,7 @@ import type CGameCard from "@Content/Features/Community/GameCard/CGameCard";
 
 export default class FCardExchangeLinks extends Feature<CBadges|CGameCard> {
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return Settings.steamcardexchange;
     }
 

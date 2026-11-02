@@ -10,7 +10,7 @@ export default class FShowHiddenAchievements extends Feature<CProfileStats> {
 
     private _node: HTMLElement|null = null;
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         // Check if there's a "x hidden achievements remaining" row present
         this._node = document.querySelector(".achieveHiddenBox");
         return this._node !== null;

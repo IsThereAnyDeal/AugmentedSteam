@@ -5,7 +5,7 @@ import { mount } from "svelte";
 
 export default class FChatDropdownOptions extends Feature<CProfileHome> {
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return this.context.user.isSignedIn;
     }
 

@@ -8,7 +8,7 @@ import {mount} from "svelte";
 
 export default class FRegionalPricing extends Feature<CApp> {
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         const countries = Settings.regional_countries;
         return countries && countries.length > 0 && Settings.showregionalprice !== "off";
     }

@@ -6,7 +6,7 @@ import HTML from "@Core/Html/Html";
 
 export default class FBackgroundPreviewLink extends Feature<CPointsShop> {
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         return this.context.user.isSignedIn;
     }
 

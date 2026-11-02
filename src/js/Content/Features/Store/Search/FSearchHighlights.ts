@@ -10,7 +10,7 @@ export default class FSearchHighlights extends Feature<CSearch> {
     // @ts-expect-error
     private highlighter: HighlightsTagsUtils2;
 
-    override checkPrerequisites(): boolean {
+    override isEnabled(): boolean {
         if (!this.context.user.isSignedIn) {
             return false; // TODO ITAD status
         }

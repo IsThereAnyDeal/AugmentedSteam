@@ -10,7 +10,7 @@ import SelectorMap from "@Content/SelectorMap";
 
 export default class FVaporLensInsights extends Feature<CApp> {
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         return Settings.ai_enabled && Settings.show_vaporlens_summary;
     }
 

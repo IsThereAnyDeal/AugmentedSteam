@@ -8,7 +8,7 @@ import {DateTime} from "luxon";
  */
 export default class FReleaseCountdown extends Feature<CApp> {
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         // FIXME setting
         return true;
     }

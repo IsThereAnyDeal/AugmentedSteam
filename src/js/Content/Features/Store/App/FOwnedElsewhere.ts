@@ -7,7 +7,7 @@ import { mount } from "svelte";
 
 export default class FOwnedElsewhere extends Feature<CApp> {
 
-    override async checkPrerequisites(): Promise<boolean> {
+    override async isEnabled(): Promise<boolean> {
         return (!this.context.isOwned || !Settings.collection_banner_notowned)
             && await ITADApiFacade.isConnected();
     }

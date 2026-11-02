@@ -3,7 +3,7 @@ import type CSearch from "@Content/Features/Store/Search/CSearch";
 
 export default class FIFeelLucky extends Feature<CSearch> {
 
-    override checkPrerequisites(): boolean | Promise<boolean> {
+    override isEnabled(): boolean | Promise<boolean> {
         return (new URLSearchParams(window.location.search ?? ""))
             .has("ifeellucky");
     }
