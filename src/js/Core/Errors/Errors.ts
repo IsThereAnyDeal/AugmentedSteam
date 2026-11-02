@@ -29,19 +29,9 @@ class HTTPError extends Error {
     }
 }
 
-class FeatureDependencyError extends Error {
-    public featureName: string;
-
-    constructor(msg: string, featureName: string) {
-        super(msg);
-        this.featureName = featureName;
-    }
-}
-
 export default {
     LoginError,
     ServerOutageError,
     HTTPError,
-    FeatureDependencyError,
     OAuthUnauthorized
 };
