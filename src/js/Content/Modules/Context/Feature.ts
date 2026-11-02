@@ -9,6 +9,10 @@ export default abstract class Feature<C extends Context> {
     public abstract checkPrerequisites(): Promise<boolean>;
     public abstract apply(): Promise<void>;
 
+    public get name(): string {
+        return this.constructor.name;
+    }
+
     protected logError(err: unknown, msg: unknown, ...args: unknown[]): void {
         console.group(this.constructor.name);
         console.error(msg, ...args);

@@ -11,7 +11,6 @@ import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
 import Config from "config";
 import Info from "@Core/Info";
 import Feature from "@Content/Modules/Context/Feature";
-import Errors from "@Core/Errors/Errors";
 import Context, {ContextParams} from "@Content/Modules/Context/Context";
 import ProgressBar from "@Content/Modules/Widgets/ProgressBar";
 import AugmentedSteam from "@Content/Modules/AugmentedSteam";
@@ -20,6 +19,9 @@ import ITAD from "@Content/Modules/ITAD";
 import ReactDOM from "@Content/Steam/ReactDOM";
 import TimeUtils from "@Core/Utils/TimeUtils";
 import SteamFacade from "@Content/Facades/SteamFacade";
+import {mount} from "svelte";
+import FeatureStatus from "@Content/Modules/Widgets/AugmentedSteam/Components/FeatureStatus.svelte";
+import FeatureReport, {FeatureDesc} from "@Content/FeatureReport.svelte.js";
 
 Environment.CurrentContext = ContextType.ContentScript;
 
@@ -43,6 +45,8 @@ export const enum EBootstrapMode {
     Legacy,
     React
 }
+
+const report: FeatureReport = new FeatureReport();
 
 async function hydration(timeout: number=30): Promise<void> {
     const start = TimeUtils.now();
@@ -156,6 +160,17 @@ export async function bootstrap(config: {
     await ChangelogHandler.checkVersion();
     await ITAD.init(user);
 
+    const menu = document.querySelector(".as-menu");
+    if (menu) {
+        mount(FeatureStatus, {
+            target: menu.parentElement!,
+            anchor: menu,
+            props: {
+                report
+            }
+        });
+    }
+
     return new ContextParams(config.mode, language, user);
 }
 // shortcuts
@@ -163,39 +178,43 @@ export const bootstrapLegacy = () => bootstrap({mode: EBootstrapMode.Legacy});
 export const bootstrapReact = () => bootstrap({mode: EBootstrapMode.React});
 
 export async function features<C extends Context>(context: C, features: (typeof Feature<Context>)[]) {
-    const stats = {
-        completed: 0,
-        failed: 0
-    };
 
     await Promise.allSettled(features.map(async (f: typeof Feature<Context>): Promise<void> => {
         // @ts-expect-error
         const feature = new f(context);
+        const desc = new FeatureDesc(feature);
 
-        let pass: boolean = await feature.checkPrerequisites();
-        if (!pass) {
-            return;
-        }
+        const enabled: boolean = await feature.checkPrerequisites();
 
-        try {
-            await feature.apply();
-            ++stats.completed;
-        } catch(e) {
-            const featureName = f.name;
+        desc.enabled = enabled;
+        report.features.push(desc);
 
-            console.group(featureName);
-            console.error("Error while applying feature %s", featureName);
-            console.error(e);
-            console.groupEnd();
+        if (enabled) {
+            ++report.enabled;
+            ++report.loading;
+            desc.loading = true;
 
-            ++stats.failed;
-            throw new Errors.FeatureDependencyError("Failed to apply", featureName);
+            try {
+                await feature.apply();
+                ++report.loaded;
+            } catch(e) {
+                console.group(feature.name);
+                console.error(e);
+                console.groupEnd();
+                ++report.failed;
+
+                desc.failed = true;
+                desc.message = e instanceof Error ? e.message : "Error occured";
+            } finally {
+                desc.loading = false;
+                --report.loading;
+            }
         }
     }));
 
     console.log(
         "Feature loading complete, %i successfully loaded, %i failed to load",
-        stats.completed,
-        stats.failed
+        report.loaded,
+        report.failed
     );
 }

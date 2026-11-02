@@ -144,6 +144,7 @@
         position: relative;
         max-height: calc(100vh - 100px);
         box-sizing: border-box;
+        scrollbar-width: thin;
     }
 
     .buttons {
