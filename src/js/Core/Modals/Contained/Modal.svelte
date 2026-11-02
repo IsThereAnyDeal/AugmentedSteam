@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {type Snippet} from "svelte";
+    import {onMount, type Snippet} from "svelte";
     import {fade} from "svelte/transition";
     import ModalButton from "@Core/Modals/Contained/ModalButton.svelte";
 
@@ -28,7 +28,26 @@
         oncancel = () => {},
         children
     }: Props = $props();
+
+    onMount(() => {
+        if (!showClose) {
+            return;
+        }
+
+        const handler = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                oncancel();
+                e.preventDefault();
+            }
+        };
+        document.addEventListener("keyup", handler);
+
+        return () => {
+            document.removeEventListener("keyup", handler)
+        }
+    });
 </script>
+
 
 <div class="container">
     <div class="bg" in:fade={{duration: 200}}></div>
@@ -119,9 +138,10 @@
         height: 16px;
         width: 16px;
         opacity: 0.7;
-    }
-    button:hover {
-        opacity: 1;
+
+        &:hover {
+            opacity: 1;
+        }
     }
 
     .title {
