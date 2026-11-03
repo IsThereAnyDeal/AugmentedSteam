@@ -13,6 +13,7 @@ export default class FFocusSearchBox extends Feature<Context> {
 
         const selectors = this.context.isReact
             ? [
+                SelectorMap.store.searchbox,
                 "input.Focusable" // Wishlist
             ] : [
                 SelectorMap.store.searchbox,
