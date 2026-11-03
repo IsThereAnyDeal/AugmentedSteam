@@ -22,7 +22,7 @@ export default abstract class Feature<C extends Context> {
     public get name(): string {
         return this.constructor.name
             .replaceAll(/^F|\d+/g, "")
-            .replaceAll(/([a-z])([A-Z])/g, "$1 $2");
+            .replaceAll(/([a-z]|[A-Z]{2,})([A-Z])/g, "$1 $2");
     }
 
     protected logError(err: unknown, msg: unknown, ...args: unknown[]): void {
