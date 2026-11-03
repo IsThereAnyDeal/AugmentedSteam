@@ -9,7 +9,6 @@ import Context, {type ContextParams} from "@Content/Modules/Context/Context";
 import {bootstrapLegacy, features} from "@Content/bootstrap";
 import FITADPrices from "@Content/Features/Store/Common/FITADPrices";
 import FDRMWarnings from "@Content/Features/Store/Common/FDRMWarnings";
-import type IProductPageContext from "@Content/Features/Store/IProductPageContext";
 import FReviewScores from "@Content/Features/Store/App/FReviewScores";
 import FOwnedElsewhere from "@Content/Features/Store/App/FOwnedElsewhere";
 import FPurchaseDate from "@Content/Features/Store/App/FPurchaseDate";
@@ -21,7 +20,6 @@ import FPackageInfoButton from "@Content/Features/Store/App/FPackageInfoButton";
 import FPlayers from "@Content/Features/Store/App/FPlayers";
 import FBadgeProgress from "@Content/Features/Store/App/FBadgeProgress";
 import FAchievementBar from "@Content/Features/Store/App/FAchievementBar";
-import FRegionalPricing from "@Content/Features/Store/Common/FRegionalPricing";
 import FReviewToggleButton from "./FReviewToggleButton";
 import FOwnedActionsButtons from "@Content/Features/Store/App/FOwnedActionsButtons";
 import FSupportInfo from "@Content/Features/Store/App/FSupportInfo";
@@ -32,15 +30,16 @@ import FHorizontalScrolling from "@Content/Features/Store/App/FHorizontalScrolli
 import FVaporLensInsights from "@Content/Features/Store/App/FVaporLensInsights";
 import FReleaseCountdown from "@Content/Features/Store/App/FReleaseCountdown";
 import FRestorePriceCut from "@Content/Features/Store/Common/FRestorePriceCut";
-import FHighlightsTags from "@Content/Features/Common/FHighlightsTags";
+import FHighlightsApp from "@Content/Features/Store/App/FHighlightsApp";
 import FDLCCheckboxes from "@Content/Features/Store/App/FDLCCheckboxes.svelte";
 import FHideReportedTags from "@Content/Features/Store/App/FHideReportedTags";
-import FExtraLinksApp from "@Content/Features/Store/Common/FExtraLinksApp";
-import FExtraLinksAppError from "@Content/Features/Store/Common/FExtraLinksAppError";
+import FExtraLinksApp from "@Content/Features/Store/App/FExtraLinksApp";
+import FExtraLinksAppError from "@Content/Features/Store/App/FExtraLinksAppError";
 import storeFeatures from "@Content/Features/Store/storeFeatures";
 import commonFeatures from "@Content/Features/Common/_commonFeatures";
+import FRegionalPricingApp from "@Content/Features/Store/App/FRegionalPricingApp";
 
-export default class CApp extends Context implements IProductPageContext {
+export default class CApp extends Context {
 
     public readonly appid: number;
     public readonly storeid: string;
@@ -115,15 +114,13 @@ export async function run(): Promise<void> {
     const isErrorPage = document.getElementById("error_box") !== null;
     const context = new CApp(params, isErrorPage);
 
-    // TODO CBase features
-    // TODO CStoreBase features
     await features(context, isErrorPage
         ? [
             FExtraLinksAppError
         ] : [
             ...commonFeatures(),
             ...storeFeatures(),
-            FHighlightsTags,
+            FHighlightsApp,
             FReplaceDevPubLinks,
             FUserNotes,
             FWaitlistToggle,
@@ -143,7 +140,7 @@ export async function run(): Promise<void> {
             FDLCCheckboxes,
             FBadgeProgress,
             FAchievementBar,
-            FRegionalPricing,
+            FRegionalPricingApp,
             FReviewToggleButton,
             FOwnedActionsButtons,
             FSupportInfo,

@@ -1,22 +1,20 @@
 import BundleOverview from "../../../Modules/Prices/BundleOverview.svelte";
 import PriceOverview from "../../../Modules/Prices/PriceOverview.svelte";
-import type CBundle from "@Content/Features/Store/Bundle/CBundle";
 import Settings from "@Options/Data/Settings";
 import Feature from "@Content/Modules/Context/Feature";
 import Prices from "@Content/Modules/Prices/Prices";
 import type {TBundle, TPriceOverview} from "@Background/Modules/AugmentedSteam/_types";
-import type CSub from "@Content/Features/Store/Sub/CSub";
-import type CApp from "@Content/Features/Store/App/CApp";
-import { mount } from "svelte";
+import {mount} from "svelte";
 import StorePageUtils from "@Content/Features/Store/storeUtils";
+import type Context from "@Content/Modules/Context/Context";
 
-export default class FITADPrices extends Feature<CApp|CSub|CBundle> {
+export default class FITADPrices extends Feature<Context> {
 
     override async isEnabled(): Promise<boolean> {
         return Settings.showlowestprice;
     }
 
-    #insertPrices(type: "app"|"sub"|"bundle", id: number, data: TPriceOverview) {
+    #insertPrices(type: "app"|"sub"|"bundle", id: number, data: TPriceOverview): void {
         let anchor: HTMLElement|null = null;
 
         if (type === "sub") {
@@ -39,7 +37,7 @@ export default class FITADPrices extends Feature<CApp|CSub|CBundle> {
         }
     }
 
-    #insertBundles(data: TBundle[]) {
+    #insertBundles(data: TBundle[]): void {
         const anchor = document.querySelector("#game_area_purchase")?.nextElementSibling;
         if (anchor) {
             mount(BundleOverview, {

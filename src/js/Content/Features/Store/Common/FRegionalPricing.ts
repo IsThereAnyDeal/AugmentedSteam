@@ -1,17 +1,21 @@
 import self_ from "./FRegionalPricing.svelte";
 import Feature from "@Content/Modules/Context/Feature";
 import Settings from "@Options/Data/Settings";
-import ServiceFactory from "@Protobufs/ServiceFactory";
-import type CApp from "@Content/Features/Store/App/CApp";
-import type {CStoreBrowse_GetItems_Response, StoreItem_PurchaseOption} from "@Protobufs/Compiled/proto.bundle";
+import type {StoreItem_PurchaseOption} from "@Protobufs/Compiled/proto.bundle";
 import {mount} from "svelte";
+import type Context from "@Content/Modules/Context/Context";
 
-export default class FRegionalPricing extends Feature<CApp> {
+// [packageid][country] = price
+export type TPriceMap = Map<number, Map<string, StoreItem_PurchaseOption.$Properties>>;
+
+export default abstract class FRegionalPricing<T extends Context> extends Feature<T> {
 
     override async isEnabled(): Promise<boolean> {
         const countries = Settings.regional_countries;
         return countries && countries.length > 0 && Settings.showregionalprice !== "off";
     }
+
+    abstract getPriceMap(countries: string[]): Promise<TPriceMap>;
 
     override async apply(): Promise<string|null> {
         const countries = Settings.regional_countries;
@@ -21,33 +25,7 @@ export default class FRegionalPricing extends Feature<CApp> {
             countries.push(localCountry);
         }
 
-        // [packageid][country] = price
-        const priceMap: Map<number, Map<string, StoreItem_PurchaseOption.$Properties>> = new Map();
-
-        await Promise.all(countries.map(async country => {
-            const data: CStoreBrowse_GetItems_Response = await ServiceFactory.StoreBrowseService(this.context.user).getItems({
-                context: {
-                    language: this.context.language?.name ?? "english",
-                    countryCode: country,
-                    steamRealm: 1
-                },
-                dataRequest: {
-                    includeAllPurchaseOptions: true
-                },
-                ids: [{appid: this.context.appid}]
-            });
-
-            for (const item of data.storeItems) {
-                for (const option of item.purchaseOptions ?? []) {
-                    if (!option.packageid) { continue; }
-
-                    if (!priceMap.has(option.packageid)) {
-                        priceMap.set(option.packageid, new Map());
-                    }
-                    priceMap.get(option.packageid)!.set(country, option);
-                }
-            }
-        }));
+        const priceMap: TPriceMap = await this.getPriceMap(countries);
 
         for (const [subid, prices] of priceMap.entries()) {
             const node = document.querySelector(`input[name=subid][value="${subid}"]`)

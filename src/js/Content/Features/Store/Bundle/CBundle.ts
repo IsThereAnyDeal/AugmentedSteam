@@ -1,26 +1,39 @@
 import BundleId from "@Core/GameId/BundleId";
-import CStoreBase from "../Common/CStoreBase";
 import FDRMWarnings from "../Common/FDRMWarnings";
-import FExtraLinksCommon from "../Common/FExtraLinksCommon";
 import FITADPrices from "../Common/FITADPrices";
-import ContextType from "@Content/Modules/Context/ContextType";
-import type {ContextParams} from "@Content/Modules/Context/Context";
-import FBundleHighlights from "@Content/Features/Store/Bundle/FBundleHighlights";
+import Context, {type ContextParams} from "@Content/Modules/Context/Context";
+import FPackageHighlights from "@Content/Features/Store/Common/FPackageHighlights";
+import {bootstrapLegacy, features} from "@Content/bootstrap";
+import commonFeatures from "@Content/Features/Common/_commonFeatures";
+import storeFeatures from "@Content/Features/Store/storeFeatures";
+import FExtraLinksBundle from "@Content/Features/Store/Bundle/FExtraLinksBundle";
 
-export default class CBundle extends CStoreBase {
+export default class CBundle extends Context {
 
-    public readonly appid: undefined = undefined;
+    public readonly appid: null = null;
     public readonly bundleid: number;
 
     constructor(params: ContextParams) {
-
-        super(params, ContextType.BUNDLE, [
-            FExtraLinksCommon,
-            FDRMWarnings,
-            FITADPrices,
-            FBundleHighlights
-        ]);
-
+        super(params);
         this.bundleid = BundleId.fromUrl(window.location.host + window.location.pathname)!;
     }
+}
+
+
+/**
+ * @contentScript *://*.steampowered.com/bundle/*
+ * @match *://*.steampowered.com/bundle/*
+ */
+export async function run(): Promise<void> {
+    const params = await bootstrapLegacy();
+    const context = new CBundle(params);
+
+    await features(context, [
+        ...commonFeatures(),
+        ...storeFeatures(),
+        FExtraLinksBundle,
+        FDRMWarnings,
+        FITADPrices,
+        FPackageHighlights
+    ]);
 }

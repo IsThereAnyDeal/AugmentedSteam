@@ -4,20 +4,15 @@ import {L} from "@Core/Localization/Localization";
 import {__drmThirdParty, __drmThirdPartySub} from "@Strings/_strings";
 import Settings from "@Options/Data/Settings";
 import {mount} from "svelte";
-import type IProductPageContext from "@Content/Features/Store/IProductPageContext";
-import type Context from "@Content/Modules/Context/Context";
 import {MountTargetError} from "@Core/Errors/Errors";
+import type CApp from "@Content/Features/Store/App/CApp";
+import type CBundle from "@Content/Features/Store/Bundle/CBundle";
+import type CSub from "@Content/Features/Store/Sub/CSub";
 
-export default class FDRMWarnings extends Feature<Context & IProductPageContext> {
-
-    // Exclude false-positives
-    readonly #excludedAppids: number[] = [
-        21690 // Resident Evil 5, at Capcom's request
-    ];
+export default class FDRMWarnings extends Feature<CApp|CBundle|CSub> {
 
     override async isEnabled(): Promise<boolean> {
-        return Settings.showdrm
-            && (!this.context.appid || !this.#excludedAppids.includes(this.context.appid));
+        return Settings.showdrm;
     }
 
     #getTextFromDRMNotices(): string[] {
@@ -39,9 +34,13 @@ export default class FDRMWarnings extends Feature<Context & IProductPageContext>
     }
 
     #getTextFromGameDetails(): string {
-        let value = "";
+        // TODO is this still true?
         let node: Node|null = document.querySelector(".language_list");
-        if (!node) { return ""; }
+        if (!node) {
+            return "";
+        }
+
+        let value = "";
         node = node.nextSibling;
         while (node !== null) {
             value += node.textContent;
@@ -58,14 +57,14 @@ export default class FDRMWarnings extends Feature<Context & IProductPageContext>
             text += node.textContent;
         }
 
-        let drmNotices: string[] = [];
-        let gameDetails: string = "";
-        if (isAppPage) {
-            drmNotices = this.#getTextFromDRMNotices();
+        const drmNotices: string[] = this.#getTextFromDRMNotices();
+        if (drmNotices.length > 0) {
             text += drmNotices.join("");
-        } else {
-            // Only bundle/sub pages have DRM info in game details
-            gameDetails = this.#getTextFromGameDetails();
+        }
+
+        // Only bundle/sub pages have DRM info in game details
+        const gameDetails: string = this.#getTextFromGameDetails();
+        if (gameDetails !== "") {
             text += gameDetails;
         }
 
@@ -126,23 +125,24 @@ export default class FDRMWarnings extends Feature<Context & IProductPageContext>
 
         const drmNames: string[] = drmList.flatMap(({name, enabled}) => enabled ? [name] : []);
 
-        let drmString: string|undefined = undefined;
-        if (drmNames.length > 0) {
-            drmString = L(isAppPage ? __drmThirdParty : __drmThirdPartySub, {
-                "drmlist": `(${drmNames.join(", ")})`
-            });
-        } else {
-            const regex = /\b(drm|account|steam)\b/i;
+        let drm: string[] = [];
 
-            // Display the first "DRM Notice" or the text in game details that matches DRM/3rd party accounts
-            if (isAppPage) {
-                drmString = drmNotices.find(text => regex.test(text));
-            } else if (regex.test(gameDetails)) {
-                drmString = gameDetails;
-            }
+        if (drmNames.length > 0) {
+            drm.push(L(isAppPage ? __drmThirdParty : __drmThirdPartySub, {
+                "drmlist": `(${drmNames.join(", ")})`
+            }));
         }
 
-        if (drmString) {
+        const filtered = drmNotices.filter(text => /\b(drm|account|steam)\b/i.test(text))
+        if (filtered.length > 0) {
+            drm.push(...filtered);
+        }
+
+        if (/\b(drm|account|steam)\b/i.test(gameDetails)) {
+            drm.push(gameDetails);
+        }
+
+        if (drm.length > 0) {
             const target = document.querySelector("#game_area_purchase, #game_area_purchase_top");
             if (!target) {
                 throw new MountTargetError();
@@ -151,8 +151,10 @@ export default class FDRMWarnings extends Feature<Context & IProductPageContext>
             mount(self_, {
                 target,
                 anchor: target.firstElementChild!,
-                props: {drmString}
+                props: { drm }
             });
+        } else {
+            return "No DRM info found";
         }
         return null;
     }

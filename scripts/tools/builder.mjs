@@ -107,16 +107,16 @@ export default async function(options) {
           "store/account": "Store/Account/CAccount.ts",
           "store/agecheck": "Store/AgeCheck/CAgecheck.ts",
           "store/app": "Store/App/CApp.ts",
-//            {out: "store/bundle", in: `${srcDir}/js/Content/Pages/Store/Bundle/PBundle.ts`},
+          "store/bundle": "Store/Bundle/CBundle.ts",
 //            {out: "store/cart", in: `${srcDir}/js/Content/Pages/Store/Cart/PCart.ts`},
 //            {out: "store/default", in: `${srcDir}/js/Content/Pages/Store/PDefaultStore.ts`},
 //            {out: "store/frontpage", in: `${srcDir}/js/Content/Pages/Store/Storefront/PStoreFront.ts`},
 //            {out: "store/funds", in: `${srcDir}/js/Content/Pages/Store/Funds/PFunds.ts`},
-        "store/licences": `Store/Licenses/CLicenses.ts`
+        "store/licences": "Store/Licenses/CLicenses.ts",
 //            {out: "store/points_shop", in: `${srcDir}/js/Content/Pages/Store/PointsShop/PPointsShop.ts`},
 //            {out: "store/registerkey", in: `${srcDir}/js/Content/Pages/Store/RegisterKey/PRegisterKey.ts`},
 //            {out: "store/search", in: `${srcDir}/js/Content/Pages/Store/Search/PSearch.ts`},
-//            {out: "store/sub", in: `${srcDir}/js/Content/Pages/Store/Sub/PSub.ts`},
+        "store/sub": "Store/Sub/CSub.ts",
 //            {out: "store/wishlist", in: `${srcDir}/js/Content/Pages/Store/Wishlist/PWishlist.ts`},
     };
 

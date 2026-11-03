@@ -9,7 +9,7 @@ import GameId from "@Core/GameId/GameId";
 import AppId from "@Core/GameId/AppId";
 import {tick} from "svelte";
 
-export default class FHighlightsTags extends Feature<CApp> {
+export default class FHighlightsApp extends Feature<CApp> {
 
     readonly #highlighter: HighlightsTagsUtils2;
 

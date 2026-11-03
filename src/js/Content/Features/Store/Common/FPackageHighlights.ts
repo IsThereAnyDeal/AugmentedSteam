@@ -3,26 +3,28 @@ import HighlightsTagsUtils2, {EHighlightStyle, type ItemSetup} from "@Content/Mo
 import AppId from "@Core/GameId/AppId";
 import GameId from "@Core/GameId/GameId";
 import SubId from "@Core/GameId/SubId";
+import {MountTargetError} from "@Core/Errors/Errors";
+import {tick} from "svelte";
+import type CBundle from "@Content/Features/Store/Bundle/CBundle";
 import type CSub from "@Content/Features/Store/Sub/CSub";
 
-export default class FSubHighlights extends Feature<CSub> {
+export default class FPackageHighlights extends Feature<CBundle|CSub> {
 
-    // @ts-expect-error
     private highlighter: HighlightsTagsUtils2;
 
-    override isEnabled(): boolean {
-        if (!this.context.user.isSignedIn) {
-            return false; // TODO ITAD status
-        }
-
+    constructor(context: CBundle|CSub) {
+        super(context);
         this.highlighter = new HighlightsTagsUtils2();
+    }
+
+    override async isEnabled(): Promise<boolean> {
         return this.highlighter.isEnabled();
     }
 
-    override async apply(): Promise<void> {
+    override async apply(): Promise<string|null> {
         const nodes = document.querySelectorAll<HTMLDivElement>(".tab_item[data-ds-appid],.tab_item[data-ds-packageid]");
         if (nodes.length === 0) {
-            return;
+            throw new MountTargetError();
         }
 
         const nodeMap: Map<string, [GameId, HTMLDivElement]> = new Map();
@@ -64,6 +66,8 @@ export default class FSubHighlights extends Feature<CSub> {
             }
         }
 
+        await tick();
         this.highlighter.clearDisconnectedTags();
+        return null;
     }
 }

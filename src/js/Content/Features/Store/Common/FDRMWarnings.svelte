@@ -1,22 +1,30 @@
 <script lang="ts">
     interface Props {
-        drmString: string;
+        drm: string[];
     }
 
-    let { drmString }: Props = $props();
+    let { drm }: Props = $props();
 </script>
 
 
-<div>{drmString}</div>
+<ul>
+    {#each drm as item}
+        <li>{item}</li>
+    {/each}
+</ul>
 
 
 <style>
-    div {
+    ul {
         box-sizing: border-box;
         width: 100%;
         padding: 12px 15px;
         background: linear-gradient(to right, #bf3022, #49161a);
         margin-bottom: 10px;
         color: #c6d4df;
+    }
+
+    li {
+        list-style-type: none;
     }
 </style>
