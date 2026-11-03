@@ -4,6 +4,7 @@
     import YesIcon from "@Content/Icons/Status/EnabledIcon.svelte";
     import NoIcon from "@Content/Icons/Status/DisabledIcon.svelte";
     import ErrorIcon from "@Content/Icons/Status/ErrorIcon.svelte";
+    import LoadingIcon from "@Content/Icons/Status/LoadingIcon.svelte";
 
     interface Props {
         report: FeatureReport,
@@ -24,11 +25,13 @@
     <ul>
         {#each features as feature}
             <li class={{
-                enabled: feature.enabled,
-                failed: feature.failed
+                enabled: !feature.loading && feature.enabled,
+                failed: !feature.loading && feature.failed
             }}>
                 <div class="status">
-                    {#if feature.failed}
+                    {#if feature.loading}
+                        <LoadingIcon />
+                    {:else if feature.failed}
                         <ErrorIcon />
                     {:else if feature.enabled}
                         <YesIcon />
@@ -49,6 +52,8 @@
 <style>
     ul {
         font-size: 14px;
+        margin: 0;
+        padding: 0;
     }
 
     li {
