@@ -4,10 +4,10 @@ import type Context from "@Content/Modules/Context/Context";
 export class FeatureDesc {
     #feature: Feature<Context>
 
-    enabled: boolean = false;
-    loading: boolean = false;
-    failed: boolean = false;
-    message: string|null = null;
+    enabled: boolean = $state(false);
+    loading: boolean = $state(false);
+    failed: boolean = $state(false);
+    message: string|null = $state(null);
 
     constructor(feature: Feature<Context>) {
         this.#feature = feature;
