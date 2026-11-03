@@ -197,7 +197,13 @@ export async function features<C extends Context>(context: C, features: (typeof 
                 ++report.failed;
 
                 desc.failed = true;
-                desc.message = e instanceof Error ? e.message : "Error occured";
+                if (typeof e === "string") {
+                    desc.message = e;
+                } else if (e instanceof Error) {
+                    desc.message = e.message;
+                } else {
+                    desc.message = "Error occured";
+                }
             } finally {
                 desc.loading = false;
                 --report.loading;

@@ -108,7 +108,7 @@ export default async function(options) {
           "store/agecheck": "Store/AgeCheck/CAgecheck.ts",
           "store/app": "Store/App/CApp.ts",
           "store/bundle": "Store/Bundle/CBundle.ts",
-//            {out: "store/cart", in: `${srcDir}/js/Content/Pages/Store/Cart/PCart.ts`},
+          "store/cart": "Store/Cart/CCart.ts",
 //            {out: "store/default", in: `${srcDir}/js/Content/Pages/Store/PDefaultStore.ts`},
 //            {out: "store/frontpage", in: `${srcDir}/js/Content/Pages/Store/Storefront/PStoreFront.ts`},
 //            {out: "store/funds", in: `${srcDir}/js/Content/Pages/Store/Funds/PFunds.ts`},

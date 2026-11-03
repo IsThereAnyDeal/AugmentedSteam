@@ -1,27 +1,29 @@
 import {L} from "@Core/Localization/Localization";
 import {__shoppingCartHistory} from "@Strings/_strings";
-import type CCart from "@Content/Features/Store/Cart/CCart";
 import HTML from "@Core/Html/Html";
 import Feature from "@Content/Modules/Context/Feature";
+import type Context from "@Content/Modules/Context/Context";
+import dynamicNode from "@Content/Modules/DOM/DynamicNode";
+import SelectorMap from "@Content/SelectorMap";
 
-export default class FCartHistoryLink extends Feature<CCart> {
+export default class FCartHistoryLink extends Feature<Context> {
 
-    override async apply(): Promise<void> {
+    public override async isEnabled(): Promise<boolean> {
+        // FIXME setting
+        return true;
+    }
 
-        const root = document.querySelector('[data-featuretarget="react-root"]');
-        if (!root) { return; }
+    override async apply(): Promise<string|null> {
+        const anchor = await dynamicNode({
+            selector: () => document.querySelector<HTMLElement>(SelectorMap.store.cart.yourShoppingCartBreadcrumb)
+        });
 
-        new MutationObserver((_, observer) => {
-            const anchor = root.querySelector<HTMLElement>("._3TtUDn-J9j6rkwHqjT-i4Y")
+        HTML.beforeEnd(anchor,
+            `&nbsp;>&nbsp;<a href="https://help.steampowered.com/accountdata/ShoppingCartHistory" target="_blank">
+                ${L(__shoppingCartHistory)}
+            </a>`
+        );
 
-            if (anchor) {
-                HTML.beforeEnd(anchor,
-                    `&nbsp;>&nbsp;<a href="https://help.steampowered.com/accountdata/ShoppingCartHistory" target="_blank">
-                    ${L(__shoppingCartHistory)}
-                </a>`);
-
-                observer.disconnect();
-            }
-        }).observe(root, {"childList": true, "subtree": true});
+        return null;
     }
 }
