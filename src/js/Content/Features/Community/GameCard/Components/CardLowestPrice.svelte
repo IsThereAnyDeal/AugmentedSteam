@@ -7,6 +7,7 @@
     import Errors from "@Core/Errors/Errors";
     import Price from "@Content/Modules/Currency/Price";
     import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
+    import {parseOrderBookResponse} from "@Content/Features/Community/Inventory/Components/MarketPrices";
 
     interface TCacheData {
         price: string,
@@ -22,18 +23,13 @@
     // export let currency: string;
     export let appid: number;
     export let cardName: string;
-    export let marketHashName: string | undefined;
+    export let marketCardName: () => Promise<string>;
     export let foil: boolean;
     export let onprice: (price: Price) => void;
 
-    let effectiveMarketHashName = "";
-    let cacheName = "";
-    let uriPath = "";
-    $: {
-        effectiveMarketHashName = marketHashName ?? `${appid}-${cardName}`;
-        cacheName = effectiveMarketHashName + (foil ? "-foil" : "");
-        uriPath = encodeURIComponent(effectiveMarketHashName);
-    }
+    let cacheName = `${appid}-${cardName}` + (foil ? "-foil" : "");
+
+    let uriPath: string = `${appid}-${encodeURIComponent(cardName)}`;
     let promise: Promise<Price|null>|null = null;
 
     async function loadFromCache(): Promise<Price|null> {
@@ -53,22 +49,20 @@
     }
 
     async function fetchCardPrices(marketHashName: string): Promise<Price|null> {
-        let orderbook;
+        let response;
         try {
-            orderbook = await RequestData.getJson<{
-                success: boolean,
-                data: {
-                    amtMinSellOrder: number,
-                    eCurrency: number
-                }
-            }>(`https://steamcommunity.com/market/orderbook?q=Load&qp=${encodeURIComponent(JSON.stringify([753, marketHashName]))}`);
+            response = await RequestData.getJson<Parameters<typeof parseOrderBookResponse>[0]>(
+                `https://steamcommunity.com/market/orderbook?q=Load&qp=${encodeURIComponent(JSON.stringify([753, marketHashName]))}`
+            );
 
         } catch(e) {
             console.error(e);
             throw e;
         }
 
-        if (!orderbook.success || !orderbook.data.amtMinSellOrder) {
+        // Steam wraps the orderbook payload in an outer `data` property (#2392)
+        const orderbook = parseOrderBookResponse(response);
+        if (!orderbook || !orderbook.data.amtMinSellOrder) {
             return null;
         }
 
@@ -78,11 +72,14 @@
     }
 
     async function loadMarketCardPrice(): Promise<Price|null> {
+        const marketHashName = `${appid}-${await marketCardName()}`;
+        uriPath = encodeURIComponent(marketHashName);
+
         let price: Price|null = null;
         let fetched = false;
         for (const [sb, sf] of CardSuffixes) {
             const suffix = foil ? sf : sb;
-            price = await fetchCardPrices(effectiveMarketHashName + suffix);
+            price = await fetchCardPrices(marketHashName + suffix);
             if (price) {
                 fetched = true;
                 uriPath += suffix;
