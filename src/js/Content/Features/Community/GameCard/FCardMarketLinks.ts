@@ -77,7 +77,8 @@ export default class FCardMarketLinks extends Feature<CGameCard> {
                     marketCardName: () => resolveMarketName(index, cardName),
                     foil: this.context.isFoil,
                     onprice: (price: Price) => {
-                        if (isUnowned) {
+                        // badgeCompletion only exists on the user's own badge page
+                        if (isUnowned && badgeCompletion) {
                             costMap.set(cardName, price);
                             badgeCompletion.update(costMap);
                         }
