@@ -11,25 +11,6 @@ export default class FFocusSearchBox extends Feature<Context> {
 
     override async apply(): Promise<string|null> {
 
-        const selectors = this.context.isReact
-            ? [
-                SelectorMap.store.searchbox,
-                "input.Focusable" // Wishlist
-            ] : [
-                SelectorMap.store.searchbox,
-                "#store_nav_search_term", // Store pages
-                "input.discussionSearchText", // Community discussions
-                "#workshopSearchText", // Workshop
-                "#findItemsSearchBox", // Market
-                "input#filter_control", // Inventory
-                // TODO support dynamic pages e.g. groups/friends, Games page (React)
-            ];
-
-        const node = document.querySelector<HTMLElement>(selectors.join(","));
-        if (!node) {
-            return "No searchbox found";
-        }
-
         function isContentEditable(el: Element): boolean {
             return el.tagName === "INPUT"
                 || el.tagName === "TEXTAREA"
@@ -47,6 +28,27 @@ export default class FFocusSearchBox extends Feature<Context> {
             if (el && isContentEditable(el)) { return; }
 
             e.preventDefault();
+
+            const selectors = this.context.isReact
+                ? [
+                    SelectorMap.store.searchbox,
+                    "input.Focusable" // Wishlist
+                ] : [
+                    SelectorMap.store.searchbox,
+                    "#store_nav_search_term", // Store pages
+                    "input.discussionSearchText", // Community discussions
+                    "#workshopSearchText", // Workshop
+                    "#findItemsSearchBox", // Market
+                    "input#filter_control", // Inventory
+                    // TODO support dynamic pages e.g. groups/friends, Games page (React)
+                ];
+
+            const node = document.querySelector<HTMLElement>(selectors.join(","));
+            if (!node) {
+                console.error("No searchbox found");
+                return;
+            }
+
             node.focus();
         });
         return null;
