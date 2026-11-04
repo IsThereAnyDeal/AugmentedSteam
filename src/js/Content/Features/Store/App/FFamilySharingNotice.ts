@@ -18,7 +18,7 @@ export default class FFamilySharingNotice extends Feature<CApp> {
         }
 
         const familySharing = (await this.context.data)?.family_sharing;
-        if (!familySharing) {
+        if (familySharing) {
             return null;
         }
 
