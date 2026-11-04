@@ -18,6 +18,8 @@ jobs:
           node-version: 24
       - name: Install
         run: npm install
+      - name: Test
+        run: npm test
       - name: Check
         run: npm run check
       - name: Build

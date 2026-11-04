@@ -6,6 +6,8 @@ import DOMHelper from "@Content/Modules/DOMHelper";
 import CardLowestPrice from "@Content/Features/Community/GameCard/Components/CardLowestPrice.svelte";
 import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
 import BadgeCompletion from "@Content/Features/Community/GameCard/Components/BadgeCompletion.svelte";
+import RequestData from "@Content/Modules/RequestData";
+import {englishBadgeUrl, marketCardNames, readCardName, readCardNames} from "@Content/Features/Community/GameCard/MarketHashName";
 
 export default class FCardMarketLinks extends Feature<CGameCard> {
 
@@ -30,13 +32,35 @@ export default class FCardMarketLinks extends Feature<CGameCard> {
 
         const costMap = new Map<string, Price|null>();
 
-        for (const node of document.querySelectorAll(".badge_card_set_card")) {
-            let cardName = node
-                .querySelector<HTMLElement>(".badge_card_set_text")!.textContent!
-                .replace(/&amp;/g, "&")
-                .replace(/\(\d+\)/g, "")
-                .trim();
+        const cards = [...document.querySelectorAll(".badge_card_set_card")]
+            .map(node => ({node, cardName: readCardName(node)}));
+        const visibleNames = cards.map(card => card.cardName);
 
+        /*
+         * The market only knows the English card names (#2393). On a page in another language,
+         * the first price request fetches the English version of this page once, and the cards
+         * are matched by position because both pages list them in the same order.
+         */
+        let englishNames: Promise<string[]>|null = null;
+        const resolveMarketName = async (index: number, cardName: string): Promise<string> => {
+            if (this.context.language?.isOneOf("english")) {
+                return cardName;
+            }
+
+            if (!englishNames) {
+                englishNames = RequestData.getText(englishBadgeUrl(window.location.href))
+                    .then(html => readCardNames(new DOMParser().parseFromString(html, "text/html")))
+                    .then(names => marketCardNames(visibleNames, names))
+                    .catch(e => {
+                        englishNames = null; // a retry fetches again
+                        throw e;
+                    });
+            }
+            const names = await englishNames;
+            return names[index] ?? cardName;
+        };
+
+        cards.forEach(({node, cardName}, index) => {
             const isUnowned = node.classList.contains("unowned");
 
             if (isUnowned) {
@@ -50,15 +74,17 @@ export default class FCardMarketLinks extends Feature<CGameCard> {
                     // currency: CurrencyManager.storeCurrency,
                     appid: this.context.appid,
                     cardName,
+                    marketCardName: () => resolveMarketName(index, cardName),
                     foil: this.context.isFoil,
                     onprice: (price: Price) => {
-                        if (isUnowned) {
+                        // badgeCompletion only exists on the user's own badge page
+                        if (isUnowned && badgeCompletion) {
                             costMap.set(cardName, price);
                             badgeCompletion.update(costMap);
                         }
                     }
                 }
             }));
-        }
+        });
     }
 }

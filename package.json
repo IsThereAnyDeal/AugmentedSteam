@@ -2,6 +2,7 @@
   "name": "augmented-steam",
   "scripts": {
     "build": "node scripts/build.mjs",
+    "test": "node --test test/card-market-name.test.mjs",
     "update-locales": "node scripts/locales.mjs download",
     "compile-locales": "node scripts/locales.mjs compile",
     "locales": "npm run update-locales || npm run compile-locales",
