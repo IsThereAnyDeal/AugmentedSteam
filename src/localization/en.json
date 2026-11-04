@@ -557,7 +557,7 @@
     "wallet": {
         "custom_amount": "Add custom amount",
         "custom_amount_text": "Any amount over __minamount__",
-        "custom_giftcard": "Select __input__ Custom Gift Card"
+        "custom_giftcard": "Select Custom Gift Card"
     },
     "wsgf": {
         "incomplete": "Incomplete",

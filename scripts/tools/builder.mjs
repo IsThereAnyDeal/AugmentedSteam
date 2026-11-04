@@ -111,12 +111,13 @@ export default async function(options) {
           "store/cart": "Store/Cart/CCart.ts",
 //            {out: "store/default", in: `${srcDir}/js/Content/Pages/Store/PDefaultStore.ts`},
 //            {out: "store/frontpage", in: `${srcDir}/js/Content/Pages/Store/Storefront/PStoreFront.ts`},
-//            {out: "store/funds", in: `${srcDir}/js/Content/Pages/Store/Funds/PFunds.ts`},
-        "store/licences": "Store/Licenses/CLicenses.ts",
+          "store/funds": "Store/Funds/CFunds.ts",
+          "store/giftcards": "Store/GiftCards/CGiftCards.ts",
+          "store/licences": "Store/Licenses/CLicenses.ts",
 //            {out: "store/points_shop", in: `${srcDir}/js/Content/Pages/Store/PointsShop/PPointsShop.ts`},
 //            {out: "store/registerkey", in: `${srcDir}/js/Content/Pages/Store/RegisterKey/PRegisterKey.ts`},
 //            {out: "store/search", in: `${srcDir}/js/Content/Pages/Store/Search/PSearch.ts`},
-        "store/sub": "Store/Sub/CSub.ts",
+          "store/sub": "Store/Sub/CSub.ts",
 //            {out: "store/wishlist", in: `${srcDir}/js/Content/Pages/Store/Wishlist/PWishlist.ts`},
     };
 
