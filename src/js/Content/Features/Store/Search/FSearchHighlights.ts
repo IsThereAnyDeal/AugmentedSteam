@@ -7,18 +7,18 @@ import type CSearch from "@Content/Features/Store/Search/CSearch";
 
 export default class FSearchHighlights extends Feature<CSearch> {
 
-    // @ts-expect-error
-    private highlighter: HighlightsTagsUtils2;
+    private readonly highlighter: HighlightsTagsUtils2;
 
-    override isEnabled(): boolean {
-        if (!this.context.user.isSignedIn) {
-            return false; // TODO ITAD status
-        }
-
+    constructor(context: CSearch) {
+        super(context);
         this.highlighter = new HighlightsTagsUtils2();
-        return this.highlighter.isEnabled();
     }
-    override async apply(): Promise<void> {
+
+    override async isEnabled(): Promise<boolean> {
+        return this.context.user.isSignedIn && this.highlighter.isEnabled();
+    }
+    
+    override async apply(): Promise<string|null> {
         this.highlighter.insertStyles();
         this.#highlight();
 
@@ -26,6 +26,7 @@ export default class FSearchHighlights extends Feature<CSearch> {
         document.addEventListener("searchCompleted", (e: CustomEvent<boolean>) => {
             this.#highlight();
         });
+        return null;
     }
 
     async #highlight(): Promise<void> {

@@ -114,7 +114,6 @@ export default class FSearchFilters extends Feature<CSearch> {
             this._modifyPageLinks();
         })
 
-        DOMHelper.insertScript("scriptlets/Store/Search/executeSearchOverride.js");
     }
 
     private _updateFilterValues(): void {

@@ -4,7 +4,7 @@ import ITAD from "@Content/Modules/ITAD";
 import DOMHelper from "@Content/Modules/DOM/DOMHelper";
 import Tags from "@Content/Modules/Highlights/Tags.svelte";
 import type GameId from "@Core/GameId/GameId";
-import {mount, unmount} from "svelte";
+import {mount, tick, unmount} from "svelte";
 
 export const enum EHighlightStyle {
     BgGradient,
@@ -232,7 +232,8 @@ export default class HighlightsTagsUtils2 {
         this.tagsComponents.push(tags);
     }
 
-    public clearDisconnectedTags(): void {
+    public async clearDisconnectedTags(): Promise<void> {
+        await tick();
         this.tagsComponents = this.tagsComponents.filter(tags => {
             const connected = tags.isConnected();
             if (!connected) {

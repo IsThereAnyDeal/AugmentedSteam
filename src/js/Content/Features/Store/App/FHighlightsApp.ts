@@ -51,7 +51,6 @@ export default class FHighlightsApp extends Feature<CApp> {
         this.#highlightTitle(setup, appid);
         this.#highlightDlcs(setup, dlcNodeMap);
 
-        await tick();
         this.#highlighter.clearDisconnectedTags();
         return null;
     }

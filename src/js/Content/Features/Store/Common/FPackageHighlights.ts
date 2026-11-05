@@ -66,7 +66,6 @@ export default class FPackageHighlights extends Feature<CBundle|CSub> {
             }
         }
 
-        await tick();
         this.highlighter.clearDisconnectedTags();
         return null;
     }
