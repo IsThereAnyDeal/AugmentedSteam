@@ -923,19 +923,6 @@ video.highlight_movie:hover + .html5_video_overlay {
 }
 
 /***************************************
- * Points Shop
- * FBackgroundPreviewLink
- **************************************/
-.as_preview_background_ctn {
-  text-align: right;
-  text-decoration: underline;
-}
-.as_preview_background {
-  font-size: .9rem;
-  color: #b3b4cd;
-}
-
-/***************************************
  * Market home
  * FMarketLowestPrice
  **************************************/

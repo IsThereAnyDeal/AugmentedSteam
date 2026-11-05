@@ -10,6 +10,10 @@ const map = {
         },
         cart: {
             yourShoppingCartBreadcrumb: ".l3tXfL5lEk0-"
+        },
+        pointsShop: {
+            profileBgImagePreview: ".MUXvc-K-iPA-.AmUkgklq9kc-",
+            profileBgActions: ".NC2LiacfVDs-"
         }
     }
 }

@@ -1,13 +1,21 @@
 import FBackgroundPreviewLink from "./FBackgroundPreviewLink";
-import Context, {type ContextParams} from "@Content/Modules/Context/Context";
-import ContextType from "@Content/Modules/Context/ContextType";
+import Context from "@Content/Modules/Context/Context";
+import {bootstrapLegacy, features} from "@Content/bootstrap";
+import commonFeatures from "@Content/Features/Common/_commonFeatures";
 
-export default class CPointsShop extends Context {
+export default class CPointsShop extends Context {}
 
-    constructor(params: ContextParams) {
 
-        super(params, ContextType.POINTS_SHOP, [
-            FBackgroundPreviewLink,
-        ]);
-    }
+/**
+ * @contentScript
+ * @match *://*.steampowered.com/points[/*]
+ */
+export async function run(): Promise<void> {
+    const params = await bootstrapLegacy();
+    const context = new CPointsShop(params);
+
+    await features(context, [
+        ...commonFeatures(),
+        FBackgroundPreviewLink
+    ]);
 }

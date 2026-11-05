@@ -114,7 +114,7 @@ export default async function(options) {
           "store/funds": "Store/Funds/CFunds.ts",
           "store/giftcards": "Store/GiftCards/CGiftCards.ts",
           "store/licences": "Store/Licenses/CLicenses.ts",
-//            {out: "store/points_shop", in: `${srcDir}/js/Content/Pages/Store/PointsShop/PPointsShop.ts`},
+          "store/points_shop": "Store/PointsShop/CPointsShop.ts",
 //            {out: "store/registerkey", in: `${srcDir}/js/Content/Pages/Store/RegisterKey/PRegisterKey.ts`},
 //            {out: "store/search", in: `${srcDir}/js/Content/Pages/Store/Search/PSearch.ts`},
           "store/sub": "Store/Sub/CSub.ts",

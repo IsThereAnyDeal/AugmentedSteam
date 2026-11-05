@@ -1,72 +1,61 @@
-import {L} from "@Core/Localization/Localization";
-import {__previewBackground} from "@Strings/_strings";
+import self_ from "./FBackgroundPreviewLink.svelte";
 import type CPointsShop from "@Content/Features/Store/PointsShop/CPointsShop";
 import Feature from "@Content/Modules/Context/Feature";
-import HTML from "@Core/Html/Html";
+import dynamicNode from "@Content/Modules/DOM/DynamicNode";
+import {mount} from "svelte";
+import SelectorMap from "@Content/SelectorMap";
 
+/*
+ * Also need to test when viewing the item directly, e.g.
+ * https://store.steampowered.com/points/shop/c/backgrounds/reward/150370/
+ */
 export default class FBackgroundPreviewLink extends Feature<CPointsShop> {
 
-    override isEnabled(): boolean {
+    public override async isEnabled(): Promise<boolean> {
+        // FIXME setting
         return this.context.user.isSignedIn;
     }
 
-    override async apply(): Promise<void> {
+    public override async apply(): Promise<string|null> {
 
-        let modalEl = document.querySelector<HTMLElement>(".FullModalOverlay");
-        if (!modalEl) {
-            await new Promise<void>(resolve => {
-                new MutationObserver((_, observer) => {
-                    modalEl = document.querySelector(".FullModalOverlay");
-                    if (modalEl) {
-                        observer.disconnect();
-                        resolve();
-                    }
-                }).observe(document.body, {"childList": true});
+        const modalEl = await dynamicNode({
+            selector: () => document.querySelector<HTMLElement>(".FullModalOverlay")
+        });
+
+        new MutationObserver(() => {
+            if (modalEl.querySelector("#as-preview-bg")) {
+                // already mounted
+                return;
+            }
+
+            const bgLinkSource = modalEl.querySelector<HTMLSourceElement>("video source")?.src
+                ?? modalEl.querySelector<HTMLElement>(SelectorMap.store.pointsShop.profileBgImagePreview)?.style.backgroundImage;
+            if (!bgLinkSource) {
+                console.info("Failed to find profile bg source");
+                return;
+            }
+
+            const bgLink = bgLinkSource.match(/images\/items\/(\d+\/[a-z0-9.]+)/i);
+            if (!bgLink || !bgLink[1]) {
+                console.info("Failed to parse profile bg source");
+                return;
+            }
+
+            const target = modalEl.querySelector(SelectorMap.store.pointsShop.profileBgActions);
+            if (!target) {
+                return;
+            }
+
+            mount(self_, {
+                target,
+                anchor: target.firstElementChild!,
+                props: {
+                    user: this.context.user,
+                    bg: bgLink[1]
+                }
             });
-        }
-
-        /*
-         * Also need to test hen viewing the item directly, e.g.
-         * https://store.steampowered.com/points/shop/c/backgrounds/reward/150370/
-         */
-        new MutationObserver(mutations => {
-            let container;
-            outer: for (const mutation of mutations) {
-                const addedNodes = mutation.addedNodes as NodeListOf<HTMLElement>;
-                for (const node of addedNodes) {
-                    if (node.classList.contains("ModalPosition")) {
-                        container = node;
-                        break outer;
-                    }
-                }
-            }
-            if (!container) { return; }
-
-            let previewEl: HTMLElement|null = null;
-            for (const node of container.querySelectorAll("div")) {
-
-                // https://store.cloudflare.steamstatic.com/public/images/applications/store/background_preview.png
-                const bg = getComputedStyle(node).backgroundImage;
-                if (/\/background_preview\.png/.test(bg)) {
-                    previewEl = <HTMLElement|null>(node.nextElementSibling);
-                    break;
-                }
-            }
-            if (!previewEl) { return; }
-
-            const bgLinkSource = previewEl.tagName === "VIDEO"
-                ? previewEl.querySelector("source")!.src // Use the first source (usually webm format, should be well supported)
-                : previewEl.style.backgroundImage;
-
-            const bgLink = bgLinkSource.match(/images\/items\/(\d+)\/([a-z0-9.]+)/i);
-            if (!bgLink) { return; }
-
-            HTML.beforeBegin(previewEl.parentNode as Element|null,
-                `<div class="as_preview_background_ctn">
-                    <a class="as_preview_background" target="_blank" href="${this.context.user.profileUrl}#previewBackground/${bgLink[1]}/${bgLink[2]}">
-                        ${L(__previewBackground)}
-                    </a>
-                </div>`);
         }).observe(modalEl!, {"childList": true, "subtree": true});
+
+        return null;
     }
 }
