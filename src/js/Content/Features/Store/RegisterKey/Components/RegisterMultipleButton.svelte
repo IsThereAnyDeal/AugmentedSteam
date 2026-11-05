@@ -3,7 +3,8 @@
     import {L} from "@Core/Localization/Localization";
     import MultiProductKeysForm from "@Content/Features/Store/RegisterKey/Components/MultiProductKeysForm.svelte";
     import type UserInterface from "@Core/User/UserInterface";
-import { mount, unmount } from "svelte";
+    import {mount, unmount} from "svelte";
+    import LargeSteamButton from "@Content/Steam/LargeSteamButton.svelte";
 
     interface Props {
         user: UserInterface;
@@ -12,28 +13,26 @@ import { mount, unmount } from "svelte";
     let { user }: Props = $props();
 
     function showDialog(): void {
+        const value = document.querySelector<HTMLInputElement>("#product_key")!.value.replace(/,/g, "\n");
         const dialog = mount(MultiProductKeysForm, {
-                    target: document.body,
-                    props: {
-                        user,
-                        value: document.querySelector<HTMLInputElement>("#product_key")!.value.replace(/,/g, "\n")
-                    }
-                });
-        dialog.$on("close", () => {
-            unmount(dialog);
+            target: document.body,
+            props: {
+                user,
+                value,
+                oncancel: () => unmount(dialog)
+            }
         });
     }
 </script>
 
 
-<button type="button" class="btnv6_blue_hoverfade btn_medium" onclick={showDialog}>
-    <span>{L(__activateMultiple)}</span>
-</button>
-<div style="clear: both;"></div>
+<div>
+    <LargeSteamButton onclick={showDialog}>{L(__activateMultiple)}</LargeSteamButton>
+</div>
 
 
 <style>
-    button {
-        margin-bottom: 15px;
+    div {
+        margin: 5px 0 15px 0;
     }
 </style>

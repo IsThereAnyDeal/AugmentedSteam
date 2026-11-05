@@ -16,10 +16,8 @@
         __register_toomany,
         __register_wallet
     } from "@Strings/_strings";
-    import {createEventDispatcher} from "svelte";
     import Modal from "@Core/Modals/Contained/Modal.svelte";
     import type UserInterface from "@Core/User/UserInterface";
-    import {EModalAction} from "@Core/Modals/Contained/EModalAction";
     import RequestData from "@Content/Modules/Data/RequestData";
 
     interface TActivationResult {
@@ -32,16 +30,13 @@
         }
     }
 
-    const dispatch = createEventDispatcher<{
-        close: void
-    }>();
-
     interface Props {
-        value: string;
-        user: UserInterface;
+        value: string,
+        user: UserInterface,
+        oncancel: () => void
     }
 
-    let { value = $bindable(), user }: Props = $props();
+    let { value, user, oncancel }: Props = $props();
 
     let keys: [string, Promise<TActivationResult>][] = $state([]);
     let buttons: {
@@ -60,7 +55,7 @@
         return await response.json() as TActivationResult;
     }
 
-    async function activate(): Promise<void> {
+    async function onactivate(): Promise<void> {
         const lines = value.trim().split("\n");
         for (const line of lines) {
             // remove all whitespace and non-key characters
@@ -71,7 +66,6 @@
 
             keys.push([line.trim(), activateKey(key)]);
         }
-        keys = keys;
         if (keys.length === 0) {
             return;
         }
@@ -85,23 +79,13 @@
         }
     }
 
-    async function handleButton(e: CustomEvent<EModalAction>): Promise<void> {
-        const response = e.detail;
-        if (response === EModalAction.OK) {
-            activate();
-        } else if (response === EModalAction.Cancel) {
-            dispatch("close");
-            return;
-        }
-    }
-
     function gameName(result: TActivationResult): string {
         return result.purchase_receipt_info.line_items[0]?.line_item_description ?? "";
     }
 </script>
 
 
-<Modal title={L(__activateMultipleHeader)} {buttons} on:button={handleButton}>
+<Modal title={L(__activateMultipleHeader)} {buttons} onprimary={onactivate} {oncancel}>
     {#if keys.length > 0}
         <ul>
             {#each keys as [key, promise]}
@@ -197,10 +181,10 @@
             background: #67c1f5;
         }
         &.success {
-            background: #5c7e10;
+            background: #02ba55;
         }
         &.error {
-            background: #9a2820;
+            background: #d72e2e;
         }
     }
 </style>

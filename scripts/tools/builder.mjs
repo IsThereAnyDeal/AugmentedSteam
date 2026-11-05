@@ -115,7 +115,7 @@ export default async function(options) {
           "store/giftcards": "Store/GiftCards/CGiftCards.ts",
           "store/licences": "Store/Licenses/CLicenses.ts",
           "store/points_shop": "Store/PointsShop/CPointsShop.ts",
-//            {out: "store/registerkey", in: `${srcDir}/js/Content/Pages/Store/RegisterKey/PRegisterKey.ts`},
+          "store/registerkey": "Store/RegisterKey/CRegisterKey.ts",
 //            {out: "store/search", in: `${srcDir}/js/Content/Pages/Store/Search/PSearch.ts`},
           "store/sub": "Store/Sub/CSub.ts",
 //            {out: "store/wishlist", in: `${srcDir}/js/Content/Pages/Store/Wishlist/PWishlist.ts`},
