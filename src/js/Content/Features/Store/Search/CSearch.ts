@@ -4,6 +4,7 @@ import {bootstrapLegacy, features} from "@Content/bootstrap";
 import commonFeatures from "@Content/Features/Common/_commonFeatures";
 import storeFeatures from "@Content/Features/Store/storeFeatures";
 import FSearchHighlights from "@Content/Features/Store/Search/FSearchHighlights";
+import FSearchFilters from "@Content/Features/Store/Search/FSearchFilters";
 
 export default class CSearch extends Context {
 
@@ -43,7 +44,7 @@ export async function run(): Promise<void> {
         ...commonFeatures(),
         ...storeFeatures(),
         FSearchHighlights,
-        // FSearchFilters,
+        FSearchFilters,
         // FIFeelLucky
     ]);
 }
