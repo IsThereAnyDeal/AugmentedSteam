@@ -60,9 +60,9 @@
 <div>
     <div class="as-header">{L(__searchFilters_reviewsCount_count)}</div>
     <div class="as-content">
-        <input type="number" min={0} placeholder={L(__searchFilters_reviewsCount_minCount)} bind:value={minValue} {onchange}>
+        <input type="number" autocomplete="off" min={0} placeholder={L(__searchFilters_reviewsCount_minCount)} bind:value={minValue} {onchange}>
         &mdash;
-        <input type="number" min={0} placeholder={L(__searchFilters_reviewsCount_maxCount)} bind:value={maxValue} {onchange}>
+        <input type="number" autocomplete="off" min={0} placeholder={L(__searchFilters_reviewsCount_maxCount)} bind:value={maxValue} {onchange}>
     </div>
 </div>
 

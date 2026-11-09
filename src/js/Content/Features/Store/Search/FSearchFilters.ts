@@ -54,13 +54,7 @@ export default class FSearchFilters extends Feature<CSearch> {
         });
 
         this.#filter();
-        const observer = new MutationObserver(() => {
-            this.#filter();
-        });
-        observer.observe(searchResultsParent, {
-            childList: true,
-            subtree: true
-        });
+        this.context.onMutation.push(() => this.#filter());
         return null;
     }
 

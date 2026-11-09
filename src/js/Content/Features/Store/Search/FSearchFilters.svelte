@@ -9,6 +9,7 @@
     import ReviewsScoreFilter from "@Content/Features/Store/Search/Filters/ReviewsScoreFilter.svelte";
     import DiscountFilter from "@Content/Features/Store/Search/Filters/DiscountFilter.svelte";
     import ReviewsCountFilter from "@Content/Features/Store/Search/Filters/ReviewsCountFilter.svelte";
+    import HideEarlyAccessFilter from "@Content/Features/Store/Search/Filters/HideEarlyAccessFilter.svelte";
 
     interface Props {
         collapseName: string,
@@ -26,8 +27,7 @@
         <HideInCartFilter {status} {register} />
         <HideMixedReviewsFilter {status} {register} />
         <HideNegativeReviewsFilter {status} {register} />
-
-        TODO Hide early access filter
+        <HideEarlyAccessFilter {status} {register} />
 
         <div class="block_rule"></div>
         <ReviewsScoreFilter {status} {register} />
