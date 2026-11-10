@@ -40,7 +40,7 @@ export default class FSearchFilters extends Feature<CSearch> {
         });
 
         this.#filter();
-        this.context.onMutation.push(() => this.#filter());
+        this.context.onMutation(() => this.#filter());
 
         // Allow user to autocollapse the added category block just like any other
         DOMHelper.insertScript("scriptlets/Store/Search/addCollapseHandlers.js", {

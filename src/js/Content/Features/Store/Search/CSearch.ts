@@ -7,13 +7,16 @@ import FSearchHighlights from "@Content/Features/Store/Search/FSearchHighlights"
 import FSearchFilters from "@Content/Features/Store/Search/FSearchFilters";
 import AugmentedSteamApiFacade from "@Content/Facades/AugmentedSteamApiFacade";
 import FIFeelLucky from "@Content/Features/Store/Search/FIFeelLucky";
+import FEarlyAccessSearch from "@Content/Features/Store/Search/FEarlyAccessSearch";
+
+type MutationListener = () => void;
 
 export default class CSearch extends Context {
 
     #eaChecked: Set<number> = new Set();
     #eaAppids: Set<number> = new Set();
 
-    onMutation: Array<() => void> = [];
+    #onMutation: MutationListener[] = [];
 
     constructor(params: ContextParams) {
         super(params);
@@ -38,13 +41,17 @@ export default class CSearch extends Context {
         } else {
             const observer = new MutationObserver(async () => {
                 await this.#handleEarlyAccess();
-                for (const fn of this.onMutation) { fn(); }
+                for (const fn of this.#onMutation) { fn(); }
             });
             observer.observe(searchResultsParent, {
                 childList: true,
                 subtree: true
             });
         }
+    }
+
+    onMutation(listener: MutationListener): void {
+        this.#onMutation.push(listener);
     }
 
     async #handleEarlyAccess(): Promise<void> {
@@ -96,6 +103,7 @@ export async function run(): Promise<void> {
         ...storeFeatures(),
         FSearchHighlights,
         FSearchFilters,
-        FIFeelLucky
+        FIFeelLucky,
+        FEarlyAccessSearch
     ]);
 }
