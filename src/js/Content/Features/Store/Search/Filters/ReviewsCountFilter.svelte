@@ -5,26 +5,20 @@
         __searchFilters_reviewsCount_minCount,
     } from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
-    import {type FilterFn} from "@Content/Features/Store/Search/FSearchFilters";
-    import type FilterState from "@Content/Features/Store/Search/Filters/FilterState.svelte";
-    import {onMount} from "svelte";
-
-    const key = "reviews-count";
+    import {type RegisterFilterFn} from "@Content/Features/Store/Search/FSearchFilters";
 
     interface Props {
-        status: FilterState,
-        register: (filter: FilterFn) => void
+        register: RegisterFilterFn
     }
 
-    let { status, register }: Props = $props();
+    let { register }: Props = $props();
 
-    let [currentMin, currentMax] = $derived(status.getRange(key));
-
-    let minValue: number|null = $derived(currentMin);
-    let maxValue: number|null = $derived(currentMax);
+    let minValue: number|null = $state(null);
+    let maxValue: number|null = $state(null);
+    let enabled: boolean = $derived(minValue !== null || maxValue !== null);
 
     function keepRow(row: HTMLElement): boolean {
-        if (minValue === null && maxValue === null) {
+        if (!enabled) {
             return true;
         }
 
@@ -48,12 +42,8 @@
     }
 
     function onchange(): void {
-        status.setRange(key, minValue, maxValue);
+        register(enabled, keepRow);
     }
-
-    onMount(() => {
-        register(keepRow);
-    });
 </script>
 
 

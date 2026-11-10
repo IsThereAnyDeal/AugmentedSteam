@@ -2,27 +2,25 @@
     import {__searchFilters_hideNegative} from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
     import ToggleFilter from "@Content/Features/Store/Search/Filters/ToggleFilter.svelte";
-    import {onMount} from "svelte";
-    import type {FilterFn} from "@Content/Features/Store/Search/FSearchFilters";
-    import FilterState from "@Content/Features/Store/Search/Filters/FilterState.svelte";
-
-    const key = "hide-negative";
+    import type {RegisterFilterFn} from "@Content/Features/Store/Search/FSearchFilters";
 
     interface Props {
-        status: FilterState,
-        register: (filter: FilterFn) => void
+        register: RegisterFilterFn
     }
 
-    let { status, register }: Props = $props();
+    let { register }: Props = $props();
+
+    let active: boolean = $state(false);
 
     function keepRow(row: HTMLElement): boolean {
-        return !status.getBoolean(key) || row.querySelector(".search_review_summary.negative") === null;
+        return !active || row.querySelector(".search_review_summary.negative") === null;
     }
 
-    onMount(() => {
-        register(keepRow);
-    });
+    function onchange(value: boolean) {
+        active = value;
+        register(value, keepRow);
+    }
 </script>
 
 
-<ToggleFilter {key} {status}>{L(__searchFilters_hideNegative)}</ToggleFilter>
+<ToggleFilter {active} {onchange}>{L(__searchFilters_hideNegative)}</ToggleFilter>

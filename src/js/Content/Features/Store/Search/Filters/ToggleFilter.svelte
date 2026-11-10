@@ -1,24 +1,21 @@
 <script lang="ts">
     import type {Snippet} from "svelte";
-    import FilterState from "@Content/Features/Store/Search/Filters/FilterState.svelte";
 
     interface Props {
-        key: string,
-        status: FilterState,
+        active: boolean,
+        onchange: (value: boolean) => void,
         children: Snippet<[void]>
     }
 
-    let { key, status, children }: Props = $props();
-
-    const checked = $derived(status.getBoolean(key));
+    let { active, onchange, children }: Props = $props();
 
     function onclick() {
-        status.setBoolean(key, !checked);
+        onchange(!active);
     }
 </script>
 
 
-<button type="button" class={{checked}} {onclick}>
+<button type="button" class={{checked: active}} {onclick}>
     <span class="checkbox"></span>
     <span class="label">{@render children()}</span>
 </button>

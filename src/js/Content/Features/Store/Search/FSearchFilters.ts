@@ -4,13 +4,13 @@ import type CSearch from "@Content/Features/Store/Search/CSearch";
 import DOMHelper from "@Content/Modules/DOM/DOMHelper";
 import {MountTargetError} from "@Core/Errors/Errors";
 import {mount} from "svelte";
-import FilterState from "./Filters/FilterState.svelte";
 
 export type FilterFn = (row: HTMLElement) => boolean;
+export type RegisterFilterFn = (enabled: boolean, fn: FilterFn) => void;
 
 export default class FSearchFilters extends Feature<CSearch> {
 
-    #filters: Array<FilterFn> = [];
+    #filters: Set<FilterFn> = new Set<FilterFn>();
 
     override async isEnabled(): Promise<boolean> {
         // FIXME setting
@@ -30,32 +30,35 @@ export default class FSearchFilters extends Feature<CSearch> {
             throw new MountTargetError();
         }
 
-        const status = new FilterState();
-        status.onUpdate = () => {
-            this.#reset();
-            this.#filter();
-        };
-        status.parseUrl();
-
         mount(self_, {
             target: rightColNode,
             anchor: rightColNode.firstElementChild ?? undefined,
             props: {
                 collapseName,
-                status,
-                register: (filter: FilterFn) => this.#filters.push(filter)
+                register: (enabled, filter) => this.#onFilterChange(enabled, filter)
             }
-        });
-
-        // Allow user to autocollapse the added category block just like any other
-        DOMHelper.insertScript("scriptlets/Store/Search/addCollapseHandlers.js", {
-            collapseName,
-            shouldCollapse: false // FIXME this.#filters.every(filter => !filter.active)
         });
 
         this.#filter();
         this.context.onMutation.push(() => this.#filter());
+
+        // Allow user to autocollapse the added category block just like any other
+        DOMHelper.insertScript("scriptlets/Store/Search/addCollapseHandlers.js", {
+            collapseName,
+            shouldCollapse: false
+        });
         return null;
+    }
+
+    #onFilterChange(enabled: boolean, filter: FilterFn): void {
+        if (enabled) {
+            this.#filters.add(filter);
+        } else {
+            this.#filters.delete(filter);
+        }
+
+        this.#reset();
+        this.#filter();
     }
 
     #reset(): void {

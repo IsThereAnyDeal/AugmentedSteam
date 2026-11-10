@@ -1,29 +1,24 @@
 <script lang="ts">
     import {__searchFilters_discountPercent_count,} from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
-    import {type FilterFn} from "@Content/Features/Store/Search/FSearchFilters";
     import DoubleSlider from "@Content/Features/Store/Search/Filters/DoubleSlider.svelte";
-    import type FilterState from "@Content/Features/Store/Search/Filters/FilterState.svelte";
-    import {onMount} from "svelte";
+    import type {RegisterFilterFn} from "@Content/Features/Store/Search/FSearchFilters";
 
-    const key = "discount";
     const min = 0;
     const max = 100;
 
     interface Props {
-        status: FilterState,
-        register: (filter: FilterFn) => void
+        register: RegisterFilterFn
     }
 
-    let { status, register }: Props = $props();
+    let { register }: Props = $props();
 
-    let [currentMin, currentMax] = $derived(status.getRange(key));
-
-    let minValue = $derived(currentMin ?? min);
-    let maxValue = $derived(currentMax ?? max);
+    let minValue = $state(min);
+    let maxValue = $state(max);
+    let enabled: boolean = $derived(minValue > min || maxValue < max);
 
     function keepRow(row: HTMLElement): boolean {
-        if (minValue === min && maxValue === max) {
+        if (!enabled) {
             return true;
         }
 
@@ -32,14 +27,8 @@
     }
 
     function onchange(): void {
-        const newMin = minValue === min ? null : minValue;
-        const newMax = maxValue === max ? null : maxValue;
-        status.setRange(key, newMin, newMax);
+        register(enabled, keepRow);
     }
-
-    onMount(() => {
-        register(keepRow);
-    });
 </script>
 
 
