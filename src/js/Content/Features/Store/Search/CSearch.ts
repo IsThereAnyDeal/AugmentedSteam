@@ -8,6 +8,7 @@ import FSearchFilters from "@Content/Features/Store/Search/FSearchFilters";
 import AugmentedSteamApiFacade from "@Content/Facades/AugmentedSteamApiFacade";
 import FIFeelLucky from "@Content/Features/Store/Search/FIFeelLucky";
 import FEarlyAccessSearch from "@Content/Features/Store/Search/FEarlyAccessSearch";
+import FDeckCompatibilityFix from "@Content/Features/Store/Search/FDeckCompatibilityFix";
 
 type MutationListener = () => void;
 
@@ -22,18 +23,6 @@ export default class CSearch extends Context {
         super(params);
 
         DOMHelper.insertScript("scriptlets/Store/Search/executeSearchOverride.js");
-
-        /**
-         * Fixing Steam bug where Steam deck compatibility box wasn't collapsable
-         */
-        const deckCompatibility = document.querySelector("#deck_compatibility_search_filter");
-        if (deckCompatibility && !deckCompatibility.classList.contains("search_collapse_block")) {
-            deckCompatibility.classList.add("search_collapse_block");
-            DOMHelper.insertScript("scriptlets/Store/Search/addCollapseHandlers.js", {
-                collapseName: "deck_compatibility",
-                shouldCollapse: true
-            });
-        }
 
         const searchResultsParent = document.querySelector("#search_results");
         if (!searchResultsParent) {
@@ -104,6 +93,7 @@ export async function run(): Promise<void> {
         FSearchHighlights,
         FSearchFilters,
         FIFeelLucky,
-        FEarlyAccessSearch
+        FEarlyAccessSearch,
+        FDeckCompatibilityFix
     ]);
 }
