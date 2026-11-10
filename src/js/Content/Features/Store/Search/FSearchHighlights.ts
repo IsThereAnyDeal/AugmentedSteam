@@ -20,10 +20,9 @@ export default class FSearchHighlights extends Feature<CSearch> {
     
     override async apply(): Promise<string|null> {
         this.highlighter.insertStyles();
-        this.#highlight();
 
-        // @ts-expect-error
-        document.addEventListener("searchCompleted", (e: CustomEvent<boolean>) => {
+        this.#highlight();
+        this.context.onMutation(() => {
             this.#highlight();
         });
         return null;
