@@ -1,17 +1,20 @@
 import Feature from "@Content/Modules/Context/Feature";
 import type CSearch from "@Content/Features/Store/Search/CSearch";
+import Settings from "@Options/Data/Settings";
 
 export default class FIFeelLucky extends Feature<CSearch> {
 
-    override isEnabled(): boolean | Promise<boolean> {
-        return (new URLSearchParams(window.location.search ?? ""))
-            .has("ifeellucky");
+    override async isEnabled(): Promise<boolean> {
+        return Settings.context_steam_lucky;
     }
 
-    override apply(): void {
-        const firstResult = document.querySelector<HTMLAnchorElement>("a.search_result_row");
-        if (firstResult && firstResult.href) {
-            window.location.href = firstResult.href;
+    override async apply(): Promise<null> {
+        if ((new URLSearchParams(window.location.search ?? "")).has("ifeellucky")) {
+            const firstResult = document.querySelector<HTMLAnchorElement>("a.search_result_row");
+            if (firstResult && firstResult.href) {
+                window.location.href = firstResult.href;
+            }
         }
+        return null;
     }
 }
