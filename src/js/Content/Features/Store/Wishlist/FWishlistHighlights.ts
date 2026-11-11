@@ -5,37 +5,38 @@ import AppId from "@Core/GameId/AppId";
 
 export default class FWishlistHighlights extends Feature<CWishlist> {
 
-    // @ts-expect-error
     private highlighter: HighlightsTagsUtils2;
 
     // @ts-expect-error
     private map: Map<string, ItemSetup>;
 
-    override isEnabled(): boolean {
-        return this.context.user.isSignedIn; // TODO ITAD status
-    }
+    constructor(context: CWishlist) {
+        super(context);
 
-    override async apply(): Promise<void> {
         const isMyWishlist = this.context.isMyWishlist;
 
         this.highlighter = new HighlightsTagsUtils2({
             wishlisted: !isMyWishlist,
             waitlisted: !isMyWishlist
         });
-        if (!this.highlighter.isEnabled()) {
-            return;
-        }
+    }
 
+    override async isEnabled(): Promise<boolean> {
+        return this.context.user.isSignedIn && this.highlighter.isEnabled();
+    }
+
+    override async apply(): Promise<string|null> {
         const appids = this.context.wishlistData?.map(entry => new AppId(entry.appid)) ?? [];
 
         if (appids.length === 0) {
-            return;
+            return "No appids found";
         }
 
         this.highlighter.insertStyles();
         this.map = await this.highlighter.query(appids);
 
         this.context.dom.onUpdate.subscribe(() => this.highlight(), true);
+        return null;
     }
 
     private highlight(): void {

@@ -1,5 +1,6 @@
 import ASEventHandler from "@Content/Modules/Events/ASEventHandler";
 import AppId from "@Core/GameId/AppId";
+import SelectorMap from "@Content/SelectorMap";
 
 interface TDOMGame {
     node: HTMLElement,
@@ -26,14 +27,14 @@ export class WishlistDOM {
 
     #update() {
 
-        const parent = document.querySelector<HTMLElement>("section.jGMVnjZbmZM-");
+        const parent = document.querySelector<HTMLElement>(SelectorMap.wishlist.parent);
         if (!parent) {
             console.error("Didn't find parent");
             this.dom = {};
             return;
         }
 
-        const gameList = parent.querySelector<HTMLElement>(".PLkUpk974nY-.Panel");
+        const gameList = parent.querySelector<HTMLElement>(SelectorMap.wishlist.gameList);
         if (!gameList) {
             console.error("Didn't find gameList");
             this.dom = {};
@@ -41,7 +42,7 @@ export class WishlistDOM {
         }
 
         const games: TDOMGame[] = [];
-        for (const gameNode of gameList.querySelectorAll<HTMLElement>(".PE-3oq-yIvg-.Panel")) {
+        for (const gameNode of gameList.querySelectorAll<HTMLElement>(SelectorMap.wishlist.game)) {
             const game: TDOMGame = {
                 node: gameNode,
                 categories: this.categoriesNode(gameNode)
@@ -73,43 +74,31 @@ export class WishlistDOM {
     }
 
     gameNode(parent: HTMLElement): HTMLDivElement {
-        return parent.querySelector(".PE-3oq-yIvg-")!;
+        return parent.querySelector(SelectorMap.wishlist.game)!;
     }
 
     titleNode(parent: HTMLElement): HTMLAnchorElement|null {
-        return parent.querySelector<HTMLAnchorElement>("a.I8vuMMV-osE-[href*='/app/']");
+        return parent.querySelector<HTMLAnchorElement>(SelectorMap.wishlist.titleNode);
     }
 
     categoriesNode(parent: HTMLElement): HTMLAnchorElement|null {
-        return parent.querySelector<HTMLAnchorElement>(".lZzQoZsDjew-");
+        return parent.querySelector<HTMLAnchorElement>(SelectorMap.wishlist.categoriesNode);
     }
 
     priceNodes(parent: HTMLElement): {
         normal: HTMLElement|null,
         icon: HTMLElement|null,
-        current: HTMLElement|null,
-        replacer: (cut: number) => void
+        current: HTMLElement|null
     } {
-        const parentPriceNode = parent.querySelector<HTMLElement>("._5obTMJByPr0-");
-        const normalPriceNode = parentPriceNode?.querySelector<HTMLElement>(".sNExYpOoTBo- .r4XxdUG9Bg0-") ?? null;
-        const cutIconNode = parentPriceNode?.querySelector<HTMLElement>(".rsMD9WnTopA-.OaA5Hz-VGBw-") ?? null;
-        const currentNode = parentPriceNode?.querySelector<HTMLElement>(".-HQzBzl6lqI-") ?? null;
-        const replacer = (cut: number) => {
-            if (!cutIconNode) { return; }
-            cutIconNode.classList.remove("OaA5Hz-VGBw-");
-
-            const node = document.createElement("div");
-            node.classList.add("hPiY1A-1izA-");
-            node.innerText = `-${cut}%`;
-
-            cutIconNode.replaceChildren(node);
-        }
+        const parentPriceNode = parent.querySelector<HTMLElement>(SelectorMap.wishlist.prices.parent);
+        const normalPriceNode = parentPriceNode?.querySelector<HTMLElement>(SelectorMap.wishlist.prices.normal) ?? null;
+        const cutIconNode = parentPriceNode?.querySelector<HTMLElement>(SelectorMap.wishlist.prices.cutIconNode) ?? null;
+        const currentNode = parentPriceNode?.querySelector<HTMLElement>(SelectorMap.wishlist.prices.current) ?? null;
 
         return {
             normal: normalPriceNode,
             icon: cutIconNode,
-            current: currentNode,
-            replacer
+            current: currentNode
         }
     }
 

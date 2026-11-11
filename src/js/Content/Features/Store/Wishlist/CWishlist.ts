@@ -95,12 +95,12 @@ export async function run(): Promise<void> {
     await features(context, [
         ...commonFeatures(),
         // FAlternativeLinuxIcon,
-//        FWishlistHighlights,
+        FWishlistHighlights,
 //         FWishlistITADPrices,
 //        FWishlistUserNotes,
         FWishlistStats,
 //        FEmptyWishlist,
         FExportWishlist,
-//        FWishlistRestorePriceCut
+        FWishlistRestorePriceCut
     ]);
 }

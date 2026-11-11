@@ -2,24 +2,37 @@ import Feature from "@Content/Modules/Context/Feature";
 import Settings from "@Options/Data/Settings";
 import type CWishlist from "@Content/Features/Store/Wishlist/CWishlist";
 import Price from "@Content/Modules/Currency/Price";
+import SelectorMap from "@Content/SelectorMap";
 
 export default class FWishlistRestorePriceCut extends Feature<CWishlist> {
 
-    override isEnabled(): boolean {
+    override async isEnabled(): Promise<boolean> {
         return Settings.restore_price_cut;
     }
 
-    override async apply(): Promise<void> {
+    override async apply(): Promise<string|null> {
         this.context.dom.onUpdate.subscribe(() => {
-            this.checkPrices();
+            this.#checkPrices();
         }, true);
+
+        return null;
     }
 
-    private checkPrices(): void {
+    #replace(cutIconNode: HTMLElement, cut: number): void {
+        cutIconNode.classList.remove(SelectorMap.wishlist.prices.cutIconClass);
+
+        const node = document.createElement("div");
+        node.classList.add(SelectorMap.wishlist.prices.cutClass);
+        node.innerText = `-${cut}%`;
+
+        cutIconNode.replaceChildren(node);
+    }
+
+    #checkPrices(): void {
         const dom = this.context.dom.dom;
 
         for (let game of dom.gameList?.games ?? []) {
-            const {normal, current, icon, replacer} = this.context.dom.priceNodes(game.node);
+            const {normal, current, icon} = this.context.dom.priceNodes(game.node);
              if (!normal || !current || !icon) {
                  continue;
              }
@@ -34,7 +47,7 @@ export default class FWishlistRestorePriceCut extends Feature<CWishlist> {
 
             if (normalPrice && currentPrice) {
                 const cut = 100 - Math.round((currentPrice.value / normalPrice.value)*100);
-                replacer(cut);
+                this.#replace(icon, cut);
             }
         }
     }

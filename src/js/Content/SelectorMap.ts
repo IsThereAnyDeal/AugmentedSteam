@@ -17,7 +17,20 @@ const map = {
         }
     },
     wishlist: {
-        header: ".KFyvA5BJClc-"
+        parent: "section.jGMVnjZbmZM-",
+        header: ".KFyvA5BJClc-",
+        gameList: ".PLkUpk974nY-.Panel",
+        game: ".PE-3oq-yIvg-.Panel",
+        titleNode: "a.I8vuMMV-osE-[href*='/app/']",
+        categoriesNode: ".lZzQoZsDjew-",
+        prices: {
+            parent: "._5obTMJByPr0-",
+            normal: "._9Rf9BwU0xAQ-",
+            current: ".-HQzBzl6lqI-",
+            cutIconNode: ".rsMD9WnTopA-.OaA5Hz-VGBw-",
+            cutIconClass: "OaA5Hz-VGBw-",
+            cutClass: "hPiY1A-1izA-",
+        }
     }
 }
 
