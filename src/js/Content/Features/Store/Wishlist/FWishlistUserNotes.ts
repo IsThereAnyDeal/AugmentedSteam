@@ -3,26 +3,28 @@ import type CWishlist from "@Content/Features/Store/Wishlist/CWishlist";
 import Settings from "@Options/Data/Settings";
 import UserNotes from "@Content/Features/Store/Common/UserNotes/UserNotes";
 import UserNote from "@Content/Features/Store/Wishlist/Components/WishlistUserNote.svelte";
-import { mount } from "svelte";
+import {mount, tick, unmount} from "svelte";
 
 export default class FWishlistUserNotes extends Feature<CWishlist> {
 
-    private notes: UserNotes|undefined;
-    private components: UserNote[] = [];
+    #notes: UserNotes|undefined;
+    #components: UserNote[] = [];
 
-    override isEnabled(): boolean {
+    override async isEnabled(): Promise<boolean> {
         return this.context.isMyWishlist && Settings.user_notes_wishlist;
     }
 
-    override async apply(): Promise<void> {
-        this.notes ??= new UserNotes();
+    override async apply(): Promise<string|null> {
+        this.#notes ??= new UserNotes();
 
         this.context.dom.onUpdate.subscribe(() => {
-            this.addNotes();
+            this.#addNotes();
         }, true);
+
+        return null;
     }
 
-    private addNotes(): void {
+    async #addNotes(): Promise<void> {
         const dom = this.context.dom.dom;
 
         for (let game of dom.gameList?.games ?? []) {
@@ -47,26 +49,27 @@ export default class FWishlistUserNotes extends Feature<CWishlist> {
                 continue;
             }
 
-            const component = mount(UserNote, {
-                            target: targetNode,
-                            props: {
-                                notes: this.notes!,
-                                appName,
-                                appid: appid.number
-                            }
-                        });
-
-            this.components.push(component);
+            this.#components.push(
+                mount(UserNote, {
+                    target: targetNode,
+                    props: {
+                        notes: this.#notes!,
+                        appName,
+                        appid: appid.number
+                    }
+                })
+            );
         }
 
+        await tick();
         let stillConnected: UserNote[] = [];
-        for (let component of this.components) {
+        for (let component of this.#components) {
             if (component.isConnected()) {
                 stillConnected.push(component);
             } else {
-                component.$destroy();
+                unmount(component);
             }
         }
-        this.components = stillConnected;
+        this.#components = stillConnected;
     }
 }

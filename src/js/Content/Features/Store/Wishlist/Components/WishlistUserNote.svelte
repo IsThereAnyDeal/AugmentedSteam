@@ -13,9 +13,9 @@
     let { notes, appName, appid }: Props = $props();
 
     let note: string|null = $state(null);
-    let el: HTMLElement = $state();
+    let el = $state() as HTMLElement;
 
-    async function handleEdit(): Promise<void> {
+    async function onedit(): Promise<void> {
         let newNote: string|null = await notes.showModalDialog(appName, appid,);
         if (newNote === "") {
             newNote = null;
@@ -28,16 +28,16 @@
     }
 
     onMount(() => {
-        notes.get(appid).then(n => note = n.get(appid) ?? null);
+        (async () => {
+            note = (await notes.get(appid)).get(appid) ?? null;
+        })();
     });
 </script>
 
 
 <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
-<div class="as-note" data-appid={appid} bind:this={el} class:is-empty={!note} onclick={handleEdit}>
-    {#if note !== undefined}
-        {note ?? L(__userNote_add)}
-    {/if}
+<div bind:this={el} class={["as-note", {"is-empty": !note}]} data-appid={appid} onclick={onedit}>
+    {note ?? L(__userNote_add)}
 </div>
 
 
@@ -52,12 +52,14 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-    }
-    div.is-empty {
-        font-style: italic;
-        color: #9dacbc;
-    }
-    div:hover {
-        color: white;
+
+        &.is-empty {
+            font-style: italic;
+            color: #9dacbc;
+        }
+
+        &:hover {
+            color: white;
+        }
     }
 </style>
