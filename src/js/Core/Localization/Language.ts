@@ -35,6 +35,10 @@ export default class Language {
     private readonly _name: string;
     private readonly _code: string|null;
 
+    static get default(): Language {
+        return new Language("english");
+    }
+
     constructor(language: string) {
         this._name = language;
         this._code = Language.map[language] ?? null;

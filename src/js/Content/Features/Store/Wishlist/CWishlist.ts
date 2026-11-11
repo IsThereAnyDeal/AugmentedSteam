@@ -98,9 +98,9 @@ export async function run(): Promise<void> {
 //        FWishlistHighlights,
 //         FWishlistITADPrices,
 //        FWishlistUserNotes,
-//        FWishlistStats,
+        FWishlistStats,
 //        FEmptyWishlist,
-       FExportWishlist,
+        FExportWishlist,
 //        FWishlistRestorePriceCut
     ]);
 }
