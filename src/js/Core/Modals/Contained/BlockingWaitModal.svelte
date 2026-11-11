@@ -5,14 +5,18 @@
 
     interface Props {
         title: string;
-        status?: string|string[];
+        statusFn?: () => string|string[];
     }
 
-    let { title, status = L(__wait) }: Props = $props();
+    let {
+        title,
+        statusFn
+    }: Props = $props();
 
-    export {
-    	title,
-    	status,
+    let status: string|string[] = $state(L(__wait));
+
+    export function update(): void {
+        status = statusFn?.() ?? L(__wait);
     }
 </script>
 
@@ -44,5 +48,4 @@
         margin-right: 5px;
         float: left;
     }
-
 </style>

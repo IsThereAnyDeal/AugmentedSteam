@@ -1,23 +1,24 @@
 <script lang="ts">
-    import { createBubbler } from 'svelte/legacy';
-
-    const bubble = createBubbler();
-
     interface Props {
-        label: string;
-        destructive?: boolean;
+        label: string,
+        destructive?: boolean,
+        onclick: () => void
     }
 
-    let { label, destructive = false }: Props = $props();
+    let {
+        label,
+        destructive = false,
+        onclick
+    }: Props = $props();
 </script>
 
 
-<button type="button" class:destructive onclick={bubble('click')}>{label}</button>
+<button type="button" class={{destructive}} {onclick}>{label}</button>
 
 
 <style>
     button {
-        background-color: #6c94a0;
+        background: #6c94a0;
         text-transform: uppercase;
         text-decoration: none;
         text-align: center;
@@ -29,16 +30,18 @@
         cursor: pointer;
         font-size: 11px;
         height: 100%;
-    }
-    button:hover {
-        background-color: #dbdee1;
-        color: black;
+
+        &:hover {
+            background: #dbdee1;
+            color: black;
+        }
     }
 
     .destructive {
-        background-color: #bf5a5a;
-    }
-    .destructive:hover {
-        background-color: #ffd1d1;
+        background: #bf5a5a;
+
+        &:hover {
+            background: #ffd1d1;
+        }
     }
 </style>

@@ -1,7 +1,4 @@
 <script lang="ts">
-    import { createBubbler } from 'svelte/legacy';
-
-    const bubble = createBubbler();
     import {L} from "@Core/Localization/Localization";
     import {
         __cancel,
@@ -15,45 +12,37 @@
         __wait
     } from "@Strings/_strings";
     import {slide} from "svelte/transition";
-    import {createEventDispatcher} from "svelte";
     import Modal from "@Core/Modals/Contained/Modal.svelte";
     import Clipboard from "@Content/Modules/Clipboard";
     import Downloader from "@Core/Downloader";
-    import {
-        ExportMethod,
-        type WishlistData,
-        WishlistExporter
-    } from "@Content/Features/Store/Wishlist/Utils/WishlistExporter";
-    import {EModalAction} from "@Core/Modals/Contained/EModalAction";
+    import {type WishlistData, WishlistExporter} from "@Content/Features/Store/Wishlist/Utils/WishlistExporter";
     import BlockingWaitDialog from "@Core/Modals/BlockingWaitDialog";
     import ServiceFactory from "@Protobufs/ServiceFactory";
     import type UserInterface from "@Core/User/UserInterface";
     import Long from "long";
     import {StoreItemID} from "@Protobufs/Compiled/proto.bundle";
     import type Language from "@Core/Localization/Language";
-    import ProtobufUtils from  "@Protobufs/ProtobufUtils";
-
-    const dispatch = createEventDispatcher<{
-        close: void
-    }>();
+    import ProtobufUtils from "@Protobufs/ProtobufUtils";
 
     interface Props {
-        language: Language;
-        user: UserInterface;
-        ownerId: string;
-        type?: "text"|"json";
-        format?: string;
+        language: Language,
+        user: UserInterface,
+        ownerId: string,
+        type?: "text"|"json",
+        format?: string,
+        onclose: () => void
     }
 
     let {
         language,
         user,
         ownerId,
-        type = $bindable("text"),
-        format = $bindable("%title%")
+        type = "text",
+        format = "%title%",
+        onclose
     }: Props = $props();
 
-    let input: HTMLInputElement = $state();
+    let input = $state() as HTMLInputElement;
 
     function add(value: string): void {
         if (!input) { return; }
@@ -74,7 +63,14 @@
         input.focus();
     }
 
-    async function loadWishlist(): Promise<WishlistData> {
+    async function getExporter(): Promise<WishlistExporter> {
+        let status: { loaded: number, pages: number } | null = null;
+
+        const wait = new BlockingWaitDialog(L(__wait), () => {
+            return L(__loading) + (!status ? "" : ` (${status.loaded} / ${status.pages})`);
+        });
+        await wait.update();
+
         let data: WishlistData = [];
 
         const wishlistService = ServiceFactory.WishlistService(user);
@@ -87,6 +83,10 @@
         const dateAddedMap = new Map(wishlist.items.map(item => [item.appid, item.dateAdded]));
 
         const chunkSize = 50;
+        status = {
+            loaded: 0,
+            pages: Math.ceil(wishlist.items.length / chunkSize)
+        }
         for (let i=0; i <= wishlist.items.length; i += chunkSize) {
             const chunk = wishlist.items.slice(i, i+chunkSize).map(item => new StoreItemID({
                 appid: item.appid
@@ -106,7 +106,7 @@
                 ids: chunk
             });
 
-            for (let item of items.storeItems) {
+            for (const item of items.storeItems) {
                 data.push({
                     appid: item.id!,
                     name: item.name!,
@@ -127,27 +127,17 @@
                     }
                 });
             }
+
+            status.loaded++;
+            wait.update();
         }
-        return data;
+
+        wait.dismiss();
+        return new WishlistExporter(data);
     }
 
-    async function handleButton(e: CustomEvent<EModalAction>): Promise<void> {
-        const response = e.detail;
-        if (response === EModalAction.Cancel) {
-            dispatch("close");
-            return;
-        }
-
-        const method = response === EModalAction.OK
-            ? ExportMethod.download
-            : ExportMethod.copy;
-
-        const wait = new BlockingWaitDialog(L(__wait), () => L(__loading));
-        await wait.update();
-        const wishlistData = await loadWishlist();
-        wait.dismiss();
-
-        const wishlist = new WishlistExporter(wishlistData);
+    async function ondownload(): Promise<void> {
+        const wishlist = await getExporter();
 
         let data = "";
         let filename = "";
@@ -162,11 +152,24 @@
             filetype = "text/plain";
         }
 
-        if (method === ExportMethod.copy) {
-            Clipboard.set(data);
-        } else if (method === ExportMethod.download) {
-            Downloader.download(new Blob([data], {"type": `${filetype};charset=UTF-8`}), filename);
+        Downloader.download(new Blob([data], {"type": `${filetype};charset=UTF-8`}), filename);
+    }
+
+    async function oncopy(): Promise<void> {
+        const wishlist = await getExporter();
+
+        let data = "";
+        if (type === "json") {
+            data = await wishlist.toJson();
+        } else if (type === "text" && format) {
+            data = await wishlist.toText(format);
         }
+
+        Clipboard.set(data);
+    }
+
+    function oncancel() {
+        onclose();
     }
 </script>
 
@@ -177,14 +180,16 @@
            secondary: L(__export_copyClipboard),
            cancel: L(__cancel)
        }}
-       on:button={handleButton}>
+       onprimary={ondownload}
+       onsecondary={oncopy}
+       {oncancel}>
 
     <div class="as_wexport_container">
         <div class="as_wexport">
             <h2>{L(__export_type)}</h2>
             <div class="as_wexport_buttons">
-                <label><input type="radio" value="text" bind:group={type} onchange={bubble('change')}> {L(__export_text)}</label>
-                <label><input type="radio" value="json" bind:group={type} onchange={bubble('change')}> JSON</label>
+                <label><input type="radio" value="text" bind:group={type}> {L(__export_text)}</label>
+                <label><input type="radio" value="json" bind:group={type}> JSON</label>
             </div>
         </div>
 
@@ -192,7 +197,7 @@
             <div class="as_wexport" transition:slide={{axis: "y", duration: 200}}>
                 <h2>{L(__export_format)}</h2>
                 <div>
-                    <input type="text" bind:value={format} bind:this={input} onchange={bubble('change')}>
+                    <input type="text" bind:value={format} bind:this={input}>
                     <div class="as_wexport_symbols">
                         {#each [
                             "title", "id", "appid", "url", "added_date",
@@ -236,17 +241,20 @@
         border: 1px solid #333643;
         text-align: left;
         cursor: pointer;
-    }
-    label:hover {
-        color: white;
-        border-color: white;
-    }
-    label:has(:global(input[type=radio]:checked)) {
-        color: white;
-        border-color: #1a97ff;
-    }
-    label input[type=radio] {
-        display: none;
+
+        &:hover {
+            color: white;
+            border-color: white;
+        }
+
+        &:has(:global(input[type=radio]:checked)) {
+            color: white;
+            border-color: #1a97ff;
+        }
+
+        & input[type=radio] {
+            display: none;
+        }
     }
 
     input[type=text] {
@@ -268,14 +276,15 @@
         padding: 0;
         color: #acb2b8;
         cursor: pointer;
-    }
-    button:hover {
-        text-decoration: underline;
-        color: white;
-    }
 
-    button span {
-        color: #6e6e6e;
-        font-size: 0.75em;
+        &:hover {
+            text-decoration: underline;
+            color: white;
+        }
+
+        & span {
+            color: #6e6e6e;
+            font-size: 0.75em;
+        }
     }
 </style>

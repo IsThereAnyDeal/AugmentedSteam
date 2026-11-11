@@ -13,6 +13,9 @@ import Long from "long";
 import ServiceFactory from "@Protobufs/ServiceFactory";
 import ASEventHandler from "@Content/Modules/Events/ASEventHandler";
 import FWishlistRestorePriceCut from "@Content/Features/Store/Wishlist/FWishlistRestorePriceCut";
+import {bootstrapReact, features} from "@Content/bootstrap";
+import commonFeatures from "@Content/Features/Common/_commonFeatures";
+import FAlternativeLinuxIcon from "@Content/Features/Store/Common/FAlternativeLinuxIcon";
 
 export interface WishlistEntry {
     appid: number,
@@ -22,15 +25,21 @@ export interface WishlistEntry {
 
 export default class CWishlist extends Context {
 
-    public readonly dom: WishlistDOM;
-    public readonly ownerId: string;
+    dom: WishlistDOM;
 
-    public wishlistData: WishlistEntry[];
+    // @ts-expect-error Initialized in setup()
+    ownerId: string;
+    // @ts-expect-error Initialized in setup()
+    wishlistData: WishlistEntry[];
 
-    public readonly onReorder: ASEventHandler<void> = new ASEventHandler<void>();
+    readonly onReorder: ASEventHandler<void> = new ASEventHandler<void>();
 
-    static override async create(params: ContextParams): Promise<CWishlist> {
+    constructor(params: ContextParams) {
+        super(params);
+        this.dom = new WishlistDOM();
+    }
 
+    async setup(): Promise<void> {
         const queryData: TReactQueryData = JSON.parse(await SteamFacade.global("SSR.renderContext.queryData"));
 
         let ownerId: string|null = null;
@@ -47,25 +56,8 @@ export default class CWishlist extends Context {
             throw new Error("Couldn't initialize wishlist, didn't find owner");
         }
 
-        return new CWishlist(params, ownerId, wishlistData);
-    }
-
-    /* TODO private */ constructor(params: ContextParams, ownerId: string, wishlistData: WishlistEntry[]) {
-        super(params, ContextType.WISHLIST, [
-            // FAlternativeLinuxIcon,
-            FWishlistHighlights,
-            FWishlistITADPrices,
-            FWishlistUserNotes,
-            FWishlistStats,
-            FEmptyWishlist,
-            FExportWishlist,
-            FWishlistRestorePriceCut
-        ]);
-
         this.ownerId = ownerId;
         this.wishlistData = wishlistData;
-        this.dom = new WishlistDOM();
-
         this.dom.observe();
     }
 
@@ -85,4 +77,30 @@ export default class CWishlist extends Context {
             }
         });
     }
+}
+
+
+/**
+ * @contentScripts
+ * @match *://*.steampowered.com/wishlist
+ * @match *://*.steampowered.com/wishlist/(id|profiles)/*
+ * @match *://*.steampowered.com//wishlist
+ * @match *://*.steampowered.com//wishlist/(id|profiles)/*
+ */
+export async function run(): Promise<void> {
+    const params = await bootstrapReact();
+    const context = new CWishlist(params);
+    await context.setup();
+
+    await features(context, [
+        ...commonFeatures(),
+        // FAlternativeLinuxIcon,
+//        FWishlistHighlights,
+//         FWishlistITADPrices,
+//        FWishlistUserNotes,
+//        FWishlistStats,
+//        FEmptyWishlist,
+       FExportWishlist,
+//        FWishlistRestorePriceCut
+    ]);
 }

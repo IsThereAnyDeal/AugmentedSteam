@@ -1,8 +1,13 @@
 <script lang="ts">
-    let node: HTMLElement = $state();
+    import {tick} from "svelte";
+
+    let node = $state() as HTMLElement;
     let itemNodes: Array<[number, HTMLElement]> = [];
 
-    export function getTarget(targetPosition: number): HTMLElement {
+    export async function getTarget(targetPosition: number): Promise<HTMLElement> {
+        /* If the menu is mounted at the same time as we request target, we won't have node bound yet */
+        await tick();
+
         let anchor: HTMLElement|null = null;
 
         for (const [position, itemNode] of itemNodes) {
@@ -25,7 +30,6 @@
         itemNodes.sort((a, b) => a[0]-b[0]);
         return newItem;
     }
-
 </script>
 
 

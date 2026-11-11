@@ -21,14 +21,10 @@ interface TDOMStructure {
 
 export class WishlistDOM {
 
-    public dom: TDOMStructure = {};
-    public readonly onUpdate: ASEventHandler<void> = new ASEventHandler<void>();
+    dom: TDOMStructure = {};
+    readonly onUpdate: ASEventHandler<void> = new ASEventHandler<void>();
 
-    constructor() {
-        this.update();
-    }
-
-    private update() {
+    #update() {
 
         const parent = document.querySelector<HTMLElement>("section.jGMVnjZbmZM-");
         if (!parent) {
@@ -123,8 +119,10 @@ export class WishlistDOM {
     }
 
     observe(): void {
+        this.#update();
+
         const observer = new MutationObserver(() => {
-            this.update();
+            this.#update();
             this.onUpdate.dispatch();
         });
         observer.observe(

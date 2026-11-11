@@ -15,11 +15,6 @@ export type WishlistData = Array<{
     }
 }>;
 
-export enum ExportMethod {
-    download,
-    copy
-}
-
 export class WishlistExporter {
 
     private readonly wishlist: WishlistData;

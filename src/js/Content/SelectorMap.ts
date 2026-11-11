@@ -15,6 +15,9 @@ const map = {
             profileBgImagePreview: ".MUXvc-K-iPA-.AmUkgklq9kc-",
             profileBgActions: ".NC2LiacfVDs-"
         }
+    },
+    wishlist: {
+        header: ".KFyvA5BJClc-"
     }
 }
 
