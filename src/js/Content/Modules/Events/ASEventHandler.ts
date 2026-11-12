@@ -11,7 +11,7 @@ export default class ASEventHandler<T = void> {
     public subscribe(listener: ASEventListener<T>, forceDispatch: boolean=false): void {
         this.listeners.push(listener);
 
-        if (this.wasDispatched || forceDispatch) {
+        if (!this.wasDispatched || forceDispatch) {
             this.invoke(listener);
         }
     }

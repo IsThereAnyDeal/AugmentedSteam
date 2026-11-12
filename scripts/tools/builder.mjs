@@ -110,7 +110,7 @@ export default async function(options) {
           "store/bundle": "Store/Bundle/CBundle.ts",
           "store/cart": "Store/Cart/CCart.ts",
 //            {out: "store/default", in: `${srcDir}/js/Content/Pages/Store/PDefaultStore.ts`},
-//            {out: "store/frontpage", in: `${srcDir}/js/Content/Pages/Store/Storefront/PStoreFront.ts`},
+          "store/frontpage": "Store/Storefront/CStoreFront.ts",
           "store/funds": "Store/Funds/CFunds.ts",
           "store/giftcards": "Store/GiftCards/CGiftCards.ts",
           "store/licences": "Store/Licenses/CLicenses.ts",
