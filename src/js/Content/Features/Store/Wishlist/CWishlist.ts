@@ -99,7 +99,7 @@ export async function run(): Promise<void> {
         FWishlistITADPrices,
         FWishlistUserNotes,
         FWishlistStats,
-//        FEmptyWishlist,
+        FEmptyWishlist,
         FExportWishlist,
         FWishlistRestorePriceCut
     ]);

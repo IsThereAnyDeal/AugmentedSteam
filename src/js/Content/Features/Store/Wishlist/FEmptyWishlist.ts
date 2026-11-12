@@ -13,43 +13,57 @@ import DynamicStore from "@Content/Modules/Data/DynamicStore";
 import BlockingWaitDialog from "@Core/Modals/BlockingWaitDialog";
 import WishlistButton from "@Content/Features/Store/Wishlist/Components/WishlistButton.svelte";
 import {getMenuNode} from "@Content/Features/Store/Wishlist/Components/WishlistMenu";
-import ConfirmDialog from "@Core/Modals/ConfirmDialog";
-import {EModalAction} from "@Core/Modals/Contained/EModalAction";
 import ServiceFactory from "@Protobufs/ServiceFactory";
-import { mount } from "svelte";
+import {mount, unmount} from "svelte";
+import Modal from "@Core/Modals/Contained/Modal.svelte";
 
 export default class FEmptyWishlist extends Feature<CWishlist> {
 
-    override isEnabled(): boolean {
-        return this.context.isMyWishlist && Settings.showemptywishlist;
+    override async isEnabled(): Promise<boolean> {
+        return Settings.showemptywishlist;
     }
 
-    override apply(): void {
+    override async apply(): Promise<string|null> {
+        if (!this.context.isMyWishlist) {
+            return null;
+        }
 
-        const button = mount(WishlistButton, {
-                    target: getMenuNode().getTarget(1),
-                    props: {
-                        label: L(__emptyWishlist_title),
-                        destructive: true
-                    }
-                });
-        button.$on("click", () => {
-            this.handleClick()
-        });
-    }
-
-    private async handleClick(): Promise<void> {
-
-        const confirm = new ConfirmDialog(
-            L(__emptyWishlist_title),
-            L(__emptyWishlist_confirm), {
-                primary: L(__ok),
-                cancel: L(__cancel)
+        mount(WishlistButton, {
+            target: await getMenuNode().getTarget(1),
+            props: {
+                label: L(__emptyWishlist_title),
+                destructive: true,
+                onclick: () => this.#handleClick()
             }
-        );
+        });
+        return null;
+    }
 
-        const response = await confirm.show();
-        if (response !== EModalAction.OK) {
+    async #handleClick(): Promise<void> {
+
+        const confirm = new Promise<boolean>((resolve) => {
+            const modal = mount(Modal, {
+                target: document.body,
+                props: {
+                    title: L(__emptyWishlist_title),
+                    body: L(__emptyWishlist_confirm),
+                    buttons: {
+                        primary: L(__ok),
+                        cancel: L(__cancel)
+                    },
+                    onprimary: () => {
+                        resolve(true);
+                        unmount(modal);
+                    },
+                    oncancel: () => {
+                        resolve(false);
+                        unmount(modal);
+                    }
+                }
+            });
+        })
+
+        if (!await confirm) {
             return;
         }
 
