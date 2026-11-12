@@ -55,7 +55,7 @@
                 {/if}
             </ul>
         {/if}
-        <a class="linkbar es_external_icon" href={url} use:external>{L(__moreInformation)}</a>
+        <a class="linkbar es_external_icon" href={url} {@attach external}>{L(__moreInformation)}</a>
     </div>
 </SidebarBox>
 

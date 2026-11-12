@@ -35,13 +35,13 @@
 
 <div class="itad-pricing" style:margin-top={marginTop} style:margin-bottom={marginBottom}>
     {#if data.current}
-        <a href={data.urls.info} use:external>{L(__pricing_lowestPrice)}</a>
+        <a href={data.urls.info} {@attach external}>{L(__pricing_lowestPrice)}</a>
 
         <span class="price">
             <PriceWithAlt price={data.current.price} />
         </span>
 
-        <a href={data.current.url} class="main" use:external>
+        <a href={data.current.url} class="main" {@attach external}>
             {#if data.current.cut > 0}
                 <span class="cut">-{data.current.cut}%</span>
             {/if}
@@ -58,7 +58,7 @@
     {/if}
 
     {#if data.lowest}
-        <a href={data.urls.history} use:external>{L(__pricing_historicalLow)}</a>
+        <a href={data.urls.history} {@attach external}>{L(__pricing_historicalLow)}</a>
 
         <span class="price">
             <PriceWithAlt price={data.lowest.price} />
@@ -74,7 +74,7 @@
     {/if}
 
     {#if data.bundled}
-        <a href={data.urls.info} use:external>{L(__pricing_bundled)}</a>
+        <a href={data.urls.info} {@attach external}>{L(__pricing_bundled)}</a>
         <div class="bundled">{L(__pricing_bundleCount, {"count": data.bundled})}</div>
     {/if}
 </div>

@@ -22,7 +22,7 @@
 
 
 <div class="profile_count_link">
-    <a class="link" {href} use:external>
+    <a class="link" {href} {@attach external}>
         {#if iconType !== "none"}
             <ProfileLinkIcon {id} {iconUrl} gray={iconType === "gray"} />
         {/if}

@@ -22,7 +22,7 @@
 <a class="btnv6_blue_hoverfade btn_medium {icon}"
     class:es_community_btn={isCommunity}
     class:es_app_btn={!isCommunity}
-    use:external {href}
+   {@attach external} {href}
 >
     <span>
         {#if iconUrl}

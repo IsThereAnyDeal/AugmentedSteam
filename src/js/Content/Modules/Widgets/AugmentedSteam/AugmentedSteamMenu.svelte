@@ -119,13 +119,13 @@
                 <a href="#clear_cache" onclick={preventDefault(clearCache)}>{L(__clearCache)}</a>
             </div>
             <div class="group">
-                <a use:external href="https://github.com/IsThereAnyDeal/AugmentedSteam">{L(__contribute)}</a>
-                <a use:external href="https://github.com/IsThereAnyDeal/AugmentedSteam/issues">{L(__bugFeature)}</a>
+                <a {@attach external} href="https://github.com/IsThereAnyDeal/AugmentedSteam">{L(__contribute)}</a>
+                <a {@attach external} href="https://github.com/IsThereAnyDeal/AugmentedSteam/issues">{L(__bugFeature)}</a>
             </div>
             <div class="group">
-                <a use:external href="{Config.PublicHost}">{L(__website)}</a>
-                <a use:external href="https://isthereanydeal.com/">IsThereAnyDeal</a>
-                <a use:external href="{Config.ITADDiscord}">Discord</a>
+                <a {@attach external} href="{Config.PublicHost}">{L(__website)}</a>
+                <a {@attach external} href="https://isthereanydeal.com/">IsThereAnyDeal</a>
+                <a {@attach external} href="{Config.ITADDiscord}">Discord</a>
             </div>
 
             {#if user.isSignedIn}
