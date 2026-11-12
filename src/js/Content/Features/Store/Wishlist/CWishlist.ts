@@ -96,7 +96,7 @@ export async function run(): Promise<void> {
         ...commonFeatures(),
         // FAlternativeLinuxIcon,
         FWishlistHighlights,
-//         FWishlistITADPrices,
+        FWishlistITADPrices,
         FWishlistUserNotes,
         FWishlistStats,
 //        FEmptyWishlist,

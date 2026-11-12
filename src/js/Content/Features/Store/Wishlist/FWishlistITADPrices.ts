@@ -4,7 +4,7 @@ import Prices from "@Content/Modules/Prices/Prices";
 import PriceOverview from "@Content/Modules/Prices/PriceOverview.svelte";
 import Settings from "@Options/Data/Settings";
 import type {TPriceOverview} from "@Background/Modules/AugmentedSteam/_types";
-import { mount } from "svelte";
+import {mount, unmount} from "svelte";
 
 export default class FWishlistITADPrices extends Feature<CWishlist> {
 
@@ -17,11 +17,11 @@ export default class FWishlistITADPrices extends Feature<CWishlist> {
     private currentHoverAppid: number|null = null;
     private currentElement: PriceOverview|null = null;
 
-    override isEnabled(): boolean {
+    override async isEnabled(): Promise<boolean> {
         return Settings.showlowestprice_onwishlist;
     }
 
-    override apply(): void | Promise<void> {
+    override async apply(): Promise<string|null> {
         this.loader = new Prices(this.context.user);
 
         const ChunkSize = 40;
@@ -53,7 +53,9 @@ export default class FWishlistITADPrices extends Feature<CWishlist> {
 
             this.currentHoverAppid = appid;
             this.attachPrice(node, appid);
-        })
+        });
+
+        return null;
     }
 
     private async attachPrice(node: HTMLElement, appid: number): Promise<void> {
@@ -94,17 +96,19 @@ export default class FWishlistITADPrices extends Feature<CWishlist> {
             // margin of game node
             const margin = window.getComputedStyle(this.context.dom.gameNode(node)).marginBottom;
             this.currentElement = mount(PriceOverview, {
-                            target: node,
-                            props: {
-                                data,
-                                marginTop: `-${margin}`,
-                                marginBottom: margin
-                            }
-                        });
+                target: node,
+                props: {
+                    data,
+                    marginTop: `-${margin}`,
+                    marginBottom: margin
+                }
+            });
         }
     }
 
     private detachPrice(): void {
-        this.currentElement?.$destroy();
+        if (this.currentElement) {
+            unmount(this.currentElement);
+        }
     }
 }
