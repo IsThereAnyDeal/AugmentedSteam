@@ -43,6 +43,7 @@
 
 <style>
     div {
+        margin-top: 4px;
         font-size: 11px;
         justify-self: flex-end;
         text-align: right;
