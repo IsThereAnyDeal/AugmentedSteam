@@ -1,11 +1,11 @@
 import Feature from "@Content/Modules/Context/Feature";
 import Settings from "@Options/Data/Settings";
-import type CBundle from "@Content/Features/Store/Bundle/CBundle";
+import type Context from "@Content/Modules/Context/Context";
 
 /**
  * Prepends bundle name to the document <title> if it doesn't already start with bundle name
  */
-export default class FBundleTitle extends Feature<CBundle> {
+export default class FBundleTitle extends Feature<Context> {
 
     override async isEnabled(): Promise<boolean> {
         return Settings.tabtitle_appname_first;
