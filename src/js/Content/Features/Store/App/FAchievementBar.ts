@@ -6,6 +6,13 @@ import {mount} from "svelte";
 import SelectorMap from "@Content/SelectorMap";
 import ServiceFactory, {EOrigin} from "@Protobufs/ServiceFactory";
 import {MountTargetError} from "@Core/Errors/Errors";
+import dynamicNode from "@Content/Modules/DOM/DynamicNode";
+
+interface TProps {
+    unlocked: number,
+    total: number
+    percentage: number
+}
 
 export default class FAchievementBar extends Feature<CApp> {
 
@@ -35,19 +42,51 @@ export default class FAchievementBar extends Feature<CApp> {
             return "No achievements found";
         }
 
-        const target = document.querySelector(SelectorMap.store.app.achievementBar);
-        if (!target) {
+        const props = {
+            unlocked: unlocked!,
+            total: total!,
+            percentage: Math.round(percentage!)
+        };
+
+        // TODO settings
+        const inSidebar = await this.#mountSidebar(props);
+        const inActivity = await this.#mountActivity(props);
+
+        if (!inSidebar && !inActivity) {
             throw new MountTargetError();
+        } else if (!inSidebar) {
+            return "Sidebar target not found";
+        } else if (!inActivity) {
+            return "Activity target not found";
         }
 
+        return null;
+    }
+
+    async #mountActivity(props: TProps): Promise<boolean> {
+        const target = await dynamicNode({
+            selector: () => document.querySelector<HTMLElement>("#my_activity")
+        });
+        if (!target) {
+            return false
+        }
         mount(self_, {
             target,
-            props: {
-                unlocked: unlocked!,
-                total: total!,
-                percentage: Math.round(percentage!)
-            }
+            anchor: target.firstElementChild!,
+            props: Object.assign(props, {inActivity: true})
         });
-        return null;
+        return true;
+    }
+
+    async #mountSidebar(props: TProps): Promise<boolean> {
+        const target = await dynamicNode({
+            selector: () => document.querySelector<HTMLElement>(SelectorMap.store.app.achievementBar)
+        });
+        if (!target) {
+            return false
+        }
+        mount(self_, {target, props});
+
+        return true;
     }
 }

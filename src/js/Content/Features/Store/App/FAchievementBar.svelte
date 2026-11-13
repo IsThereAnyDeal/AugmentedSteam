@@ -3,16 +3,17 @@
     import {L} from "@Core/Localization/Localization";
 
     interface Props {
-        unlocked: number;
-        total: number;
-        percentage: number;
+        unlocked: number,
+        total: number,
+        percentage: number,
+        inActivity?: boolean
     }
 
-    let { unlocked, total, percentage }: Props = $props();
+    let { unlocked, total, percentage, inActivity = false }: Props = $props();
 </script>
 
 
-<div class="achievements">
+<div class={["achievements", {"in-activity": inActivity}]}>
     <div>{L(__achievements_summary, {unlocked, total, percentage})}</div>
 
     <div class="bar">
@@ -26,6 +27,16 @@
         color: var(--color-text-body-body);
         background: #191d2580;
         padding: 10px;
+        border-radius: 2px;
+
+        &.in-activity {
+            float: right;
+            padding: 7px 10px;
+            min-width: 280px;
+            position: relative;
+            top: -3px;
+            background: #00000033;
+        }
     }
 
     .bar {
