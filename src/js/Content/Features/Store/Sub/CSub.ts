@@ -8,7 +8,7 @@ import storeFeatures from "@Content/Features/Store/storeFeatures";
 import FPackageHighlights from "@Content/Features/Store/Common/FPackageHighlights";
 import FExtraLinksSub from "@Content/Features/Store/Sub/FExtraLinksSub";
 import FRegionalPricingSub from "@Content/Features/Store/Sub/FRegionalPricingSub";
-import FBundleTitle from "@Content/Features/Store/Common/FBundleTitle";
+import FBundleSubTitle from "@Content/Features/Store/Common/FBundleSubTitle";
 
 export default class CSub extends Context {
 
@@ -38,6 +38,6 @@ export async function run(): Promise<void> {
         FITADPrices,
         FRegionalPricingSub,
         FPackageHighlights,
-        FBundleTitle
+        FBundleSubTitle
     ]);
 }

@@ -3,9 +3,10 @@ import Settings from "@Options/Data/Settings";
 import type Context from "@Content/Modules/Context/Context";
 
 /**
- * Prepends bundle name to the document <title> if it doesn't already start with bundle name
+ * Prepends bundle or package name to the document <title> if it doesn't already start with it.
+ * Should work on both /bundle/ and /sub/ pages, since those seem to be the same
  */
-export default class FBundleTitle extends Feature<Context> {
+export default class FBundleSubTitle extends Feature<Context> {
 
     override async isEnabled(): Promise<boolean> {
         return Settings.tabtitle_appname_first;
