@@ -24,7 +24,9 @@ export default class FSearchSuggestionsDecorations extends Feature<Context> {
     }
 
     override async apply(): Promise<string|null> {
-        const parent = document.querySelector(SelectorMap.store.quicksearch.container);
+        const parent = document.querySelector(
+            `${SelectorMap.store.quicksearch.container},${SelectorMap.wishlist.quicksearch.container}`
+        );
         if (!parent) {
             throw new MountTargetError();
         }
@@ -79,7 +81,9 @@ export default class FSearchSuggestionsDecorations extends Feature<Context> {
             }
 
             if (setup?.t) {
-                const titleNode = node.querySelector<HTMLElement>(SelectorMap.store.quicksearch.title);
+                const titleNode = node.querySelector<HTMLElement>(
+                    `${SelectorMap.store.quicksearch.title},${SelectorMap.wishlist.quicksearch.title}`
+                );
                 if (titleNode) {
                     this.#highlighter.tags(setup.t, titleNode);
                 }
@@ -87,7 +91,9 @@ export default class FSearchSuggestionsDecorations extends Feature<Context> {
 
             if (ea[gameid.number] && !node.dataset.asEa) {
                 node.dataset.asEa = "1";
-                const target = node.querySelector<HTMLElement>(SelectorMap.store.quicksearch.capsuleContainer);
+                const target = node.querySelector<HTMLElement>(
+                    `${SelectorMap.store.quicksearch.capsuleContainer},${SelectorMap.wishlist.quicksearch.capsuleContainer}`
+                );
                 if (target) {
                     target.style.position = "relative";
                     this.#eaComponents.push(mount(EarlyAccessQuickSearchFlag, {target}));

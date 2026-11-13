@@ -22,6 +22,11 @@ const map = {
         }
     },
     wishlist: {
+        quicksearch: {
+            container: ".c9zw0GyPYDc-",
+            title: ".kNeH7jZB5vg-",
+            capsuleContainer: ".JImNxATJ1xc-"
+        },
         parent: "section.jGMVnjZbmZM-",
         header: ".KFyvA5BJClc-",
         gameList: ".PLkUpk974nY-.Panel",
