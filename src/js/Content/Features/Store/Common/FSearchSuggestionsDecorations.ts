@@ -8,6 +8,7 @@ import SelectorMap from "@Content/SelectorMap";
 import AugmentedSteamApiFacade from "@Content/Facades/AugmentedSteamApiFacade";
 import EarlyAccessQuickSearchFlag from "@Content/Features/Store/Common/EarlyAccess/EarlyAccessQuickSearchFlag.svelte";
 import {mount, tick, unmount} from "svelte";
+import TimeUtils from "@Core/Utils/TimeUtils";
 
 export default class FSearchSuggestionsDecorations extends Feature<Context> {
 
@@ -24,6 +25,13 @@ export default class FSearchSuggestionsDecorations extends Feature<Context> {
     }
 
     override async apply(): Promise<string|null> {
+        /*
+        * Artificial delay, because it seems like there's some kind of hydration going on and sometimes
+        * the feature is not applied correctly - I think the element we find initially gets replaced?
+        * It seemed to be most notable in points shop.
+        */
+        await TimeUtils.timer(1000);
+
         const parent = document.querySelector(SelectorMap.quicksearch.container);
         if (!parent) {
             throw new MountTargetError();
