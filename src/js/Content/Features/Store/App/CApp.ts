@@ -38,6 +38,7 @@ import FExtraLinksAppError from "@Content/Features/Store/App/FExtraLinksAppError
 import storeFeatures from "@Content/Features/Store/storeFeatures";
 import commonFeatures from "@Content/Features/Common/_commonFeatures";
 import FRegionalPricingApp from "@Content/Features/Store/App/FRegionalPricingApp";
+import FRemoveBroadcasts from "@Content/Features/Store/Common/FRemoveBroadcasts";
 
 export default class CApp extends Context {
 
@@ -151,6 +152,7 @@ export async function run(): Promise<void> {
             FHorizontalScrolling,
             FVaporLensInsights,
             FReleaseCountdown,
-            FRestorePriceCut
+            FRestorePriceCut,
+            FRemoveBroadcasts
         ]);
 }

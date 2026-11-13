@@ -2,6 +2,7 @@ import FCartHistoryLink from "./FCartHistoryLink";
 import Context from "@Content/Modules/Context/Context";
 import {bootstrapReact, features} from "@Content/bootstrap";
 import commonFeatures from "@Content/Features/Common/_commonFeatures";
+import storeFeatures from "@Content/Features/Store/storeFeatures";
 
 export default class CCart extends Context {}
 
@@ -16,6 +17,7 @@ export async function run(): Promise<void> {
 
     await features(context, [
         ...commonFeatures(),
+        ...storeFeatures(),
         FCartHistoryLink,
     ]);
 }

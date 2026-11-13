@@ -16,6 +16,7 @@ import FWishlistRestorePriceCut from "@Content/Features/Store/Wishlist/FWishlist
 import {bootstrapReact, features} from "@Content/bootstrap";
 import commonFeatures from "@Content/Features/Common/_commonFeatures";
 import FAlternativeLinuxIcon from "@Content/Features/Store/Common/FAlternativeLinuxIcon";
+import storeFeatures from "@Content/Features/Store/storeFeatures";
 
 export interface WishlistEntry {
     appid: number,
@@ -94,6 +95,7 @@ export async function run(): Promise<void> {
 
     await features(context, [
         ...commonFeatures(),
+        ...storeFeatures(),
         FWishlistHighlights,
         FWishlistITADPrices,
         FWishlistUserNotes,

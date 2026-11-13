@@ -2,6 +2,7 @@ import FBackgroundPreviewLink from "./FBackgroundPreviewLink";
 import Context from "@Content/Modules/Context/Context";
 import {bootstrapLegacy, features} from "@Content/bootstrap";
 import commonFeatures from "@Content/Features/Common/_commonFeatures";
+import storeFeatures from "@Content/Features/Store/storeFeatures";
 
 export default class CPointsShop extends Context {}
 
@@ -16,6 +17,7 @@ export async function run(): Promise<void> {
 
     await features(context, [
         ...commonFeatures(),
+        ...storeFeatures(),
         FBackgroundPreviewLink
     ]);
 }

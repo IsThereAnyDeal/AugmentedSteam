@@ -1,6 +1,8 @@
 import Context from "@Content/Modules/Context/Context";
 import FLicensesSummary from "./FLicensesSummary";
 import {EBootstrapMode, bootstrap, features} from "@Content/bootstrap";
+import commonFeatures from "@Content/Features/Common/_commonFeatures";
+import storeFeatures from "@Content/Features/Store/storeFeatures";
 
 export default class CLicenses extends Context {}
 
@@ -11,5 +13,9 @@ export default class CLicenses extends Context {}
 export async function run(): Promise<void> {
     const params = await bootstrap({mode: EBootstrapMode.Legacy});
     const context: CLicenses = new CLicenses(params);
-    await features(context, [FLicensesSummary]);
+    await features(context, [
+        ...commonFeatures(),
+        ...storeFeatures(),
+        FLicensesSummary
+    ]);
 }

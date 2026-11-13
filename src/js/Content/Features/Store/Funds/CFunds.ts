@@ -2,6 +2,7 @@ import Context from "@Content/Modules/Context/Context";
 import {bootstrapLegacy, features} from "@Content/bootstrap";
 import commonFeatures from "@Content/Features/Common/_commonFeatures";
 import FCustomWallet from "@Content/Features/Store/Funds/FCustomWallet";
+import storeFeatures from "@Content/Features/Store/storeFeatures";
 
 export default class CFunds extends Context {}
 
@@ -16,6 +17,7 @@ export async function run(): Promise<void> {
 
     await features(context, [
         ...commonFeatures(),
+        ...storeFeatures(),
         FCustomWallet
     ]);
 }

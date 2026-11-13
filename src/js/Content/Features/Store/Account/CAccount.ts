@@ -1,6 +1,8 @@
 import Context from "@Content/Modules/Context/Context";
 import FUsefulLinks from "./FUsefulLinks";
 import {bootstrapLegacy, features} from "@Content/bootstrap";
+import commonFeatures from "@Content/Features/Common/_commonFeatures";
+import storeFeatures from "@Content/Features/Store/storeFeatures";
 
 export default class CAccount extends Context {}
 
@@ -11,5 +13,9 @@ export default class CAccount extends Context {}
 export async function run() {
     const params = await bootstrapLegacy();
     const context = new CAccount(params);
-    await features(context, [FUsefulLinks]);
+    await features(context, [
+        ...commonFeatures(),
+        ...storeFeatures(),
+        FUsefulLinks
+    ]);
 }

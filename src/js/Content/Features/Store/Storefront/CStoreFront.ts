@@ -4,6 +4,7 @@ import commonFeatures from "@Content/Features/Common/_commonFeatures";
 import FStorefrontHighlights from "@Content/Features/Store/Storefront/FStorefrontHighlights";
 import ASEventHandler from "@Content/Modules/Events/ASEventHandler";
 import FStorefrontEarlyAccess from "@Content/Features/Store/Storefront/FStorefrontEarlyAccess";
+import storeFeatures from "@Content/Features/Store/storeFeatures";
 
 export default class CStoreFront extends Context {
 
@@ -42,6 +43,7 @@ export async function run(): Promise<void> {
 
     await features(context, [
         ...commonFeatures(),
+        ...storeFeatures(),
         FStorefrontHighlights,
         FStorefrontEarlyAccess,
     ]);
