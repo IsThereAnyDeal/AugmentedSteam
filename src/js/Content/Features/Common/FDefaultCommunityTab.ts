@@ -1,14 +1,18 @@
 import Feature from "@Content/Modules/Context/Feature";
-import type CBase from "@Content/Features/Common/CBase";
 import Settings from "@Options/Data/Settings";
+import type Context from "@Content/Modules/Context/Context";
 
-export default class FDefaultCommunityTab extends Feature<CBase> {
+/**
+ * Tries to find community app pages and add default section to them
+ * TODO not sure how well this works
+ */
+export default class FDefaultCommunityTab extends Feature<Context> {
 
-    override isEnabled(): boolean {
+    override async isEnabled(): Promise<boolean> {
         return Settings.community_default_tab !== ""; // Default value is an empty string
     }
 
-    override apply(): void {
+    override async apply(): Promise<string|null> {
         const tab = Settings.community_default_tab;
 
         const links = document.querySelectorAll<HTMLAnchorElement>("a[href^='https://steamcommunity.com/app/']");
@@ -20,5 +24,6 @@ export default class FDefaultCommunityTab extends Feature<CBase> {
             }
             link.pathname += `${tab}/`;
         }
+        return null;
     }
 }
