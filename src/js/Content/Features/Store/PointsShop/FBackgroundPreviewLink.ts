@@ -4,6 +4,7 @@ import Feature from "@Content/Modules/Context/Feature";
 import dynamicNode from "@Content/Modules/DOM/DynamicNode";
 import {mount} from "svelte";
 import SelectorMap from "@Content/SelectorMap";
+import {MountTargetError} from "@Core/Errors/Errors";
 
 /*
  * Also need to test when viewing the item directly, e.g.
@@ -19,45 +20,57 @@ export default class FBackgroundPreviewLink extends Feature<CPointsShop> {
     }
 
     public override async apply(): Promise<string|null> {
-
         const modalEl = await dynamicNode({
             selector: () => document.querySelector<HTMLElement>(".FullModalOverlay")
         });
 
-        new MutationObserver(() => {
-            if (modalEl.querySelector("#as-preview-bg")) {
-                // already mounted
-                return;
-            }
+        if (!modalEl) {
+            throw new MountTargetError();
+        }
 
-            const bgLinkSource = modalEl.querySelector<HTMLSourceElement>("video source")?.src
-                ?? modalEl.querySelector<HTMLElement>(SelectorMap.store.pointsShop.profileBgImagePreview)?.style.backgroundImage;
-            if (!bgLinkSource) {
-                console.info("Failed to find profile bg source");
-                return;
-            }
+        this.#addButton(modalEl);
 
-            const bgLink = bgLinkSource.match(/images\/items\/(\d+\/[a-z0-9.]+)/i);
-            if (!bgLink || !bgLink[1]) {
-                console.info("Failed to parse profile bg source");
-                return;
-            }
-
-            const target = modalEl.querySelector(SelectorMap.store.pointsShop.profileBgActions);
-            if (!target) {
-                return;
-            }
-
-            mount(self_, {
-                target,
-                anchor: target.firstElementChild!,
-                props: {
-                    user: this.context.user,
-                    bg: bgLink[1]
-                }
+        (new MutationObserver(() => this.#addButton(modalEl)))
+            .observe(modalEl!, {
+                childList: true,
+                subtree: true
             });
-        }).observe(modalEl!, {"childList": true, "subtree": true});
 
         return null;
+    }
+
+    #addButton(modalEl: HTMLElement): void {
+        if (modalEl.querySelector("#as-preview-bg")) {
+            // already mounted
+            return;
+        }
+
+        const bgLinkSource = modalEl.querySelector<HTMLSourceElement>("video source")?.src
+            ?? modalEl.querySelector<HTMLElement>(SelectorMap.store.pointsShop.profileBgImagePreview)?.style.backgroundImage;
+        if (!bgLinkSource) {
+            console.warn("Failed to find profile bg source");
+            return;
+        }
+
+        const bgLink = bgLinkSource.match(/images\/items\/(\d+\/[a-z0-9.]+)/i);
+        if (!bgLink || !bgLink[1]) {
+            console.warn("Failed to parse profile bg source");
+            return;
+        }
+
+        const target = modalEl.querySelector(SelectorMap.store.pointsShop.profileBgActions);
+        if (!target) {
+            console.warn("Failed to find profile bg actions");
+            return;
+        }
+
+        mount(self_, {
+            target,
+            anchor: target.firstElementChild!,
+            props: {
+                user: this.context.user,
+                bg: bgLink[1]
+            }
+        });
     }
 }

@@ -17,7 +17,7 @@ const map = {
             yourShoppingCartBreadcrumb: ".l3tXfL5lEk0-"
         },
         pointsShop: {
-            profileBgImagePreview: ".MUXvc-K-iPA-",
+            profileBgImagePreview: ".JCc3TEzb1UY- .MUXvc-K-iPA-", // first selector filters type, second selects actual preview
             profileBgActions: ".NC2LiacfVDs-"
         }
     },
