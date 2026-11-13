@@ -9,12 +9,12 @@
         wishlisted: boolean;
     }
 
-    let { appid, wishlisted = $bindable() }: Props = $props();
+    let { appid, wishlisted }: Props = $props();
 
     let isLoading: boolean = $state(false);
     let isError: boolean = $state(false);
 
-    async function handleClick(): Promise<void> {
+    async function onclick(): Promise<void> {
         if (isLoading) { return; }
         isLoading = true;
         isError = false;
@@ -39,8 +39,7 @@
 </script>
 
 
-<!-- svelte-ignore a11y_click_events_have_key_events -->
-<span class="wl_btn btnv6_blue_hoverfade btn_medium" onclick={handleClick} role="button" tabindex="0">
+<button type="button" {onclick}>
     <span>
         {#if isLoading}
             <img class="loading_img" src="https://community.cloudflare.steamstatic.com/public/images/login/throbber.gif" alt="" />
@@ -50,33 +49,55 @@
         {/if}
         {wishlisted ? L(__onWishlist) : L(__addToWishlist)}
     </span>
-</span>
+</button>
 {#if isError}
     <div class="fail">{L(__error)}</div>
 {/if}
 
 
 <style>
-    .wl_btn:hover .remove_img {
-        display: inline;
-    }
-    .remove_img,
-    .wl_btn:hover .selected_img {
-        display: none;
-    }
-    .loading_img {
-        width: 16px;
-        /* Makes the image more consistent with others */
-        filter: brightness(350%);
+    button {
+        border: 0;
+        outline: 0;
+        border-radius: 2px;
+        padding: 1px 15px;
+        display: inline-block;
+        font-size: 15px;
+        line-height: 30px;
+        color: #67c1f5;
+        background: #67c1f533;
+        margin-left: 5px;
+        cursor: pointer;
+
+        &:hover {
+            color: #fff;
+            background: linear-gradient(-60deg, #417a9b 5%, #67c1f5 95%);
+        }
     }
     img {
         margin: 7px 0;
         vertical-align: top;
     }
+
+    .remove_img {
+        display: none;
+
+        button:hover & {
+            display: inline;
+        }
+    }
+    button:hover .selected_img {
+        display: none;
+    }
+
+    .loading_img {
+        width: 16px;
+        filter: brightness(350%); /* makes the image more consistent with others */
+    }
+
     .fail {
         position: absolute;
         right: 0;
-        color: #c6d4df;
-        font-weight: bold;
+        color: #d72e2e;
     }
 </style>

@@ -1,15 +1,18 @@
 import Feature from "@Content/Modules/Context/Feature";
-import type CApp from "@Content/Features/Community/App/CApp";
-import type CAgeCheck from "@Content/Features/Store/AgeCheck/CAgecheck";
 import Settings from "@Options/Data/Settings";
+import type Context from "@Content/Modules/Context/Context";
 
-export default class FSkipAgecheck extends Feature<CApp|CAgeCheck> {
+/*
+ * TODO I'm not sure this is still relevant/still works
+ */
+export default class FSkipAgecheck extends Feature<Context> {
 
     override async isEnabled(): Promise<boolean> {
         return Settings.send_age_info;
     }
 
-    override async apply(): Promise<void> {
+    override async apply(): Promise<string|null> {
         document.querySelector<HTMLButtonElement>(".contentcheck_desc_ctn button[onclick^=Proceed]")?.click();
+        return null;
     }
 }

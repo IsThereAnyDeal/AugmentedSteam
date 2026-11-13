@@ -1,26 +1,32 @@
+import self_ from "./FCommunityAppPageLinks.svelte";
 import Feature from "@Content/Modules/Context/Feature";
 import type CApp from "@Content/Features/Community/App/CApp";
-import CommonExtraLinks from "@Content/Features/Common/CommonExtraLinks.svelte";
-import { mount } from "svelte";
+import {mount} from "svelte";
+import Settings from "@Options/Data/Settings";
+import {MountTargetError} from "@Core/Errors/Errors";
 
 export default class FCommunityAppPageLinks extends Feature<CApp> {
 
-    private node: HTMLElement | null = null;
-
-    override isEnabled(): boolean {
-        return (this.node = document.querySelector(".apphub_OtherSiteInfo")) !== null
-            && this.context.appid !== null;
+    override async isEnabled(): Promise<boolean> {
+        return Settings.showitadlinks || Settings.showsteamdb;
     }
 
-    override apply(): void {
+    override async apply(): Promise<string|null> {
+        if (this.context.appid === null) {
+            return "Appid not found";
+        }
 
-        (mount(CommonExtraLinks, {
-                    "target": this.node!,
-                    "props": {
-                        type: "app",
-                        gameid: this.context.appid!,
-                        isCommunity: true
-                    },
-                }));
+        const node = document.querySelector(".apphub_OtherSiteInfo");
+        if (!node) {
+            throw new MountTargetError();
+        }
+
+        mount(self_, {
+            target: node,
+            props: {
+                appid: this.context.appid!
+            },
+        });
+        return null;
     }
 }
