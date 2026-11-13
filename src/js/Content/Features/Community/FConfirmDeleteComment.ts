@@ -1,17 +1,23 @@
 import {__deleteCommentPrompt, __update_dontShow} from "@Strings/_strings";
 import {L} from "@Core/Localization/Localization";
 import Feature from "@Content/Modules/Context/Feature";
-import type CCommunityBase from "@Content/Features/Community/CCommunityBase";
 import Settings from "@Options/Data/Settings";
 import DOMHelper from "@Content/Modules/DOM/DOMHelper";
+import type Context from "@Content/Modules/Context/Context";
 
-export default class FConfirmDeleteComment extends Feature<CCommunityBase> {
+/**
+ * TODO no idea if this still works, or for how long it will
+ */
+export default class FConfirmDeleteComment extends Feature<Context> {
 
-    override isEnabled(): boolean {
-        return this.context.user.isSignedIn && Settings.confirmdeletecomment;
+    override async isEnabled(): Promise<boolean> {
+        return Settings.confirmdeletecomment;
     }
 
-    override apply(): void {
+    override async apply(): Promise<string|null> {
+        if (!this.context.user.isSignedIn) {
+            return "Must be logged in";
+        }
 
         document.addEventListener("noDeletionConfirm", () => {
             Settings.confirmdeletecomment = false;
@@ -21,5 +27,6 @@ export default class FConfirmDeleteComment extends Feature<CCommunityBase> {
             prompt: L(__deleteCommentPrompt),
             label: L(__update_dontShow)
         });
+        return null;
     }
 }

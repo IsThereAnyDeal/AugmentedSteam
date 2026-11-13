@@ -6,6 +6,7 @@ import FSkipAgecheck from "@Content/Features/Community/App/FSkipAgecheck";
 import {bootstrapLegacy, features} from "@Content/bootstrap";
 import commonFeatures from "@Content/Features/Common/_commonFeatures";
 import FAppTitleHighlight from "@Content/Features/Community/App/FAppTitleHighlight";
+import communityFeatures from "@Content/Features/Community/communityFeatures";
 
 export default class CApp extends Context {
 
@@ -34,6 +35,7 @@ export async function run(): Promise<void> {
 
     await features(context, [
         ...commonFeatures(),
+        ...communityFeatures(),
         FCommunityAppPageLinks,
         FCommunityAppPageWishlist,
         FSkipAgecheck,
