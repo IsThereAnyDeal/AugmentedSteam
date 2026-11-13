@@ -7,6 +7,7 @@ import {bootstrapLegacy, features} from "@Content/bootstrap";
 import commonFeatures from "@Content/Features/Common/_commonFeatures";
 import storeFeatures from "@Content/Features/Store/storeFeatures";
 import FExtraLinksBundle from "@Content/Features/Store/Bundle/FExtraLinksBundle";
+import FBundleTitle from "@Content/Features/Store/Bundle/FBundleTitle";
 
 export default class CBundle extends Context {
 
@@ -34,6 +35,7 @@ export async function run(): Promise<void> {
         FExtraLinksBundle,
         FDRMWarnings,
         FITADPrices,
-        FPackageHighlights
+        FPackageHighlights,
+        FBundleTitle
     ]);
 }
