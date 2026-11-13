@@ -8,6 +8,8 @@ import SelectorMap from "@Content/SelectorMap";
 /*
  * Also need to test when viewing the item directly, e.g.
  * https://store.steampowered.com/points/shop/c/backgrounds/reward/150370/
+ * https://store.steampowered.com/points/shop/app/3527290/reward/434237
+ * https://store.steampowered.com/points/shop/app/3527290/reward/408004
  */
 export default class FBackgroundPreviewLink extends Feature<CPointsShop> {
 
