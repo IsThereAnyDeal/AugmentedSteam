@@ -1,5 +1,6 @@
 <script lang="ts">
     import {fade} from "svelte/transition";
+    import {onMount} from "svelte";
 
     interface Props {
         target?: HTMLElement|Window;
@@ -16,10 +17,14 @@
     }
 
     let scrollTop: number = $state(0);
+
+    onMount(() => {
+        target.addEventListener("scroll", () => {
+            scrollTop = target instanceof HTMLElement ? target.scrollTop : target.scrollY;
+        });
+    });
 </script>
 
-
-<svelte:window bind:scrollY={scrollTop} />
 
 {#if scrollTop > 400}
     <button type="button" {onclick} transition:fade={{duration: 200}}>▲</button>
