@@ -80,7 +80,7 @@ export default async function(options) {
     // TODO make pretty
     const pages = {
             "community/app": "Community/App/CApp.ts",
-//            {out: "community/badges", in: `${srcDir}/js/Content/Pages/Community/Badges/PBadges.ts`},
+            "community/badges": "Community/Badges/CBadges.ts",
 //            {out: "community/booster_creator", in: `${srcDir}/js/Content/Pages/Community/BoosterCreator/PBoosterCreator.ts`},
 //            {out: "community/default", in: `${srcDir}/js/Content/Pages/Community/PDefaultCommunity.ts`},
 //            {out: "community/edit_guide", in: `${srcDir}/js/Content/Pages/Community/EditGuide/PEditGuide.ts`},

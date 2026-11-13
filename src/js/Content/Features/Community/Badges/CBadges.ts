@@ -1,35 +1,32 @@
 import HTML from "@Core/Html/Html";
 import HTMLParser from "@Core/Html/HtmlParser";
 import CCommunityBase from "../CCommunityBase";
-import FCardExchangeLinks from "../FCardExchangeLinks";
-import FBadgeSortAndFilter from "./FBadgeSortAndFilter";
-import FBadgeCalculations from "./FBadgeCalculations";
-import ContextType from "@Content/Modules/Context/ContextType";
 import CommunityUtils from "@Content/Modules/Community/CommunityUtils";
 import DOMHelper from "@Content/Modules/DOM/DOMHelper";
 import RequestData from "@Content/Modules/Data/RequestData";
 import type {ContextParams} from "@Content/Modules/Context/Context";
+import {bootstrapLegacy, features} from "@Content/bootstrap";
+import commonFeatures from "@Content/Features/Common/_commonFeatures";
+import ASEventHandler from "@Content/Modules/Events/ASEventHandler";
+import FCardExchangeLinks from "@Content/Features/Community/Badges/FCardExchangeLinks";
 
 export default class CBadges extends CCommunityBase {
 
-    public readonly appid = null;
-    public readonly myProfile: boolean;
-    public hasMultiplePages: boolean;
+    readonly myProfile: boolean;
+    readonly hasMultiplePages: boolean;
+    readonly pageUpdateEvent: ASEventHandler<void>
 
     constructor(params: ContextParams) {
-
-        super(params, ContextType.BADGES, [
-            FCardExchangeLinks,
-            FBadgeSortAndFilter,
-            FBadgeCalculations,
-        ]);
+        super(params);
 
         this.myProfile = CommunityUtils.userIsOwner(this.user);
         this.hasMultiplePages = document.querySelector(".profile_paging") !== null;
+
+        this.pageUpdateEvent = new ASEventHandler();
     }
 
     triggerPageUpdatedEvent(): void {
-        document.dispatchEvent(new CustomEvent("as_pageUpdated"));
+        this.pageUpdateEvent.dispatch();
     }
 
     async *eachBadgePage(): AsyncGenerator<[DocumentFragment, Record<string, any>|null]> {
@@ -66,4 +63,21 @@ export default class CBadges extends CCommunityBase {
             }
         }
     }
+}
+
+
+/**
+ * @contentScript
+ * @match *://steamcommunity.com/(id|profiles)/*\/badges
+ */
+export async function run(): Promise<void> {
+    const params = await bootstrapLegacy();
+    const context = new CBadges(params);
+
+    await features(context, [
+        ...commonFeatures(),
+        FCardExchangeLinks,
+//        FBadgeSortAndFilter,
+//        FBadgeCalculations,
+    ]);
 }
