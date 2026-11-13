@@ -26,11 +26,14 @@ export default class FDLCCheckboxes extends Feature<CApp> {
             return "DLC Section not found";
         }
 
+        let paidDlcs: number = 0;
+
         for (const dlcRow of dlcSection.querySelectorAll(".game_area_dlc_row")) {
             const subidNode = dlcRow.querySelector<HTMLInputElement>("input[name^=subid]");
             if (!subidNode) {
                 continue;
             }
+            paidDlcs++;
 
             const subid = new SubId(Number(subidNode.value));
 
@@ -60,15 +63,19 @@ export default class FDLCCheckboxes extends Feature<CApp> {
             });
         }
 
-        mount(SelectOptions, {
-            target: dlcSection,
-            anchor: dlcSection.querySelector(".game_area_dlc_list")!
-        });
+        if (paidDlcs > 0) {
+            mount(SelectOptions, {
+                target: dlcSection,
+                anchor: dlcSection.querySelector(".game_area_dlc_list")!
+            });
 
-        const dlcForm = dlcSection.querySelector("form")!;
-        mount(AddToCart, {
-            target: dlcForm,
-        });
+            const dlcForm = dlcSection.querySelector("form")!;
+            mount(AddToCart, {
+                target: dlcForm,
+                anchor: dlcForm.lastElementChild ?? undefined
+            });
+        }
+
         return null;
     }
 }
