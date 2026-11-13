@@ -24,7 +24,7 @@
         minValue;
         untrack(() => {
             if (minValue > maxValue) {
-                minValue = maxValue;
+                maxValue = minValue;
             }
         });
     });
@@ -33,7 +33,7 @@
         maxValue;
         untrack(() => {
             if (maxValue < minValue) {
-                maxValue = minValue;
+                minValue = maxValue;
             }
         });
     });
