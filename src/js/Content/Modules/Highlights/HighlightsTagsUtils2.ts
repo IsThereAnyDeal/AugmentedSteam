@@ -31,6 +31,8 @@ export type HighlightMap = Map<string, ItemSetup>;
 
 export default class HighlightsTagsUtils2 {
 
+    private static stylesInserted: boolean = false;
+
     private readonly settings: Options;
     private readonly cache: Map<string, ItemSetup>;
 
@@ -60,6 +62,8 @@ export default class HighlightsTagsUtils2 {
     }
 
     public insertStyles(): void {
+        if (HighlightsTagsUtils2.stylesInserted) { return; }
+        HighlightsTagsUtils2.stylesInserted = true;
 
         /*
          * NOTE: the sequence of these entries determines the precendence of the highlights!
@@ -78,13 +82,13 @@ export default class HighlightsTagsUtils2 {
         const css = [];
         for (const [name, color] of Object.entries(colors)) {
             css.push(
-                `.ash-${name}-bg {
+                `[data-ashbg="${name}"] {
                     background: linear-gradient(135deg, hsla(from ${color} h s l / 0.1) 10%, hsla(from ${color} h s l / 0.5) 100%) !important;
                 }
-                .ash-${name}-outline {
+                [data-ashoutline="${name}"] {
                     outline: solid ${color};
                 }
-                .ash-${name}-color {
+                [data-ashcolor="${name}"] {
                     background: none !important; color: ${color};
                 }`
             );
@@ -112,7 +116,6 @@ export default class HighlightsTagsUtils2 {
 
         if (query.length > 0) {
             const storeIds = query.map(id => id.string);
-            const appids = query.filter(id => id.type === "app").map(id => id.number);
 
             const settings = this.settings;
             const includeDsInfo = settings.owned || settings.wishlisted || settings.followed || settings.ignored || settings.ignoredOwned;
@@ -135,7 +138,7 @@ export default class HighlightsTagsUtils2 {
                     : Promise.resolve(new Set<string>())
             ]);
 
-            for (const id of ids) {
+            for (const id of query) {
                 const storeId = id.string;
                 let high: Array<keyof Options> = [];
                 let tags: Array<keyof Options> = [];
@@ -206,7 +209,7 @@ export default class HighlightsTagsUtils2 {
         }
 
         for (const option of options) {
-            node.classList.add(`ash-${option}-${suffix}`);
+            node.dataset[`ash${suffix}`]=option;
         }
     }
 

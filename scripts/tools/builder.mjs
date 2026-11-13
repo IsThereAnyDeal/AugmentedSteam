@@ -109,7 +109,7 @@ export default async function(options) {
           "store/app": "Store/App/CApp.ts",
           "store/bundle": "Store/Bundle/CBundle.ts",
           "store/cart": "Store/Cart/CCart.ts",
-//            {out: "store/default", in: `${srcDir}/js/Content/Pages/Store/PDefaultStore.ts`},
+          "store/default": "Store/Common/CStoreBase.ts",
           "store/frontpage": "Store/Storefront/CStoreFront.ts",
           "store/funds": "Store/Funds/CFunds.ts",
           "store/giftcards": "Store/GiftCards/CGiftCards.ts",

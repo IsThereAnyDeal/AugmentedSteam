@@ -1,113 +1,47 @@
-import FAlternativeLinuxIcon from "./FAlternativeLinuxIcon";
-import FSkipGotSteamDialog from "./FSkipGotSteamDialog";
-import FHorizontalScrolling from "./FHorizontalScrolling";
-import CBase from "@Content/Features/Common/CBase";
-import ContextType from "@Content/Modules/Context/ContextType";
-import HighlightsTagsUtils from "@Content/Modules/Highlights/HighlightsTagsUtils";
-import EarlyAccessUtils from "@Content/Modules/EarlyAccess/EarlyAccessUtils";
-import type Feature from "@Content/Modules/Context/Feature";
-import Context, {type ContextParams} from "@Content/Modules/Context/Context";
-import FRemoveBroadcasts from "@Content/Features/Store/Common/FRemoveBroadcasts";
+import Context from "@Content/Modules/Context/Context";
+import {bootstrapLegacy, features} from "@Content/bootstrap";
+import commonFeatures from "@Content/Features/Common/_commonFeatures";
+import storeFeatures from "@Content/Features/Store/storeFeatures";
 
-export default class CStoreBase extends CBase {
+export default class CStoreBase extends Context {}
 
-    constructor(
-        params: ContextParams,
-        type = ContextType.STORE_DEFAULT,
-        features: (typeof Feature<Context>)[] = []
-    ) {
-        features.push(
-            FAlternativeLinuxIcon,
-            FSkipGotSteamDialog,
-            FHorizontalScrolling,
-            FRemoveBroadcasts
-        );
+/**
+ * @contentScript
+ * @match *://*.steampowered.com/*
+ * @exclude *://store.steampowered.com/dynamicstore/*
+ * @exclude *://store.steampowered.com/supportmessages
+ * @exclude *://store.steampowered.com/video/*
+ * @exclude *://store.steampowered.com/widget[/*]
+ * @exclude *://store.steampowered.com/login[/*]
+ * @exclude *://store.steampowered.com/join[/*]
+ * @exclude *://store.steampowered.com/api/*
+ * @exclude *://api.steampowered.com/*
+ * @exclude *://help.steampowered.com/*
+ * @exclude *://login.steampowered.com/*
+ * @exclude *://checkout.steampowered.com/*
+ * @exclude *://partner.steampowered.com/*
+ * @exclude *://store.steampowered.com/[?*]
+ * @exclude *://*.steampowered.com/wishlist/id/*
+ * @exclude *://*.steampowered.com/wishlist/profiles/*
+ * @exclude *://*.steampowered.com/search[/*]
+ * @exclude *://*.steampowered.com/steamaccount/addfunds
+ * @exclude *://*.steampowered.com/digitalgiftcards/selectgiftcard
+ * @exclude *://*.steampowered.com/account
+ * @exclude *://*.steampowered.com/account/licenses
+ * @exclude *://*.steampowered.com/account/registerkey
+ * @exclude *://*.steampowered.com/bundle/*
+ * @exclude *://*.steampowered.com/sub/*
+ * @exclude *://*.steampowered.com/app/*
+ * @exclude *://*.steampowered.com/agecheck/*
+ * @exclude *://*.steampowered.com/points[/*]
+ * @exclude *://*.steampowered.com/cart[/*]
+ */
+export async function run(): Promise<void> {
+    const params = await bootstrapLegacy();
+    const context = new CStoreBase(params);
 
-        super(params, type, features);
-
-        this._observeChanges();
-    }
-
-    getAllSubids(): string[] {
-        const result: string[] = [];
-        for (const node of document.querySelectorAll<HTMLInputElement>("input[name=subid]")) {
-            if (node.value) {
-                result.push(node.value);
-            }
-        }
-        return result;
-    }
-
-    private _observeChanges(): void {
-
-        // search box on the navigation bar
-        const searchBox = document.querySelector("#search_suggestion_contents");
-        if (searchBox) {
-            new MutationObserver(mutations => {
-                const nodes = Array.from(mutations[0]!.addedNodes as NodeListOf<HTMLElement>)
-                    .filter(el => el.classList.contains("match_app"));
-
-                this.decorateStoreCapsules(nodes);
-            }).observe(searchBox, {"childList": true});
-        }
-
-        // genre, category, tags etc. pages
-        const tabContent = document.querySelector(".tab_content_ctn");
-        if (tabContent) {
-            new MutationObserver(mutations => {
-                for (const mutation of mutations) {
-                    const addedNodes = mutation.addedNodes as NodeListOf<HTMLElement>;
-                    if (addedNodes.length > 1) {
-                        const nodes = Array.from(addedNodes)
-                            .filter(el => el instanceof Element && el.classList.contains("tab_item"));
-
-                        this.decorateStoreCapsules(nodes);
-                    }
-                }
-            }).observe(tabContent, {"childList": true, "subtree": true});
-
-            return;
-        }
-
-        // recommended/friendactivity
-        const friendactivityTab = document.querySelector("#friendactivity_tabarea");
-        if (friendactivityTab) {
-            new MutationObserver(mutations => {
-                for (const mutation of mutations) {
-                    const addedNodes = mutation.addedNodes as NodeListOf<HTMLElement>;
-                    if (addedNodes.length > 1) {
-                        const nodes = Array.from(addedNodes)
-                            .filter(el => el instanceof Element
-                                && el.querySelector<HTMLElement>(".friendactivity_game_link") !== null);
-
-                        this.decorateStoreCapsules(nodes);
-                    }
-                }
-            }).observe(friendactivityTab, {"childList": true, "subtree": true});
-
-            return;
-        }
-
-        const container = document.querySelector([
-            "#tag_browse_games_ctn", // tag/browse
-            "#RecommendationsRows", // curator, developer, publisher, franchise, dlc etc. pages
-            "#CuratorsRows", // curators/recommendedcurators
-        ].join(","));
-
-        if (container) {
-            new MutationObserver(mutations => {
-                for (const {addedNodes} of mutations) {
-                    if (addedNodes.length > 0 && addedNodes[0] instanceof Element) {
-                        const nodes = addedNodes[0].querySelectorAll<HTMLElement>(".browse_tag_game, .store_capsule, .recommendation");
-                        this.decorateStoreCapsules(nodes);
-                    }
-                }
-            }).observe(container, {"childList": true, "subtree": true});
-        }
-    }
-
-    decorateStoreCapsules(nodes: NodeListOf<HTMLElement>|Array<HTMLElement>): void {
-        HighlightsTagsUtils.highlightAndTag(nodes);
-        EarlyAccessUtils.show(this.language, nodes);
-    }
+    await features(context, [
+        ...commonFeatures(),
+        ...storeFeatures()
+    ]);
 }

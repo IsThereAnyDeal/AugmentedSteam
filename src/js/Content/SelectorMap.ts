@@ -2,6 +2,11 @@
 const map = {
     store: {
         searchbox: "input[name='term']",
+        quicksearch: {
+            container: ".O2jUvAs3OiU- ._6udfJIcyaRc-",
+            title: ".FY3FS-llgYw-",
+            capsuleContainer: ".Jhq3hD97Ms8-"
+        },
         app: {
             achievementBar: ".uZGVdQKYKa0-",
             highlightSlider: ".PXfzURLcJGs-",
