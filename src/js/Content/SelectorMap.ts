@@ -28,7 +28,9 @@ const map = {
             yourShoppingCartBreadcrumb: ".l3tXfL5lEk0-"
         },
         pointsShop: {
-            profileBgImagePreview: ".JCc3TEzb1UY- .MUXvc-K-iPA-", // first selector filters type, second selects actual preview
+            modal: ".FullModalOverlay",
+            profileBgImagePreviewVideo:  "._3vVSBTFSZow-.apjs9cYrPQU- source", // first selector filters type, second selects actual preview
+            profileBgImagePreviewStatic: "._3vVSBTFSZow-.apjs9cYrPQU- .MUXvc-K-iPA-", // first selector filters type, second selects actual preview
             profileBgActions: ".NC2LiacfVDs-"
         }
     },

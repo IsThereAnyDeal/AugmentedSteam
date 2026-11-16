@@ -21,7 +21,7 @@ export default class FBackgroundPreviewLink extends Feature<CPointsShop> {
 
     public override async apply(): Promise<string|null> {
         const modalEl = await dynamicNode({
-            selector: () => document.querySelector<HTMLElement>(".FullModalOverlay")
+            selector: () => document.querySelector<HTMLElement>(SelectorMap.store.pointsShop.modal)
         });
 
         if (!modalEl) {
@@ -45,8 +45,9 @@ export default class FBackgroundPreviewLink extends Feature<CPointsShop> {
             return;
         }
 
-        const bgLinkSource = modalEl.querySelector<HTMLSourceElement>("video source")?.src
-            ?? modalEl.querySelector<HTMLElement>(SelectorMap.store.pointsShop.profileBgImagePreview)?.style.backgroundImage;
+        const bgLinkSource = modalEl
+                      .querySelector<HTMLSourceElement>(SelectorMap.store.pointsShop.profileBgImagePreviewVideo)?.src
+            ?? modalEl.querySelector<HTMLElement>(SelectorMap.store.pointsShop.profileBgImagePreviewStatic)?.style.backgroundImage;
         if (!bgLinkSource) {
             console.warn("Failed to find profile bg source");
             return;
