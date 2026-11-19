@@ -7,16 +7,21 @@ import DOMHelper from "@Content/Modules/DOM/DOMHelper";
 
 export default class FInviteButton extends Feature<CFriendsAndGroups> {
 
-    override isEnabled(): boolean {
-        return this.context.myProfile;
+    override async isEnabled(): Promise<boolean> {
+        // FIXME setting
+        return true;
     }
 
-    override apply(): void {
-        document.addEventListener("as_subpageNav", () => { this.callback(); });
-        this.callback();
+    override async apply(): Promise<string|null> {
+        if (!this.context.myProfile) {
+            return "Not your profile";
+        }
+
+        this.context.onSubpageNav.subscribe(() => this.#callback(), true);
+        return null;
     }
 
-    private async callback(): Promise<void> {
+    async #callback(): Promise<void> {
         if (!document.getElementById("friends_list")) { return; }
 
         HTML.beforeEnd(".manage_friend_actions_ctn",

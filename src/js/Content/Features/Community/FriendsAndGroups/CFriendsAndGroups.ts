@@ -1,40 +1,37 @@
-import CCommunityBase from "../CCommunityBase";
-import FFriendsSort from "./FFriendsSort";
-import FInviteFriendsToGroup from "./FInviteFriendsToGroup";
-import FGroupsManageButton from "./FGroupsManageButton";
-import FGroupsSort from "./FGroupsSort";
-import FFriendsAppendNickname from "./FFriendsAppendNickname";
-import ContextType from "@Content/Modules/Context/ContextType";
 import CommunityUtils from "@Content/Modules/Community/CommunityUtils";
 import HTML from "@Core/Html/Html";
 import DOMHelper from "@Content/Modules/DOM/DOMHelper";
-import type {ContextParams} from "@Content/Modules/Context/Context";
+import Context, {type ContextParams} from "@Content/Modules/Context/Context";
+import {bootstrapLegacy, features} from "@Content/bootstrap";
+import commonFeatures from "@Content/Features/Common/_commonFeatures";
+import FFriendsSort from "@Content/Features/Community/FriendsAndGroups/FFriendsSort";
+import ASEventHandler from "@Content/Modules/Events/ASEventHandler";
+import FInviteFriendsToGroup from "./FInviteFriendsToGroup";
+import FGroupsManageButton from "@Content/Features/Community/FriendsAndGroups/FGroupsManageButton";
 
-export default class CFriendsAndGroups extends CCommunityBase {
+export default class CFriendsAndGroups extends Context {
 
-    public readonly myProfile: boolean;
+    readonly myProfile: boolean;
+
+    onSubpageNav: ASEventHandler<void>
 
     constructor(params: ContextParams) {
-
-        super(params, ContextType.FRIENDS_AND_GROUPS, [
-            FFriendsSort,
-            FInviteFriendsToGroup,
-            FGroupsManageButton,
-            FGroupsSort,
-            FFriendsAppendNickname,
-        ]);
+        super(params);
 
         this.myProfile = CommunityUtils.userIsOwner(this.user);
-        this._moveSearchBar();
+        this.#moveSearchBar();
+
+        this.onSubpageNav = new ASEventHandler();
 
         document.addEventListener("as_subpageNav", () => {
-            this._moveSearchBar();
+            this.#moveSearchBar();
+            this.onSubpageNav.dispatch();
         });
 
         DOMHelper.insertScript("scriptlets/Community/FriendsAndGroups/subpageNav.js");
     }
 
-    _moveSearchBar() {
+    #moveSearchBar() {
         if (document.getElementById("groups_list") !== null) {
             // Move the search bar on groups page to the same position as on friends page
             const container = HTML.wrap(
@@ -46,4 +43,25 @@ export default class CFriendsAndGroups extends CCommunityBase {
             }
         }
     }
+}
+
+
+/**
+ * @contentScript
+ * @match *://steamcommunity.com/(id|profiles)/*\/friends[/*]
+ * @match *://steamcommunity.com/(id|profiles)/*\/groups[/*]
+ * @match *://steamcommunity.com/(id|profiles)/*\/following[/*]
+ */
+export async function run(): Promise<void> {
+    const params = await bootstrapLegacy();
+    const context = new CFriendsAndGroups(params);
+
+    await features(context, [
+        ...commonFeatures(),
+        FFriendsSort,
+        FInviteFriendsToGroup,
+        FGroupsManageButton,
+        // FGroupsSort,
+        // FFriendsAppendNickname,
+    ]);
 }

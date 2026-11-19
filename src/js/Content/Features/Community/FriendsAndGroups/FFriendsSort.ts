@@ -6,34 +6,38 @@ import SortBox from "@Content/Modules/Widgets/SortBox.svelte";
 import SyncedStorage from "@Core/Storage/SyncedStorage";
 import RequestData from "@Content/Modules/Data/RequestData";
 import HTML from "@Core/Html/Html";
-import type {SortboxChangeEvent} from "@Content/Modules/Widgets/SortboxChangeEvent";
-import { mount } from "svelte";
+import {mount} from "svelte";
 
 export default class FFriendsSort extends Feature<CFriendsAndGroups> {
 
-    private _friendsFetched: boolean = false;
-    private _offlineFriends: HTMLElement[] = [];
+    #friendsFetched: boolean = false;
+    #offlineFriends: HTMLElement[] = [];
 
-    override isEnabled(): boolean {
-        return this.context.myProfile;
+    override async isEnabled(): Promise<boolean> {
+        // FIXME setting
+        return true;
     }
 
-    apply(): void | Promise<void> {
-        document.addEventListener("as_subpageNav", () => this.callback());
-        this.callback();
+    override async apply(): Promise<string|null> {
+        if (!this.context.myProfile) {
+            return "Not your profile";
+        }
+
+        this.context.onSubpageNav.subscribe(() => this.#callback(), true);
+        return null;
     }
 
-    private async callback(): Promise<void> {
+    async #callback(): Promise<void> {
         if (!document.getElementById("friends_list")) {
             return;
         }
 
-        this._offlineFriends = Array.from(document.querySelectorAll(".friend_block_v2.persona.offline"));
-        if (this._offlineFriends.length <= 1) {
+        this.#offlineFriends = Array.from(document.querySelectorAll(".friend_block_v2.persona.offline"));
+        if (this.#offlineFriends.length <= 1) {
             return;
         }
 
-        this._offlineFriends.forEach((friend, i) => {
+        this.#offlineFriends.forEach((friend, i) => {
             friend.dataset.esSortdefault = String(i);
         });
 
@@ -42,31 +46,30 @@ export default class FFriendsSort extends Feature<CFriendsAndGroups> {
             return;
         }
 
-        const sortbox = mount(SortBox, {
-                    target: anchor.parentElement!,
-                    anchor,
-                    props: {
-                        name: "friends",
-                        options: [
-                            ["default", L(__theworddefault)],
-                            ["lastonline", L(__lastonline)]
-                        ],
-                        value: (await SyncedStorage.get("sortfriendsby") ?? "default_ASC")
-                    }
-                });
-        sortbox.$on("change", (e: CustomEvent<SortboxChangeEvent>) => {
-            const {value, key, direction} = e.detail;
-            this._sortFriends(key, direction < 0);
-            SyncedStorage.set("sortfriendsby", value);
+        mount(SortBox, {
+            target: anchor.parentElement!,
+            anchor,
+            props: {
+                name: "friends",
+                options: [
+                    ["default", L(__theworddefault)],
+                    ["lastonline", L(__lastonline)]
+                ],
+                value: (await SyncedStorage.get("sortfriendsby") ?? "default_ASC"),
+                onchange: (value: string, key: string, direction: number) => {
+                    this._sortFriends(key, direction < 0);
+                    SyncedStorage.set("sortfriendsby", value);
+                }
+            }
         });
     }
 
     async _sortFriends(sortBy: string, reversed: boolean): Promise<void> {
         const property = `esSort${sortBy}`;
 
-        if (sortBy === "lastonline" && !this._friendsFetched) {
+        if (sortBy === "lastonline" && !this.#friendsFetched) {
 
-            this._friendsFetched = true;
+            this.#friendsFetched = true;
             const data = await RequestData.getText("https://steamcommunity.com/my/friends/?ajax=1&l=english");
             const dom = HTML.toDom(data);
             const lastOnlineRegex = /Last Online (?:(\d+) days)?(?:, )?(?:(\d+) hrs)?(?:, )?(?:(\d+) mins)? ago/;
@@ -88,16 +91,16 @@ export default class FFriendsSort extends Feature<CFriendsAndGroups> {
             }
         }
 
-        this._offlineFriends.sort((a, b) => Number(a.dataset[property]) - Number(b.dataset[property]));
+        this.#offlineFriends.sort((a, b) => Number(a.dataset[property]) - Number(b.dataset[property]));
 
         // reverse if otherwise, because nodes are inserted at the "afterend" position
         if (!reversed) {
-            this._offlineFriends.reverse();
+            this.#offlineFriends.reverse();
         }
 
         const offlineBlock = document.getElementById("state_offline");
         if (offlineBlock) {
-            this._offlineFriends.forEach(friend => offlineBlock.after(friend));
+            this.#offlineFriends.forEach(friend => offlineBlock.after(friend));
         }
     }
 }

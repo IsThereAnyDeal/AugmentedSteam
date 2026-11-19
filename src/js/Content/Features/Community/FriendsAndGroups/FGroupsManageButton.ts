@@ -1,17 +1,4 @@
-import SteamFacade from "@Content/Facades/SteamFacade";
-import {
-    __all,
-    __groups_actionGroups,
-    __groups_leave,
-    __groups_leaveAdminConfirm_currentlyAdmin,
-    __groups_leaveAdminConfirm_wantToLeave,
-    __groups_leaveGroupsConfirm,
-    __groups_manageGroups,
-    __groups_select,
-    __groups_selected,
-    __inverse,
-    __none,
-} from "@Strings/_strings";
+import {__groups_leave, __groups_leaveGroupsConfirm,} from "@Strings/_strings";
 import {L} from "@Core/Localization/Localization";
 import type CFriendsAndGroups from "@Content/Features/Community/FriendsAndGroups/CFriendsAndGroups";
 import Feature from "@Content/Modules/Context/Feature";
@@ -20,52 +7,61 @@ import RequestData from "@Content/Modules/Data/RequestData";
 import Messenger from "@Content/Modules/Messaging/Messenger";
 import {MessageHandler} from "@Content/Modules/Messaging/MessageHandler";
 import DOMHelper from "@Content/Modules/DOM/DOMHelper";
+import {mount, unmount} from "svelte";
+import ManageFriendsPanel from "@Content/Features/Community/FriendsAndGroups/Components/ManageFriendsPanel.svelte";
+import ManageFriendsControl from "@Content/Features/Community/FriendsAndGroups/Components/ManageFriendsControl.svelte";
+import ConfirmDialog from "@Core/Modals/ConfirmDialog";
+import ConfirmLeaveGroupModal
+    from "@Content/Features/Community/FriendsAndGroups/Components/ConfirmLeaveGroupModal.svelte";
 
 export default class FGroupsManageButton extends Feature<CFriendsAndGroups> {
 
-    private _endpoint: URL|undefined;
+    readonly #endpoint: URL;
 
-    override isEnabled(): boolean {
-        return this.context.myProfile;
+    constructor(context: CFriendsAndGroups) {
+        super(context);
+        this.#endpoint = new URL("friends/action", this.context.user.profileUrl);
     }
 
-    override apply(): void {
+    override async isEnabled(): Promise<boolean> {
+        // FIXME settings
+        return true;
+    }
+
+    override async apply(): Promise<string|null> {
+        if (!this.context.myProfile) {
+            return "Not your profile";
+        }
+
         DOMHelper.insertScript("scriptlets/Community/FriendsAndGroups/groupsManager.js");
-        document.addEventListener("as_subpageNav", () => this.callback());
-        this.callback();
+        this.context.onSubpageNav.subscribe(() => this.#callback(), true);
+
+        return null;
     }
 
-    callback() {
+    #callback(): void {
         if (!document.getElementById("groups_list")) { return; }
 
         const groups = document.querySelectorAll(".group_block");
         if (groups.length === 0) { return; }
 
-        HTML.beforeEnd(".title_bar",
-            `<button id="manage_friends_control" class="profile_friends manage_link btnv6_blue_hoverfade btn_medium btn_uppercase">
-                <span>${L(__groups_manageGroups)}</span>
-            </button>`);
+        const titleBarNode = document.querySelector<HTMLElement>(".title_bar");
+        if (!titleBarNode) {
+            console.error("Title bar not found")
+            return;
+        }
 
-        HTML.afterEnd(".title_bar",
-            `<div id="manage_friends" class="manage_friends_panel">
-                <div class="row">${L(__groups_actionGroups)}
-                    <span class="row">
-                        <span class="dimmed">${L(__groups_select)}</span>
-                        <span class="selection_type" id="es_select_all">${L(__all)}</span>
-                        <span class="selection_type" id="es_select_none">${L(__none)}</span>
-                        <span class="selection_type" id="es_select_inverse">${L(__inverse)}</span>
-                    </span>
-                </div>
-                <div class="row">
-                    <div class="manage_friend_actions_ctn">
-                        <span class="manage_action btnv6_lightblue_blue btn_small" id="es_leave_groups">
-                            <span>${L(__groups_leave)}</span>
-                        </span>
-                    </div>
-                    <span id="selected_msg_err" class="selected_msg error hidden"></span>
-                    <span id="selected_msg" class="selected_msg hidden">${L(__groups_selected, {n: '<span id="selected_count"></span>'})}</span>
-                </div>
-            </div>`);
+        mount(ManageFriendsControl, {
+            target: titleBarNode
+        });
+
+        mount(ManageFriendsPanel, {
+            target: titleBarNode.parentElement!,
+            anchor: titleBarNode.nextElementSibling ?? undefined,
+            props: {
+                onleave: () => this.#leaveGroups()
+            }
+        });
 
         for (const group of groups) {
             group.classList.add("selectable");
@@ -82,33 +78,39 @@ export default class FGroupsManageButton extends Feature<CFriendsAndGroups> {
                 Messenger.call(MessageHandler.GroupsManager, "updateSelection");
             });
         }
-
-        document.querySelector("#manage_friends_control")!.addEventListener("click", () => {
-            Messenger.call(MessageHandler.GroupsManager, "toggleManageFriends");
-        });
-
-        document.querySelector("#es_select_all")!.addEventListener("click", () => {
-            Messenger.call(MessageHandler.GroupsManager, "selectAll");
-        });
-
-        document.querySelector("#es_select_none")!.addEventListener("click", () => {
-            Messenger.call(MessageHandler.GroupsManager, "selectNone");
-        });
-
-        document.querySelector("#es_select_inverse")!.addEventListener("click", () => {
-            Messenger.call(MessageHandler.GroupsManager, "selectInverse");
-        });
-
-        document.querySelector("#es_leave_groups")!
-            .addEventListener("click", () => this._leaveGroups());
     }
 
-    async _leaveGroups() {
-        this._endpoint = new URL("friends/action", this.context.user.profileUrl);
+    async #confirmLeaveAdmin(name: string, id: string): Promise<boolean> {
+        return new Promise<boolean>(resolve => {
+            const modal = mount(ConfirmLeaveGroupModal, {
+                target: document.body,
+                props: {
+                    name,
+                    id,
+                    onconfirm: () => {
+                        unmount(modal);
+                        resolve(true);
+                    },
+                    oncancel: () => {
+                        unmount(modal);
+                        resolve(false)
+                    }
+                }
+            });
+        });
+    }
+
+    async #confirmLeaveGroups(count: number): Promise<boolean> {
+        return await ConfirmDialog({
+            title: L(__groups_leave),
+            body: L(__groups_leaveGroupsConfirm, {n: count})
+        });
+    }
+
+    async #leaveGroups() {
         const selected: [string, HTMLElement][] = [];
 
         for (const group of document.querySelectorAll<HTMLElement>(".group_block.selected")) {
-
             const actions = group.querySelector(".actions")!;
             const admin = actions.querySelector("[href*='/edit']");
             const split = actions.querySelector("[onclick*=ConfirmLeaveGroup]")!
@@ -119,16 +121,12 @@ export default class FGroupsManageButton extends Feature<CFriendsAndGroups> {
                 continue;
             }
 
-            const id = split[1];
+            const id: string = split[1];
 
             if (admin && split[3]) {
-                const name = split[3];
+                const name: string = split[3];
 
-                const body = `${L(__groups_leaveAdminConfirm_currentlyAdmin, {
-                    "name": `<a href="/gid/${id}" target="_blank">${name}</a>`
-                })}<br>${L(__groups_leaveAdminConfirm_wantToLeave)}`;
-                const result = await SteamFacade.showConfirmDialog(L(__groups_leave), body);
-                if (result !== "OK") {
+                if (!await this.#confirmLeaveAdmin(name, id)) {
                     group.querySelector<HTMLElement>(".select_friend")!.click();
                     continue;
                 }
@@ -138,14 +136,11 @@ export default class FGroupsManageButton extends Feature<CFriendsAndGroups> {
         }
 
         if (selected.length > 0) {
-            const body = L(__groups_leaveGroupsConfirm, {"n": selected.length});
-            const result = await SteamFacade.showConfirmDialog(L(__groups_leave), body);
-
-            if (result === "OK") {
+            if (await this.#confirmLeaveGroups(selected.length)) {
                 for (const [id, group] of selected) {
 
                     try {
-                        const response = await this._leaveGroup(id);
+                        const response = await this.#leaveGroup(id);
                         const data = await response.json();
 
                         if (!data || !data.success) {
@@ -164,19 +159,17 @@ export default class FGroupsManageButton extends Feature<CFriendsAndGroups> {
         }
     }
 
-    _leaveGroup(id: string) {
+    #leaveGroup(id: string): Promise<Response> {
         if (!this.context.user.sessionId) {
             throw new Error("Unknown session id");
         }
 
-        const data = {
+        return RequestData.post(this.#endpoint, {
             "sessionid": this.context.user.sessionId,
             "steamid": this.context.user.steamId,
             "ajax": "1",
             "action": "leave_group",
             "steamids[]": id
-        };
-
-        return RequestData.post(this._endpoint!, data);
+        });
     }
 }

@@ -81,21 +81,22 @@
                 const gameid = appdetails.fullgame?.appid ?? appid;
                 const gamename = appdetails.fullgame?.name ?? appdetails.name;
 
-                const confirm = await (new ConfirmDialog(
-                    L(__playGame, {gamename}),
-                    `<img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/${gameid}/header.jpg">`,
-                    {
-                        primary: L(__ok),
-                        secondary: L(__visitStore),
-                        cancel: L(__cancel)
-                    }
-                )).show();
-
-                if (confirm === EModalAction.OK) {
-                    window.location.assign(`steam://run/${gameid}`)
-                } else if (confirm === EModalAction.Secondary) {
-                    window.location.assign(`//store.steampowered.com/app/${gameid}`)
-                }
+// FIXME
+//                const confirm = await (new ConfirmDialog(
+//                    L(__playGame, {gamename}),
+//                    `<img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/${gameid}/header.jpg">`,
+//                    {
+//                        primary: L(__ok),
+//                        secondary: L(__visitStore),
+//                        cancel: L(__cancel)
+//                    }
+//                )).show();
+//
+//                if (confirm === EModalAction.OK) {
+//                    window.location.assign(`steam://run/${gameid}`)
+//                } else if (confirm === EModalAction.Secondary) {
+//                    window.location.assign(`//store.steampowered.com/app/${gameid}`)
+//                }
                 return;
             }
         }

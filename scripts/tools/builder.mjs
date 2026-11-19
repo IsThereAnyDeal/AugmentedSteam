@@ -84,7 +84,7 @@ export default async function(options) {
             "community/booster_creator": "Community/BoosterCreator/CBoosterCreator.ts",
 //            {out: "community/default", in: `${srcDir}/js/Content/Pages/Community/PDefaultCommunity.ts`},
             "community/edit_guide": "Community/EditGuide/CEditGuide.ts",
-//            {out: "community/friends_and_groups", in: `${srcDir}/js/Content/Pages/Community/FriendsAndGroups/PFriendsAndGroups.ts`},
+            "community/friends_and_groups": "Community/FriendsAndGroups/CFriendsAndGroups.ts",
 //            {out: "community/friends_that_play", in: `${srcDir}/js/Content/Pages/Community/FriendsThatPlay/PFriendsThatPlay.ts`},
 //            {out: "community/gamecard", in: `${srcDir}/js/Content/Pages/Community/GameCard/PGameCard.ts`},
 //            {out: "community/games", in: `${srcDir}/js/Content/Pages/Community/Games/PGames.ts`},
