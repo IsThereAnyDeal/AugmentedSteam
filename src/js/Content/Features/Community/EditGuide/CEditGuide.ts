@@ -1,4 +1,3 @@
-import FCustomTags from "./FCustomTags";
 import Context from "@Content/Modules/Context/Context";
 import FMaxLengthIndicator from "@Content/Features/Community/EditGuide/FMaxLengthIndicator";
 import {bootstrapLegacy, features} from "@Content/bootstrap";
@@ -23,7 +22,7 @@ export async function run(): Promise<void> {
     await features(context, [
         ...commonFeatures(),
         ...(hasFeatures ? [
-            // FMaxLengthIndicator
+            FMaxLengthIndicator
         ] : [])
     ]);
 }

@@ -1,17 +1,23 @@
 import Feature from "@Content/Modules/Context/Feature";
 import type CEditGuide from "@Content/Features/Community/EditGuide/CEditGuide";
+import {MountTargetError} from "@Core/Errors/Errors";
 
 export default class FMaxLengthIndicator extends Feature<CEditGuide> {
 
-    override apply(): void {
+    override async isEnabled(): Promise<boolean> {
+        // FIXME setting
+        return true;
+    }
+
+    override async apply(): Promise<string|null> {
         const description = document.querySelector("textarea#description");
         if (!description) {
-            throw new Error("Textarea not found");
+            throw new MountTargetError("Textarea not found");
         }
 
         const helpContainer = description.parentNode!.querySelector(".workshopFormattingHelpContainer") as HTMLDivElement;
         if (!helpContainer) {
-            throw new Error("Help container not found");
+            throw new MountTargetError("Help container not found");
         }
 
         const counter = document.createElement("div");
@@ -27,5 +33,7 @@ export default class FMaxLengthIndicator extends Feature<CEditGuide> {
             const count = textarea.value.length;
             counter.innerText = String(count);
         });
+
+        return null;
     }
 }
