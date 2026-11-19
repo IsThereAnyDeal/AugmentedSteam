@@ -2,6 +2,7 @@
     import {__cardDropsRemaining, __dropCalc, __gamesWithBooster, __gamesWithDrops, __loading} from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
     import {onMount} from "svelte";
+    import SmallSteamButton from "@Content/Steam/SmallSteamButton.svelte";
 
     interface Props {
         multipage: boolean;
@@ -11,9 +12,9 @@
 
     let { multipage, getDropCounts, getBoosterCountEligibility }: Props = $props();
 
-    let dropsGames: number = $state();
-    let dropsCount: number = $state();
-    let boosterCount: number|null = $state();
+    let dropsGames: number = $state(0);
+    let dropsCount: number = $state(0);
+    let boosterCount: number|null = $state(null);
 
     let promise: Promise<void>|null = $state(null);
 
@@ -33,25 +34,38 @@
         if (!multipage) {
             promise = load();
         }
-    })
+    });
 </script>
 
 
-<div id="es_calculations">
+<div class="parent">
     {#if promise === null}
-        <button type="button" class="btn_grey_black btn_small_thin" onclick={() => promise = load()}>
-            <span>{L(__dropCalc)}</span>
-        </button>
+        <SmallSteamButton onclick={() => promise = load()}>
+            {L(__dropCalc)}
+        </SmallSteamButton>
     {:else}
         {#await promise}
             {L(__loading)}
         {:then _}
-            <div>{L(__cardDropsRemaining, {"drops": dropsCount})}</div>
-            <div>{L(__gamesWithDrops, {"dropsgames": dropsGames})}</div>
+            <div>{@html L(__cardDropsRemaining, {"drops": `<span class="as-cnt">${dropsCount}</span>`})}</div>
+            <div>{@html L(__gamesWithDrops, {"dropsgames": `<span class="as-cnt">${dropsGames}</span>`})}</div>
 
             {#if boosterCount !== null}
-                <div>{L(__gamesWithBooster, {"boostergames": boosterCount})}</div>
+                <div>{@html L(__gamesWithBooster, {"boostergames": `<span class="as-cnt">${boosterCount}</span>`})}</div>
             {/if}
         {/await}
     {/if}
 </div>
+
+
+<style>
+    .parent {
+        margin-top: 15px;
+        padding-left: 20px;
+    }
+
+    .parent :global(.as-cnt) {
+        color: #e1e1e1;
+        font-size: 17px;
+    }
+</style>

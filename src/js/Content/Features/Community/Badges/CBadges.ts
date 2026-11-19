@@ -12,19 +12,20 @@ import FBadgeSortAndFilter from "@Content/Features/Community/Badges/FBadgeSortAn
 import BlockingWaitDialog from "@Core/Modals/BlockingWaitDialog";
 import {L} from "@Core/Localization/Localization";
 import {__loading} from "@Strings/_strings";
+import FBadgeCalculations from "@Content/Features/Community/Badges/FBadgeCalculations";
 
 export default class CBadges extends CCommunityBase {
 
     readonly myProfile: boolean;
 
-    hasMultiplePages: boolean;
+    hasUnloadedPages: boolean;
     readonly pageUpdateEvent: ASEventHandler<void>
 
     constructor(params: ContextParams) {
         super(params);
 
         this.myProfile = CommunityUtils.userIsOwner(this.user);
-        this.hasMultiplePages = document.querySelector(".profile_paging") !== null;
+        this.hasUnloadedPages = document.querySelector(".profile_paging") !== null;
 
         this.pageUpdateEvent = new ASEventHandler();
     }
@@ -91,6 +92,6 @@ export async function run(): Promise<void> {
         ...commonFeatures(),
         FCardExchangeLinks,
         FBadgeSortAndFilter,
-//        FBadgeCalculations,
+        FBadgeCalculations,
     ]);
 }

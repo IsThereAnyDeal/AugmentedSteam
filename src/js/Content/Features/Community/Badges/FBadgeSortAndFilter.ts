@@ -8,12 +8,14 @@ import BadgeViewOptions from "@Content/Features/Community/Badges/Components/Badg
 import "./FBadgeSortAndFilter.css";
 
 export default class FBadgeSortAndFilter extends Feature<CBadges> {
-    // @ts-ignore
 
-    #header: HTMLElement;
-    #hasAllPagesLoaded: boolean = false;
-
+    readonly #header: HTMLElement;
     #binderLoaded: boolean = false;
+
+    constructor(context: CBadges) {
+        super(context);
+        this.#header = document.querySelector<HTMLElement>(".profile_badges_header")!;
+    }
 
     override async isEnabled(): Promise<boolean> {
         // FIXME settings
@@ -21,8 +23,6 @@ export default class FBadgeSortAndFilter extends Feature<CBadges> {
     }
 
     override async apply(): Promise<string|null> {
-        this.#header = document.querySelector<HTMLElement>(".profile_badges_header")!;
-
         this.#addSort();
         this.#addFilter();
         this.#addViewOptions();
@@ -84,7 +84,7 @@ export default class FBadgeSortAndFilter extends Feature<CBadges> {
             return;
         }
 
-        if (this.context.hasMultiplePages) {
+        if (this.context.hasUnloadedPages) {
             await this.#loadAllPages();
         }
 
@@ -120,7 +120,7 @@ export default class FBadgeSortAndFilter extends Feature<CBadges> {
                     }
                 },
                 ondrops: async () => {
-                    if (this.context.hasMultiplePages) {
+                    if (this.context.hasUnloadedPages) {
                         await this.#loadAllPages();
                     }
 
@@ -152,10 +152,10 @@ export default class FBadgeSortAndFilter extends Feature<CBadges> {
     }
 
     async #loadAllPages(): Promise<void> {
-        if (this.#hasAllPagesLoaded) {
+        if (!this.context.hasUnloadedPages) {
             return;
         }
-        this.#hasAllPagesLoaded = true;
+        this.context.hasUnloadedPages = false;
 
         const sheetNode = document.querySelector(".badges_sheet");
         if (!sheetNode) {
@@ -169,7 +169,7 @@ export default class FBadgeSortAndFilter extends Feature<CBadges> {
 
         for (const node of document.querySelectorAll<HTMLElement>(".profile_paging")) {
             node.style.display = "none";
-            this.context.hasMultiplePages = false;
+            this.context.hasUnloadedPages = false;
         }
 
         const nodes = sheetNode.querySelectorAll<HTMLImageElement>("[data-delayed-image]");

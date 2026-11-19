@@ -1,59 +1,45 @@
+import self_ from "@Content/Features/Community/Badges/FBadgeCalculations.svelte";
 import Feature from "@Content/Modules/Context/Feature";
 import type CBadges from "@Content/Features/Community/Badges/CBadges";
 import HTML from "@Core/Html/Html";
 import RequestData from "@Content/Modules/Data/RequestData";
-import DropStats from "@Content/Features/Community/Badges/Components/DropStats.svelte";
 import { mount } from "svelte";
+import {MountTargetError} from "@Core/Errors/Errors";
 
 export default class FBadgeCalculations extends Feature<CBadges> {
 
-    override isEnabled(): boolean {
+    override async isEnabled(): Promise<boolean> {
         return this.context.myProfile;
     }
 
-    override apply(): void {
-        this._updateHead();
-        this._addCalculations();
-    }
-
-    _updateHead() {
-        const xpBlockRight = document.querySelector(".profile_xp_block_right");
-        if (!xpBlockRight) {
-            return;
+    override async apply(): Promise<string|null> {
+        const target = document.querySelector(".profile_xp_block");
+        if (!target) {
+            throw new MountTargetError();
         }
 
-        // Move FAQ to the middle
-        HTML.beforeEnd(
-            document.querySelector(".profile_xp_block_mid"),
-            `<div class="es_faq_cards">${xpBlockRight.innerHTML}</div>`
-        );
-        HTML.inner(xpBlockRight, "");
+        mount(self_, {
+            target,
+            props: {
+                multipage: this.context.hasUnloadedPages,
+                getDropCounts: () => this.#countDrops(),
+                getBoosterCountEligibility: () => this.#getBoosterCountEligibility()
+            }
+        });
+        return null;
     }
 
-    async _addCalculations(): Promise<void> {
-        const target = document.querySelector(".profile_xp_block_right")!;
-
-        (mount(DropStats, {
-                    target,
-                    props: {
-                        multipage: this.context.hasMultiplePages,
-                        getDropCounts: () => this._countDrops(),
-                        getBoosterCountEligibility: () => this._getBoosterCountEligibility()
-                    }
-                }));
-    }
-
-    async _countDrops(): Promise<[number, number]> {
+    async #countDrops(): Promise<[number, number]> {
         let totalGames: number = 0;
         let totalDrops: number = 0;
 
-        let [games, drops] = this._countDropsFromDOM(document);
+        let [games, drops] = this.#countDropsFromDOM(document);
         totalGames += games;
         totalDrops += drops;
 
-        if (this.context.hasMultiplePages) {
-            for await (let [dom, images_] of this.context.eachBadgePage()) {
-                let [games, drops] = this._countDropsFromDOM(dom);
+        if (this.context.hasUnloadedPages) {
+            for await (const dom of this.context.eachBadgePage()) {
+                const [games, drops] = this.#countDropsFromDOM(dom);
                 totalGames += games;
                 totalDrops += drops;
             }
@@ -61,7 +47,7 @@ export default class FBadgeCalculations extends Feature<CBadges> {
         return [totalGames, totalDrops];
     }
 
-    _countDropsFromDOM(dom: DocumentFragment|Document): [number, number] {
+    #countDropsFromDOM(dom: DocumentFragment|Document): [number, number] {
         let games: number = 0;
         let drops: number = 0;
 
@@ -76,7 +62,7 @@ export default class FBadgeCalculations extends Feature<CBadges> {
         return [games, drops];
     }
 
-    async _getBoosterCountEligibility(): Promise<number> {
+    async #getBoosterCountEligibility(): Promise<number> {
         try {
             const response = await RequestData.getText("https://steamcommunity.com/my/ajaxgetboostereligibility/");
 
