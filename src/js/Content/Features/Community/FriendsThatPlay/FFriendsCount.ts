@@ -4,8 +4,12 @@ import type CFriendsThatPlay from "@Content/Features/Community/FriendsThatPlay/C
 
 export default class FFriendsCount extends Feature<CFriendsThatPlay> {
 
-    override apply(): void {
+    override async isEnabled(): Promise<boolean> {
+        // FIXME setting
+        return true;
+    }
 
+    override async apply(): Promise<string|null> {
         for (const header of document.querySelectorAll(".friendListSectionHeader")) {
             const profileList = header.nextElementSibling;
             if (!profileList) { continue; }
@@ -19,5 +23,6 @@ export default class FFriendsCount extends Feature<CFriendsThatPlay> {
                 HTML.beforeEnd(header, html);
             }
         }
+        return null;
     }
 }

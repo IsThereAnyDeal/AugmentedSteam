@@ -1,22 +1,27 @@
-import ContextType from "@Content/Modules/Context/ContextType";
-import CCommunityBase from "../CCommunityBase";
-import FFriendsCount from "./FFriendsCount";
-import FFriendsPlaytimeSort from "./FFriendsPlaytimeSort";
-import type {ContextParams} from "@Content/Modules/Context/Context";
+import Context from "@Content/Modules/Context/Context";
+import {bootstrapLegacy, features} from "@Content/bootstrap";
+import commonFeatures from "@Content/Features/Common/_commonFeatures";
+import FFriendsCount from "@Content/Features/Community/FriendsThatPlay/FFriendsCount";
+import FFriendsPlaytimeSort from "@Content/Features/Community/FriendsThatPlay/FFriendsPlaytimeSort";
 
-export default class CFriendsThatPlay extends CCommunityBase {
+export default class CFriendsThatPlay extends Context {}
 
-    constructor(params: ContextParams) {
 
-        // Don't apply features if there's an error message (e.g. invalid or missing appid)
-        if (document.querySelector(".profile_fatalerror") !== null) {
-            super(params, ContextType.FRIENDS_THAT_PLAY, []);
-            return;
-        }
+/**
+ * @contentScript
+ * @match *://steamcommunity.com/(id|profiles)/*\/friendsthatplay/*
+ */
+export async function run(): Promise<void> {
+    const params = await bootstrapLegacy();
+    const context = new CFriendsThatPlay(params);
 
-        super(params, ContextType.FRIENDS_THAT_PLAY, [
+    const errorPage = document.querySelector(".profile_fatalerror") !== null;
+
+    await features(context, [
+        ...commonFeatures(),
+        ...(errorPage ? [] : [
             FFriendsCount,
             FFriendsPlaytimeSort,
-        ]);
-    }
+        ])
+    ]);
 }

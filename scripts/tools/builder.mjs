@@ -85,7 +85,7 @@ export default async function(options) {
 //            {out: "community/default", in: `${srcDir}/js/Content/Pages/Community/PDefaultCommunity.ts`},
             "community/edit_guide": "Community/EditGuide/CEditGuide.ts",
             "community/friends_and_groups": "Community/FriendsAndGroups/CFriendsAndGroups.ts",
-//            {out: "community/friends_that_play", in: `${srcDir}/js/Content/Pages/Community/FriendsThatPlay/PFriendsThatPlay.ts`},
+            "community/friends_that_play": "Community/FriendsThatPlay/CFriendsThatPlay.ts",
 //            {out: "community/gamecard", in: `${srcDir}/js/Content/Pages/Community/GameCard/PGameCard.ts`},
 //            {out: "community/games", in: `${srcDir}/js/Content/Pages/Community/Games/PGames.ts`},
 //            {out: "community/group_home", in: `${srcDir}/js/Content/Pages/Community/GroupHome/PGroupHome.ts`},
