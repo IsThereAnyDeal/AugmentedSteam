@@ -14,35 +14,39 @@ import FFriendsAppendNickname from "@Content/Features/Community/FriendsAndGroups
 export default class CFriendsAndGroups extends Context {
 
     readonly myProfile: boolean;
-
-    onSubpageNav: ASEventHandler<void>
+    readonly onSubpageNav: ASEventHandler<void>
 
     constructor(params: ContextParams) {
         super(params);
 
         this.myProfile = CommunityUtils.userIsOwner(this.user);
-        this.#moveSearchBar();
-
         this.onSubpageNav = new ASEventHandler();
 
         document.addEventListener("as_subpageNav", () => {
-            this.#moveSearchBar();
             this.onSubpageNav.dispatch();
         });
 
         DOMHelper.insertScript("scriptlets/Community/FriendsAndGroups/subpageNav.js");
     }
 
-    #moveSearchBar() {
-        if (document.getElementById("groups_list") !== null) {
-            // Move the search bar on groups page to the same position as on friends page
-            const container = HTML.wrap(
-                '<div class="searchBarContainer"></div>',
-                "#search_text_box"
-            );
-            if (container) {
-                document.getElementById("search_results")?.insertAdjacentElement("beforebegin", container);
-            }
+    moveSearchBar(): void {
+        // only on groups pages
+        if (document.getElementById("groups_list") === null) {
+            return;
+        }
+
+        // only once
+        if (document.getElementById("as-group-searchbar") !== null) {
+            return;
+        }
+
+        // Move the search bar on groups page to the same position as on friends page
+        const container = HTML.wrap(
+            '<div class="searchBarContainer" id="as-group-searchbar"></div>',
+            "#search_text_box"
+        );
+        if (container) {
+            document.getElementById("search_results")?.insertAdjacentElement("beforebegin", container);
         }
     }
 }

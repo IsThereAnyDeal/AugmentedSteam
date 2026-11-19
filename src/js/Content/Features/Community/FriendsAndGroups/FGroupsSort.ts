@@ -22,6 +22,7 @@ export default class FGroupsSort extends Feature<CFriendsAndGroups> {
         if (!document.getElementById("groups_list")) {
             return;
         }
+        this.context.moveSearchBar();
 
         const container = document.querySelector<HTMLElement>("#search_results");
         if (!container || container.querySelectorAll(".group_block").length <= 1) {

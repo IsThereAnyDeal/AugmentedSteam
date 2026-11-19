@@ -41,6 +41,7 @@ export default class FGroupsManageButton extends Feature<CFriendsAndGroups> {
 
     #callback(): void {
         if (!document.getElementById("groups_list")) { return; }
+        this.context.moveSearchBar();
 
         const groups = document.querySelectorAll(".group_block");
         if (groups.length === 0) { return; }
