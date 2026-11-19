@@ -81,7 +81,7 @@ export default async function(options) {
     const pages = {
             "community/app": "Community/App/CApp.ts",
             "community/badges": "Community/Badges/CBadges.ts",
-//            {out: "community/booster_creator", in: `${srcDir}/js/Content/Pages/Community/BoosterCreator/PBoosterCreator.ts`},
+            "community/booster_creator": "Community/BoosterCreator/CBoosterCreator.ts",
 //            {out: "community/default", in: `${srcDir}/js/Content/Pages/Community/PDefaultCommunity.ts`},
 //            {out: "community/edit_guide", in: `${srcDir}/js/Content/Pages/Community/EditGuide/PEditGuide.ts`},
 //            {out: "community/friends_and_groups", in: `${srcDir}/js/Content/Pages/Community/FriendsAndGroups/PFriendsAndGroups.ts`},

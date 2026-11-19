@@ -1,14 +1,21 @@
 import FShowGemsCost from "./FShowGemsCost";
-import ContextType from "@Content/Modules/Context/ContextType";
-import CCommunityBase from "@Content/Features/Community/CCommunityBase";
-import type {ContextParams} from "@Content/Modules/Context/Context";
+import {bootstrapLegacy, features} from "@Content/bootstrap";
+import commonFeatures from "@Content/Features/Common/_commonFeatures";
+import Context from "@Content/Modules/Context/Context";
 
-export default class CBoosterCreator extends CCommunityBase {
+export default class CBoosterCreator extends Context {}
 
-    constructor(params: ContextParams) {
 
-        super(params, ContextType.BOOSTER_CREATOR, [
-            FShowGemsCost,
-        ]);
-    }
+/**
+ * @contentScript
+ * @match *://steamcommunity.com/tradingcards/boostercreator
+ */
+export async function run(): Promise<void> {
+    const params = await bootstrapLegacy();
+    const context = new CBoosterCreator(params);
+
+    await features(context, [
+        ...commonFeatures(),
+        FShowGemsCost
+    ]);
 }
