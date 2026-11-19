@@ -111,12 +111,6 @@ export default class SteamFacade {
         ]);
     }
 
-    // events
-
-    static bindAutoFlyoutEvents(): void {
-        Messenger.call(MessageHandler.SteamFacade, "bindAutoFlyoutEvents");
-    }
-
     // tooltips
 
     static vTooltip(selector: string, isHtml: boolean = false): void {

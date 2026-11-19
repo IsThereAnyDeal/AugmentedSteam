@@ -1,0 +1,75 @@
+.as_badge_progress_info,
+.as_game_stats {
+    display: none !important;
+}
+
+.as_binder_view {
+    & .badges_sheet {
+        overflow: hidden;
+    }
+    & .badge_progress_info,
+    & .badge_cards,
+    & .badge_title_stats,
+    & .badge_description,
+    & .badge_view_details,
+    & .badge_info_unlocked,
+    & .badge_progress_tasks {
+        display: none !important;
+    }
+    & .badge_title {
+        font-size: 12px !important;
+        line-height: 26px !important;
+    }
+    & .badge_title_row {
+        padding-top: 0 !important;
+        padding-right: 4px !important;
+        padding-left: 4px !important;
+        height: 24px !important;
+    }
+    & .badge_row_inner {
+        height: 210px !important;
+    }
+    & .badge_current {
+        width: 100% !important;
+    }
+    & .badge_empty_circle {
+        float: none !important;
+        margin-left: 45px !important;
+    }
+    & .badge_info_image {
+        float: none !important;
+        margin: 7px auto 0 auto !important;
+        width: 100% !important;
+    }
+    & .badge_content {
+        padding-top: 0 !important;
+    }
+    & .badge_row {
+        width: 160px !important;
+        height: 210px !important;
+        float: left;
+        margin-right: 15px !important;
+        margin-bottom: 15px !important;
+    }
+    & .badges_sheet {
+        text-align: center !important;
+        margin-left: 32px !important;
+    }
+    & .badge_empty {
+        border: none !important;
+    }
+    & .badge_empty_name {
+        clear: both;
+    }
+
+    & .as_badge_progress_info {
+        display: block !important;
+    }
+    & .es_game_stats {
+        display: block !important;
+        color: #5491cf;
+        font-size: 12px;
+        white-space: nowrap;
+    }
+}
+

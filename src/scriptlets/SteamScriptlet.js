@@ -112,12 +112,6 @@
             AddToWishlist(appid, divToHide, divToShowSuccess, divToShowError, navref, divToHide2);
         }
 
-        // events
-
-        static bindAutoFlyoutEvents() {
-            BindAutoFlyoutEvents();
-        }
-
         // tooltips
 
         static vTooltip(selector, isHtml = false) {

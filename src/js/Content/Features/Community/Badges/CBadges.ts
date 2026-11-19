@@ -1,5 +1,4 @@
 import HTML from "@Core/Html/Html";
-import HTMLParser from "@Core/Html/HtmlParser";
 import CCommunityBase from "../CCommunityBase";
 import CommunityUtils from "@Content/Modules/Community/CommunityUtils";
 import DOMHelper from "@Content/Modules/DOM/DOMHelper";
@@ -9,11 +8,16 @@ import {bootstrapLegacy, features} from "@Content/bootstrap";
 import commonFeatures from "@Content/Features/Common/_commonFeatures";
 import ASEventHandler from "@Content/Modules/Events/ASEventHandler";
 import FCardExchangeLinks from "@Content/Features/Community/Badges/FCardExchangeLinks";
+import FBadgeSortAndFilter from "@Content/Features/Community/Badges/FBadgeSortAndFilter";
+import BlockingWaitDialog from "@Core/Modals/BlockingWaitDialog";
+import {L} from "@Core/Localization/Localization";
+import {__loading} from "@Strings/_strings";
 
 export default class CBadges extends CCommunityBase {
 
     readonly myProfile: boolean;
-    readonly hasMultiplePages: boolean;
+
+    hasMultiplePages: boolean;
     readonly pageUpdateEvent: ASEventHandler<void>
 
     constructor(params: ContextParams) {
@@ -29,7 +33,15 @@ export default class CBadges extends CCommunityBase {
         this.pageUpdateEvent.dispatch();
     }
 
-    async *eachBadgePage(): AsyncGenerator<[DocumentFragment, Record<string, any>|null]> {
+    async *eachBadgePage(): AsyncGenerator<DocumentFragment> {
+
+        let loaded: number = 1;
+        let pages: number = 0;
+
+        const dialog = new BlockingWaitDialog(
+            L(__loading),
+            () => `${loaded}/${pages}`
+        );
 
         const url = new URL(window.location.origin + window.location.pathname);
         const params = new URLSearchParams(window.location.search);
@@ -44,24 +56,25 @@ export default class CBadges extends CCommunityBase {
             console.error("Couldn't find .pagelink");
             return;
         }
-        const lastPage = Number(lastPageNode.textContent);
+        pages = Number(lastPageNode.textContent);
+        dialog.update();
 
-        for (let p = 1; p <= lastPage; p++) {
+        for (let p = 1; p <= pages; p++) {
             if (p === skip) { continue; }
 
             url.searchParams.set("p", String(p));
 
             try {
                 const response = await RequestData.getText(url);
-
-                const delayedLoadImages = HTMLParser.getObjectVariable("g_rgDelayedLoadImages", response);
                 const dom = HTML.toDom(response);
-
-                yield [dom, delayedLoadImages];
+                yield dom;
             } catch (err) {
                 console.error(`Failed to request ${url.toString()}: ${err}`);
             }
+            loaded++;
+            dialog.update();
         }
+        dialog.dismiss();
     }
 }
 
@@ -77,7 +90,7 @@ export async function run(): Promise<void> {
     await features(context, [
         ...commonFeatures(),
         FCardExchangeLinks,
-//        FBadgeSortAndFilter,
+        FBadgeSortAndFilter,
 //        FBadgeCalculations,
     ]);
 }
