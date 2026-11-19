@@ -8,6 +8,8 @@ import FFriendsSort from "@Content/Features/Community/FriendsAndGroups/FFriendsS
 import ASEventHandler from "@Content/Modules/Events/ASEventHandler";
 import FInviteFriendsToGroup from "./FInviteFriendsToGroup";
 import FGroupsManageButton from "@Content/Features/Community/FriendsAndGroups/FGroupsManageButton";
+import FGroupsSort from "@Content/Features/Community/FriendsAndGroups/FGroupsSort";
+import FFriendsAppendNickname from "@Content/Features/Community/FriendsAndGroups/FFriendsAppendNickname";
 
 export default class CFriendsAndGroups extends Context {
 
@@ -61,7 +63,7 @@ export async function run(): Promise<void> {
         FFriendsSort,
         FInviteFriendsToGroup,
         FGroupsManageButton,
-        // FGroupsSort,
-        // FFriendsAppendNickname,
+        FGroupsSort,
+        FFriendsAppendNickname,
     ]);
 }

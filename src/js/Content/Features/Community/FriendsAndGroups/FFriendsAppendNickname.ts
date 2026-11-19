@@ -7,14 +7,17 @@ import "./FFriendsAppendNickname.css";
 export default class FFriendsAppendNickname extends Feature<CFriendsAndGroups> {
 
     // Apply this feature on all profiles to support common friends
-    override isEnabled(): boolean {
-        return this.context.user.isSignedIn && Settings.friends_append_nickname;
+    override async isEnabled(): Promise<boolean> {
+        return Settings.friends_append_nickname;
     }
 
-    apply(): void | Promise<void> {
-        document.addEventListener("as_subpageNav", () => this.callback());
-        this.callback();
-        this.handleMiniProfile();
+    override async apply(): Promise<string|null> {
+        if (this.context.user.isSignedIn) {
+            this.context.onSubpageNav.subscribe(() => this.callback(), true);
+            this.handleMiniProfile();
+        }
+
+        return null;
     }
 
     private async callback(): Promise<void> {
