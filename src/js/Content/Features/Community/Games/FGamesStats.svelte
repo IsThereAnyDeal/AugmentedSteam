@@ -1,16 +1,10 @@
 <script lang="ts">
-    import {slide} from "svelte/transition";
-    import SmallSteamButton from "../../../Steam/SmallSteamButton.svelte";
-    import ToggleIcon from "../../../Steam/ToggleIcon.svelte";
     import {
         __coll_inCollection,
         __coll_neverPlayed,
         __coll_played,
         __coll_totalTime,
-        __hide,
         __hoursShort,
-        __show,
-        __wl_label,
     } from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
 
@@ -27,8 +21,6 @@
         countNeverPlayed,
         totalTime
     }: Props = $props();
-
-    let isOpen: boolean = false;
 </script>
 
 

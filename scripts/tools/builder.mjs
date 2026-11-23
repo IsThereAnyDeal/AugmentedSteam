@@ -87,7 +87,7 @@ export default async function(options) {
             "community/friends_and_groups": "Community/FriendsAndGroups/CFriendsAndGroups.ts",
             "community/friends_that_play": "Community/FriendsThatPlay/CFriendsThatPlay.ts",
             "community/gamecard": "Community/GameCard/CGameCard.ts",
-//            {out: "community/games", in: `${srcDir}/js/Content/Pages/Community/Games/PGames.ts`},
+            "community/games": "Community/Games/CGames.ts",
 //            {out: "community/group_home", in: `${srcDir}/js/Content/Pages/Community/GroupHome/PGroupHome.ts`},
 //            {out: "community/guides", in: `${srcDir}/js/Content/Pages/Community/Guides/PGuides.ts`},
 //            {out: "community/inventory", in: `${srcDir}/js/Content/Pages/Community/Inventory/PInventory.ts`},
