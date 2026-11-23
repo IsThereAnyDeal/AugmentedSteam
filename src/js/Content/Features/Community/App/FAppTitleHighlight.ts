@@ -1,7 +1,7 @@
 import Feature from "@Content/Modules/Context/Feature";
 import HighlightsTagsUtils2, {EHighlightStyle} from "@Content/Modules/Highlights/HighlightsTagsUtils2";
 import {MountTargetError} from "@Core/Errors/Errors";
-import type CApp from "@Content/Features/Community/App/CApp";
+import type CApp from "@Content/Features/Community/App/App/CApp";
 import AppId from "@Core/GameId/AppId";
 
 /*

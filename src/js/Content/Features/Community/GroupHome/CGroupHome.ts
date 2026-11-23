@@ -27,7 +27,6 @@ export default class CGroupHome extends Context {
  * @contentScript
  * @match *://steamcommunity.com/groups/*
  */
-
 export async function run(): Promise<void> {
     const params = await bootstrapLegacy();
     const context = new CGroupHome(params);

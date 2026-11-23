@@ -79,7 +79,7 @@ export default async function(options) {
 
     // TODO make pretty
     const pages = {
-            "community/app": "Community/App/CApp.ts",
+            "community/app": "Community/App/App/CApp.ts",
             "community/badges": "Community/Badges/CBadges.ts",
             "community/booster_creator": "Community/BoosterCreator/CBoosterCreator.ts",
 //            {out: "community/default", in: `${srcDir}/js/Content/Pages/Community/PDefaultCommunity.ts`},
@@ -89,7 +89,7 @@ export default async function(options) {
             "community/gamecard": "Community/GameCard/CGameCard.ts",
             "community/games": "Community/Games/CGames.ts",
             "community/group_home": "Community/GroupHome/CGroupHome.ts",
-//            {out: "community/guides", in: `${srcDir}/js/Content/Pages/Community/Guides/PGuides.ts`},
+            "community/guides": "Community/App/Guides/CGuides.ts",
 //            {out: "community/inventory", in: `${srcDir}/js/Content/Pages/Community/Inventory/PInventory.ts`},
 //            {out: "community/market_home", in: `${srcDir}/js/Content/Pages/Community/MarketHome/PMarketHome.ts`},
 //            {out: "community/market_listing", in: `${srcDir}/js/Content/Pages/Community/MarketListing/PMarketListing.ts`},

@@ -1,15 +1,15 @@
 import Feature from "@Content/Modules/Context/Feature";
-import type CGuides from "@Content/Features/Community/Guides/CGuides";
+import type CGuides from "@Content/Features/Community/App/Guides/CGuides";
 import Settings from "@Options/Data/Settings";
 import HTML from "@Core/Html/Html";
 
 export default class FRemoveGuidesLangFilter extends Feature<CGuides> {
 
-    override isEnabled(): boolean {
+    override async isEnabled(): Promise<boolean> {
         return Settings.removeguideslanguagefilter;
     }
 
-    override apply(): void {
+    override async apply(): Promise<string|null> {
 
         for (const node of document.querySelectorAll(".rightDetailsBlock .browseOption")) {
             const linkNode = node.querySelector("a");
@@ -56,5 +56,7 @@ export default class FRemoveGuidesLangFilter extends Feature<CGuides> {
 
             node.href = newLink.href;
         }
+
+        return null;
     }
 }

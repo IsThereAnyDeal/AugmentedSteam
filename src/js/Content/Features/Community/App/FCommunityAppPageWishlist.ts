@@ -1,6 +1,6 @@
 import self_ from "./FCommunityAppPageWishlist.svelte";
 import Feature from "@Content/Modules/Context/Feature";
-import type CApp from "@Content/Features/Community/App/CApp";
+import type CApp from "@Content/Features/Community/App/App/CApp";
 import DynamicStore from "@Content/Modules/Data/DynamicStore";
 import Settings from "@Options/Data/Settings";
 import { mount } from "svelte";

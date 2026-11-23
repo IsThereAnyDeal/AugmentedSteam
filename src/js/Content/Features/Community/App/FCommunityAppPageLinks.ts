@@ -1,6 +1,6 @@
 import self_ from "./FCommunityAppPageLinks.svelte";
 import Feature from "@Content/Modules/Context/Feature";
-import type CApp from "@Content/Features/Community/App/CApp";
+import type CApp from "@Content/Features/Community/App/App/CApp";
 import {mount} from "svelte";
 import Settings from "@Options/Data/Settings";
 import {MountTargetError} from "@Core/Errors/Errors";

@@ -1,5 +1,5 @@
 import ContextType from "@Content/Modules/Context/ContextType";
-import CApp from "../App/CApp";
+import CApp from "../App/App/CApp";
 import FMediaExpander from "../../Common/FMediaExpander";
 import FCollectionSort from "../Workshop/FCollectionSort";
 import type {ContextParams} from "@Content/Modules/Context/Context";

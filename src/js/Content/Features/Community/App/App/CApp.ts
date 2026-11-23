@@ -1,5 +1,5 @@
-import FCommunityAppPageLinks from "./FCommunityAppPageLinks";
-import FCommunityAppPageWishlist from "./FCommunityAppPageWishlist";
+import FCommunityAppPageLinks from "../FCommunityAppPageLinks";
+import FCommunityAppPageWishlist from "../FCommunityAppPageWishlist";
 import AppId from "@Core/GameId/AppId";
 import Context, {type ContextParams} from "@Content/Modules/Context/Context";
 import FSkipAgecheck from "@Content/Features/Community/App/FSkipAgecheck";
