@@ -1,24 +1,19 @@
 import AppId from "@Core/GameId/AppId";
-import ContextType from "@Content/Modules/Context/ContextType";
-import CCommunityBase from "../CCommunityBase";
-import FCardExchangeLinks from "../FCardExchangeLinks";
-import FCardExtraLinks from "./FCardExtraLinks";
-import FCardMarketLinks from "./FCardMarketLinks";
-import type {ContextParams} from "@Content/Modules/Context/Context";
+import Context, {type ContextParams} from "@Content/Modules/Context/Context";
+import {bootstrapLegacy, features} from "@Content/bootstrap";
+import commonFeatures from "@Content/Features/Common/_commonFeatures";
+import FCardExchangeLinks from "@Content/Features/Community/GameCard/FCardExchangeLinks";
+import FCardMarketLinks from "@Content/Features/Community/GameCard/FCardMarketLinks";
+import FCardExtraLinks from "@Content/Features/Community/GameCard/FCardExtraLinks";
 
-export default class CGameCard extends CCommunityBase {
+export default class CGameCard extends Context {
 
     public readonly appid: number;
     public readonly isFoil: boolean;
     public readonly saleAppids: number[];
 
     constructor(params: ContextParams) {
-
-        super(params, ContextType.GAME_CARD, [
-            FCardExchangeLinks,
-            FCardMarketLinks,
-            FCardExtraLinks,
-        ]);
+        super(params);
 
         this.appid = AppId.fromGameCardUrl(window.location.pathname)!;
         this.isFoil = new URLSearchParams(window.location.search).get("border") === "1";
@@ -35,4 +30,21 @@ export default class CGameCard extends CCommunityBase {
             2861690
         ];
     }
+}
+
+
+/**
+ * @contentScript
+ * @match *://steamcommunity.com/(id|profiles)/*\/gamecards/*
+ */
+export async function run(): Promise<void> {
+    const params = await bootstrapLegacy();
+    const context = new CGameCard(params);
+
+    await features(context, [
+        ...commonFeatures(),
+        FCardExchangeLinks,
+        FCardMarketLinks,
+        FCardExtraLinks,
+    ]);
 }

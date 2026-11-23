@@ -18,10 +18,7 @@
         [" (Trading Card)", " (Foil Trading Card)"]
     ] as const;
 
-    // export let country: string;
-    
     interface Props {
-        // export let currency: string;
         appid: number;
         cardName: string;
         foil: boolean;
@@ -35,9 +32,13 @@
         onprice
     }: Props = $props();
 
-    let marketHashName = `${appid}-${cardName}`;
-    let cacheName = marketHashName + (foil ? "-foil" : "");
+    // svelte-ignore state_referenced_locally
+    const marketHashName = `${appid}-${cardName}`;
 
+    // svelte-ignore state_referenced_locally
+    const cacheName = marketHashName + (foil ? "-foil" : "");
+
+    // svelte-ignore state_referenced_locally
     let uriPath: string = $state(`${appid}-${encodeURIComponent(cardName)}`);
     let promise: Promise<Price|null>|null = $state(null);
 
@@ -61,24 +62,29 @@
         let orderbook;
         try {
             orderbook = await RequestData.getJson<{
-                success: boolean,
                 data: {
-                    amtMinSellOrder: number,
-                    eCurrency: number
+                    success: boolean,
+                    data: {
+                        amtMinSellOrder: number,
+                        eCurrency: number
+                    }
                 }
             }>(`https://steamcommunity.com/market/orderbook?q=Load&qp=${encodeURIComponent(JSON.stringify([753, marketHashName]))}`);
-
         } catch(e) {
             console.error(e);
             throw e;
         }
 
-        if (!orderbook.success || !orderbook.data.amtMinSellOrder) {
+        const success = orderbook.data.success ?? false;
+        const amtMinSellOrder = orderbook.data.data.amtMinSellOrder ?? null;
+        const eCurrency = orderbook.data.data.eCurrency;
+
+        if (!success || !amtMinSellOrder || !eCurrency) {
             return null;
         }
 
-        const price = Number(orderbook.data.amtMinSellOrder*0.01);
-        const currencyCode = CurrencyManager.currencyIdToCode(orderbook.data.eCurrency);
+        const price = Number(amtMinSellOrder*0.01);
+        const currencyCode = CurrencyManager.currencyIdToCode(eCurrency);
         return new Price(price, currencyCode);
     }
 
@@ -139,9 +145,7 @@
         {#await promise}
             {L(__loading)}
         {:then price}
-            <a class="es_card_search" href="https://steamcommunity.com/market/listings/753/{uriPath}">
-                {L(__lowestPrice)}
-            </a>
+            <a href="https://steamcommunity.com/market/listings/753/{uriPath}">{L(__lowestPrice)}</a>
             {price?.toString() ?? "N/A"}
         {:catch e}
             <button type="button" onclick={load}>

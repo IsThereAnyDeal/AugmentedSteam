@@ -4,17 +4,20 @@ import Price from "@Content/Modules/Currency/Price";
 import CommunityUtils from "@Content/Modules/Community/CommunityUtils";
 import DOMHelper from "@Content/Modules/DOM/DOMHelper";
 import CardLowestPrice from "@Content/Features/Community/GameCard/Components/CardLowestPrice.svelte";
-import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
 import BadgeCompletion from "@Content/Features/Community/GameCard/Components/BadgeCompletion.svelte";
-import { mount } from "svelte";
+import {mount} from "svelte";
 
 export default class FCardMarketLinks extends Feature<CGameCard> {
 
-    override isEnabled(): boolean {
-        return !this.context.saleAppids.includes(this.context.appid);
+    override async isEnabled(): Promise<boolean> {
+        // FIXME settings
+        return true;
     }
 
-    override async apply(): Promise<void> {
+    override async apply(): Promise<string|null> {
+        if (this.context.saleAppids.includes(this.context.appid)) {
+            return null;
+        }
 
         let badgeCompletion: BadgeCompletion;
         if (CommunityUtils.userIsOwner(this.context.user)) {
@@ -44,22 +47,22 @@ export default class FCardMarketLinks extends Feature<CGameCard> {
                 costMap.set(cardName, null);
             }
 
-            (mount(CardLowestPrice, {
-                            target: node,
-                            props: {
-                                // country: this.context.user.storeCountry,
-                                // currency: CurrencyManager.storeCurrency,
-                                appid: this.context.appid,
-                                cardName,
-                                foil: this.context.isFoil,
-                                onprice: (price: Price) => {
-                                    if (isUnowned) {
-                                        costMap.set(cardName, price);
-                                        badgeCompletion.update(costMap);
-                                    }
-                                }
-                            }
-                        }));
+            mount(CardLowestPrice, {
+                target: node,
+                props: {
+                    appid: this.context.appid,
+                    cardName,
+                    foil: this.context.isFoil,
+                    onprice: (price: Price) => {
+                        if (isUnowned) {
+                            costMap.set(cardName, price);
+                            badgeCompletion.update(costMap);
+                        }
+                    }
+                }
+            });
         }
+
+        return null;
     }
 }

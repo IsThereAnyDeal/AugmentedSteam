@@ -131,23 +131,6 @@ img.astats_icon {
 
 
 /***************************************
- * Game Cards page
- **************************************/
-
-.es_gamecards_links {
-  float: right;
-}
-
-/* Layout for the case when zoomed in (and the buttons are wrapped) */
-.badge_detail_tasks .gamecards_inventorylink {
-  overflow: auto;
-  margin-bottom: 9px; /* Default is 14px => 14-5 = 9 */
-}
-.badge_detail_tasks .gamecards_inventorylink a {
-  margin-bottom: 5px;
-}
-
-/***************************************
  * Badges and Game Cards page
  **************************************/
 .esi-badge .badge_empty_right {
