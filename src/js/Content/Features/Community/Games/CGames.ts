@@ -3,7 +3,6 @@ import SteamFacade from "@Content/Facades/SteamFacade";
 import type {TReactQueryData} from "@Content/Features/_types";
 import {bootstrapReact, features} from "@Content/bootstrap";
 import commonFeatures from "@Content/Features/Common/_commonFeatures";
-import communityFeatures from "@Content/Features/Community/communityFeatures";
 import FGamesStats from "@Content/Features/Community/Games/FGamesStats";
 
 export interface TGame {
@@ -41,7 +40,6 @@ export async function run(): Promise<void> {
 
     await features(context, [
         ...commonFeatures(),
-        ...communityFeatures(),
         FGamesStats
     ]);
 }
