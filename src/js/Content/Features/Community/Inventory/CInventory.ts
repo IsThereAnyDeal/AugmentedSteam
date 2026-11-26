@@ -1,6 +1,5 @@
 import CCommunityBase from "../CCommunityBase";
 import FInventoryGoTo from "./FInventoryGoTo";
-import FPriceHistoryZoomYear from "../FPriceHistoryZoomYear";
 import ContextType from "@Content/Modules/Context/ContextType";
 import CommunityUtils from "@Content/Modules/Community/CommunityUtils";
 import DOMHelper from "@Content/Modules/DOM/DOMHelper";
@@ -69,8 +68,7 @@ export async function run(): Promise<void> {
         ...commonFeatures(),
         ...(hasFeatures ? [
             FInventoryGoTo,
-//            FPriceHistoryZoomYear,
-//            FInventoryFeatures
+            FInventoryFeatures
         ] : [])
     ]);
 }
