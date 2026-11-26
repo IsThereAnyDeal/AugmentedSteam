@@ -12,11 +12,10 @@
 
     let { context }: Props = $props();
 
-    let marketInfo: MarketInfo|null = $state();
+    let marketInfo: MarketInfo|null = $state(null);
     let showQuickSell: boolean = $state(false);
     let showEquip: boolean = $state(false);
     let show1ClickGoo: boolean = $state(false);
-
 
     onMount(() => {
         context.onMarketInfo.subscribe(e => {
@@ -79,7 +78,6 @@
 
 <style>
     .container {
-        width: 346px;
         box-sizing: border-box;
         background: radial-gradient(ellipse at center top, #333333, #1e1e1e);
         padding: 15px;

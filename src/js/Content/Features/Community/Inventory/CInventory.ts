@@ -1,6 +1,4 @@
-import CCommunityBase from "../CCommunityBase";
 import FInventoryGoTo from "./FInventoryGoTo";
-import ContextType from "@Content/Modules/Context/ContextType";
 import CommunityUtils from "@Content/Modules/Community/CommunityUtils";
 import DOMHelper from "@Content/Modules/DOM/DOMHelper";
 import ASEventHandler from "@Content/Modules/Events/ASEventHandler";
@@ -8,7 +6,6 @@ import Context, {type ContextParams} from "@Content/Modules/Context/Context";
 import FInventoryFeatures from "@Content/Features/Community/Inventory/FInventoryFeatures";
 import {bootstrapLegacy, features} from "@Content/bootstrap";
 import commonFeatures from "@Content/Features/Common/_commonFeatures";
-import communityFeatures from "@Content/Features/Community/communityFeatures";
 
 export interface MarketInfo {
     view: number,
