@@ -1,5 +1,5 @@
 import self_ from "./FBackgroundPreviewLink.svelte";
-import type CMarketListing from "@Content/Features/Community/MarketListing/CMarketListing";
+import CMarketListing, {EItemClass} from "@Content/Features/Community/MarketListing/CMarketListing";
 import Feature from "@Content/Modules/Context/Feature";
 import {mount} from "svelte";
 import dynamicNode from "@Content/Modules/DOM/DynamicNode";
@@ -13,37 +13,34 @@ export default class FBackgroundPreviewLink extends Feature<CMarketListing> {
     }
 
     override async apply(): Promise<string|null> {
-        if (this.context.appid !== 753 || !this.context.user.isSignedIn) {
-            return null;
+        if (!this.context.user.isSignedIn) {
+            return "Not signed in";
         }
 
-        const target = await dynamicNode<HTMLImageElement>({
+        if (this.context.appid !== 753) {
+            return "Wrong app type";
+        }
+
+        if (this.context.itemClass === null
+            || this.context.itemClass !== String(EItemClass.Background)) {
+            return `Wrong or unknown item class (${this.context.itemClass})`;
+        }
+
+        const url = this.context.item.icon_url;
+        if (!url) {
+            return "Image not found";
+        }
+
+        const target = await dynamicNode<HTMLElement>({
             // main content box, second column, trying to add button below "Add to Watchlist"
             selector: () => document.querySelector(SelectorMap.market.listing.addToWatchlistBox)
         });
-
-        const previewNode = await dynamicNode<HTMLImageElement>({
-            selector: () => document.querySelector(SelectorMap.market.listing.backgroundPreview)
-        });
-
-        const src = previewNode.src;
-
-        let background: string|null = null;
-        if (src.includes("/economy/image/")) {
-            background = src.replace(/^(.+)(\/economy\/image\/)/, "$2")
-        } else if (src.includes("/community_assets/images/items/")) {
-            background = src.replace(/^(.+)\/community_assets\/images\/items\//, "");
-        }
-
-        if (!background) {
-            throw new Error("Unknown image format");
-        }
 
         mount(self_, {
             target,
             props: {
                 profileUrl: this.context.user.profileUrl,
-                background
+                background: "/economy/image/"+url
             }
         });
 

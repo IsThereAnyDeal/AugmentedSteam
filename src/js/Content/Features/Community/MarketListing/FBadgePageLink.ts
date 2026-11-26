@@ -1,28 +1,54 @@
-import {__viewBadge} from "@Strings/_strings";
-import {L} from "@Core/Localization/Localization";
-import type CMarketListing from "@Content/Features/Community/MarketListing/CMarketListing";
+import self_ from "./FBadgePageLink.svelte";
+import CMarketListing, {EItemClass} from "@Content/Features/Community/MarketListing/CMarketListing";
 import Feature from "@Content/Modules/Context/Feature";
-import HTML from "@Core/Html/Html";
+import {mount} from "svelte";
+import dynamicNode from "@Content/Modules/DOM/DynamicNode";
+import SelectorMap from "@Content/SelectorMap";
 
 export default class FBadgePageLink extends Feature<CMarketListing> {
 
-    override isEnabled(): boolean {
-        return this.context.appid === 753;
+    override async isEnabled(): Promise<boolean> {
+        // FIXME setting
+        return true;
     }
 
-    apply(): void {
+    override async apply(): Promise<string|null> {
+        if (this.context.appid !== 753) {
+            return "Wrong app type";
+        }
+
+        if (this.context.itemClass === null
+            || ![String(EItemClass.Card), String(EItemClass.BoosterPack)].includes(this.context.itemClass)) {
+                return `Wrong or unknown item class (${this.context.itemClass})`;
+        }
 
         const gameAppId = parseInt(this.context.marketHashName);
-        if (!gameAppId || gameAppId === 753) { return; }
+        if (!gameAppId) {
+            return "Didn't find game appid";
+        }
 
-        const cardType = /Foil(%20Trading%20Card)?%29/.test(this.context.marketHashName) ? "?border=1" : "";
+        const marketHashName = decodeURIComponent(this.context.marketHashName);
+        let isFoil: boolean = false;
+        for (const tag of this.context.item.tags) {
+            if (tag.category === "cardborder") {
+                isFoil = tag.internal_name === "cardborder_1";
+                break;
+            }
+        }
 
-        HTML.beforeEnd("#mainContents .market_listing_nav",
-            `<a class="es_marketlistings_btn btn_grey_grey btn_medium" href="//steamcommunity.com/my/gamecards/${gameAppId + cardType}" target="_blank">
-                <span>
-                    <img src="//store.steampowered.com/public/images/v6/ico/ico_cards.png">
-                    ${L(__viewBadge)}
-                </span>
-            </a>`);
+        const target = await dynamicNode<HTMLElement>({
+            // main content box, second column, trying to add button below "Add to Watchlist"
+            selector: () => document.querySelector(SelectorMap.market.listing.addToWatchlistBox)
+        });
+
+        mount(self_, {
+            target,
+            props: {
+                gameAppId,
+                isFoil
+            }
+        });
+
+        return null;
     }
 }

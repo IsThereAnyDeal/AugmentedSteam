@@ -766,17 +766,6 @@ video.highlight_movie:hover + .html5_video_overlay {
  * Market listings pages
  * FBadgePageLink
  **************************************/
-.es_marketlistings_btn {
-  float: right;
-  margin-top: -10px;
-}
-.es_marketlistings_btn img[src$="/ico_cards.png"] {
-  margin: 7px 0;
-  width: 26px;
-  height: 16px;
-  border: 0;
-  vertical-align: top;
-}
 
 
 /* Customizer, SpamComments */
