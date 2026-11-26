@@ -54,6 +54,11 @@ const map = {
             cutIconClass: "OaA5Hz-VGBw-",
             cutClass: "hPiY1A-1izA-",
         }
+    },
+    market: {
+        listing: {
+            sellColumn: ".ekE5QEU9qis-:last-child"
+        }
     }
 }
 

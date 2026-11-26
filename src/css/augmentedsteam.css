@@ -761,30 +761,6 @@ video.highlight_movie:hover + .html5_video_overlay {
   content: "❚❚";
 }
 
-/***************************************
- * Market listings pages
- * FSoldAmountLastDay
- **************************************/
-#market_commodity_orders_header {
-  position: relative;
-}
-.market_section_title .es_sold_amount {
-  font-size: 16px !important;
-}
-.jqplot-title .es_sold_amount,
-.market_section_title .es_sold_amount {
-  z-index: 999;
-  position: relative;
-  display: inline-block !important;
-}
-.jqplot-title .es_sold_amount:before,
-.market_section_title .es_sold_amount:before {
-  content: "(";
-}
-.jqplot-title .es_sold_amount:after,
-.market_section_title .es_sold_amount:after {
-  content: ")";
-}
 
 /***************************************
  * Market listings pages
