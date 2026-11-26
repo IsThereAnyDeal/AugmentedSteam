@@ -5,25 +5,27 @@ import Feature from "@Content/Modules/Context/Feature";
 import Settings from "@Options/Data/Settings";
 import HTML from "@Core/Html/Html";
 import DOMHelper from "@Content/Modules/DOM/DOMHelper";
+import {MountTargetError} from "@Core/Errors/Errors";
+import "./FInventoryGoTo.css";
 
 export default class FInventoryGoTo extends Feature<CInventory> {
 
-    override isEnabled(): boolean {
+    override async isEnabled(): Promise<boolean> {
         return Settings.showinvnav;
     }
 
-    override apply(): void {
+    override async apply(): Promise<string|null> {
 
         // Go to first page
-        HTML.afterEnd("#pagebtn_previous", '<a id="pagebtn_first" class="pagebtn pagecontrol_element disabled">&lt;&lt;</a>');
+        HTML.afterEnd("#pagebtn_previous", '<button id="pagebtn_first" class="pagebtn pagecontrol_element disabled">&lt;&lt;</button>');
 
         // Go to last page
-        HTML.beforeBegin("#pagebtn_next", '<a id="pagebtn_last" class="pagebtn pagecontrol_element">&gt;&gt;</a>');
+        HTML.beforeBegin("#pagebtn_next", '<button id="pagebtn_last" class="pagebtn pagecontrol_element">&gt;&gt;</button>');
 
         // Page number box
         const pageMax = document.getElementById("pagecontrol_max");
         if (!pageMax) {
-            throw new Error();
+            throw new MountTargetError();
         }
 
         HTML.beforeBegin("#inventory_pagecontrols",
@@ -56,5 +58,7 @@ export default class FInventoryGoTo extends Feature<CInventory> {
         }).observe(document.getElementById("inventory_pagecontrols")!, {"subtree": true, "attributes": true});
 
         DOMHelper.insertScript("scriptlets/Community/Inventory/goToControls.js");
+
+        return null;
     }
 }

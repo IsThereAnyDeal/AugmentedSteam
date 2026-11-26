@@ -90,7 +90,7 @@ export default async function(options) {
             "community/games": "Community/Games/CGames.ts",
             "community/group_home": "Community/GroupHome/CGroupHome.ts",
             "community/guides": "Community/App/Guides/CGuides.ts",
-//            {out: "community/inventory", in: `${srcDir}/js/Content/Pages/Community/Inventory/PInventory.ts`},
+            "community/inventory": "Community/Inventory/CInventory.ts",
 //            {out: "community/market_home", in: `${srcDir}/js/Content/Pages/Community/MarketHome/PMarketHome.ts`},
 //            {out: "community/market_listing", in: `${srcDir}/js/Content/Pages/Community/MarketListing/PMarketListing.ts`},
 //            {out: "community/market_search", in: `${srcDir}/js/Content/Pages/Community/MarketSearch/PMarketSearch.ts`},

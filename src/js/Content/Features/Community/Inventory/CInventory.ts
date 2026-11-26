@@ -5,8 +5,11 @@ import ContextType from "@Content/Modules/Context/ContextType";
 import CommunityUtils from "@Content/Modules/Community/CommunityUtils";
 import DOMHelper from "@Content/Modules/DOM/DOMHelper";
 import ASEventHandler from "@Content/Modules/Events/ASEventHandler";
-import type {ContextParams} from "@Content/Modules/Context/Context";
+import Context, {type ContextParams} from "@Content/Modules/Context/Context";
 import FInventoryFeatures from "@Content/Features/Community/Inventory/FInventoryFeatures";
+import {bootstrapLegacy, features} from "@Content/bootstrap";
+import commonFeatures from "@Content/Features/Common/_commonFeatures";
+import communityFeatures from "@Content/Features/Community/communityFeatures";
 
 export interface MarketInfo {
     view: number,
@@ -26,21 +29,13 @@ export interface MarketInfo {
     hasGooOption: boolean
 }
 
-export default class CInventory extends CCommunityBase {
+export default class CInventory extends Context {
 
     public readonly myInventory: boolean = false;
     public readonly onMarketInfo: ASEventHandler<MarketInfo|null> = new ASEventHandler<MarketInfo|null>();
 
-    constructor(params: ContextParams) {
-
-        // Don't apply features on empty or private inventories
-        const hasFeatures = document.getElementById("no_inventories") === null;
-
-        super(params, ContextType.INVENTORY, hasFeatures ? [
-                FInventoryGoTo,
-                FPriceHistoryZoomYear,
-                FInventoryFeatures
-            ] : []);
+    constructor(params: ContextParams, hasFeatures: boolean) {
+        super(params);
 
         if (!hasFeatures) {
             return;
@@ -55,4 +50,27 @@ export default class CInventory extends CCommunityBase {
 
         DOMHelper.insertScript("scriptlets/Community/Inventory/marketInfo.js");
     }
+}
+
+
+/**
+ * @contentScript
+ * @match *://steamcommunity.com/(id|profiles)/*\/inventory
+ */
+export async function run(): Promise<void> {
+    const params = await bootstrapLegacy();
+
+    // Don't apply features on empty or private inventories
+    const hasFeatures = document.getElementById("no_inventories") === null;
+
+    const context = new CInventory(params, hasFeatures);
+
+    await features(context, [
+        ...commonFeatures(),
+        ...(hasFeatures ? [
+            FInventoryGoTo,
+//            FPriceHistoryZoomYear,
+//            FInventoryFeatures
+        ] : [])
+    ]);
 }

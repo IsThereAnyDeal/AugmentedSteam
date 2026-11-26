@@ -1,0 +1,17 @@
+#pagebtn_first,
+#pagebtn_last {
+    margin: 0 3px;
+}
+#es_pagego {
+    float: left;
+}
+#es_pagenumber {
+    width: 50px;
+}
+#es_gotopage_btn {
+    width: 32px;
+    padding: 0;
+    margin: 0 6px;
+    text-align: center;
+    display: inline-table; /** https://github.com/jshackles/Enhanced_Steam/pull/1624 */
+}
