@@ -1,102 +1,52 @@
 import self_ from "./FBackgroundPreviewLink.svelte";
 import type CMarketListing from "@Content/Features/Community/MarketListing/CMarketListing";
 import Feature from "@Content/Modules/Context/Feature";
-import SteamFacade from "@Content/Facades/SteamFacade";
-import {util} from "protobufjs";
-import { mount } from "svelte";
-
-import resolve = util.path.resolve;
+import {mount} from "svelte";
+import dynamicNode from "@Content/Modules/DOM/DynamicNode";
+import SelectorMap from "@Content/SelectorMap";
 
 export default class FBackgroundPreviewLink extends Feature<CMarketListing> {
 
-    private itemInfoNode: HTMLElement|null = null;
-    private link: string|null = null;
-
     override async isEnabled(): Promise<boolean> {
-        if (this.context.appid !== 753 || !this.context.user.isSignedIn) {
-            return false;
-        }
-
-        this.itemInfoNode = document.querySelector(".largeiteminfo_react_placeholder");
-        if (!this.itemInfoNode) {
-            console.error("[FBackgroundPreviewLink] container not found");
-            return false;
-        }
-
-        const assets = await SteamFacade.global("g_rgAssets");
-        if (!assets) {
-            console.error("[FBackgroundPreviewLink] assets not found");
-            return false;
-        }
-
-        const asset = assets[753][6];
-        if (!asset) {
-            return false;
-        }
-
-        const data = Object.values(asset) as any;
-        if (data.length === 0 || !data[0].actions[0].link) {
-            return false
-        }
-        this.link = data[0].actions[0].link;
+        // FIXME setting
         return true;
     }
 
-    private findImageNode(): HTMLImageElement|null {
-        const doc = new XPathEvaluator();
-        const xpath = doc.createExpression("//img[contains(@src, '330x192')][contains(@src, 'https://community.fastly.steamstatic.com/economy/image/')]")
-        const result = xpath.evaluate(document, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE);
-
-        if (result.snapshotLength > 0) {
-            return result.snapshotItem(0) as HTMLImageElement; // assume only one element found, or the first one is the one we need
+    override async apply(): Promise<string|null> {
+        if (this.context.appid !== 753 || !this.context.user.isSignedIn) {
+            return null;
         }
-        return null;
-    }
 
-    private async waitForNode(): Promise<HTMLImageElement> {
-        return new Promise(resolve => {
-
-            const node = this.findImageNode();
-            if (node) {
-                resolve(node);
-                return;
-            }
-
-            const observer = new MutationObserver(() => {
-                const node = this.findImageNode();
-                if (node) {
-                    resolve(node);
-                    observer.disconnect();
-                    return;
-                }
-            });
-            observer.observe(this.itemInfoNode!, {
-                childList: true,
-                subtree: true
-            });
+        const target = await dynamicNode<HTMLImageElement>({
+            // main content box, second column, trying to add button below "Add to Watchlist"
+            selector: () => document.querySelector(SelectorMap.market.listing.addToWatchlistBox)
         });
-    }
 
-    override async apply(): Promise<void> {
-        const target = await this.waitForNode(); // we're assuming that we did our due diligence and we find the node
+        const previewNode = await dynamicNode<HTMLImageElement>({
+            selector: () => document.querySelector(SelectorMap.market.listing.backgroundPreview)
+        });
 
-        const link = this.link!;
+        const src = previewNode.src;
 
-        let src: string|null = null;
-        if (link.includes("/economy/images/")) {
-            src = link.replace(/^(.+)(\/economy\/image\/)/, "$1")
-        } else if (link.includes("/community_assets/images/items/")) {
-            src = link.replace(/^(.+)\/community_assets\/images\/items\//, "");
+        let background: string|null = null;
+        if (src.includes("/economy/image/")) {
+            background = src.replace(/^(.+)(\/economy\/image\/)/, "$2")
+        } else if (src.includes("/community_assets/images/items/")) {
+            background = src.replace(/^(.+)\/community_assets\/images\/items\//, "");
         }
 
-        if (src) {
-            mount(self_, {
-                            target: target.parentElement!,
-                            props: {
-                                profileUrl: this.context.user.profileUrl,
-                                background: src
-                            }
-                        });
+        if (!background) {
+            throw new Error("Unknown image format");
         }
+
+        mount(self_, {
+            target,
+            props: {
+                profileUrl: this.context.user.profileUrl,
+                background
+            }
+        });
+
+        return null;
     }
 }

@@ -32,7 +32,7 @@ export async function run(): Promise<void> {
     await features(context, [
         ...commonFeatures(),
         FSoldAmountLastDay,
-//        FBackgroundPreviewLink,
+        FBackgroundPreviewLink,
 //        FBadgePageLink,
     ]);
 }

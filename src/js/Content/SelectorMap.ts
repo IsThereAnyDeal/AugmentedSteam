@@ -57,7 +57,9 @@ const map = {
     },
     market: {
         listing: {
-            sellColumn: ".ekE5QEU9qis-:last-child"
+            sellColumn: ".ekE5QEU9qis-:last-child",
+            backgroundPreview: "._8JrgJ7Yp4GE-",
+            addToWatchlistBox: ".KHOD4K-lWWs-.rFurYHdyDxI-"
         }
     }
 }
