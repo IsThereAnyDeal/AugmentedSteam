@@ -1,14 +1,21 @@
-import ContextType from "@Content/Modules/Context/ContextType";
-import CCommunityBase from "../CCommunityBase";
-import FHighlightMarketItems from "./FHighlightMarketItems";
-import type {ContextParams} from "@Content/Modules/Context/Context";
+import {bootstrapReact, features} from "@Content/bootstrap";
+import commonFeatures from "@Content/Features/Common/_commonFeatures";
+import FHighlightMarketItems from "@Content/Features/Community/MarketSearch/FHighlightMarketItems";
 
-export default class CMarketSearch extends CCommunityBase {
+export default class CMarketSearch extends Context {}
 
-    constructor(params: ContextParams) {
 
-        super(params, ContextType.MARKET_SEARCH, [
-            FHighlightMarketItems,
-        ]);
-    }
+/**
+ * @contentScript
+ * @match *://steamcommunity.com/market/search[/*]
+ */
+export async function run(): Promise<void> {
+    const params = await bootstrapReact();
+
+    const context = new CMarketSearch(params);
+
+    await features(context, [
+        ...commonFeatures(),
+        FHighlightMarketItems
+    ]);
 }

@@ -93,7 +93,7 @@ export default async function(options) {
             "community/inventory": "Community/Inventory/CInventory.ts",
 //            {out: "community/market_home", in: `${srcDir}/js/Content/Pages/Community/MarketHome/PMarketHome.ts`},
             "community/market_listing": "Community/MarketListing/CMarketListing.ts",
-//            {out: "community/market_search", in: `${srcDir}/js/Content/Pages/Community/MarketSearch/PMarketSearch.ts`},
+            "community/market_search": "Community/MarketSearch/CMarketSearch.ts",
 //            {out: "community/myworkshop", in: `${srcDir}/js/Content/Pages/Community/MyWorkshop/PMyWorkshop.ts`},
 //            {out: "community/profile_activity", in: `${srcDir}/js/Content/Pages/Community/ProfileActivity/PProfileActivity.ts`},
 //            {out: "community/profile_edit", in: `${srcDir}/js/Content/Pages/Community/ProfileEdit/PProfileEdit.ts`},
