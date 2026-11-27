@@ -94,7 +94,7 @@ export default async function(options) {
 //            {out: "community/market_home", in: `${srcDir}/js/Content/Pages/Community/MarketHome/PMarketHome.ts`},
             "community/market_listing": "Community/MarketListing/CMarketListing.ts",
             "community/market_search": "Community/MarketSearch/CMarketSearch.ts",
-//            {out: "community/myworkshop", in: `${srcDir}/js/Content/Pages/Community/MyWorkshop/PMyWorkshop.ts`},
+            "community/myworkshop": "Community/MyWorkshop/CMyWorkshop.ts",
 //            {out: "community/profile_activity", in: `${srcDir}/js/Content/Pages/Community/ProfileActivity/PProfileActivity.ts`},
 //            {out: "community/profile_edit", in: `${srcDir}/js/Content/Pages/Community/ProfileEdit/PProfileEdit.ts`},
 //            {out: "community/profile_home", in: `${srcDir}/js/Content/Pages/Community/ProfileHome/PProfileHome.ts`},

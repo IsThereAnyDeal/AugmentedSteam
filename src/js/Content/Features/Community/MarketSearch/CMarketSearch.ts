@@ -1,6 +1,7 @@
 import {bootstrapReact, features} from "@Content/bootstrap";
 import commonFeatures from "@Content/Features/Common/_commonFeatures";
 import FHighlightMarketItems from "@Content/Features/Community/MarketSearch/FHighlightMarketItems";
+import Context from "@Content/Modules/Context/Context";
 
 export default class CMarketSearch extends Context {}
 
